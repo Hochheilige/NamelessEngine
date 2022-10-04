@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AABB2DCollider" Collapsed="true">
+    <Position X="0.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAIAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Include\AABB2DCollider.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Actor">
+    <Position X="18.5" Y="3.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAgIAGAAAABAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Include\Actor.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Game">
+    <Position X="14.75" Y="0.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>EAQAAABIAgEAgwAFAAEC4QABNAriCIAQZBCAQAACAAI=</HashCode>
+      <FileName>Include\Game.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InputDevice">
+    <Position X="21.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAoAABAQAAAAAAAAAAAAEAAAAAACAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Include\InputDevice.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mesh">
+    <Position X="4.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAEAAAAAAAAAEAAAAAAAAAEAA=</HashCode>
+      <FileName>Include\Mesh.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SquareMesh">
+    <Position X="3.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Include\Mesh.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CircleMesh">
+    <Position X="5.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Include\Mesh.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MeshRenderer">
+    <Position X="2.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAEAAAAAAAABAAAAAAAAAAERgAgAAAABA=</HashCode>
+      <FileName>Include\MeshRenderer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Shader" Collapsed="true">
+    <Position X="1.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABIAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Include\Shader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VertexShader" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAQAAQAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Include\Shader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PixelShader" Collapsed="true">
+    <Position X="2.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAQAAQAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Include\Shader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleVertexShader" Collapsed="true">
+    <Position X="0.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Include\Shader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShaderCompiler">
+    <Position X="21.5" Y="2.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAADAAAAAAAAAEAIAAAAACAABAAAAAAAAEABAAAAAEI=</HashCode>
+      <FileName>Include\ShaderCompiler.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DisplayWin32">
+    <Position X="18.5" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>QCABAAAEAAAABAAAAAAQIAAAAAAAAAAABAIAAAAAAEA=</HashCode>
+      <FileName>Include\DisplayWin32.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="CBPerObject">
+    <Position X="9" Y="4.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Include\Game.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Rotator">
+    <Position X="9.75" Y="1" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAABIAAAAAAIAGAAAAAAAQAAABAAAAAAAAQA=</HashCode>
+      <FileName>Include\Transform.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Transform">
+    <Position X="9" Y="6.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AgACAAAAAAAAAIAgAAIAAGQABBAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Include\Transform.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="DirectX::XMFLOAT4">
+    <Position X="8" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAhgAQAAAAA=</HashCode>
+      <FileName>C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\um\DirectXMath.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
