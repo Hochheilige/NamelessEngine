@@ -127,6 +127,7 @@ private:
 	
 	ComPtr<ID3D11RasterizerState> CullBackRasterizerState;
 	ComPtr<ID3D11RasterizerState> CullFrontRasterizerState;
+	ComPtr<ID3D11RasterizerState> CullNoneRasterizerState;
 
 	ComPtr<ID3D11BlendState> OpaqueBlendState;
 	ComPtr<ID3D11BlendState> LightBlendState;

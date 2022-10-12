@@ -43,6 +43,10 @@ RenderingSystem::RenderingSystem(Game* InGame)
 
 	device->CreateRasterizerState(&rastDesc, &CullFrontRasterizerState);
 
+	rastDesc.CullMode = D3D11_CULL_NONE; 
+
+	device->CreateRasterizerState(&rastDesc, &CullNoneRasterizerState);
+
 	D3D11_BLEND_DESC blendDesc{};
 	blendDesc.AlphaToCoverageEnable = false;
 	blendDesc.IndependentBlendEnable = false;
@@ -191,7 +195,7 @@ void RenderingSystem::PerformForwardOpaquePass()
 	
 
 
-	context->RSSetState(CullBackRasterizerState.Get());
+	context->RSSetState(CullNoneRasterizerState.Get());
 	context->OMSetBlendState(OpaqueBlendState.Get(), nullptr, D3D11_DEFAULT_SAMPLE_MASK);
 	context->OMSetDepthStencilState(OpaqueDepthStencilState.Get(), 0);
 
@@ -465,11 +469,11 @@ void RenderingSystem::Draw(float DeltaTime, const Camera* InCamera)
 
 	context->ClearState();
 
-	PerformShadowmapPass();
+	//PerformShadowmapPass();
 
 	// @TODO: uncomment this
-	PerformOpaquePass(DeltaTime);
-	PerformLightingPass(DeltaTime);
+	//PerformOpaquePass(DeltaTime);
+	//PerformLightingPass(DeltaTime);
 
-	//PerformForwardOpaquePass();
+	PerformForwardOpaquePass();
 }

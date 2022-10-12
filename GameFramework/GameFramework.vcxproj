@@ -29,26 +29,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -121,7 +121,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)Include;$(SolutionDir)DirectXTK\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(SolutionDir)DirectXTK\Include\;$(SolutionDir)External\assimp\include\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -129,6 +129,7 @@
     </Link>
     <Lib>
       <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -154,12 +155,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Include\AABB2DCollider.h" />
+    <ClInclude Include="Include\Game.h" />
     <ClInclude Include="Include\GameComponent.h" />
     <ClInclude Include="Include\Camera.h" />
     <ClInclude Include="Include\CameraController.h" />
     <ClInclude Include="Include\Collider.h" />
     <ClInclude Include="Include\DisplayWin32.h" />
-    <ClInclude Include="Include\Game.h" />
     <ClInclude Include="Include\GBuffer.h" />
     <ClInclude Include="Include\InputDevice.h" />
     <ClInclude Include="Include\LightBase.h" />
@@ -181,12 +182,12 @@
   <ItemGroup>
     <ClCompile Include="Include\Renderer.cpp" />
     <ClCompile Include="Src\AABB2DCollider.cpp" />
+    <ClCompile Include="Src\Game.cpp" />
     <ClCompile Include="Src\GameComponent.cpp" />
     <ClCompile Include="Src\Camera.cpp" />
     <ClCompile Include="Src\CameraController.cpp" />
     <ClCompile Include="Src\Collider.cpp" />
     <ClCompile Include="Src\DisplayWin32.cpp" />
-    <ClCompile Include="Src\Game.cpp" />
     <ClCompile Include="Src\GBuffer.cpp" />
     <ClCompile Include="Src\InputDevice.cpp" />
     <ClCompile Include="Src\LightBase.cpp" />
@@ -209,6 +210,9 @@
   <ItemGroup>
     <ProjectReference Include="..\DirectXTK\DirectXTK.vcxproj">
       <Project>{0cf8fa75-e725-41dd-b5d6-2fb912fe070f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\External\assimp\code\assimp.vcxproj">
+      <Project>{986855ab-de08-31c3-89a0-1eb21d2c3a87}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

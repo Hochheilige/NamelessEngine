@@ -20,7 +20,7 @@ void Game::Initialize()
 {
 	StartTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count() / 1000.0f;
 
-	Display = new DisplayWin32(800, 1200, &WndProc, L"PONG");
+	Display = new DisplayWin32(800, 1200, &WndProc, L"NamelessEngine");
 	Input = new InputDevice();
 
 	CreateBackBuffer();

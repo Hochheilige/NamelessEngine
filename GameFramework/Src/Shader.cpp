@@ -1,6 +1,7 @@
 #include "Shader.h"
 
 #include "Game.h"
+#include "Game.h"
 
 LPCSTR MacroNames[7] =
 {

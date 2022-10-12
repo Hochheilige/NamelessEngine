@@ -20,6 +20,6 @@ private:
 	HINSTANCE hInstance;
 	HWND hWnd;
 	WNDCLASSEX wc;
-
+	RECT windowRect;
 };
 

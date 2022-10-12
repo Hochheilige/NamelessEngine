@@ -77,7 +77,7 @@ void PongGame::PrepareResources()
 	sc.SetIsDebug(true);
 	sc.SetEntryPoint("VSMain");
 	sc.SetTarget("vs_5_0");
-	sc.SetPathToShader(L"../../Shaders/MyVeryFirstShader.hlsl");
+	sc.SetPathToShader(L"../Shaders/MyVeryFirstShader.hlsl");
 
 	vs = sc.CreateShader<SimpleVertexShader>();
 
