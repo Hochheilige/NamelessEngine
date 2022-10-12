@@ -12,6 +12,9 @@
 #include "MeshLoader.h"
 #include "LightBase.h"
 #include "WICTextureLoader.h"
+#include "CSBind.h"
+
+
 
 MeshRenderer* Sandbox::CreateObject(float trans_x, float trans_y, float trans_z,
 	float rot_x, float rot_y, float rot_z,
@@ -67,6 +70,39 @@ MeshRenderer* Sandbox::CreateSphereObject(float trans_x, float trans_y, float tr
 
 void Sandbox::PrepareResources()
 {
+
+	//MONO
+	MonoDomain* m_ptrMonoDomain = nullptr;
+	MonoAssembly* m_ptrGameAssembly = nullptr;
+	MonoImage* m_ptrGameAssemblyImage = nullptr;
+	mono_set_dirs(NULL, NULL);
+
+	m_ptrMonoDomain = mono_jit_init("Katamari");
+
+	//std::wstring ss = ExePath();
+
+	if (m_ptrMonoDomain) {
+		m_ptrGameAssembly = mono_domain_assembly_open(m_ptrMonoDomain, R"(C:\Git\NamelessEngine\Scripts.dll)");
+		if (m_ptrGameAssembly) {
+			m_ptrGameAssemblyImage = mono_assembly_get_image(m_ptrGameAssembly);
+			if (m_ptrGameAssemblyImage) {
+				mono_add_internal_call("Scripts.Script::CreateCubeObject", &CSBind::CS_CreateObj);
+
+				MonoClass* ptrMainClass = mono_class_from_name(m_ptrGameAssemblyImage, "Scripts", "Script");
+				if (ptrMainClass) {
+					MonoMethodDesc* ptrMainMethodDesc = mono_method_desc_new("Scripts.Script:Create()", true);
+					if (ptrMainMethodDesc) {
+						MonoMethod* ptrMainMethod = mono_method_desc_search_in_class(ptrMainMethodDesc, ptrMainClass);
+						if (ptrMainMethod) {
+							mono_runtime_invoke(ptrMainMethod, nullptr, nullptr, nullptr);
+						}
+					}
+				}
+			}
+		}
+	}
+		
+	//MONO END
 	Game::PrepareResources();
 	// create meshes
 	boxMesh = new BoxMesh();
@@ -117,7 +153,7 @@ void Sandbox::PrepareResources()
 	Vector4 vec(0.0f, 0.0f, 1.0f, 1.0f);
 	vec = Vector4::Transform(vec, OrthoCamera->GetProjectionMatrix());
 
-	CreateSphereObject(3.0f, 3.0f, 0.0f, 0.0f, 0.0f, 30.0f, 1, 1, 1);
+	//CreateSphereObject(3.0f, 3.0f, 0.0f, 0.0f, 0.0f, 30.0f, 1, 1, 1);
 
 	CreateCubeObject(2.0f, 2.0f, 0.0f, 45.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
 
