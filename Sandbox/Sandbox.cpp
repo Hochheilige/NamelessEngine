@@ -121,8 +121,8 @@ void Sandbox::PrepareResources()
 
 	CreateCubeObject(2.0f, 2.0f, 0.0f, 45.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
 
-	const char* bunny_path = "..\\Assets\\stanford-bunny.fbx";
-	CreateObject(0, 1, 0, 0, 0, 0, 0.005, 0.005, 0.005, bunny_path);
+	/*const char* bunny_path = "..\\Assets\\stanford-bunny.fbx";
+	CreateObject(0, 1, 0, 0, 0, 0, 0.005, 0.005, 0.005, bunny_path);*/
 
 	FPSCC = CreateGameComponent<CameraController>();
 	FPSCC->SetCameraToControl(PerspCamera);
@@ -167,6 +167,11 @@ void Sandbox::Update(float DeltaTime)
 
 			}
 			pressTime = GetTotalElapsedTime();
+		}
+		if (input.IsKeyDown(73))
+		{
+			const char* bunny_path = "..\\Assets\\stanford-bunny.fbx";
+			CreateObject(0, 1, 0, 0, 0, 0, 0.005, 0.005, 0.005, bunny_path);
 		}
 	}
 
