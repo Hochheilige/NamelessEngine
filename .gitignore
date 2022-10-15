@@ -45,6 +45,9 @@ Generated\ Files/
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 
+# Rider/Idea
+.idea/
+
 # NUnit
 *.VisualState.xml
 TestResult.xml

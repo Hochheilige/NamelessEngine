@@ -2,6 +2,10 @@
 
 #include "Game.h"
 #include "GameComponent.h"
+#include "MonoSystem.h"
+#include <mono/jit/jit.h>
+#include <mono/metadata/assembly.h>
+#include <mono/metadata/debug-helpers.h>
 
 class Sandbox : public Game
 {
@@ -23,6 +27,8 @@ public:
 		float scale_x, float scale_y, float scale_z);
 
 private:
+	class MonoSystem* monoSystem;
+
 	class BoxMesh* boxMesh;
 	class CircleMesh* circleMesh;
 	class SphereMesh* sphereMesh;

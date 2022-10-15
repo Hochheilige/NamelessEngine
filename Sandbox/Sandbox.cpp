@@ -12,6 +12,8 @@
 #include "MeshLoader.h"
 #include "LightBase.h"
 #include "WICTextureLoader.h"
+#include "CSBind.h"
+#include "AudioComponent.h"
 
 MeshRenderer* Sandbox::CreateObject(float trans_x, float trans_y, float trans_z,
 	float rot_x, float rot_y, float rot_z,
@@ -69,6 +71,7 @@ void Sandbox::PrepareResources()
 {
 	Game::PrepareResources();
 	// create meshes
+	monoSystem = new MonoSystem();
 	boxMesh = new BoxMesh();
 	boxMeshProxy = boxMesh->CreateMeshProxy();
 	circleMesh = new CircleMesh();
@@ -76,6 +79,8 @@ void Sandbox::PrepareResources()
 	sphereMesh = new SphereMesh();
 	sphereMeshProxy = sphereMesh->CreateMeshProxy();
 
+	auto audioComponent = new AudioComponent(monoSystem->GetImage());
+	audioComponent->OnRegister();
 
 	// create shaders
 	ShaderCompiler sc;
@@ -119,7 +124,7 @@ void Sandbox::PrepareResources()
 
 	CreateSphereObject(3.0f, 3.0f, 0.0f, 0.0f, 0.0f, 30.0f, 1, 1, 1);
 
-	CreateCubeObject(2.0f, 2.0f, 0.0f, 45.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
+	//CreateCubeObject(2.0f, 2.0f, 0.0f, 45.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
 
 	/*const char* bunny_path = "..\\Assets\\stanford-bunny.fbx";
 	CreateObject(0, 1, 0, 0, 0, 0, 0.005, 0.005, 0.005, bunny_path);*/
