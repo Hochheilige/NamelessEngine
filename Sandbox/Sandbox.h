@@ -3,6 +3,8 @@
 #include "Game.h"
 #include "GameComponent.h"
 
+#include "btBulletDynamicsCommon.h"
+
 class Sandbox : public Game
 {
 public:
@@ -42,5 +44,18 @@ private:
 
 	ComPtr<ID3D11Resource> cupTexResource;
 	ComPtr<ID3D11ShaderResourceView> cupTexSRV;
+
+	MeshRenderer* updateBox;
+
+	// Base physics objects
+	btDefaultCollisionConfiguration* collisionConfiguration = nullptr;
+	btCollisionDispatcher* dispatcher = nullptr;
+	btBroadphaseInterface* overlappingPairCache = nullptr;
+	btSequentialImpulseConstraintSolver* solver = nullptr;
+	btDiscreteDynamicsWorld* dynamicWorld = nullptr;
+
+	btAlignedObjectArray<btCollisionShape*> collisionShapes;
+
+	std::vector<MeshRenderer*> box;
 
 };

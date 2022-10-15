@@ -24,7 +24,7 @@ DisplayWin32::DisplayWin32(LONG ClientHeight, LONG ClientWidth, WNDPROC WndProc,
 	auto dwStyle = WS_SYSMENU | WS_CAPTION | WS_MINIMIZEBOX | WS_THICKFRAME;
 
 	auto posX = (GetSystemMetrics(SM_CXSCREEN) - ClientWidth) / 2;
-	auto posY = (GetSystemMetrics(SM_CXSCREEN) - ClientHeight) / 2;
+	auto posY = (GetSystemMetrics(SM_CYSCREEN) - ClientHeight) / 2;
 
 	hWnd = CreateWindowEx(WS_EX_APPWINDOW, ApplicationName, ApplicationName,
 		dwStyle,
