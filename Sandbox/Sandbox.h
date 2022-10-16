@@ -57,5 +57,6 @@ private:
 	btAlignedObjectArray<btCollisionShape*> collisionShapes;
 
 	std::vector<MeshRenderer*> box;
+	MeshRenderer* bunny;
 
 };
