@@ -14,6 +14,8 @@ XCOPY "CMakeLists.txt" "bullet3\" /y
 
 cd bullet3
 
+ECHO Building Bullet Physics static libraries
+
 rm CMakeCache.txt
 cmake CMakeLists.txt
 cmake --build .
