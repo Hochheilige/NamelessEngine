@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(MONO_PATH)include\mono-2.0;$(IncludePath)</IncludePath>
-    <LibraryPath>$(MONO_PATH)lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)External\Mono\include\mono-2.0;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)External\Mono\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -118,8 +118,8 @@
       <AdditionalDependencies>$(CoreLibraryDependencies);mono-2.0-sgen.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(MONO_PATH)bin\mono-2.0-sgen.dll" "$(TargetDir)" /y
-xcopy "$(MONO_PATH)lib\mono\4.5\*" "$(TargetDir)mono\4.5\" /y /i /s</Command>
+      <Command>xcopy "$(SolutionDir)External\Mono\bin\mono-2.0-sgen.dll" "$(TargetDir)" /y
+xcopy "$(SolutionDir)External\Mono\lib\mono\4.5\*" "$(TargetDir)mono\4.5\" /y /i /s</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
