@@ -1,4 +1,5 @@
 #pragma once
+#include <xstring>
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
 #include <mono/metadata/debug-helpers.h>
@@ -17,10 +18,11 @@ public:
 	MonoMethod* GetMethodByClass(MonoClass* clazz, MonoMethodDesc* desc) const;
 	MonoObject* InvokeMethod(MonoMethod* method, void* obj, void** params, MonoObject** exc);
 	MonoMethod* GetMethod(const char* nameSpace, const char* className, const char* desc);
+	void PrintAssemblyTypes(MonoAssembly* assembly);
 
 	MonoDomain* rootDomain = nullptr;
 	MonoDomain* appDomain = nullptr;
-	MonoAssembly* m_ptrGameAssembly = nullptr;
+	MonoAssembly* scriptAssembly = nullptr;
 	MonoImage* image = nullptr;
 
 	/**

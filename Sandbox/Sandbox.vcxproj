@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)External\Mono\include\mono-2.0;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)External\Mono\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(SolutionDir)External\mono\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -108,18 +108,18 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\assimp\include\;$(SolutionDir)DirectXTK\Include\;$(SolutionDir)GameFramework\Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\assimp\include\;$(SolutionDir)External\mono\include;$(SolutionDir)DirectXTK\Include\;$(SolutionDir)GameFramework\Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)External\assimp\lib\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\mono\lib\$(Configuration)\;$(SolutionDir)External\assimp\lib\</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(CoreLibraryDependencies);mono-2.0-sgen.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)External\Mono\bin\mono-2.0-sgen.dll" "$(TargetDir)" /y
-xcopy "$(SolutionDir)External\Mono\lib\mono\4.5\*" "$(TargetDir)mono\4.5\" /y /i /s</Command>
+      <Command>xcopy "$(SolutionDir)External\mono\bin\$(Configuration)\mono-2.0-sgen.dll" "$(TargetDir)" /y
+xcopy "$(SolutionDir)External\mono\lib\4.5\*" "$(TargetDir)mono\lib\4.5\" /y /i /s</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
