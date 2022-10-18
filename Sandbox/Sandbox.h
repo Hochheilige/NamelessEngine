@@ -27,7 +27,9 @@ public:
 		float scale_x, float scale_y, float scale_z);
 
 private:
-	class MonoSystem* monoSystem;
+	void LoadGameFacade();
+
+	class MonoSystem* mono;
 
 	class BoxMesh* boxMesh;
 	class CircleMesh* circleMesh;

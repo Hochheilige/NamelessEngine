@@ -140,13 +140,13 @@ xcopy "$(SolutionDir)External\Mono\lib\mono\4.5\*" "$(TargetDir)mono\4.5\" /y /i
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AudioComponent.h" />
-    <ClInclude Include="CSBind.h" />
+    <ClInclude Include="Mappings.h" />
     <ClInclude Include="MonoSystem.h" />
     <ClInclude Include="Sandbox.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AudioComponent.cpp" />
-    <ClCompile Include="CSBind.cpp" />
+    <ClCompile Include="Mappings.cpp" />
     <ClCompile Include="MonoSystem.cpp" />
     <ClCompile Include="Sandbox.cpp" />
     <ClCompile Include="Source.cpp" />

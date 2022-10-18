@@ -12,8 +12,10 @@
 #include "MeshLoader.h"
 #include "LightBase.h"
 #include "WICTextureLoader.h"
-#include "CSBind.h"
+#include "Mappings.h"
 #include "AudioComponent.h"
+#include "windows.h"
+#include "mono/metadata/debug-helpers.h"
 
 MeshRenderer* Sandbox::CreateObject(float trans_x, float trans_y, float trans_z,
 	float rot_x, float rot_y, float rot_z,
@@ -67,11 +69,20 @@ MeshRenderer* Sandbox::CreateSphereObject(float trans_x, float trans_y, float tr
 	return object;
 }
 
+void Sandbox::LoadGameFacade() {
+	auto method = mono->GetMethod("Scripts.Internal", "Loader", "Boot()");
+	//mono->InvokeMethod(method, nullptr, nullptr, nullptr);
+	//TODO uncomment 
+}
+
 void Sandbox::PrepareResources()
 {
 	Game::PrepareResources();
 	// create meshes
-	monoSystem = new MonoSystem();
+	mono = new MonoSystem();
+
+	LoadGameFacade();
+
 	boxMesh = new BoxMesh();
 	boxMeshProxy = boxMesh->CreateMeshProxy();
 	circleMesh = new CircleMesh();
@@ -79,7 +90,7 @@ void Sandbox::PrepareResources()
 	sphereMesh = new SphereMesh();
 	sphereMeshProxy = sphereMesh->CreateMeshProxy();
 
-	auto audioComponent = new AudioComponent(monoSystem->GetImage());
+	auto audioComponent = new AudioComponent(mono->GetImage());
 	audioComponent->OnRegister();
 
 	// create shaders

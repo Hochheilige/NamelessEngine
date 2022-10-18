@@ -1,5 +1,5 @@
 #include "MonoSystem.h"
-#include "CSBind.h"
+#include "Mappings.h"
 #include <filesystem>
 
 MonoSystem::MonoSystem()
@@ -11,23 +11,67 @@ MonoSystem::MonoSystem()
 
 
 	mono_set_dirs(result, result);
+	mono_set_assemblies_path("mono/lib");
 
-	m_ptrMonoDomain = mono_jit_init("Katamari");
+	//TODO add exceptions/message if domain/assembly/image can't be loaded
 
-	if (m_ptrMonoDomain) {
+	rootDomain = mono_jit_init("NamelessEngine");
+
+	if (rootDomain) {
 		auto pathStr = parentPath + "\\Scripts.dll";
-		m_ptrGameAssembly = mono_domain_assembly_open(m_ptrMonoDomain, pathStr.c_str());
+
+		char appDomainName[] = "EngineAppDomain";
+		appDomain = mono_domain_create_appdomain(appDomainName, nullptr);
+		mono_domain_set(appDomain, true);
+
+		m_ptrGameAssembly = mono_domain_assembly_open(rootDomain, pathStr.c_str());
 		if (m_ptrGameAssembly) {
-			m_ptrGameAssemblyImage = mono_assembly_get_image(m_ptrGameAssembly);
-			if (m_ptrGameAssemblyImage) {
-				mono_add_internal_call("Scripts.Script::CreateCubeObject", &CSBind::CS_CreateObj);
-				mono_add_internal_call("Scripts.AudioComponent::InternalOnRegister", &CSBind::CS_AudioOnCreate);
+			image = mono_assembly_get_image(m_ptrGameAssembly);
+			if (image) {
+				mono_add_internal_call("Scripts.Script::CreateCubeObject", &Mappings::CS_CreateObj);
+				mono_add_internal_call("Scripts.AudioComponent::InternalOnRegister", &Mappings::CS_AudioOnCreate);
 			}
 		}
 	}
 }
 
+
 MonoImage* MonoSystem::GetImage()
 {
-	return m_ptrGameAssemblyImage;
+	return image;
+}
+
+MonoClass* MonoSystem::FindClass(const char* nameSpace, const char* className) const
+{
+	return mono_class_from_name(image, nameSpace, className);
+}
+
+MonoMethodDesc* MonoSystem::MakeMethodDescriptor(const char* descriptor, bool includeNamespace) const
+{
+	return mono_method_desc_new(descriptor, includeNamespace);
+}
+
+MonoMethod* MonoSystem::GetMethodByClass(MonoClass* clazz, MonoMethodDesc* desc) const
+{
+	return mono_method_desc_search_in_class(desc, clazz);
+}
+
+MonoObject* MonoSystem::InvokeMethod(MonoMethod* method, void* obj, void** params,
+	MonoObject** exception) 
+{
+	return mono_runtime_invoke(method, obj, params, exception);
+}
+
+MonoMethod* MonoSystem::GetMethod(const char* nameSpace, const char* className, const char* desc)
+{
+	const auto clazz = FindClass(nameSpace, className);
+
+	auto fullDesc = std::string(nameSpace);
+	fullDesc.append(".");
+	fullDesc.append(className);
+	fullDesc.append(":");
+	fullDesc.append(desc);
+
+	const auto desciptor = MakeMethodDescriptor(fullDesc.c_str(), true);
+	return GetMethodByClass(clazz, desciptor);
 }

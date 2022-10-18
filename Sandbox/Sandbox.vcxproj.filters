@@ -18,7 +18,7 @@
     <ClInclude Include="Sandbox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CSBind.h">
+    <ClInclude Include="Mappings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MonoSystem.h">
@@ -35,7 +35,7 @@
     <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CSBind.cpp">
+    <ClCompile Include="Mappings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MonoSystem.cpp">
