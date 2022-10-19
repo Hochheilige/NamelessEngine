@@ -15,9 +15,12 @@ public:
 	//TODO check? throw error?
 	MonoClass* FindClass(const char* name_space, const char* className) const;
 	MonoMethodDesc* MakeMethodDescriptor(const char* descriptor, bool includeNamespace) const;
-	MonoMethod* GetMethodByClass(MonoClass* clazz, MonoMethodDesc* desc) const;
+	MonoMethod* GetMethod(MonoClass* clazz, MonoMethodDesc* desc) const;
+	MonoMethod* GetMethod(MonoClass* clazz, const char* methodName, int paramCount) const;
+	MonoMethod* GetMethod(const char* nameSpace, const char* className, const char* desc) const;
+	MonoMethod* GetVirtualMethod(const char* earliestAncestorNamespace, const char* earliestAncestorClassName,
+	                             const char* methodDesc, MonoObject* obj) const;
 	MonoObject* InvokeMethod(MonoMethod* method, void* obj, void** params, MonoObject** exc);
-	MonoMethod* GetMethod(const char* nameSpace, const char* className, const char* desc);
 	void PrintAssemblyTypes(MonoAssembly* assembly);
 
 	MonoDomain* rootDomain = nullptr;

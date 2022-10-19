@@ -12,6 +12,7 @@ namespace Scripts.Tests
         internal override void OnLoad()
         {
             Console.WriteLine("Me booted, kek.");
+            Console.Out.Flush();
         }
     }
 }

@@ -3,9 +3,6 @@
 #include "Game.h"
 #include "GameComponent.h"
 #include "MonoSystem.h"
-#include <mono/jit/jit.h>
-#include <mono/metadata/assembly.h>
-#include <mono/metadata/debug-helpers.h>
 
 class Sandbox : public Game
 {
@@ -30,6 +27,7 @@ private:
 	void LoadGameFacade();
 
 	class MonoSystem* mono;
+	MonoObject* csGameInstance;
 
 	class BoxMesh* boxMesh;
 	class CircleMesh* circleMesh;

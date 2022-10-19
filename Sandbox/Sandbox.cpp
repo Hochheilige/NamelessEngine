@@ -70,9 +70,15 @@ MeshRenderer* Sandbox::CreateSphereObject(float trans_x, float trans_y, float tr
 }
 
 void Sandbox::LoadGameFacade() {
-	auto method = mono->GetMethod("Scripts.Internal", "Loader", "Boot()");
-	mono->InvokeMethod(method, nullptr, nullptr, nullptr);
-	//TODO uncomment 
+	const auto mLoader_Boot = mono->GetMethod("Scripts.Internal", "Loader", "Boot()");
+	csGameInstance = mono->InvokeMethod(mLoader_Boot, nullptr, nullptr, nullptr);
+
+	//TODO
+	/*const auto mGame_OnSpecifyEngineSettings = mono->GetVirtualMethod("Scripts", "Game", "OnSpecifyEngineSettings(Scripts.EngineSettings.Builder)", csGameInstance);
+	mono->InvokeMethod(mGame_OnSpecifyEngineSettings, csGameInstance, nullptr, nullptr);*/
+
+	const auto mGame_Load = mono->GetVirtualMethod("Scripts", "Game", "OnLoad()", csGameInstance);
+	mono->InvokeMethod(mGame_Load, csGameInstance, nullptr, nullptr);
 }
 
 void Sandbox::PrepareResources()
@@ -152,6 +158,9 @@ void Sandbox::PrepareResources()
 
 void Sandbox::Update(float DeltaTime)
 {
+	const auto mGame_Update = mono->GetVirtualMethod("Scripts", "Game", "OnUpdate()", csGameInstance);
+	mono->InvokeMethod(mGame_Update, csGameInstance, nullptr, nullptr);
+
 	InputDevice& input = *Game::GetInstance()->GetInputDevice();
 
 	static float pressTime = GetTotalElapsedTime();

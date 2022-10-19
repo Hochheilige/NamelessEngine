@@ -1,8 +1,8 @@
 #include "MonoSystem.h"
 #include "Mappings.h"
 #include <filesystem>
-#include <fstream>
 
+//TODO move to GameFramework
 MonoSystem::MonoSystem()
 {
 	auto exePath = __argv[0];
@@ -10,10 +10,6 @@ MonoSystem::MonoSystem()
 	auto parentPath = path.parent_path().string();
 	auto result = parentPath.c_str();
 
-	std::cout << result << std:: endl;
-
-
-	//mono_set_dirs(result, result);
 	mono_set_assemblies_path((parentPath + "/mono/lib/4.5").c_str());
 
 	//TODO add exceptions/message if domain/assembly/image can't be loaded
@@ -54,18 +50,17 @@ MonoMethodDesc* MonoSystem::MakeMethodDescriptor(const char* descriptor, bool in
 	return mono_method_desc_new(descriptor, includeNamespace);
 }
 
-MonoMethod* MonoSystem::GetMethodByClass(MonoClass* clazz, MonoMethodDesc* desc) const
+MonoMethod* MonoSystem::GetMethod(MonoClass* clazz, MonoMethodDesc* desc) const
 {
 	return mono_method_desc_search_in_class(desc, clazz);
 }
 
-MonoObject* MonoSystem::InvokeMethod(MonoMethod* method, void* obj, void** params,
-	MonoObject** exception) 
+MonoMethod* MonoSystem::GetMethod(MonoClass* clazz, const char* methodName, int paramCount) const
 {
-	return mono_runtime_invoke(method, obj, params, exception);
+	return mono_class_get_method_from_name(clazz, methodName, paramCount);
 }
 
-MonoMethod* MonoSystem::GetMethod(const char* nameSpace, const char* className, const char* desc)
+MonoMethod* MonoSystem::GetMethod(const char* nameSpace, const char* className, const char* desc) const
 {
 	const auto clazz = FindClass(nameSpace, className);
 
@@ -76,7 +71,19 @@ MonoMethod* MonoSystem::GetMethod(const char* nameSpace, const char* className, 
 	fullDesc.append(desc);
 
 	const auto desciptor = MakeMethodDescriptor(fullDesc.c_str(), true);
-	return GetMethodByClass(clazz, desciptor);
+	return GetMethod(clazz, desciptor);
+}
+
+MonoMethod* MonoSystem::GetVirtualMethod(const char* earliestAncestorNamespace, const char* earliestAncestorClassName, const char* methodDesc, MonoObject* obj) const
+{
+	auto baseMethod = GetMethod(earliestAncestorNamespace, earliestAncestorClassName, methodDesc);
+	return mono_object_get_virtual_method(obj, baseMethod);
+}
+
+MonoObject* MonoSystem::InvokeMethod(MonoMethod* method, void* obj, void** params,
+	MonoObject** exception)
+{
+	return mono_runtime_invoke(method, obj, params, exception);
 }
 
 void MonoSystem::PrintAssemblyTypes(MonoAssembly* assembly) {

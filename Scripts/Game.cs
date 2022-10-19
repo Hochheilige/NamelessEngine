@@ -44,7 +44,7 @@ namespace Scripts
          */
         internal virtual void OnLoad()
         {
-
+            Console.WriteLine("Hello!");
         }
 
         /**
@@ -58,6 +58,7 @@ namespace Scripts
         /**
          * Called upon exit
          */
+        //TODO add calling from cpp
         internal virtual void OnExit()
         {
 
@@ -65,7 +66,7 @@ namespace Scripts
 
         /**
          * Allows to modify engine settings upon game loading
-         */
+         *///TODO add calling from cpp
         internal virtual void OnSpecifyEngineSettings(EngineSettings.Builder settingsBuilder)
         {
 
