@@ -4,6 +4,7 @@
 #include "GameComponent.h"
 
 #include "btBulletDynamicsCommon.h"
+#include "RigidBodyComponent.h"
 
 class Sandbox : public Game
 {
@@ -47,14 +48,16 @@ private:
 
 	MeshRenderer* updateBox;
 
-	// Base physics objects
-	btDefaultCollisionConfiguration* collisionConfiguration = nullptr;
-	btCollisionDispatcher* dispatcher = nullptr;
-	btBroadphaseInterface* overlappingPairCache = nullptr;
-	btSequentialImpulseConstraintSolver* solver = nullptr;
-	btDiscreteDynamicsWorld* dynamicWorld = nullptr;
+	//// Base physics objects
+	//btDefaultCollisionConfiguration* collisionConfiguration = nullptr;
+	//btCollisionDispatcher* dispatcher = nullptr;
+	//btBroadphaseInterface* overlappingPairCache = nullptr;
+	//btSequentialImpulseConstraintSolver* solver = nullptr;
+	//btDiscreteDynamicsWorld* dynamicWorld = nullptr;
 
-	btAlignedObjectArray<btCollisionShape*> collisionShapes;
+	//btAlignedObjectArray<btCollisionShape*> collisionShapes;
+
+	std::vector<RigidBodyComponent*> rigidBodies;
 
 	std::vector<MeshRenderer*> box;
 	MeshRenderer* bunny;

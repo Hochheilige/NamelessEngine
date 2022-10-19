@@ -65,6 +65,63 @@ MeshRenderer* Sandbox::CreateSphereObject(float trans_x, float trans_y, float tr
 	return object;
 }
 
+RigidBodyComponent* CreateCubeComponent(float trans_x, float trans_y, float trans_z, float rot_x, float rot_y, float rot_z, float scale_x, float scale_y, float scale_z, float mass)
+{
+	auto physics = PhysicsModuleData::GetInstance();
+
+	RigidBodyComponent* comp = new RigidBodyComponent();
+
+	comp->Shape = new btBoxShape(btVector3(scale_x / 2, scale_y / 2, scale_z / 2));
+	physics->GetCollisionShapes().push_back(comp->Shape);
+
+	comp->Transform.setIdentity();
+	comp->Transform.setOrigin(btVector3(trans_x, trans_y, trans_z));
+	comp->Transform.setRotation(btQuaternion(rot_x, rot_y, rot_z));
+
+	comp->Mass = mass;
+
+	btVector3 localInertia = btVector3(0, 0, 0);
+	if (mass != 0.0f)
+		comp->Shape->calculateLocalInertia(mass, localInertia);
+
+	btDefaultMotionState* myMotionState = new btDefaultMotionState(comp->Transform);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(comp->Mass, myMotionState, comp->Shape, localInertia);
+	comp->Body = new btRigidBody(rbInfo);
+
+	physics->GetDynamicsWorls()->addRigidBody(comp->Body);
+
+	return comp;
+}
+
+RigidBodyComponent* CreateSphereComponent(float trans_x, float trans_y, float trans_z, float rot_x, float rot_y, float rot_z, float scale_x, float scale_y, float scale_z, float mass)
+{
+	auto physics = PhysicsModuleData::GetInstance();
+
+	RigidBodyComponent* comp = new RigidBodyComponent();
+
+
+	comp->Shape = new btSphereShape(scale_x);
+	physics->GetCollisionShapes().push_back(comp->Shape);
+
+	comp->Transform.setIdentity();
+	comp->Transform.setOrigin(btVector3(trans_x, trans_y, trans_z));
+	comp->Transform.setRotation(btQuaternion(rot_x, rot_y, rot_z));
+
+	comp->Mass = mass;
+
+	btVector3 localInertia = btVector3(0, 0, 0);
+	if (mass != 0.0f)
+		comp->Shape->calculateLocalInertia(mass, localInertia);
+
+	btDefaultMotionState* myMotionState = new btDefaultMotionState(comp->Transform);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(comp->Mass, myMotionState, comp->Shape, localInertia);
+	comp->Body = new btRigidBody(rbInfo);
+
+	physics->GetDynamicsWorls()->addRigidBody(comp->Body);
+
+	return comp;
+}
+
 void Sandbox::PrepareResources()
 {
 	Game::PrepareResources();
@@ -117,6 +174,8 @@ void Sandbox::PrepareResources()
 	Vector4 vec(0.0f, 0.0f, 1.0f, 1.0f);
 	vec = Vector4::Transform(vec, OrthoCamera->GetProjectionMatrix());
 
+	CreateCubeObject(5, -0.5, 0, 0, 0, 0, 10, 0.5, 10);
+
 	CreateSphereObject(3.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1, 1, 1);
 
 	for (int i = 0; i < 5; ++i)
@@ -124,7 +183,7 @@ void Sandbox::PrepareResources()
 			for (int k = 0; k < 10; ++k)
 				box.push_back(CreateCubeObject(i, 40.0f + j, k, 45.0f, 45.0f, 0.0f, 1.0f, 1.0f, 1.0f));
 
-	CreateCubeObject(5, -0.5, 0, 0, 0, 0, 10, 0.5, 10);
+	
 
 	const char* bunny_path = "..\\Assets\\stanford-bunny.fbx";
 	bunny = CreateObject(0, 1, 0, 0, 0, 0, 0.005, 0.005, 0.005, bunny_path);
@@ -140,69 +199,40 @@ void Sandbox::PrepareResources()
 
 	// Physics part
 
-	// Base objects for every physics scenea
-	collisionConfiguration = new btDefaultCollisionConfiguration();
-	dispatcher = new btCollisionDispatcher(collisionConfiguration);
-	overlappingPairCache = new btDbvtBroadphase();
-	solver = new btSequentialImpulseConstraintSolver();
-	dynamicWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
-
-	dynamicWorld->setGravity(btVector3(0, -10, 0));
 
 	// Create rigid bodies
 	
 	// static platform
-	btCollisionShape* platform = new btBoxShape(btVector3(5, 0.25, 5));
-	collisionShapes.push_back(platform);
+	RigidBodyComponent* platform = CreateCubeComponent(5, -0.5, 0, 0, 0, 0, 10, 0.5, 10, 0);
+	rigidBodies.push_back(platform);
+	//btCollisionShape* platform = new btBoxShape(btVector3(5, 0.25, 5));
+	//collisionShapes.push_back(platform);
 
-	btTransform platformTransform;
-	platformTransform.setIdentity();
-	platformTransform.setOrigin(btVector3(5, -0.5, 0));
-	btScalar platformMass(0);
+	//btTransform platformTransform;
+	//platformTransform.setIdentity();
+	//platformTransform.setOrigin(btVector3(5, -0.5, 0));
+	//btScalar platformMass(0);
 
-	bool isDynamic = (platformMass != 0.0f);
+	//bool isDynamic = (platformMass != 0.0f);
 
-	btVector3 localInertia(0, 0, 0);
-	if (isDynamic)
-		platform->calculateLocalInertia(platformMass, localInertia);
+	//btVector3 localInertia(0, 0, 0);
+	//if (isDynamic)
+	//	platform->calculateLocalInertia(platformMass, localInertia);
 
-	btDefaultMotionState* platformMotionState = new btDefaultMotionState(platformTransform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(platformMass, platformMotionState, platform, localInertia);
-	btRigidBody* body = new btRigidBody(rbInfo);
+	//btDefaultMotionState* platformMotionState = new btDefaultMotionState(platformTransform);
+	//btRigidBody::btRigidBodyConstructionInfo rbInfo(platformMass, platformMotionState, platform, localInertia);
+	//btRigidBody* body = new btRigidBody(rbInfo);
 
-	dynamicWorld->addRigidBody(body);
+	//dynamicWorld->addRigidBody(body);
 
 	// Dynamic cube
-	btCollisionShape* box = new btBoxShape(btVector3(0.5, 0.5, 0.5));
-	btCollisionShape* sphere = new btSphereShape(1);
+	//btCollisionShape* box = new btBoxShape(btVector3(0.5, 0.5, 0.5));
 
-	/*btCollisionShape* model = new btConvexHullShape(bunny.);*/
-	
-	collisionShapes.push_back(sphere);
-
-	btTransform startTransform;
-	startTransform.setIdentity();
-	startTransform.setOrigin(btVector3(3, 10, 0));
-
-	btScalar mass(1.f);
-
-	//rigidbody is dynamic if and only if mass is non zero, otherwise static
-	isDynamic = (mass != 0.f);
-
-	localInertia = btVector3(0, 0, 0);
-	if (isDynamic)
-		sphere->calculateLocalInertia(mass, localInertia);
+	RigidBodyComponent* sphere = CreateSphereComponent(3, 10, 0, 0, 0, 0, 1, 1, 1, 1);
+	rigidBodies.push_back(sphere);
 
 
-
-	//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
-	btRigidBody::btRigidBodyConstructionInfo rbSphereInfo(mass, myMotionState, sphere, localInertia);
-	btRigidBody* sphereBody = new btRigidBody(rbSphereInfo);
-
-	dynamicWorld->addRigidBody(sphereBody);
-
-
+	RigidBodyComponent* box;
 	for (int i = 0; i < 5; ++i)
 	{
 		for (int j = 0; j < 5; ++j)
@@ -210,32 +240,8 @@ void Sandbox::PrepareResources()
 			for (int k = 0; k < 10; ++k)
 			{
 
-
-				collisionShapes.push_back(box);
-
-				/// Create Dynamic Objects
-				btTransform startTransform;
-				startTransform.setIdentity();
-				startTransform.setRotation(btQuaternion(45, 45, 0));
-				startTransform.setOrigin(btVector3(i, 40 + j, k));
-
-				btScalar mass(1.f);
-
-				//rigidbody is dynamic if and only if mass is non zero, otherwise static
-				isDynamic = (mass != 0.f);
-
-				localInertia = btVector3(0, 0, 0);
-				if (isDynamic)
-					box->calculateLocalInertia(mass, localInertia);
-
-
-
-				//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-				btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
-				btRigidBody::btRigidBodyConstructionInfo rbBoxInfo(mass, myMotionState, box, localInertia);
-				btRigidBody* boxBody = new btRigidBody(rbBoxInfo);
-
-				dynamicWorld->addRigidBody(boxBody);
+				box = CreateCubeComponent(i, 40 + j, k, 45, 45, 0, 1, 1, 1, 1);
+				rigidBodies.push_back(box);
 			}
 		}
 	}
@@ -245,23 +251,16 @@ void Sandbox::PrepareResources()
 void Sandbox::Update(float DeltaTime)
 {
 	// Physics Simulation
-	dynamicWorld->stepSimulation(DeltaTime);
+	auto physics = PhysicsModuleData::GetInstance();
+	physics->OnUpdate(DeltaTime);
 
-	for (int i = 0; i < 251; ++i)
+	int i = 0;
+	for (auto& body : rigidBodies)
 	{
-		btCollisionObject* obj = dynamicWorld->getCollisionObjectArray()[i + 1];
-		btRigidBody* body = btRigidBody::upcast(obj);
-		btTransform trans;
-		if (body && body->getMotionState())
-		{
-			body->getMotionState()->getWorldTransform(trans);
-		}
-		else
-		{
-			trans = obj->getWorldTransform();
-		}
+		btTransform trans = body->Update();
 		GameComponents[i]->mTransform.Position = Vector3(trans.getOrigin().x(), trans.getOrigin().y(), trans.getOrigin().z());
 		GameComponents[i]->mTransform.Rotation = Quaternion(trans.getRotation());
+		++i;
 	}
 
 	InputDevice& input = *Game::GetInstance()->GetInputDevice();

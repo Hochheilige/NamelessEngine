@@ -140,9 +140,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="PhysicsModule.h" />
+    <ClInclude Include="RigidBodyComponent.h" />
     <ClInclude Include="Sandbox.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="PhysicsModule.cpp" />
+    <ClCompile Include="RigidBodyComponent.cpp" />
     <ClCompile Include="Sandbox.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>

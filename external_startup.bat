@@ -2,7 +2,7 @@ TITLE External Libraries Build
 
 cd External\assimp
 
-ECHO Building Assimp static library
+ECHO Building Assimp library
 
 rm CMakeCache.txt
 cmake CMakeLists.txt
