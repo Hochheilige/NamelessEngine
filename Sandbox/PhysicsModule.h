@@ -6,6 +6,8 @@ class PhysicsModuleData
 {
 public:
 
+    ~PhysicsModuleData();
+
     static PhysicsModuleData* GetInstance();
 
     void OnUpdate(float deltaTime);

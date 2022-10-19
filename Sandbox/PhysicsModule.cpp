@@ -16,6 +16,22 @@ PhysicsModuleData::PhysicsModuleData()
     World->setGravity(btVector3(0.0f, -9.8f, 0.0f));
 }
 
+PhysicsModuleData::~PhysicsModuleData()
+{
+    for (int j = 0; j < collisionShapes.size(); j++)
+    {
+        btCollisionShape* shape = collisionShapes[j];
+        collisionShapes[j] = 0;
+        delete shape;
+    }
+
+    delete World;
+    delete Solver;
+    delete Broadphase;
+    delete Dispatcher;
+    delete CollisionConfiguration;
+}
+
 PhysicsModuleData* PhysicsModuleData::GetInstance()
 {
     if (instance == nullptr)

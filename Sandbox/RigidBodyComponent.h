@@ -8,6 +8,8 @@ class RigidBodyComponent
 public:
 	RigidBodyComponent(){}
 
+	~RigidBodyComponent();
+
 	void Init();
 	void OnRegister();
 
