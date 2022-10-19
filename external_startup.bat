@@ -1,8 +1,16 @@
 TITLE External Libraries Build
 
-cd External\assimp
+cd External
 
 ECHO Building Assimp library
+
+XCOPY "CMakeLists.assimp" "assimp\" /y
+
+cd assimp
+
+rm CMakeLists.txt
+
+ren *.assimp *.txt
 
 rm CMakeCache.txt
 cmake CMakeLists.txt
