@@ -213,7 +213,7 @@ void Game::Run()
 		PrevTime = now;
 
 		// Process input
-		Input->PreInputProcess();
+		Input->Prepare();
 		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);

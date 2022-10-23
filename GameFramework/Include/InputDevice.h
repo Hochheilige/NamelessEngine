@@ -2,6 +2,7 @@
 
 #include <unordered_set>
 #include <Windows.h>
+#include "Mouse.h"
 
 class InputDevice
 {
@@ -10,17 +11,10 @@ public:
 
 	LRESULT HandleMessage(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
 
-	void PreInputProcess();
-
-	void GetMouseDelta(float& OutX, float& OutY);
-
+	Mouse* GetMouse();
+	void Prepare();
 private:
+	Mouse mouse;
 	std::unordered_set<uint64_t> PressedKeys;
-
-	float MouseMoveDeltaX = 0.0f;
-	float MouseMoveDeltaY = 0.0f;
-
-	int PrevPosX = 0;
-	int PrevPosY = 0;
 };
 

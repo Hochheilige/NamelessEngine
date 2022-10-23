@@ -35,7 +35,7 @@ void OrbitCameraController::Update(float DeltaTime)
 
 	float deltaX;
 	float deltaY;
-	input.GetMouseDelta(deltaX, deltaY);
+	input.GetMouse()->GetDeltas(deltaX, deltaY);
 
 	Pitch += DeltaTime * deltaY * RotSpeedPitch;
 	Pitch = Pitch < -MaxPitch ? -MaxPitch : Pitch > MaxPitch ? MaxPitch : Pitch;

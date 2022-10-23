@@ -29,31 +29,31 @@ LRESULT InputDevice::HandleMessage(HWND hwnd, UINT umessage, WPARAM wparam, LPAR
 	case WM_KEYUP:
 		PressedKeys.erase(wparam);
 		return 0;
-
+	case WM_ACTIVATE:
+	case WM_INPUT:
 	case WM_MOUSEMOVE:
-	{
-		DisplayWin32* disp = Game::GetInstance()->GetDisplay();
-		const int posX = GET_X_LPARAM(lparam);
-		const int posY = GET_Y_LPARAM(lparam);
-		MouseMoveDeltaX = (PrevPosX - posX) / static_cast<float>(disp->GetClientWidth());
-		MouseMoveDeltaY = (PrevPosY - posY) / static_cast<float>(disp->GetClientHeight());
-		PrevPosX = posX;
-		PrevPosY = posY;
-		return 0;
-	}
+	case WM_LBUTTONDOWN:
+	case WM_LBUTTONUP:
+	case WM_RBUTTONDOWN:
+	case WM_RBUTTONUP:
+	case WM_MBUTTONDOWN:
+	case WM_MBUTTONUP:
+	case WM_MOUSEWHEEL:
+	case WM_XBUTTONDOWN:
+	case WM_XBUTTONUP:
+	case WM_MOUSEHOVER:
+		mouse.ProcessMessage(umessage, wparam, lparam);
 	default:
 		return DefWindowProc(hwnd, umessage, wparam, lparam);
 	}
 }
 
-void InputDevice::PreInputProcess()
+Mouse* InputDevice::GetMouse()
 {
-	MouseMoveDeltaX = 0.0f;
-	MouseMoveDeltaY = 0.0f;
+	return &mouse;
 }
 
-void InputDevice::GetMouseDelta(float& OutX, float& OutY)
+void InputDevice::Prepare()
 {
-	OutX = MouseMoveDeltaX;
-	OutY = MouseMoveDeltaY;
+	mouse.Prepare();
 }

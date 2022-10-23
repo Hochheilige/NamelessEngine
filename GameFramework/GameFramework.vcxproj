@@ -178,6 +178,7 @@
     <ClInclude Include="Include\ShaderCompiler.h" />
     <ClInclude Include="Include\SphereCollider.h" />
     <ClInclude Include="Include\Transform.h" />
+    <ClInclude Include="Include\Mouse.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\Renderer.cpp" />
@@ -196,6 +197,7 @@
     <ClCompile Include="Src\MeshLoader.cpp" />
     <ClCompile Include="Src\MeshProxy.cpp" />
     <ClCompile Include="Src\MeshRenderer.cpp" />
+    <ClCompile Include="Src\Mouse.cpp" />
     <ClCompile Include="Src\OrbitCameraController.cpp" />
     <ClCompile Include="Src\PlaneComponent.cpp" />
     <ClCompile Include="Src\RenderingSystem.cpp" />
