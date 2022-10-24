@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Renderer.h"
+#include "Game.h"
 
 struct RenderingSystemContext;
 
@@ -8,7 +9,7 @@ class LineRenderer : public Renderer
 {
 public:
 
-	LineRenderer(Transform transform);
+	LineRenderer(std::shared_ptr<Transform> transform);
 
 	virtual void Init() override {}
 	virtual void OnRegister() override {}
@@ -31,7 +32,7 @@ class LineCircle : public LineRenderer
 {
 public:
 
-	LineCircle(Transform transform) : LineRenderer(transform)
+	LineCircle(std::shared_ptr<Transform> transform) : LineRenderer(transform)
 	{
 		struct ConstrStatic
 		{
@@ -85,7 +86,7 @@ class LineSphere : public LineRenderer
 {
 public:
 
-	LineSphere(Transform transform) : LineRenderer(transform)
+	LineSphere(std::shared_ptr<Transform> transform) : LineRenderer(transform)
 	{
 		struct ConstrStatic
 		{

@@ -9,7 +9,7 @@ public:
 	virtual void OnRegister() = 0;
 	virtual void Update(float DeltaTime) = 0;
 
-	Transform mTransform;
+	std::shared_ptr<Transform> mTransform;
 
 	friend class Game;
 

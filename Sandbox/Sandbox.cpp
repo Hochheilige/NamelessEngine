@@ -12,6 +12,7 @@
 #include "MeshLoader.h"
 #include "LightBase.h"
 #include "WICTextureLoader.h"
+#include "RigidBodyCube.h"
 
 //MeshRenderer* Sandbox::CreateObject(float trans_x, float trans_y, float trans_z,
 //	float rot_x, float rot_y, float rot_z,
@@ -178,13 +179,19 @@ void Sandbox::PrepareResources()
 
 	Transform tr;
 	tr.Position = Vector3(5, -0.5, 0);
-	tr.Rotation.SetEulerAngles(0, 0, 0);
+	tr.Rotation.SetEulerAngles(0, 45, 45);
 	tr.Scale = Vector3(1, 1, 1);
 	Actor* cube = new Actor(tr);
 	auto mesh_component = cube->AddComponent<MeshRenderer>();
 	mesh_component->SetMeshProxy(boxMeshProxy);
 	mesh_component->SetPixelShader(basicPS);
 	mesh_component->SetVertexShader(basicVS);
+	auto cube_rb = cube->AddComponent<RigidBodyCube>();
+	cube_rb->SetMass(1);
+	cube_rb->Init();
+	cube->UsePhysicsSimulation();
+
+	Actors.push_back(cube);
 
 	//CreateSphereObject(3.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1, 1, 1);
 
@@ -243,14 +250,19 @@ void Sandbox::Update(float DeltaTime)
 	auto physics = PhysicsModuleData::GetInstance();
 	physics->OnUpdate(DeltaTime);
 
-	int i = 0;
-	for (auto& body : rigidBodies)
+	for (auto actor : Actors)
 	{
-		btTransform trans = body->Update();
-		GameComponents[i]->mTransform.Position = Vector3(trans.getOrigin().x(), trans.getOrigin().y(), trans.getOrigin().z());
-		GameComponents[i]->mTransform.Rotation = Quaternion(trans.getRotation());
-		++i;
+		actor->Update(DeltaTime);
 	}
+
+	//int i = 0;
+	//for (auto& body : rigidBodies)
+	//{
+	//	btTransform trans = body->Update();
+	//	GameComponents[i]->mTransform.Position = Vector3(trans.getOrigin().x(), trans.getOrigin().y(), trans.getOrigin().z());
+	//	GameComponents[i]->mTransform.Rotation = Quaternion(trans.getRotation());
+	//	++i;
+	//}
 
 	InputDevice& input = *Game::GetInstance()->GetInputDevice();
 

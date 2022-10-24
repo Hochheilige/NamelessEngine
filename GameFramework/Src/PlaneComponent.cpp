@@ -6,7 +6,7 @@
 
 using namespace std;
 
-PlaneComponent::PlaneComponent(Transform transform) : LineRenderer(transform)
+PlaneComponent::PlaneComponent(std::shared_ptr<Transform> transform) : LineRenderer(transform)
 {	
 	struct ConstrStatic
 	{

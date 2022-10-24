@@ -167,6 +167,9 @@ protected:
 	ComPtr<ID3D11SamplerState> ShadowmapSamplerState = nullptr;
 
 
+	std::vector<Actor*> Actors;
+
+
 private:
 
 	void InitializeInternal();
@@ -199,6 +202,5 @@ private:
 
 	Camera DefaultCamera = Camera();
 
-	std::vector<Actor*> Actors;
 };
 

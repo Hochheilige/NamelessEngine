@@ -1,21 +1,25 @@
 #include "Actor.h"
 
-Actor::Actor(Transform transform) : mTransform(transform)
+#include "MeshRenderer.h"
+#include "LineRenderer.h"
+#include "RigidBodyComponent.h"
+
+Actor::Actor(Transform transform) : mTransform(std::make_shared<Transform>(transform))
 {}
 
 Transform Actor::GetTransform() const
 {
-	return mTransform;
+	return *mTransform;
 }
 
 Transform Actor::GetWorldTransform() const
 {
 	if (Parent == nullptr)
 	{
-		return mTransform;
+		return *mTransform;
 	}
 
-	return mTransform.TransformToWorld(Parent->GetWorldTransform());
+	return mTransform->TransformToWorld(Parent->GetWorldTransform());
 }
 
 Actor* Actor::GetParent() const
@@ -63,14 +67,76 @@ void Actor::AddChild(Actor* Child)
 
 void Actor::Update(float DeltaTime)
 {
-	for (auto component : Components)
+	if (is_physics_enable)
 	{
-		component->Update(DeltaTime);
+		auto rigid_body_comp = std::find_if(Components.begin(), Components.end(),
+			[](Component* comp) {return dynamic_cast<RigidBodyComponent*>(comp); }
+		);
+		(*rigid_body_comp)->Update(DeltaTime);
+
+		for (auto component : Components)
+		{
+			if (*rigid_body_comp != component)
+				component->Update(DeltaTime);
+		}
 	}
+	else
+	{
+		for (auto component : Components)
+		{
+			component->Update(DeltaTime);
+		}
+	}
+
 }
 
 void Actor::RemoveChild(Actor* Child)
 {
 	Children.erase(remove(Children.begin(), Children.end(), Child), Children.end());
+}
+
+void Actor::UseDebugRendererOnly()
+{
+	is_debug_renderer_enable = true;
+	if (is_mesh_renderer_enable)
+	{
+		auto mesh_renderer = std::find_if(Components.begin(), Components.end(),
+			[](Component* comp) {return dynamic_cast<MeshRenderer*>(comp); }
+		);
+		Game::GetInstance()->MyRenderingSystem->UnregisterRenderer(
+			dynamic_cast<MeshRenderer*>(*mesh_renderer)
+		);
+		is_mesh_renderer_enable = false;
+	}
+}
+
+void Actor::UseMeshRendererOnly()
+{
+	is_mesh_renderer_enable = true;
+	if (is_debug_renderer_enable)
+	{
+		auto line_renderer = std::find_if(Components.begin(), Components.end(),
+			[](Component* comp) {return dynamic_cast<LineRenderer*>(comp); }
+		);
+		Game::GetInstance()->MyRenderingSystem->UnregisterRenderer(
+			dynamic_cast<LineRenderer*>(*line_renderer)
+		);
+		is_debug_renderer_enable = false;
+	}
+}
+
+void Actor::UseDebugAndMeshRenderer()
+{
+}
+
+void Actor::UsePhysicsSimulation()
+{
+	is_physics_enable = true;
+}
+
+void Actor::UnUsePhysicsSimulation()
+{
+	is_physics_enable = false;
+	// TODO remove component from physics world
 }
 
