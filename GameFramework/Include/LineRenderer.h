@@ -8,7 +8,11 @@ class LineRenderer : public Renderer
 {
 public:
 
-	LineRenderer();
+	LineRenderer(Transform transform);
+
+	virtual void Init() override {}
+	virtual void OnRegister() override {}
+	virtual void Update(float DeltaTime) override {}
 
 	virtual void Render(const RenderingSystemContext& RSContext) override;
 
@@ -27,7 +31,7 @@ class LineCircle : public LineRenderer
 {
 public:
 
-	LineCircle()
+	LineCircle(Transform transform) : LineRenderer(transform)
 	{
 		struct ConstrStatic
 		{
@@ -81,7 +85,7 @@ class LineSphere : public LineRenderer
 {
 public:
 
-	LineSphere()
+	LineSphere(Transform transform) : LineRenderer(transform)
 	{
 		struct ConstrStatic
 		{
@@ -92,7 +96,7 @@ public:
 			{
 				std::vector<Vector3> points;
 
-				int numPoints = 20;
+				int numPoints = 50;
 				const float deltaAlpha = XM_2PI / static_cast<float>(numPoints);
 				for (int i = 0; i <= numPoints; ++i)
 				{

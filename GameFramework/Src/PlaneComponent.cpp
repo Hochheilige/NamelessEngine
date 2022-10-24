@@ -6,7 +6,7 @@
 
 using namespace std;
 
-PlaneComponent::PlaneComponent()
+PlaneComponent::PlaneComponent(Transform transform) : LineRenderer(transform)
 {	
 	struct ConstrStatic
 	{

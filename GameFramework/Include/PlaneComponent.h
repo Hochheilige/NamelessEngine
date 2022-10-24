@@ -6,6 +6,6 @@
 class PlaneComponent : public LineRenderer
 {
 public:
-	PlaneComponent();
+	PlaneComponent(Transform transform);
 
 };

@@ -22,9 +22,11 @@ public:
 	void   AddChild(Actor* Child);
 
 	template<typename T>
-	void AddComponent()
+	T* AddComponent()
 	{
-		Components.push_back(new T(mTransform));
+		T* component = new T(mTransform);
+		Components.push_back(component);
+		return component;
 	}
 
 	template<typename T>
@@ -32,7 +34,7 @@ public:
 	{
 
 		Components.erase(remove_if(Components.begin(), Components.end(),
-			[](Component* comp) {return dynamic_cast<T>(comp); }), Components.end())
+			[](Component* comp) {return dynamic_cast<T>(comp); }), Components.end());
 	}
 
 	void RemoveChild(Actor* Child);

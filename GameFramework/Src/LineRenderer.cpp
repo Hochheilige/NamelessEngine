@@ -3,9 +3,11 @@
 
 #include "RenderingSystem.h"
 
-LineRenderer::LineRenderer()
+LineRenderer::LineRenderer(Transform transform)
 {
 	bCastShadow = false;
+	mTransform = transform;
+	Game::GetInstance()->MyRenderingSystem->RegisterRenderer(this);
 }
 
 void LineRenderer::Render(const RenderingSystemContext& RSContext)
@@ -30,7 +32,7 @@ void LineRenderer::Render(const RenderingSystemContext& RSContext)
 
 	// Update constant buffer with world matrix
 	CBPerObject cbData;
-	cbData.ObjectToWorld = GetWorldTransform().GetTransformMatrixTransposed();
+	cbData.ObjectToWorld = mTransform.GetTransformMatrixTransposed();//GetWorldTransform().GetTransformMatrixTransposed();
 	cbData.Color = mColor;
 
 	D3D11_MAPPED_SUBRESOURCE resource = {};
@@ -45,6 +47,9 @@ void LineRenderer::Render(const RenderingSystemContext& RSContext)
 
 
 	context->IASetVertexBuffers(0, 1, VertexBuffer.GetAddressOf(), strides, offsets);
+
+	context->PSSetConstantBuffers(2, 1, game->GetPerObjectConstantBuffer().GetAddressOf());
+	context->VSSetConstantBuffers(2, 1, game->GetPerObjectConstantBuffer().GetAddressOf());
 
 	context->Draw(numVerts, 0);
 }

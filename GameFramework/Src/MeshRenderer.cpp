@@ -8,6 +8,17 @@
 
 #include <d3d11.h>
 
+MeshRenderer::MeshRenderer(Transform transform)
+{
+	mTransform = transform;
+	Game::GetInstance()->MyRenderingSystem->RegisterRenderer(this);
+}
+
+void MeshRenderer::Update(float DeltaTime)
+{
+	// get transform from physics if needed
+}
+
 void MeshRenderer::SetMeshProxy(MeshProxy* InMeshProxy)
 {
 	mMeshProxy = InMeshProxy;
@@ -48,9 +59,9 @@ void MeshRenderer::Render(const RenderingSystemContext& RSContext)
 
 	// Update constant buffer with world matrix
 	CBPerObject cbData;
-	cbData.ObjectToWorld = GetWorldTransform().GetTransformMatrixTransposed();
+	cbData.ObjectToWorld = mTransform.GetTransformMatrixTransposed();//GetWorldTransform().GetTransformMatrixTransposed();
 	cbData.Color = mColor;
-	cbData.NormalObjectToWorld = GetWorldTransform().GetNormalMatrixTransposed();
+	cbData.NormalObjectToWorld = mTransform.GetNormalMatrixTransposed();//GetWorldTransform().GetNormalMatrixTransposed();
 	cbData.Mat = Mat;
 
 	D3D11_MAPPED_SUBRESOURCE resource = {};

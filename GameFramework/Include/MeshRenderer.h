@@ -10,6 +10,13 @@
 class MeshRenderer : public Renderer
 {
 public:
+
+	MeshRenderer(Transform transform);
+
+	virtual void Init() override {}
+	virtual void OnRegister() override {}
+	virtual void Update(float DeltaTime) override;
+
 	void SetMeshProxy(class MeshProxy* InMeshProxy);
 
 	void SetAlbedoSRV(ComPtr<ID3D11ShaderResourceView> InAlbedoSRV);

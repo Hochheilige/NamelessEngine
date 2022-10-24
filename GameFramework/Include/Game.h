@@ -13,6 +13,8 @@
 
 #include "Camera.h"
 
+#include "Actor.h"
+
 class RenderingSystem;
 
 using namespace Microsoft::WRL;
@@ -84,14 +86,14 @@ public:
 
 		comp->SetParent(Parent);
 
-		if constexpr (std::is_base_of<class Renderer, T>::value)
-		{
-			MyRenderingSystem->RegisterRenderer(comp);
-		}
-		else if constexpr (std::is_base_of<class Collider, T>::value)
-		{
-			Colliders.push_back(comp);
-		}
+		//if constexpr (std::is_base_of<class Renderer, T>::value)
+		//{
+		//	MyRenderingSystem->RegisterRenderer(comp);
+		//}
+		//else if constexpr (std::is_base_of<class Collider, T>::value)
+		//{
+		//	Colliders.push_back(comp);
+		//}
 
 		return comp;
 	}
@@ -121,7 +123,7 @@ public:
 
 	ComPtr<ID3D11SamplerState> GetDefaultSamplerState() { return DefaultSamplerState; }
 
-	void DestroyComponent(GameComponent* GC);
+	//void DestroyComponent(GameComponent* GC);
 
 	DirLight DirectiLight;
 	Camera LightCam;
@@ -197,6 +199,6 @@ private:
 
 	Camera DefaultCamera = Camera();
 
-
+	std::vector<Actor*> Actors;
 };
 
