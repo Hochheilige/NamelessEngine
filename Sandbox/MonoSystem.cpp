@@ -74,6 +74,13 @@ MonoMethod* MonoSystem::GetMethod(const char* nameSpace, const char* className, 
 	return GetMethod(clazz, desciptor);
 }
 
+MonoObject* MonoSystem::CreateClassInstance(MonoClass* klass)
+{
+	MonoObject* classInstance = mono_object_new(appDomain, klass);
+	mono_runtime_object_init(classInstance);
+	return classInstance;
+}
+
 MonoMethod* MonoSystem::GetVirtualMethod(const char* earliestAncestorNamespace, const char* earliestAncestorClassName, const char* methodDesc, MonoObject* obj) const
 {
 	auto baseMethod = GetMethod(earliestAncestorNamespace, earliestAncestorClassName, methodDesc);

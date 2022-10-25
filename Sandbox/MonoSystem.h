@@ -21,6 +21,7 @@ public:
 	MonoMethod* GetVirtualMethod(const char* earliestAncestorNamespace, const char* earliestAncestorClassName,
 	                             const char* methodDesc, MonoObject* obj) const;
 	MonoObject* InvokeMethod(MonoMethod* method, void* obj, void** params, MonoObject** exc);
+	MonoObject* CreateClassInstance(MonoClass* klass);
 	void PrintAssemblyTypes(MonoAssembly* assembly);
 
 	MonoDomain* rootDomain = nullptr;

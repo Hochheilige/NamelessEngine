@@ -12,8 +12,8 @@ namespace Scripts
 
         void OnUnregister();
 
-        float GetParentTransform();
+        Transform GetParentTransform();
 
-        void Update();
+        void Update(float deltaTime);
     }
 }

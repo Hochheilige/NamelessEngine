@@ -1,17 +1,22 @@
 #pragma once
 #include "MonoSystem.h"
+#include <Transform.h>
 
-class AudioComponent //Нужен будет общий интерфейс IComponent
+class AudioComponent //РќСѓР¶РµРЅ Р±СѓРґРµС‚ РѕР±С‰РёР№ РёРЅС‚РµСЂС„РµР№СЃ IComponent
 {
 public:
-	AudioComponent(MonoImage* image);
+	AudioComponent(MonoSystem* mono);
 	void Init();
 	void OnRegister();
+	void GetTransform(MonoSystem* mono);
 
-	//Что-то такое должно быть
+	//Р§С‚Рѕ-С‚Рѕ С‚Р°РєРѕРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ
 	//GameObject GetParent();
+	private:
+	MonoSystem* _mono;
 
+	MonoClass* _klass;
 
-	MonoClass* ptrMainClass;
+	MonoObject* _instance;
 };
 

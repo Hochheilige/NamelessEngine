@@ -14,6 +14,7 @@
 #include "WICTextureLoader.h"
 #include "Mappings.h"
 #include "AudioComponent.h"
+#include "ScriptObject.h"
 #include "windows.h"
 #include "mono/metadata/debug-helpers.h"
 
@@ -96,8 +97,12 @@ void Sandbox::PrepareResources()
 	sphereMesh = new SphereMesh();
 	sphereMeshProxy = sphereMesh->CreateMeshProxy();
 
-	auto audioComponent = new AudioComponent(mono->GetImage());
-	audioComponent->OnRegister();
+	auto obj = new ScriptObject("Cargo", mono);
+	auto m = obj->GetTransform();
+	std::cout << m.Position.x;
+	obj->Update(2.0f);
+	std::cout << m.Position.x;
+	auto m2 = obj->GetTransform();
 
 	// create shaders
 	ShaderCompiler sc;

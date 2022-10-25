@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpDX;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -7,8 +8,24 @@ using System.Threading.Tasks;
 
 namespace Scripts
 {
-    public class AudioComponent //: IComponent
+    public class AudioComponent : IComponent
     {
+        Transform transform;
+        GameObject parent;
+
+        public AudioComponent(GameObject parent)
+        {
+            this.parent = parent;
+            transform = new Transform()
+            {
+                Position = new Vector3(1, 1, 1),
+                Rotation = new Vector4(2, 2, 2, 2),
+                Scale = new Vector3(3, 3, 3)
+            };
+
+            OnRegister();        
+        }
+
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public static extern void InternalOnRegister();
 
@@ -18,12 +35,12 @@ namespace Scripts
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public static extern void InternalOnUnregister();
 
-        public float GetParentTransform()
+        public Transform GetParentTransform()
         {
-            return 10.0f;
+            return parent.Transform;
         }
 
-        public static void OnRegister()
+        public void OnRegister()
         {
             InternalOnRegister();
         }
@@ -33,9 +50,11 @@ namespace Scripts
             InternalOnUnregister();
         }
 
-        public void Update()
+        public void Update(float deltaTime)
         {
-            throw new NotImplementedException();
+            parent.Transform.Position.X += 1f;
+            parent.Transform.Rotation.X += 1f;
+            parent.Transform.Scale.X += 1f;
         }
     }
 }
