@@ -5,29 +5,13 @@
 #include <windowsx.h>
 #include "DisplayWin32.h"
 
-bool InputDevice::IsKeyDown(uint64_t Key)
-{
-    return PressedKeys.find(Key) != PressedKeys.end();
-}
-
 LRESULT InputDevice::HandleMessage(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
 	switch (umessage)
 	{
 	case WM_KEYDOWN:
-		std::cout << "Key: " << wparam << std::endl;
-
-		if (wparam == 27)
-		{
-			Game::GetInstance()->Exit();
-			return 0;
-		}
-
-		PressedKeys.insert(wparam);
-		
-		return 0;
 	case WM_KEYUP:
-		PressedKeys.erase(wparam);
+		keyboard.ProcessMessage(umessage, wparam, lparam);
 		return 0;
 	case WM_ACTIVATE:
 	case WM_INPUT:
@@ -43,6 +27,7 @@ LRESULT InputDevice::HandleMessage(HWND hwnd, UINT umessage, WPARAM wparam, LPAR
 	case WM_XBUTTONUP:
 	case WM_MOUSEHOVER:
 		mouse.ProcessMessage(umessage, wparam, lparam);
+		return 0;
 	default:
 		return DefWindowProc(hwnd, umessage, wparam, lparam);
 	}
@@ -51,6 +36,11 @@ LRESULT InputDevice::HandleMessage(HWND hwnd, UINT umessage, WPARAM wparam, LPAR
 Mouse* InputDevice::GetMouse()
 {
 	return &mouse;
+}
+
+Keyboard* InputDevice::GetKeyboard()
+{
+	return &keyboard;
 }
 
 void InputDevice::Prepare()

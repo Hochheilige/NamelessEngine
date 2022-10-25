@@ -24,11 +24,13 @@ void OrbitCameraController::Update(float DeltaTime)
 
 	float orbitRadiusDelta = 0.0f;
 
-	if (input.IsKeyDown(69))
+	auto keyboard = input.GetKeyboard();
+
+	if (keyboard->IsDown(KEY_C))
 	{
 		orbitRadiusDelta += DeltaTime * Speed;
 	}
-	if (input.IsKeyDown(81))
+	if (keyboard->IsDown(81))
 	{
 		orbitRadiusDelta -= DeltaTime * Speed;
 	}

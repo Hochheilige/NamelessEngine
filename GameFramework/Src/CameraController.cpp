@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include "Game.h"
 #include "InputDevice.h"
+#include "Keyboard.h"
 
 CameraController::CameraController()
 {
@@ -29,32 +30,34 @@ void CameraController::Update(float DeltaTime)
 
 	Vector3 movementDelta = Vector3::Zero;
 
-	if (input.IsKeyDown(87))
+	auto keyboard = input.GetKeyboard();
+
+	if (keyboard->IsDown(KEY_W))
 	{
 		movementDelta.x += DeltaTime * Speed;
 	}
-	if (input.IsKeyDown(83))
+	if (keyboard->IsDown(KEY_S))
 	{
 		movementDelta.x -= DeltaTime * Speed;
 	}
-	if (input.IsKeyDown(68))
+	if (keyboard->IsDown(KEY_D))
 	{
 		movementDelta.y += DeltaTime * Speed;
 	}
-	if (input.IsKeyDown(65))
+	if (keyboard->IsDown(KEY_A))
 	{
 		movementDelta.y -= DeltaTime * Speed;
 	}
-	if (input.IsKeyDown(69))
+	if (keyboard->IsDown(KEY_E))
 	{
 		movementDelta.z += DeltaTime * Speed;
 	}
-	if (input.IsKeyDown(81))
+	if (keyboard->IsDown(KEY_Q))
 	{
 		movementDelta.z -= DeltaTime * Speed;
 	}
 
-	if (input.IsKeyDown(67))
+	if (keyboard->IsDown(KEY_C))
 	{
 		FOV += DeltaTime * FOVChangeSpeed;
 	}

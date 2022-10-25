@@ -36,6 +36,7 @@
     <Compile Include="EntryPoint.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="IComponent.cs" />
+    <Compile Include="InputHandler.cs" />
     <Compile Include="Internal\Loader.cs" />
     <Compile Include="Script.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

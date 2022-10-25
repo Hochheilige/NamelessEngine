@@ -167,9 +167,11 @@ void Sandbox::Update(float DeltaTime)
 
 	constexpr float cooldown = 0.2f;
 
+	auto keyboard = input.GetKeyboard();
+
 	if (GetTotalElapsedTime() - pressTime > cooldown)
 	{
-		if (input.IsKeyDown(79))
+		if (keyboard->IsDown(KEY_O))
 		{
 			// switch PerspCamera controller
 			if (CurrentCC == FPSCC)
@@ -193,14 +195,14 @@ void Sandbox::Update(float DeltaTime)
 			}
 			pressTime = GetTotalElapsedTime();
 		}
-		if (input.IsKeyDown(73))
+		if (keyboard->IsDown(KEY_I))
 		{
 			const char* bunny_path = "..\\Assets\\stanford-bunny.fbx";
 			CreateObject(0, 1, 0, 0, 0, 0, 0.005, 0.005, 0.005, bunny_path);
 		}
 	}
 
-	if (input.IsKeyDown(84))
+	if (keyboard->IsDown(KEY_T))
 	{
 		CurrentCamera = OrthoCamera;
 	}

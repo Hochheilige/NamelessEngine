@@ -179,6 +179,7 @@
     <ClInclude Include="Include\SphereCollider.h" />
     <ClInclude Include="Include\Transform.h" />
     <ClInclude Include="Include\Mouse.h" />
+    <ClInclude Include="Include\Keyboard.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\Renderer.cpp" />
@@ -191,6 +192,7 @@
     <ClCompile Include="Src\DisplayWin32.cpp" />
     <ClCompile Include="Src\GBuffer.cpp" />
     <ClCompile Include="Src\InputDevice.cpp" />
+    <ClCompile Include="Src\Keyboard.cpp" />
     <ClCompile Include="Src\LightBase.cpp" />
     <ClCompile Include="Src\LineRenderer.cpp" />
     <ClCompile Include="Src\Mesh.cpp" />

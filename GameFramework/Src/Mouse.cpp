@@ -66,14 +66,14 @@ void Mouse::OnScroll(int scrollDelta)
 
 void Mouse::SetPressStateByButton(Button button, bool press)
 {
-    if (press && IsPressed(button) || !press && !IsPressed(button)) return;
+    if (press && IsDown(button) || !press && !IsDown(button)) return;
 
     if (button == LEFT) leftButtonPressed = press;
     if (button == MIDDLE) middleButtonPressed = press;
     rightButtonPressed = press;
 }
 
-bool Mouse::IsPressed(Button button) const
+bool Mouse::IsDown(Button button) const
 {
     if (button == LEFT) return leftButtonPressed;
     if (button == MIDDLE) return middleButtonPressed;
