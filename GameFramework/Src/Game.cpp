@@ -7,6 +7,10 @@
 #include "AABB2DCollider.h"
 #include "RenderingSystem.h"
 
+#include "imgui.h"
+#include "backends/imgui_impl_dx11.h"
+#include "backends/imgui_impl_win32.h"
+
 #include <chrono>
 
 Game* Game::Instance = nullptr;
@@ -28,6 +32,27 @@ void Game::Initialize()
 	PrepareResources();
 	
 
+	// Init imGui
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+
+	ImGui::StyleColorsDark();
+
+	ImGuiStyle& style = ImGui::GetStyle();
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		style.WindowRounding = 0.0f;
+		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+	}
+
+	// Setup Platform/Renderer backends
+	ImGui_ImplWin32_Init(Display->GetWindowHandle());
+	ImGui_ImplDX11_Init(GetD3DDevice().Get(), GetD3DDeviceContext().Get());
 }
 
 void Game::CreateBackBuffer()
@@ -225,13 +250,28 @@ void Game::Run()
 			Exit();
 		}
 
+		ImGui_ImplDX11_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+
+		//temp
+		bool temp = true;
+		ImGui::ShowDemoWindow(&temp);
+
 		// Update
 		UpdateInternal(deltaTime);
 
 		// Render
 		Render();
 
-		
+		// needs to be called after imgui::Render
+		ImGuiIO& io = ImGui::GetIO();
+		// Update and Render additional Platform Windows
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+		}
 	}
 }
 
@@ -287,6 +327,9 @@ void Game::Render()
 {
 	MyRenderingSystem->Draw(0.0f, &GetCurrentCamera());
 
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
 	SwapChain->Present(1, 0);
 }
 
@@ -294,6 +337,10 @@ void Game::DestroyResources()
 {
 	delete Display; 
 	delete Input;
+
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 }
 
 InputDevice* Game::GetInputDevice()

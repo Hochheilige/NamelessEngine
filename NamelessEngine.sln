@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameFramework", "GameFramework\GameFramework.vcxproj", "{CFB25C94-968F-4FE3-8BFA-9916C240819E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2} = {6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK", "DirectXTK\DirectXTK.vcxproj", "{0CF8FA75-E725-41DD-B5D6-2FB912FE070F}"
 EndProject
@@ -14,6 +17,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RenderSystem", "RenderSyste
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sandbox", "Sandbox\Sandbox.vcxproj", "{976CF2CE-BF0B-42A3-BCA3-3915F7D3E184}"
 	ProjectSection(ProjectDependencies) = postProject
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2} = {6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}
 		{A1C440C6-91E7-45C0-ACB6-258CC70D54B7} = {A1C440C6-91E7-45C0-ACB6-258CC70D54B7}
 	EndProjectSection
 EndProject
@@ -32,6 +36,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImGui.NET.SampleProgram", "ImGui.NET\ImGui.NET.SampleProgram\ImGui.NET.SampleProgram.csproj", "{5D80A899-1FBC-4DA5-B2F1-C9447233F8F0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "example_win32_directx11", "imgui\examples\example_win32_directx11\example_win32_directx11.vcxproj", "{9F316E83-5AE5-4939-A723-305A94F48005}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGuiStaticLib", "ImGuiStaticLib\ImGuiStaticLib.vcxproj", "{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -337,6 +343,30 @@ Global
 		{9F316E83-5AE5-4939-A723-305A94F48005}.RelWithDebInfo|x64.Build.0 = Release|x64
 		{9F316E83-5AE5-4939-A723-305A94F48005}.RelWithDebInfo|x86.ActiveCfg = Release|Win32
 		{9F316E83-5AE5-4939-A723-305A94F48005}.RelWithDebInfo|x86.Build.0 = Release|Win32
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.Debug|Any CPU.Build.0 = Debug|x64
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.Debug|x64.ActiveCfg = Debug|x64
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.Debug|x64.Build.0 = Debug|x64
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.Debug|x86.ActiveCfg = Debug|Win32
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.Debug|x86.Build.0 = Debug|Win32
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.MinSizeRel|Any CPU.ActiveCfg = Debug|x64
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.MinSizeRel|Any CPU.Build.0 = Debug|x64
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.MinSizeRel|x64.ActiveCfg = Debug|x64
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.MinSizeRel|x64.Build.0 = Debug|x64
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.MinSizeRel|x86.ActiveCfg = Debug|Win32
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.MinSizeRel|x86.Build.0 = Debug|Win32
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.Release|Any CPU.ActiveCfg = Release|x64
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.Release|Any CPU.Build.0 = Release|x64
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.Release|x64.ActiveCfg = Release|x64
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.Release|x64.Build.0 = Release|x64
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.Release|x86.ActiveCfg = Release|Win32
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.Release|x86.Build.0 = Release|Win32
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.RelWithDebInfo|Any CPU.ActiveCfg = Release|x64
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.RelWithDebInfo|Any CPU.Build.0 = Release|x64
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.RelWithDebInfo|x64.ActiveCfg = Release|x64
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.RelWithDebInfo|x64.Build.0 = Release|x64
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.RelWithDebInfo|x86.ActiveCfg = Release|Win32
+		{6AE03F7D-A19D-4700-A59D-3BA8C56F5BF2}.RelWithDebInfo|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

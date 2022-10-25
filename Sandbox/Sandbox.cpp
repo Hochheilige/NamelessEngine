@@ -70,7 +70,7 @@ MeshRenderer* Sandbox::CreateSphereObject(float trans_x, float trans_y, float tr
 }
 
 void Sandbox::LoadGameFacade() {
-	auto method = mono->GetMethod("Scripts.Internal", "Loader", "Boot()");
+	// auto method = mono->GetMethod("Scripts.Internal", "Loader", "Boot()");
 	//mono->InvokeMethod(method, nullptr, nullptr, nullptr);
 	//TODO uncomment 
 }
