@@ -31,6 +31,17 @@ void Camera::UpdateFOV(float NewFOV)
 	ProjectionMatrix = Matrix::CreatePerspectiveFieldOfView(DirectX::XMConvertToRadians(NewFOV), AspectRatio, NearPlane, FarPlane);
 }
 
+void Camera::UpdateAspectRatio(float NewAspectRatio)
+{
+	AspectRatio = NewAspectRatio;
+	ProjectionMatrix = Matrix::CreatePerspectiveFieldOfView(FOV, AspectRatio, NearPlane, FarPlane);
+}
+
+void Camera::HandleViewportResize(int NewWidth, int NewHeight)
+{
+	// todo: sace camera type and update projection matrix accordingly
+}
+
 // @TODO: Rename the function to signify we get a transposed matrix? Same for other functions
 Matrix Camera::GetWorldToClipMatrix() const
 {

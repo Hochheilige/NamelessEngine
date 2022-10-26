@@ -13,6 +13,7 @@ LRESULT InputDevice::HandleMessage(HWND hwnd, UINT umessage, WPARAM wparam, LPAR
 		return true;
 	}
 	
+	// TODO: check whether ImGui wants to capture cursor or keyboard
 	switch (umessage)
 	{
 	case WM_KEYDOWN:
@@ -36,7 +37,9 @@ LRESULT InputDevice::HandleMessage(HWND hwnd, UINT umessage, WPARAM wparam, LPAR
 		return 0;
 	case WM_SIZE:
 		{
-			Game::GetInstance()->HandleWindowResize();
+			UINT width = LOWORD(lparam);
+			UINT height = HIWORD(lparam);
+			Game::GetInstance()->HandleWindowResize(static_cast<int>(width), static_cast<int>(height));
 			return 0;
 		}
 	default:
