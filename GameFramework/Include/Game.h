@@ -134,13 +134,15 @@ public:
 	int GetScreenHeight() const;
 	int GetScreenWidth() const;
 
-	ComPtr<ID3D11DepthStencilView> DepthStencilView = nullptr;
 	ComPtr<ID3D11RenderTargetView> RenderTargetView;
 	ComPtr<ID3D11Texture2D> ShadowMapTex = nullptr;
 	ComPtr<ID3D11DepthStencilView> ShadowMapView = nullptr;
 	ComPtr<ID3D11ShaderResourceView> ShadowMapSRV = nullptr;
 
-	RenderingSystem* MyRenderingSystem = nullptr;;
+	RenderingSystem* MyRenderingSystem = nullptr;
+
+
+	void HandleWindowResize();
 
 protected:
 
@@ -154,8 +156,6 @@ protected:
 	Camera* CurrentCamera = nullptr;
 
 	class DisplayWin32* Display = nullptr;
-
-	ComPtr<ID3D11Texture2D> pDepthStencil = nullptr;
 
 	ComPtr<ID3D11DepthStencilState> pDSState = nullptr;
 

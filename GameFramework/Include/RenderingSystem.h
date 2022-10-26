@@ -92,6 +92,12 @@ public:
 	// @TODO: Remove DeltaTime?
 	void Draw(float DeltaTime, const Camera* InCamera);
 
+	void* GetViewportTextureID() { return ViewportSRV.Get(); }
+
+	// TODO: add a delegate and subscribe to resize event
+	void HandleScreenResize(const Vector2& NewSize);
+
+
 private:
 
 	void PerformShadowmapPass();
@@ -101,7 +107,7 @@ private:
 	void PerformOpaquePass(float DeltaTime);
 	void PerformLightingPass(float DeltaTime);
 
-	void HandleScreenResize(const Vector2& NewSize);
+	void ResizeViewport(int Width, int Height);
 
 private:
 
@@ -138,6 +144,15 @@ private:
 	std::vector<LightBase*> Lights;
 
 	Color DiffuseClearColor = Color(0.0f, 0.4f, 0.0f, 1.0f);
+
+	ComPtr<ID3D11Texture2D> ViewportTex = nullptr;
+	ComPtr<ID3D11ShaderResourceView> ViewportSRV = nullptr;
+	ComPtr<ID3D11RenderTargetView> ViewportRTV = nullptr;
+
+	ComPtr<ID3D11Texture2D> DepthStencilTex = nullptr;
+	ComPtr<ID3D11DepthStencilView> DepthStencilView = nullptr;
+
+
 
 private:
 

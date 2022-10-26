@@ -167,6 +167,9 @@ xcopy "$(SolutionDir)External\mono\lib\4.5\*" "$(TargetDir)mono\lib\4.5\" /y /i 
     <ProjectReference Include="..\GameFramework\GameFramework.vcxproj">
       <Project>{cfb25c94-968f-4fe3-8bfa-9916c240819e}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\ImGuiStaticLib\ImGuiStaticLib.vcxproj">
+      <Project>{6ae03f7d-a19d-4700-a59d-3ba8c56f5bf2}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

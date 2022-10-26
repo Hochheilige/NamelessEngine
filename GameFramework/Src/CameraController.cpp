@@ -78,9 +78,13 @@ void CameraController::Update(float DeltaTime)
 	float deltaY;
 	input.GetMouse()->GetDeltas(deltaX, deltaY);
 
+	if (input.IsKeyDown(16)) {
+
 	Pitch += DeltaTime * deltaY * RotSpeedPitch;
 	Pitch = Pitch < -MaxPitch ? -MaxPitch : Pitch > MaxPitch ? MaxPitch : Pitch;
 	Yaw += DeltaTime * deltaX * RotSpeedYaw;
+
+	}
 
 	Cam->Transform.Rotation.SetEulerAngles(Pitch, Yaw, 0.0f);
 }
