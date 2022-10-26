@@ -10,6 +10,10 @@ public:
 
 	virtual ~RigidBodyComponent();
 
+	btRigidBody* GetRigidBody();
+	btCollisionShape* GetCollisionShape();
+	btScalar GetMass();
+
 protected:
 	btCollisionShape* Shape;
 	btRigidBody* Body;

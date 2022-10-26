@@ -131,12 +131,29 @@ void Actor::UseDebugAndMeshRenderer()
 
 void Actor::UsePhysicsSimulation()
 {
-	is_physics_enable = true;
+	if (!is_physics_enable)
+	{
+		is_physics_enable = true;
+		auto rigid_body = dynamic_cast<RigidBodyComponent*>(*std::find_if(Components.begin(), Components.end(),
+			[](Component* comp) {return dynamic_cast<RigidBodyComponent*>(comp); }
+		));
+
+		auto physics = PhysicsModuleData::GetInstance();
+		physics->GetDynamicsWorls()->addRigidBody(rigid_body->GetRigidBody());
+	}
 }
 
 void Actor::UnUsePhysicsSimulation()
 {
-	is_physics_enable = false;
-	// TODO remove component from physics world
+	if (is_physics_enable)
+	{
+		is_physics_enable = false;
+		auto rigid_body = dynamic_cast<RigidBodyComponent*>(*std::find_if(Components.begin(), Components.end(),
+			[](Component* comp) {return dynamic_cast<RigidBodyComponent*>(comp); }
+		));
+
+		auto physics = PhysicsModuleData::GetInstance();
+		physics->GetDynamicsWorls()->removeRigidBody(rigid_body->GetRigidBody());
+	}
 }
 

@@ -189,7 +189,7 @@ void Sandbox::PrepareResources()
 	auto cube_rb = cube->AddComponent<RigidBodyCube>();
 	cube_rb->SetMass(1);
 	cube_rb->Init();
-	cube->UsePhysicsSimulation();
+	//cube->UsePhysicsSimulation();
 
 	Actors.push_back(cube);
 
@@ -255,6 +255,8 @@ void Sandbox::Update(float DeltaTime)
 		actor->Update(DeltaTime);
 	}
 
+	
+
 	//int i = 0;
 	//for (auto& body : rigidBodies)
 	//{
@@ -296,10 +298,13 @@ void Sandbox::Update(float DeltaTime)
 			}
 			pressTime = GetTotalElapsedTime();
 		}
-		if (input.IsKeyDown(73))
+		if (input.IsKeyDown(49))
 		{
-			const char* bunny_path = "..\\Assets\\stanford-bunny.fbx";
-			//CreateObject(0, 1, 0, 0, 0, 0, 0.005, 0.005, 0.005, bunny_path);
+			Actors[0]->UnUsePhysicsSimulation();
+		}		
+		if (input.IsKeyDown(50))
+		{
+			Actors[0]->UsePhysicsSimulation();
 		}
 	}
 

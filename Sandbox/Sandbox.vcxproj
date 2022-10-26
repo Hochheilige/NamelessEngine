@@ -146,6 +146,7 @@
     <ClInclude Include="PhysicsModule.h" />
     <ClInclude Include="RigidBodyComponent.h" />
     <ClInclude Include="RigidBodyCube.h" />
+    <ClInclude Include="RigidBodySphere.h" />
     <ClInclude Include="Sandbox.h" />
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +154,7 @@
     <ClCompile Include="PhysicsModule.cpp" />
     <ClCompile Include="RigidBodyComponent.cpp" />
     <ClCompile Include="RigidBodyCube.cpp" />
+    <ClCompile Include="RigidBodySphere.cpp" />
     <ClCompile Include="Sandbox.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>

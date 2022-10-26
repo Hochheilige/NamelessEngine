@@ -10,6 +10,21 @@ RigidBodyComponent::~RigidBodyComponent()
     //delete Shape;
 }
 
+btRigidBody* RigidBodyComponent::GetRigidBody()
+{
+    return Body;
+}
+
+btCollisionShape* RigidBodyComponent::GetCollisionShape()
+{
+    return Shape;
+}
+
+btScalar RigidBodyComponent::GetMass()
+{
+    return Mass;
+}
+
 //btTransform RigidBodyComponent::Update()
 //{
 //    if (Body && Body->getMotionState())
