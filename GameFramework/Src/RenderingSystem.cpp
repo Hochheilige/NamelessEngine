@@ -109,6 +109,7 @@ RenderingSystem::RenderingSystem(Game* InGame)
 	depthDesc.DepthEnable = false;
 	device->CreateDepthStencilState(&depthDesc, &DisabledDepthStencilState);
 
+	ResizeViewport(InGame->GetScreenWidth(), InGame->GetScreenHeight());
 }
 
 void RenderingSystem::RegisterRenderer(Renderer* InRenderer)
@@ -242,15 +243,14 @@ void RenderingSystem::PerformForwardOpaquePass()
 
 	SetScreenSizeViewport();
 
-	context->ClearRenderTargetView(MyGame->RenderTargetView.Get(), DiffuseClearColor);
-	context->ClearDepthStencilView(MyGame->DepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	context->ClearRenderTargetView(ViewportRTV.Get(), DiffuseClearColor);
+	context->ClearDepthStencilView(DepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	context->PSSetShaderResources(1, 1, MyGame->ShadowMapSRV.GetAddressOf());
 
-	// @TODO: Move render target to variable
-	ID3D11RenderTargetView* views[8] = { MyGame->RenderTargetView.Get(), nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+	ID3D11RenderTargetView* views[8] = { ViewportRTV.Get(), nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 	// @TODO: move depth stencil view to rendering system
-	context->OMSetRenderTargets(8, views, MyGame->DepthStencilView.Get());
+	context->OMSetRenderTargets(8, views, DepthStencilView.Get());
 
 	RenderingSystemContext rsContext;
 	rsContext.ShaderFlags = static_cast<int>(ShaderFlag::ForwardRendering | ShaderFlag::DirectionalLight);
@@ -303,12 +303,12 @@ void RenderingSystem::PerformOpaquePass(float DeltaTime)
 	context->ClearRenderTargetView(GeometryBuffer.GetDiffuseRTV(), DiffuseClearColor);
 	context->ClearRenderTargetView(GeometryBuffer.GetNormalRTV(), Color(0.0f, 0.0f, 0.0f, 1.0f));
 	context->ClearRenderTargetView(GeometryBuffer.GetWorldPositionRTV(), Color(0.0f, 0.0f, 0.0f, 1.0f));
-	context->ClearDepthStencilView(MyGame->DepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	context->ClearDepthStencilView(DepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 
 	ID3D11RenderTargetView* views[8] = { GeometryBuffer.GetDiffuseRTV(), GeometryBuffer.GetNormalRTV(), GeometryBuffer.GetWorldPositionRTV(), nullptr, nullptr, nullptr, nullptr, nullptr };
 	// @TODO: move depth stencil view to rendering system
-	context->OMSetRenderTargets(8, views, MyGame->DepthStencilView.Get());
+	context->OMSetRenderTargets(8, views, DepthStencilView.Get());
 
 	RenderingSystemContext rsContext;
 	rsContext.ShaderFlags = static_cast<int>(ShaderFlag::DeferredOpaque);
@@ -354,7 +354,7 @@ void RenderingSystem::PerformLightingPass(float DeltaTime)
 
 	// @TODO: pass a pointer to render target view to render to
 	ID3D11RenderTargetView* views[8] = { MyGame->RenderTargetView.Get(), nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
-	context->OMSetRenderTargets(8, views, MyGame->DepthStencilView.Get());
+	context->OMSetRenderTargets(8, views, DepthStencilView.Get());
 
 	ID3D11ShaderResourceView* resources[] = {GeometryBuffer.GetDiffuseSRV(), MyGame->ShadowMapSRV.Get(), GeometryBuffer.GetNormalSRV(), GeometryBuffer.GetWorldPositionSRV()};
 	context->PSSetShaderResources(0, sizeof(resources)/sizeof(resources[0]), resources);
@@ -448,6 +448,7 @@ void RenderingSystem::PerformLightingPass(float DeltaTime)
 void RenderingSystem::HandleScreenResize(const Vector2& NewSize)
 {
 	GeometryBuffer.Resize(NewSize.x, NewSize.y);
+	ResizeViewport(NewSize.x, NewSize.y);
 }
 
 void RenderingSystem::SetScreenSizeViewport()
@@ -476,4 +477,47 @@ void RenderingSystem::Draw(float DeltaTime, const Camera* InCamera)
 	//PerformLightingPass(DeltaTime);
 
 	PerformForwardOpaquePass();
+}
+
+void RenderingSystem::ResizeViewport(int Width, int Height)
+{
+	D3D11_TEXTURE2D_DESC texDesc =
+	{
+		static_cast<UINT>(Width),
+		static_cast<UINT>(Height),
+		1,
+		1,
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_SAMPLE_DESC {1, 0},
+		D3D11_USAGE_DEFAULT,
+		D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE,
+		0,
+		0
+	};
+
+	ComPtr<ID3D11Device> device = MyGame->GetD3DDevice();
+
+	device->CreateTexture2D(&texDesc, nullptr, &ViewportTex);
+	device->CreateShaderResourceView(ViewportTex.Get(), nullptr, &ViewportSRV);
+	device->CreateRenderTargetView(ViewportTex.Get(), nullptr, &ViewportRTV);
+
+	D3D11_TEXTURE2D_DESC descDepth;
+	descDepth.Width = Width;
+	descDepth.Height = Height;
+	descDepth.MipLevels = 1;
+	descDepth.ArraySize = 1;
+	descDepth.Format = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+	descDepth.SampleDesc.Count = 1;
+	descDepth.SampleDesc.Quality = 0;
+	descDepth.Usage = D3D11_USAGE_DEFAULT;
+	descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	descDepth.CPUAccessFlags = 0;
+	descDepth.MiscFlags = 0;
+	device->CreateTexture2D(&descDepth, NULL, &DepthStencilTex);
+
+	// Create the depth stencil view
+	device->CreateDepthStencilView(DepthStencilTex.Get(), // Depth stencil texture
+		nullptr, // Depth stencil desc
+		&DepthStencilView);  // [out] Depth stencil view
+
 }

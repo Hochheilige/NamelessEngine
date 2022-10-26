@@ -32,7 +32,7 @@ PS_IN VSMain(VS_IN input)
 	//output.pos = mul(objectToClip, input.pos);
 
 	//output.pos = input.pos;
-	output.col = input.col;
+	output.col = float4(input.col.xyz, 1.0f);
 
 	return output;
 }

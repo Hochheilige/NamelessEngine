@@ -94,7 +94,7 @@ void Game::CreateBackBuffer()
 		nullptr,
 		Context.GetAddressOf());
 
-	res = SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(BackBuf.GetAddressOf()));
+	res = SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(BackBuf.ReleaseAndGetAddressOf()));
 	res = Device->CreateRenderTargetView(BackBuf.Get(), nullptr, RenderTargetView.GetAddressOf());
 
 	// Step 11. Set back buffer for output
@@ -140,28 +140,6 @@ void Game::CreateBackBuffer()
 
 	Context->VSSetConstantBuffers(1, 1, LightsCB.GetAddressOf());
 	Context->PSSetConstantBuffers(1, 1, LightsCB.GetAddressOf());
-
-	
-	D3D11_TEXTURE2D_DESC descDepth;
-	descDepth.Width = Display->GetClientWidth();
-	descDepth.Height = Display->GetClientHeight();
-	descDepth.MipLevels = 1;
-	descDepth.ArraySize = 1;
-	descDepth.Format = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
-	descDepth.SampleDesc.Count = 1;
-	descDepth.SampleDesc.Quality = 0;
-	descDepth.Usage = D3D11_USAGE_DEFAULT;
-	descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	descDepth.CPUAccessFlags = 0;
-	descDepth.MiscFlags = 0;
-	res = Device->CreateTexture2D(&descDepth, NULL, pDepthStencil.GetAddressOf());
-
-	// Create the depth stencil view
-
-	res = Device->CreateDepthStencilView(pDepthStencil.Get(), // Depth stencil texture
-		nullptr, // Depth stencil desc
-		DepthStencilView.GetAddressOf());  // [out] Depth stencil view
-
 
 	// Create default sampler state
 	D3D11_SAMPLER_DESC sampDesc;
@@ -263,6 +241,11 @@ void Game::Run()
 		
 		drawDockspace(temp);
 		ImGui::ShowDemoWindow(&temp);
+		ImGui::Begin("Viewort");
+		const ImVec2 viewportSize = ImGui::GetContentRegionAvail();
+		MyRenderingSystem->HandleScreenResize({ viewportSize.x, viewportSize.y });
+		ImGui::Image(MyRenderingSystem->GetViewportTextureID(), viewportSize);
+		ImGui::End();
 
 
 		// Update
@@ -336,6 +319,8 @@ void Game::Render()
 	MyRenderingSystem->Draw(0.0f, &GetCurrentCamera());
 
 	ImGui::Render();
+	ID3D11RenderTargetView* views[8] = { RenderTargetView.Get(), nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+	Context->OMSetRenderTargets(8, views, nullptr);
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 	SwapChain->Present(1, 0);
@@ -450,6 +435,24 @@ int Game::GetScreenHeight() const
 int Game::GetScreenWidth() const
 {
 	return Display->GetClientWidth();
+}
+
+void Game::HandleWindowResize()
+{
+	if (Context == nullptr)
+	{
+		return;
+	}
+
+	Context->OMSetRenderTargets(0, 0, 0);
+
+	// Release all outstanding references to the swap chain's buffers.
+	RenderTargetView->Release();
+	BackBuf->Release();
+
+	SwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+	SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(BackBuf.GetAddressOf()));
+	Device->CreateRenderTargetView(BackBuf.Get(), nullptr, RenderTargetView.GetAddressOf());
 }
 
 Game::Game()

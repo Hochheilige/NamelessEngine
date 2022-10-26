@@ -48,6 +48,11 @@ LRESULT InputDevice::HandleMessage(HWND hwnd, UINT umessage, WPARAM wparam, LPAR
 		PrevPosY = posY;
 		return 0;
 	}
+	case WM_SIZE:
+	{
+		Game::GetInstance()->HandleWindowResize();
+		return 0;
+	}
 	default:
 		return DefWindowProc(hwnd, umessage, wparam, lparam);
 	}
