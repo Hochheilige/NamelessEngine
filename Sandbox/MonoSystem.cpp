@@ -40,27 +40,34 @@ MonoImage* MonoSystem::GetImage()
 	return image;
 }
 
-MonoClass* MonoSystem::FindClass(const char* nameSpace, const char* className) const
+MonoClass* MonoSystem::FindClass(const char* nameSpace, const char* className)
 {
 	return mono_class_from_name(image, nameSpace, className);
 }
 
-MonoMethodDesc* MonoSystem::MakeMethodDescriptor(const char* descriptor, bool includeNamespace) const
+MonoMethodDesc* MonoSystem::MakeMethodDescriptor(const char* descriptor, bool includeNamespace)
 {
-	return mono_method_desc_new(descriptor, includeNamespace);
+	if (monoDescsCache.contains(descriptor)) {
+		return monoDescsCache.find(descriptor)->second;
+	}
+
+	auto methodDesc = mono_method_desc_new(descriptor, includeNamespace);
+	monoDescsCache.emplace(descriptor, methodDesc);
+
+	return methodDesc;
 }
 
-MonoMethod* MonoSystem::GetMethod(MonoClass* clazz, MonoMethodDesc* desc) const
+MonoMethod* MonoSystem::GetMethod(MonoClass* clazz, MonoMethodDesc* desc)
 {
 	return mono_method_desc_search_in_class(desc, clazz);
 }
 
-MonoMethod* MonoSystem::GetMethod(MonoClass* clazz, const char* methodName, int paramCount) const
+MonoMethod* MonoSystem::GetMethod(MonoClass* clazz, const char* methodName, int paramCount)
 {
 	return mono_class_get_method_from_name(clazz, methodName, paramCount);
 }
 
-MonoMethod* MonoSystem::GetMethod(const char* nameSpace, const char* className, const char* desc) const
+MonoMethod* MonoSystem::GetMethod(const char* nameSpace, const char* className, const char* desc)
 {
 	const auto clazz = FindClass(nameSpace, className);
 
@@ -81,7 +88,7 @@ MonoObject* MonoSystem::CreateClassInstance(MonoClass* klass)
 	return classInstance;
 }
 
-MonoMethod* MonoSystem::GetVirtualMethod(const char* earliestAncestorNamespace, const char* earliestAncestorClassName, const char* methodDesc, MonoObject* obj) const
+MonoMethod* MonoSystem::GetVirtualMethod(const char* earliestAncestorNamespace, const char* earliestAncestorClassName, const char* methodDesc, MonoObject* obj)
 {
 	auto baseMethod = GetMethod(earliestAncestorNamespace, earliestAncestorClassName, methodDesc);
 	return mono_object_get_virtual_method(obj, baseMethod);

@@ -26,7 +26,7 @@ namespace Scripts
             OnBeginPlay();
         }
 
-        public Cargo(Transform transform, List<IComponent> components) : base(transform, components)
+        public Cargo(Transform transform, List<Component> components) : base(transform, components)
         {
         }
 
@@ -34,17 +34,13 @@ namespace Scripts
         {
             Console.WriteLine("Begin Play");
             AddComponent(new AudioComponent(this));
+            Components.GetComponent<AudioComponent>();
             base.OnBeginPlay();
-        }
-
-        public override void OnDestroy()
-        {
-            throw new NotImplementedException();
         }
 
         public override void Update(float time)
         {
-            foreach (IComponent component in Components)
+            foreach (Component component in Components)
             {
                component.Update(2);
             }

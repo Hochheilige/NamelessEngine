@@ -1,22 +1,13 @@
 ﻿using SharpDX;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Scripts
 {
-    public class AudioComponent : IComponent
+    public class AudioComponent : Component
     {
-        Transform transform;
-        GameObject parent;
-
-        public AudioComponent(GameObject parent)
+        public AudioComponent(GameObject parent) : base(parent)
         {
-            this.parent = parent;
-            transform = new Transform()
+            this.Transform = new Transform()
             {
                 Position = new Vector3(1, 1, 1),
                 Rotation = new Vector4(2, 2, 2, 2),
@@ -35,26 +26,21 @@ namespace Scripts
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public static extern void InternalOnUnregister();
 
-        public Transform GetParentTransform()
-        {
-            return parent.Transform;
-        }
-
-        public void OnRegister()
+        public sealed override void OnRegister()
         {
             InternalOnRegister();
         }
 
-        public void OnUnregister()
+        public override void OnUnregister()
         {
             InternalOnUnregister();
         }
 
-        public void Update(float deltaTime)
+        public override void Update(float deltaTime)
         {
-            parent.Transform.Position.X += 1f;
-            parent.Transform.Rotation.X += 1f;
-            parent.Transform.Scale.X += 1f;
+            Parent.Transform.Position.X += 1f;
+            Parent.Transform.Rotation.X += 1f;
+            Parent.Transform.Scale.X += 1f;
         }
     }
 }

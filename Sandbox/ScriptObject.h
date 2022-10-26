@@ -12,6 +12,8 @@ public:
     Transform GetTransform();
 
 private:
+    const char* _name;
+    
     MonoSystem* _mono;
 
     MonoClass* _klass;

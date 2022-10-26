@@ -8,11 +8,11 @@ namespace Scripts
     {
         public Transform Transform;
 
-        public List<IComponent> Components { get; set; } = new List<IComponent> ();
+        public List<Component> Components { get; set; } = new List<Component> ();
 
         public GameObject() { }
 
-        public GameObject(Transform transform, List<IComponent> components)
+        public GameObject(Transform transform, List<Component> components)
         {
             Transform = transform;
             Components = components;
@@ -23,7 +23,7 @@ namespace Scripts
             Transform = transform;
         }
 
-        public void AddComponent(IComponent component)
+        public void AddComponent(Component component)
         {
             Components.Add(component);
         }
@@ -38,7 +38,10 @@ namespace Scripts
             }*/
         }
 
-        public abstract void OnDestroy();
+        public virtual void OnDestroy()
+        {
+            
+        }
 
         public virtual void OnBeginPlay()
         {
