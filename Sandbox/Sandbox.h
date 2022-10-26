@@ -18,7 +18,8 @@ public:
 	// Base objects with mesh and rigidbody components
 	Actor* CreateStaticBox(Transform transform);
 	Actor* CreateDynamicBox(Transform transform);
-	Actor* CreateSphere(Transform transform);
+	Actor* CreateStaticSphere(Transform transform);
+	Actor* CreateDynamicSphere(Transform transform);
 
 private:
 	class BoxMesh* boxMesh;

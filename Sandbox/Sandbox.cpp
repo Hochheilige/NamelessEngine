@@ -13,6 +13,7 @@
 #include "LightBase.h"
 #include "WICTextureLoader.h"
 #include "RigidBodyCube.h"
+#include "RigidBodySphere.h"
 
 
 Actor* Sandbox::CreateStaticBox(Transform transform)
@@ -43,9 +44,32 @@ Actor* Sandbox::CreateDynamicBox(Transform transform)
 	return box;
 }
 
-Actor* Sandbox::CreateSphere(Transform transform)
+Actor* Sandbox::CreateStaticSphere(Transform transform)
 {
-	return nullptr;
+	Actor* sphere = new Actor(transform);
+	auto mesh_component = sphere->AddComponent<MeshRenderer>();
+	mesh_component->SetMeshProxy(sphereMeshProxy);
+	mesh_component->SetPixelShader(ps);
+	mesh_component->SetVertexShader(vs);
+	auto sphere_rb = sphere->AddComponent<RigidBodySphere>();
+	sphere_rb->SetMass(0);
+	sphere_rb->Init();
+
+	return sphere;
+}
+
+Actor* Sandbox::CreateDynamicSphere(Transform transform)
+{
+	Actor* sphere = new Actor(transform);
+	auto mesh_component = sphere->AddComponent<MeshRenderer>();
+	mesh_component->SetMeshProxy(sphereMeshProxy);
+	mesh_component->SetPixelShader(ps);
+	mesh_component->SetVertexShader(vs);
+	auto sphere_rb = sphere->AddComponent<RigidBodySphere>();
+	sphere_rb->SetMass(1);
+	sphere_rb->Init();
+
+	return sphere;
 }
 
 void Sandbox::PrepareResources()
@@ -108,6 +132,12 @@ void Sandbox::PrepareResources()
 	Actors.push_back(platform);
 
 	//CreateSphereObject(3.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1, 1, 1);
+	tr.Position = Vector3(3.0f, 10.0f, 0.0f);
+	tr.Rotation.SetEulerAngles(0, 0, 0);
+	tr.Scale = Vector3(1, 1, 1);
+	auto sphere = CreateDynamicSphere(tr);
+	sphere->UsePhysicsSimulation();
+	Actors.push_back(sphere);
 
 	for (int i = 0; i < 5; ++i)
 		for (int j = 0; j < 5; ++j)
