@@ -230,6 +230,7 @@ void Game::Run()
 		if (msg.message == WM_QUIT)
 		{
 			Exit();
+			break;
 		}
 
 		ImGui_ImplDX11_NewFrame();
@@ -316,11 +317,18 @@ void Game::Update(float DeltaTime)
 
 void Game::Render()
 {
-	MyRenderingSystem->Draw(0.0f, &GetCurrentCamera());
+	MyRenderingSystem->Draw(0.0f, GetCurrentCamera());
 
 	ImGui::Render();
 	ID3D11RenderTargetView* views[8] = { RenderTargetView.Get(), nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 	Context->OMSetRenderTargets(8, views, nullptr);
+	D3D11_VIEWPORT viewport = {};
+	viewport.Width = static_cast<float>(Display->GetClientWidth());
+	viewport.Height = static_cast<float>(Display->GetClientHeight());
+	viewport.TopLeftX = 0.0f;
+	viewport.TopLeftY = 0.0f;
+	viewport.MinDepth = 0.0f;
+	viewport.MaxDepth = 1.0f;
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 	SwapChain->Present(1, 0);
@@ -328,12 +336,12 @@ void Game::Render()
 
 void Game::DestroyResources()
 {
-	delete Display; 
-	delete Input;
-
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
+
+	delete Display; 
+	delete Input;
 }
 
 InputDevice* Game::GetInputDevice()
@@ -387,14 +395,14 @@ Game::~Game()
 	Context->Flush();
 }
 
-const Camera& Game::GetCurrentCamera()
+Camera* Game::GetCurrentCamera()
 {
 	if (CurrentCamera == nullptr)
 	{
-		return DefaultCamera;
+		return &DefaultCamera;
 	}
 
-	return *CurrentCamera;
+	return CurrentCamera;
 }
 
 //void Game::DestroyComponent(GameComponent* GC)
@@ -437,7 +445,7 @@ int Game::GetScreenWidth() const
 	return Display->GetClientWidth();
 }
 
-void Game::HandleWindowResize()
+void Game::HandleWindowResize(int Width, int Height)
 {
 	if (Context == nullptr)
 	{

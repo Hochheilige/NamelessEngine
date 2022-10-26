@@ -119,7 +119,7 @@ public:
 
 	virtual ~Game();
 
-	const Camera& GetCurrentCamera();
+	Camera* GetCurrentCamera();
 
 	ComPtr<ID3D11SamplerState> GetDefaultSamplerState() { return DefaultSamplerState; }
 
@@ -144,7 +144,7 @@ public:
 	RenderingSystem* MyRenderingSystem = nullptr;
 
 
-	void HandleWindowResize();
+	void HandleWindowResize(int Width, int Height);
 
 protected:
 

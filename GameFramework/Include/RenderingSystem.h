@@ -152,7 +152,7 @@ private:
 	ComPtr<ID3D11Texture2D> DepthStencilTex = nullptr;
 	ComPtr<ID3D11DepthStencilView> DepthStencilView = nullptr;
 
-
+	Vector2 ViewportSize;
 
 private:
 

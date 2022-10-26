@@ -17,6 +17,10 @@ public:
 
 	void UpdateFOV(float NewFOV);
 
+	void UpdateAspectRatio(float NewAspectRatio);
+
+	void HandleViewportResize(int NewWidth, int NewHeight);
+
 	Matrix GetWorldToClipMatrix() const;
 
 	float GetFOV() const;

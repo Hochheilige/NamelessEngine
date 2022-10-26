@@ -52,10 +52,24 @@ float DisplayWin32::GetAspectRatio() const
 
 LONG DisplayWin32::GetClientHeight() const
 {
-	return ClientHeight;
+	int width;
+	int height;
+	GetClientSize(width, height);
+	return height;
 }
 
 LONG DisplayWin32::GetClientWidth() const
 {
-	return ClientWidth;
+	int width;
+	int height;
+	GetClientSize(width, height);
+	return width;
+}
+
+void DisplayWin32::GetClientSize(int& OutWidth, int& OutHeight) const
+{
+	RECT rect;
+	GetClientRect(hWnd, &rect);
+	OutWidth = rect.right;
+	OutHeight = rect.bottom;
 }

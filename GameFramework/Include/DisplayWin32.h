@@ -12,6 +12,8 @@ public:
 	LONG GetClientHeight() const;
 	LONG GetClientWidth() const;
 
+	void GetClientSize(int& OutWidth, int& OutHeight) const;
+
 	float GetAspectRatio() const;
 
 private:
