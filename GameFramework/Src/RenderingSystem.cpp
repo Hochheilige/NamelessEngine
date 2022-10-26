@@ -7,6 +7,7 @@
 
 RenderingSystem::RenderingSystem(Game* InGame)
 	: MyGame(InGame)
+	, ViewportSize(InGame->GetScreenWidth(), InGame->GetScreenHeight())
 	, GeometryBuffer(InGame->GetScreenWidth(), InGame->GetScreenHeight())
 {
 	ComPtr<ID3D11Device> device = MyGame->GetD3DDevice();
@@ -206,7 +207,7 @@ void RenderingSystem::PerformForwardOpaquePass()
 	context->PSSetConstantBuffers(0, 1, PerDrawCB.GetAddressOf());
 
 	CBPerDraw cbData;
-	const Camera& cam = MyGame->GetCurrentCamera();
+	const Camera& cam = *(MyGame->GetCurrentCamera());
 	cbData.WorldToClip = cam.GetWorldToClipMatrix();
 	cbData.CameraWorldPos = cam.Transform.Position;
 	cbData.ViewToClip = cam.GetProjectionMatrix();
@@ -282,7 +283,7 @@ void RenderingSystem::PerformOpaquePass(float DeltaTime)
 	context->VSSetConstantBuffers(0, 1, PerDrawCB.GetAddressOf());
 
 	CBPerDraw cbData;
-	const Camera& cam = MyGame->GetCurrentCamera();
+	const Camera& cam = *(MyGame->GetCurrentCamera());
 	cbData.WorldToClip = cam.GetWorldToClipMatrix();
 	cbData.CameraWorldPos = cam.Transform.Position;
 
@@ -332,7 +333,7 @@ void RenderingSystem::PerformLightingPass(float DeltaTime)
 	context->VSSetConstantBuffers(0, 1, PerDrawCB.GetAddressOf());
 
 	CBPerDraw cbData;
-	const Camera& cam = MyGame->GetCurrentCamera();
+	const Camera& cam = *(MyGame->GetCurrentCamera());
 	cbData.WorldToClip = cam.GetWorldToClipMatrix();
 	cbData.CameraWorldPos = cam.Transform.Position;;
 
@@ -449,13 +450,14 @@ void RenderingSystem::HandleScreenResize(const Vector2& NewSize)
 {
 	GeometryBuffer.Resize(NewSize.x, NewSize.y);
 	ResizeViewport(NewSize.x, NewSize.y);
+	MyGame->GetCurrentCamera()->UpdateAspectRatio(NewSize.x / NewSize.y);
 }
 
 void RenderingSystem::SetScreenSizeViewport()
 {
 	D3D11_VIEWPORT viewport = {};
-	viewport.Width = static_cast<float>(MyGame->GetScreenWidth());
-	viewport.Height = static_cast<float>(MyGame->GetScreenHeight());
+	viewport.Width = static_cast<float>(ViewportSize.x);
+	viewport.Height = static_cast<float>(ViewportSize.y);
 	viewport.TopLeftX = 0.0f;
 	viewport.TopLeftY = 0.0f;
 	viewport.MinDepth = 0.0f;
@@ -481,6 +483,7 @@ void RenderingSystem::Draw(float DeltaTime, const Camera* InCamera)
 
 void RenderingSystem::ResizeViewport(int Width, int Height)
 {
+	ViewportSize = { static_cast<float>(Width), static_cast<float>(Height) };
 	D3D11_TEXTURE2D_DESC texDesc =
 	{
 		static_cast<UINT>(Width),
