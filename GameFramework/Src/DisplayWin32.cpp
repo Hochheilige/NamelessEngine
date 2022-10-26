@@ -37,7 +37,7 @@ DisplayWin32::DisplayWin32(LONG ClientHeight, LONG ClientWidth, WNDPROC WndProc,
 	SetForegroundWindow(hWnd);
 	SetFocus(hWnd);
 	
-	ShowCursor(false);
+	ShowCursor(true);
 }
 
 HWND DisplayWin32::GetWindowHandle()

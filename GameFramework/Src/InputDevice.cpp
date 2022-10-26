@@ -4,14 +4,21 @@
 #include <iostream>
 #include <windowsx.h>
 #include "DisplayWin32.h"
+#include <imgui.h>
+
 
 bool InputDevice::IsKeyDown(uint64_t Key)
 {
     return PressedKeys.find(Key) != PressedKeys.end();
 }
 
+IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
+
 LRESULT InputDevice::HandleMessage(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, umessage, wparam, lparam)) {
+		return true;
+	}
 	switch (umessage)
 	{
 	case WM_KEYDOWN:

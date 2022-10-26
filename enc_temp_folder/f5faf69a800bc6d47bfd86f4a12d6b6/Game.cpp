@@ -15,7 +15,7 @@
 
 
 
-void drawDockspace(bool temp);
+void showViewport(bool temp);
 
 Game* Game::Instance = nullptr;
 
@@ -261,7 +261,7 @@ void Game::Run()
 		//temp
 		bool temp = true;
 		
-		drawDockspace(temp);
+		showViewport(&temp);
 		ImGui::ShowDemoWindow(&temp);
 
 
@@ -464,7 +464,7 @@ void Game::InitializeInternal()
 }
 
 
-void drawDockspace(bool temp) {
+void showViewport(bool temp) {
 
 
 	// If you strip some features of, this demo is pretty much equivalent to calling DockSpaceOverViewport()!
@@ -558,7 +558,7 @@ void drawDockspace(bool temp) {
 		ImGui::EndMenuBar();
 	}
 
-
+	//ImGui::ShowDemoWindow();
 
 	ImGui::End();
 }
