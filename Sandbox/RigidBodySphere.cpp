@@ -32,7 +32,7 @@ void RigidBodySphere::Init()
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(Mass, myMotionState, Shape, localInertia);
 	Body = new btRigidBody(rbInfo);
 
-	physics->GetDynamicsWorls()->addRigidBody(Body);
+	//physics->GetDynamicsWorls()->addRigidBody(Body);
 }
 
 void RigidBodySphere::OnRegister()

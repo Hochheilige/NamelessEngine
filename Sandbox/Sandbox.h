@@ -16,7 +16,8 @@ public:
 	virtual void Update(float DeltaTime) override;
 
 	// Base objects with mesh and rigidbody components
-	Actor* CreateBox(Transform transform);
+	Actor* CreateStaticBox(Transform transform);
+	Actor* CreateDynamicBox(Transform transform);
 	Actor* CreateSphere(Transform transform);
 
 private:

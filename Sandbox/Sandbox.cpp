@@ -14,114 +14,39 @@
 #include "WICTextureLoader.h"
 #include "RigidBodyCube.h"
 
-//MeshRenderer* Sandbox::CreateObject(float trans_x, float trans_y, float trans_z,
-//	float rot_x, float rot_y, float rot_z,
-//	float scale_x, float scale_y, float scale_z,
-//	const char* mesh_path)
-//{
-//	MeshLoader ml = MeshLoader(mesh_path);
-//	TexturedMesh mesh = ml.GetMesh(0);
-//	MeshProxy* meshProxy = mesh.CreateMeshProxy();
-//
-//	MeshRenderer* object = Game::GetInstance()->CreateGameComponent<MeshRenderer>();
-//	object->SetMeshProxy(meshProxy);
-//	object->SetPixelShader(ps);
-//	object->SetVertexShader(vs);
-//	object->mTransform.Position = Vector3(trans_x, trans_y, trans_z);
-//	object->mTransform.Rotation.SetEulerAngles(rot_x, rot_y, rot_z);
-//	object->mTransform.Scale = Vector3(scale_x, scale_y, scale_z);
-//
-//	return object;
-//}
-//
-//MeshRenderer* Sandbox::CreateCubeObject(float trans_x, float trans_y, float trans_z, float rot_x, float rot_y, float rot_z, float scale_x, float scale_y, float scale_z)
-//{
-//	boxMesh = new BoxMesh();
-//	boxMeshProxy = boxMesh->CreateMeshProxy();
-//
-//	MeshRenderer* object = Game::GetInstance()->CreateGameComponent<MeshRenderer>();
-//	object->SetMeshProxy(boxMeshProxy);
-//	object->SetPixelShader(ps);
-//	object->SetVertexShader(vs);
-//	object->mTransform.Position = Vector3(trans_x, trans_y, trans_z);
-//	object->mTransform.Rotation.SetEulerAngles(rot_x, rot_y, rot_z);
-//	object->mTransform.Scale = Vector3(scale_x, scale_y, scale_z);
-//
-//	return object;
-//}
-//
-//MeshRenderer* Sandbox::CreateSphereObject(float trans_x, float trans_y, float trans_z, float rot_x, float rot_y, float rot_z, float scale_x, float scale_y, float scale_z)
-//{
-//	sphereMesh = new SphereMesh();
-//	sphereMeshProxy = sphereMesh->CreateMeshProxy();
-//
-//	MeshRenderer* object = Game::GetInstance()->CreateGameComponent<MeshRenderer>();
-//	object->SetMeshProxy(sphereMeshProxy);
-//	object->SetPixelShader(ps);
-//	object->SetVertexShader(vs);
-//	object->mTransform.Position = Vector3(trans_x, trans_y, trans_z);
-//	object->mTransform.Rotation.SetEulerAngles(rot_x, rot_y, rot_z);
-//	object->mTransform.Scale = Vector3(scale_x, scale_y, scale_z);
-//
-//	return object;
-//}
-//
-//RigidBodyComponent* CreateCubeComponent(float trans_x, float trans_y, float trans_z, float rot_x, float rot_y, float rot_z, float scale_x, float scale_y, float scale_z, float mass)
-//{
-//	auto physics = PhysicsModuleData::GetInstance();
-//
-//	RigidBodyComponent* comp = new RigidBodyComponent();
-//
-//	comp->Shape = new btBoxShape(btVector3(scale_x / 2, scale_y / 2, scale_z / 2));
-//	physics->GetCollisionShapes().push_back(comp->Shape);
-//
-//	comp->Transform.setIdentity();
-//	comp->Transform.setOrigin(btVector3(trans_x, trans_y, trans_z));
-//	comp->Transform.setRotation(btQuaternion(rot_x, rot_y, rot_z));
-//
-//	comp->Mass = mass;
-//
-//	btVector3 localInertia = btVector3(0, 0, 0);
-//	if (mass != 0.0f)
-//		comp->Shape->calculateLocalInertia(mass, localInertia);
-//
-//	btDefaultMotionState* myMotionState = new btDefaultMotionState(comp->Transform);
-//	btRigidBody::btRigidBodyConstructionInfo rbInfo(comp->Mass, myMotionState, comp->Shape, localInertia);
-//	comp->Body = new btRigidBody(rbInfo);
-//
-//	physics->GetDynamicsWorls()->addRigidBody(comp->Body);
-//
-//	return comp;
-//}
-//
-//RigidBodyComponent* CreateSphereComponent(float trans_x, float trans_y, float trans_z, float rot_x, float rot_y, float rot_z, float scale_x, float scale_y, float scale_z, float mass)
-//{
-//	auto physics = PhysicsModuleData::GetInstance();
-//
-//	RigidBodyComponent* comp = new RigidBodyComponent();
-//
-//
-//	comp->Shape = new btSphereShape(scale_x);
-//	physics->GetCollisionShapes().push_back(comp->Shape);
-//
-//	comp->Transform.setIdentity();
-//	comp->Transform.setOrigin(btVector3(trans_x, trans_y, trans_z));
-//	comp->Transform.setRotation(btQuaternion(rot_x, rot_y, rot_z));
-//
-//	comp->Mass = mass;
-//
-//	btVector3 localInertia = btVector3(0, 0, 0);
-//	if (mass != 0.0f)
-//		comp->Shape->calculateLocalInertia(mass, localInertia);
-//
-//	btDefaultMotionState* myMotionState = new btDefaultMotionState(comp->Transform);
-//	btRigidBody::btRigidBodyConstructionInfo rbInfo(comp->Mass, myMotionState, comp->Shape, localInertia);
-//	comp->Body = new btRigidBody(rbInfo);
-//
-//	physics->GetDynamicsWorls()->addRigidBody(comp->Body);
-//
-//	return comp;
-//}
+
+Actor* Sandbox::CreateStaticBox(Transform transform)
+{
+	Actor* box = new Actor(transform);
+	auto mesh_component = box->AddComponent<MeshRenderer>();
+	mesh_component->SetMeshProxy(boxMeshProxy);
+	mesh_component->SetPixelShader(ps);
+	mesh_component->SetVertexShader(vs);
+	auto box_rb = box->AddComponent<RigidBodyCube>();
+	box_rb->SetMass(0);
+	box_rb->Init();
+
+	return box;
+}
+
+Actor* Sandbox::CreateDynamicBox(Transform transform)
+{
+	Actor* box = new Actor(transform);
+	auto mesh_component = box->AddComponent<MeshRenderer>();
+	mesh_component->SetMeshProxy(boxMeshProxy);
+	mesh_component->SetPixelShader(ps);
+	mesh_component->SetVertexShader(vs);
+	auto box_rb = box->AddComponent<RigidBodyCube>();
+	box_rb->SetMass(1);
+	box_rb->Init();
+
+	return box;
+}
+
+Actor* Sandbox::CreateSphere(Transform transform)
+{
+	return nullptr;
+}
 
 void Sandbox::PrepareResources()
 {
@@ -175,35 +100,26 @@ void Sandbox::PrepareResources()
 	Vector4 vec(0.0f, 0.0f, 1.0f, 1.0f);
 	vec = Vector4::Transform(vec, OrthoCamera->GetProjectionMatrix());
 
-	//CreateCubeObject(5, -0.5, 0, 0, 0, 0, 10, 0.5, 10);
-
 	Transform tr;
 	tr.Position = Vector3(5, -0.5, 0);
-	tr.Rotation.SetEulerAngles(0, 45, 45);
-	tr.Scale = Vector3(1, 1, 1);
-	Actor* cube = new Actor(tr);
-	auto mesh_component = cube->AddComponent<MeshRenderer>();
-	mesh_component->SetMeshProxy(boxMeshProxy);
-	mesh_component->SetPixelShader(basicPS);
-	mesh_component->SetVertexShader(basicVS);
-	auto cube_rb = cube->AddComponent<RigidBodyCube>();
-	cube_rb->SetMass(1);
-	cube_rb->Init();
-	//cube->UsePhysicsSimulation();
-
-	Actors.push_back(cube);
+	tr.Rotation.SetEulerAngles(0, 0, 0);
+	tr.Scale = Vector3(10, 0.5, 10);
+	auto platform = CreateStaticBox(tr);
+	Actors.push_back(platform);
 
 	//CreateSphereObject(3.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1, 1, 1);
 
 	for (int i = 0; i < 5; ++i)
 		for (int j = 0; j < 5; ++j)
 			for (int k = 0; k < 10; ++k)
-				//box.push_back(CreateCubeObject(i, 40.0f + j, k, 45.0f, 45.0f, 0.0f, 1.0f, 1.0f, 1.0f));
-
-	
-
-	const char* bunny_path = "..\\Assets\\stanford-bunny.fbx";
-	//bunny = CreateObject(0, 1, 0, 0, 0, 0, 0.005, 0.005, 0.005, bunny_path);
+			{
+				tr.Position = Vector3(i, 40.0f + j, k);
+				tr.Rotation.SetEulerAngles(45.0f, 45.0f, 0.0f);
+				tr.Scale = Vector3(1.0f, 1.0f, 1.0f);
+				auto box = CreateDynamicBox(tr);
+				box->UsePhysicsSimulation();
+				Actors.push_back(box);
+			}
 
 	FPSCC = CreateGameComponent<CameraController>();
 	FPSCC->SetCameraToControl(PerspCamera);
@@ -212,35 +128,6 @@ void Sandbox::PrepareResources()
 	//PlaneComponent* pc = CreateGameComponent<PlaneComponent>();
 	//pc->SetPixelShader(basicPS);
 	//pc->SetVertexShader(basicVS);
-
-
-	// Physics part
-
-
-	// Create rigid bodies
-	
-	// static platform
-	//RigidBodyComponent* platform = CreateCubeComponent(5, -0.5, 0, 0, 0, 0, 10, 0.5, 10, 0);
-	//rigidBodies.push_back(platform);
-	//
-
-	//RigidBodyComponent* sphere = CreateSphereComponent(3, 10, 0, 0, 0, 0, 1, 1, 1, 1);
-	//rigidBodies.push_back(sphere);
-
-
-	//RigidBodyComponent* box;
-	//for (int i = 0; i < 5; ++i)
-	//{
-	//	for (int j = 0; j < 5; ++j)
-	//	{
-	//		for (int k = 0; k < 10; ++k)
-	//		{
-
-	//			box = CreateCubeComponent(i, 40 + j, k, 45, 45, 0, 1, 1, 1, 1);
-	//			rigidBodies.push_back(box);
-	//		}
-	//	}
-	//}
 
 }
 
@@ -254,17 +141,6 @@ void Sandbox::Update(float DeltaTime)
 	{
 		actor->Update(DeltaTime);
 	}
-
-	
-
-	//int i = 0;
-	//for (auto& body : rigidBodies)
-	//{
-	//	btTransform trans = body->Update();
-	//	GameComponents[i]->mTransform.Position = Vector3(trans.getOrigin().x(), trans.getOrigin().y(), trans.getOrigin().z());
-	//	GameComponents[i]->mTransform.Rotation = Quaternion(trans.getRotation());
-	//	++i;
-	//}
 
 	InputDevice& input = *Game::GetInstance()->GetInputDevice();
 
@@ -317,5 +193,7 @@ void Sandbox::Update(float DeltaTime)
 		CurrentCamera = PerspCamera;
 	}
 }
+
+
 
 
