@@ -5,8 +5,14 @@
 #include <windowsx.h>
 #include "DisplayWin32.h"
 
+LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
+
 LRESULT InputDevice::HandleMessage(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, umessage, wparam, lparam)) {
+		return true;
+	}
+	
 	switch (umessage)
 	{
 	case WM_KEYDOWN:
@@ -28,6 +34,11 @@ LRESULT InputDevice::HandleMessage(HWND hwnd, UINT umessage, WPARAM wparam, LPAR
 	case WM_MOUSEHOVER:
 		mouse.ProcessMessage(umessage, wparam, lparam);
 		return 0;
+	case WM_SIZE:
+		{
+			Game::GetInstance()->HandleWindowResize();
+			return 0;
+		}
 	default:
 		return DefWindowProc(hwnd, umessage, wparam, lparam);
 	}

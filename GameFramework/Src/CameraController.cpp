@@ -78,7 +78,7 @@ void CameraController::Update(float DeltaTime)
 	float deltaY;
 	input.GetMouse()->GetDeltas(deltaX, deltaY);
 
-	if (input.IsKeyDown(16)) {
+	if (input.GetKeyboard()->IsDown(KEY_SHIFT)){
 
 	Pitch += DeltaTime * deltaY * RotSpeedPitch;
 	Pitch = Pitch < -MaxPitch ? -MaxPitch : Pitch > MaxPitch ? MaxPitch : Pitch;
