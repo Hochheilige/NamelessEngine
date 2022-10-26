@@ -73,13 +73,68 @@ MeshRenderer* Sandbox::CreateSphereObject(float trans_x, float trans_y, float tr
 void Sandbox::LoadGameFacade() {
 	const auto mLoader_Boot = mono->GetMethod("Scripts.Internal", "Loader", "Boot()");
 	csGameInstance = mono->InvokeMethod(mLoader_Boot, nullptr, nullptr, nullptr);
-
+	
 	//TODO
 	/*const auto mGame_OnSpecifyEngineSettings = mono->GetVirtualMethod("Scripts", "Game", "OnSpecifyEngineSettings(Scripts.EngineSettings.Builder)", csGameInstance);
 	mono->InvokeMethod(mGame_OnSpecifyEngineSettings, csGameInstance, nullptr, nullptr);*/
 
 	const auto mGame_Load = mono->GetVirtualMethod("Scripts", "Game", "OnLoad()", csGameInstance);
 	mono->InvokeMethod(mGame_Load, csGameInstance, nullptr, nullptr);
+}
+
+RigidBodyComponent* CreateCubeComponent(float trans_x, float trans_y, float trans_z, float rot_x, float rot_y, float rot_z, float scale_x, float scale_y, float scale_z, float mass)
+{
+	auto physics = PhysicsModuleData::GetInstance();
+	RigidBodyComponent* comp = new RigidBodyComponent();
+
+	comp->Shape = new btBoxShape(btVector3(scale_x / 2, scale_y / 2, scale_z / 2));
+	physics->GetCollisionShapes().push_back(comp->Shape);
+
+	comp->Transform.setIdentity();
+	comp->Transform.setOrigin(btVector3(trans_x, trans_y, trans_z));
+	comp->Transform.setRotation(btQuaternion(rot_x, rot_y, rot_z));
+	comp->Mass = mass;
+
+	btVector3 localInertia = btVector3(0, 0, 0);
+	if (mass != 0.0f)
+		comp->Shape->calculateLocalInertia(mass, localInertia);
+
+	btDefaultMotionState* myMotionState = new btDefaultMotionState(comp->Transform);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(comp->Mass, myMotionState, comp->Shape, localInertia);
+	comp->Body = new btRigidBody(rbInfo);
+
+	physics->GetDynamicsWorls()->addRigidBody(comp->Body);
+
+	return comp;
+}
+
+RigidBodyComponent* CreateSphereComponent(float trans_x, float trans_y, float trans_z, float rot_x, float rot_y, float rot_z, float scale_x, float scale_y, float scale_z, float mass)
+{
+	auto physics = PhysicsModuleData::GetInstance();
+
+	RigidBodyComponent* comp = new RigidBodyComponent();
+
+
+	comp->Shape = new btSphereShape(scale_x);
+	physics->GetCollisionShapes().push_back(comp->Shape);
+
+	comp->Transform.setIdentity();
+	comp->Transform.setOrigin(btVector3(trans_x, trans_y, trans_z));
+	comp->Transform.setRotation(btQuaternion(rot_x, rot_y, rot_z));
+
+	comp->Mass = mass;
+
+	btVector3 localInertia = btVector3(0, 0, 0);
+	if (mass != 0.0f)
+		comp->Shape->calculateLocalInertia(mass, localInertia);
+
+	btDefaultMotionState* myMotionState = new btDefaultMotionState(comp->Transform);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(comp->Mass, myMotionState, comp->Shape, localInertia);
+	comp->Body = new btRigidBody(rbInfo);
+
+	physics->GetDynamicsWorls()->addRigidBody(comp->Body);
+
+	return comp;
 }
 
 void Sandbox::PrepareResources()
@@ -144,12 +199,19 @@ void Sandbox::PrepareResources()
 	Vector4 vec(0.0f, 0.0f, 1.0f, 1.0f);
 	vec = Vector4::Transform(vec, OrthoCamera->GetProjectionMatrix());
 
-	CreateSphereObject(3.0f, 3.0f, 0.0f, 0.0f, 0.0f, 30.0f, 1, 1, 1);
+	CreateCubeObject(5, -0.5, 0, 0, 0, 0, 10, 0.5, 10);
 
 	//CreateCubeObject(2.0f, 2.0f, 0.0f, 45.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
 
-	/*const char* bunny_path = "..\\Assets\\stanford-bunny.fbx";
-	CreateObject(0, 1, 0, 0, 0, 0, 0.005, 0.005, 0.005, bunny_path);*/
+	for (int i = 0; i < 5; ++i)
+		for (int j = 0; j < 5; ++j)
+			for (int k = 0; k < 10; ++k)
+				box.push_back(CreateCubeObject(i, 40.0f + j, k, 45.0f, 45.0f, 0.0f, 1.0f, 1.0f, 1.0f));
+
+	
+
+	const char* bunny_path = "..\\Assets\\stanford-bunny.fbx";
+	bunny = CreateObject(0, 1, 0, 0, 0, 0, 0.005, 0.005, 0.005, bunny_path);
 
 	FPSCC = CreateGameComponent<CameraController>();
 	FPSCC->SetCameraToControl(PerspCamera);
@@ -159,12 +221,75 @@ void Sandbox::PrepareResources()
 	pc->SetPixelShader(basicPS);
 	pc->SetVertexShader(basicVS);
 
+
+	// Physics part
+
+
+	// Create rigid bodies
+	
+	// static platform
+	RigidBodyComponent* platform = CreateCubeComponent(5, -0.5, 0, 0, 0, 0, 10, 0.5, 10, 0);
+	rigidBodies.push_back(platform);
+	//btCollisionShape* platform = new btBoxShape(btVector3(5, 0.25, 5));
+	//collisionShapes.push_back(platform);
+
+	//btTransform platformTransform;
+	//platformTransform.setIdentity();
+	//platformTransform.setOrigin(btVector3(5, -0.5, 0));
+	//btScalar platformMass(0);
+
+	//bool isDynamic = (platformMass != 0.0f);
+
+	//btVector3 localInertia(0, 0, 0);
+	//if (isDynamic)
+	//	platform->calculateLocalInertia(platformMass, localInertia);
+
+	//btDefaultMotionState* platformMotionState = new btDefaultMotionState(platformTransform);
+	//btRigidBody::btRigidBodyConstructionInfo rbInfo(platformMass, platformMotionState, platform, localInertia);
+	//btRigidBody* body = new btRigidBody(rbInfo);
+
+	//dynamicWorld->addRigidBody(body);
+
+	// Dynamic cube
+	//btCollisionShape* box = new btBoxShape(btVector3(0.5, 0.5, 0.5));
+
+	RigidBodyComponent* sphere = CreateSphereComponent(3, 10, 0, 0, 0, 0, 1, 1, 1, 1);
+	rigidBodies.push_back(sphere);
+
+
+	RigidBodyComponent* box;
+	for (int i = 0; i < 5; ++i)
+	{
+		for (int j = 0; j < 5; ++j)
+		{
+			for (int k = 0; k < 10; ++k)
+			{
+
+				box = CreateCubeComponent(i, 40 + j, k, 45, 45, 0, 1, 1, 1, 1);
+				rigidBodies.push_back(box);
+			}
+		}
+	}
+
 }
 
 void Sandbox::Update(float DeltaTime)
 {
 	const auto mGame_Update = mono->GetVirtualMethod("Scripts", "Game", "OnUpdate()", csGameInstance);
 	mono->InvokeMethod(mGame_Update, csGameInstance, nullptr, nullptr);
+
+	// Physics Simulation
+	auto physics = PhysicsModuleData::GetInstance();
+	physics->OnUpdate(DeltaTime);
+
+	int i = 0;
+	for (auto& body : rigidBodies)
+	{
+		btTransform trans = body->Update();
+		GameComponents[i]->mTransform.Position = Vector3(trans.getOrigin().x(), trans.getOrigin().y(), trans.getOrigin().z());
+		GameComponents[i]->mTransform.Rotation = Quaternion(trans.getRotation());
+		++i;
+	}
 
 	InputDevice& input = *Game::GetInstance()->GetInputDevice();
 
