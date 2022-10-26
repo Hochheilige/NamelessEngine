@@ -6,11 +6,13 @@ class PhysicsModuleData
 {
 public:
 
+    ~PhysicsModuleData();
+
     static PhysicsModuleData* GetInstance();
 
     void OnUpdate(float deltaTime);
 
-    btAlignedObjectArray<btCollisionShape*> GetCollisionShapes();
+    void AddCollisionShape(btCollisionShape* shape);
     btDiscreteDynamicsWorld* GetDynamicsWorls();
 
 private:

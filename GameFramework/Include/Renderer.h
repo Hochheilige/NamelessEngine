@@ -2,7 +2,9 @@
 
 #include "GameComponent.h"
 
-class Renderer : public GameComponent
+#include "Component.h"
+
+class Renderer : public Component//public GameComponent
 {
 public:
 

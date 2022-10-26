@@ -397,35 +397,35 @@ const Camera& Game::GetCurrentCamera()
 	return *CurrentCamera;
 }
 
-void Game::DestroyComponent(GameComponent* GC)
-{
-	if (GC == nullptr)
-	{
-		return;
-	}
-
-	GC->SetParent(nullptr);
-	for (GameComponent* gc : GC->Children)
-	{
-		if (gc != nullptr)
-		{
-			gc->SetParent(nullptr);
-		}
-	}
-
-	GameComponents.erase(remove(GameComponents.begin(), GameComponents.end(), GC), GameComponents.end());
-	
-	if (Collider* col = dynamic_cast<Collider*>(GC))
-	{
-		Colliders.erase(remove(Colliders.begin(), Colliders.end(), col), Colliders.end());
-	}
-	else if (Renderer* rend = dynamic_cast<Renderer*>(GC))
-	{
-		Renderers.erase(remove(Renderers.begin(), Renderers.end(), rend), Renderers.end());
-	}
-
-	delete GC;
-}
+//void Game::DestroyComponent(GameComponent* GC)
+//{
+//	if (GC == nullptr)
+//	{
+//		return;
+//	}
+//
+//	GC->SetParent(nullptr);
+//	for (GameComponent* gc : GC->Children)
+//	{
+//		if (gc != nullptr)
+//		{
+//			gc->SetParent(nullptr);
+//		}
+//	}
+//
+//	GameComponents.erase(remove(GameComponents.begin(), GameComponents.end(), GC), GameComponents.end());
+//	
+//	if (Collider* col = dynamic_cast<Collider*>(GC))
+//	{
+//		Colliders.erase(remove(Colliders.begin(), Colliders.end(), col), Colliders.end());
+//	}
+//	else if (Renderer* rend = dynamic_cast<Renderer*>(GC))
+//	{
+//		Renderers.erase(remove(Renderers.begin(), Renderers.end(), rend), Renderers.end());
+//	}
+//
+//	delete GC;
+//}
 
 int Game::GetScreenHeight() const
 {

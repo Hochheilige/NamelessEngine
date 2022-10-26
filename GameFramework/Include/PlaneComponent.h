@@ -6,6 +6,6 @@
 class PlaneComponent : public LineRenderer
 {
 public:
-	PlaneComponent();
+	PlaneComponent(std::shared_ptr<Transform> transform);
 
 };

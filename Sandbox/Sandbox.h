@@ -6,6 +6,7 @@
 
 #include "btBulletDynamicsCommon.h"
 #include "RigidBodyComponent.h"
+#include "Actor.h"
 
 class Sandbox : public Game
 {
@@ -15,16 +16,11 @@ public:
 
 	virtual void Update(float DeltaTime) override;
 
-	class MeshRenderer* CreateObject(float trans_x, float trans_y, float trans_z,
-		float rot_x, float rot_y, float rot_z,
-		float scale_x, float scale_y, float scale_z,
-		const char* mesh_path);	
-	class MeshRenderer* CreateCubeObject(float trans_x, float trans_y, float trans_z,
-		float rot_x, float rot_y, float rot_z,
-		float scale_x, float scale_y, float scale_z);
-	class MeshRenderer* CreateSphereObject(float trans_x, float trans_y, float trans_z,
-		float rot_x, float rot_y, float rot_z,
-		float scale_x, float scale_y, float scale_z);
+	// Base objects with mesh and rigidbody components
+	Actor* CreateStaticBox(Transform transform);
+	Actor* CreateDynamicBox(Transform transform);
+	Actor* CreateStaticSphere(Transform transform);
+	Actor* CreateDynamicSphere(Transform transform);
 
 private:
 	void LoadGameFacade();
@@ -52,20 +48,11 @@ private:
 	ComPtr<ID3D11Resource> cupTexResource;
 	ComPtr<ID3D11ShaderResourceView> cupTexSRV;
 
-	MeshRenderer* updateBox;
-
-	//// Base physics objects
-	//btDefaultCollisionConfiguration* collisionConfiguration = nullptr;
-	//btCollisionDispatcher* dispatcher = nullptr;
-	//btBroadphaseInterface* overlappingPairCache = nullptr;
-	//btSequentialImpulseConstraintSolver* solver = nullptr;
-	//btDiscreteDynamicsWorld* dynamicWorld = nullptr;
-
-	//btAlignedObjectArray<btCollisionShape*> collisionShapes;
+	class MeshRenderer* updateBox;
 
 	std::vector<RigidBodyComponent*> rigidBodies;
 
-	std::vector<MeshRenderer*> box;
-	MeshRenderer* bunny;
+	std::vector<class MeshRenderer*> box;
+	class MeshRenderer* bunny;
 
 };

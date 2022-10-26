@@ -12,62 +12,40 @@
 #include "MeshLoader.h"
 #include "LightBase.h"
 #include "WICTextureLoader.h"
+#include "RigidBodyCube.h"
+#include "RigidBodySphere.h"
 #include "Mappings.h"
 #include "AudioComponent.h"
 #include "ScriptObject.h"
 #include "windows.h"
 #include "mono/metadata/debug-helpers.h"
 
-MeshRenderer* Sandbox::CreateObject(float trans_x, float trans_y, float trans_z,
-	float rot_x, float rot_y, float rot_z,
-	float scale_x, float scale_y, float scale_z,
-	const char* mesh_path)
+Actor* Sandbox::CreateStaticBox(Transform transform)
 {
-	MeshLoader ml = MeshLoader(mesh_path);
-	TexturedMesh mesh = ml.GetMesh(0);
-	MeshProxy* meshProxy = mesh.CreateMeshProxy();
+	Actor* box = new Actor(transform);
+	auto mesh_component = box->AddComponent<MeshRenderer>();
+	mesh_component->SetMeshProxy(boxMeshProxy);
+	mesh_component->SetPixelShader(ps);
+	mesh_component->SetVertexShader(vs);
+	auto box_rb = box->AddComponent<RigidBodyCube>();
+	box_rb->SetMass(0);
+	box_rb->Init();
 
-	MeshRenderer* object = Game::GetInstance()->CreateGameComponent<MeshRenderer>();
-	object->SetMeshProxy(meshProxy);
-	object->SetPixelShader(ps);
-	object->SetVertexShader(vs);
-	object->mTransform.Position = Vector3(trans_x, trans_y, trans_z);
-	object->mTransform.Rotation.SetEulerAngles(rot_x, rot_y, rot_z);
-	object->mTransform.Scale = Vector3(scale_x, scale_y, scale_z);
-
-	return object;
+	return box;
 }
 
-MeshRenderer* Sandbox::CreateCubeObject(float trans_x, float trans_y, float trans_z, float rot_x, float rot_y, float rot_z, float scale_x, float scale_y, float scale_z)
+Actor* Sandbox::CreateDynamicBox(Transform transform)
 {
-	boxMesh = new BoxMesh();
-	boxMeshProxy = boxMesh->CreateMeshProxy();
+	Actor* box = new Actor(transform);
+	auto mesh_component = box->AddComponent<MeshRenderer>();
+	mesh_component->SetMeshProxy(boxMeshProxy);
+	mesh_component->SetPixelShader(ps);
+	mesh_component->SetVertexShader(vs);
+	auto box_rb = box->AddComponent<RigidBodyCube>();
+	box_rb->SetMass(1);
+	box_rb->Init();
 
-	MeshRenderer* object = Game::GetInstance()->CreateGameComponent<MeshRenderer>();
-	object->SetMeshProxy(boxMeshProxy);
-	object->SetPixelShader(ps);
-	object->SetVertexShader(vs);
-	object->mTransform.Position = Vector3(trans_x, trans_y, trans_z);
-	object->mTransform.Rotation.SetEulerAngles(rot_x, rot_y, rot_z);
-	object->mTransform.Scale = Vector3(scale_x, scale_y, scale_z);
-
-	return object;
-}
-
-MeshRenderer* Sandbox::CreateSphereObject(float trans_x, float trans_y, float trans_z, float rot_x, float rot_y, float rot_z, float scale_x, float scale_y, float scale_z)
-{
-	sphereMesh = new SphereMesh();
-	sphereMeshProxy = sphereMesh->CreateMeshProxy();
-
-	MeshRenderer* object = Game::GetInstance()->CreateGameComponent<MeshRenderer>();
-	object->SetMeshProxy(sphereMeshProxy);
-	object->SetPixelShader(ps);
-	object->SetVertexShader(vs);
-	object->mTransform.Position = Vector3(trans_x, trans_y, trans_z);
-	object->mTransform.Rotation.SetEulerAngles(rot_x, rot_y, rot_z);
-	object->mTransform.Scale = Vector3(scale_x, scale_y, scale_z);
-
-	return object;
+	return box;
 }
 
 void Sandbox::LoadGameFacade() {
@@ -82,69 +60,38 @@ void Sandbox::LoadGameFacade() {
 	mono->InvokeMethod(mGame_Load, csGameInstance, nullptr, nullptr);
 }
 
-RigidBodyComponent* CreateCubeComponent(float trans_x, float trans_y, float trans_z, float rot_x, float rot_y, float rot_z, float scale_x, float scale_y, float scale_z, float mass)
+Actor* Sandbox::CreateStaticSphere(Transform transform)
 {
-	auto physics = PhysicsModuleData::GetInstance();
-	RigidBodyComponent* comp = new RigidBodyComponent();
+	Actor* sphere = new Actor(transform);
+	auto mesh_component = sphere->AddComponent<MeshRenderer>();
+	mesh_component->SetMeshProxy(sphereMeshProxy);
+	mesh_component->SetPixelShader(ps);
+	mesh_component->SetVertexShader(vs);
+	auto sphere_rb = sphere->AddComponent<RigidBodySphere>();
+	sphere_rb->SetMass(0);
+	sphere_rb->Init();
 
-	comp->Shape = new btBoxShape(btVector3(scale_x / 2, scale_y / 2, scale_z / 2));
-	physics->GetCollisionShapes().push_back(comp->Shape);
-
-	comp->Transform.setIdentity();
-	comp->Transform.setOrigin(btVector3(trans_x, trans_y, trans_z));
-	comp->Transform.setRotation(btQuaternion(rot_x, rot_y, rot_z));
-	comp->Mass = mass;
-
-	btVector3 localInertia = btVector3(0, 0, 0);
-	if (mass != 0.0f)
-		comp->Shape->calculateLocalInertia(mass, localInertia);
-
-	btDefaultMotionState* myMotionState = new btDefaultMotionState(comp->Transform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(comp->Mass, myMotionState, comp->Shape, localInertia);
-	comp->Body = new btRigidBody(rbInfo);
-
-	physics->GetDynamicsWorls()->addRigidBody(comp->Body);
-
-	return comp;
+	return sphere;
 }
 
-RigidBodyComponent* CreateSphereComponent(float trans_x, float trans_y, float trans_z, float rot_x, float rot_y, float rot_z, float scale_x, float scale_y, float scale_z, float mass)
+Actor* Sandbox::CreateDynamicSphere(Transform transform)
 {
-	auto physics = PhysicsModuleData::GetInstance();
+	Actor* sphere = new Actor(transform);
+	auto mesh_component = sphere->AddComponent<MeshRenderer>();
+	mesh_component->SetMeshProxy(sphereMeshProxy);
+	mesh_component->SetPixelShader(ps);
+	mesh_component->SetVertexShader(vs);
+	auto sphere_rb = sphere->AddComponent<RigidBodySphere>();
+	sphere_rb->SetMass(1);
+	sphere_rb->Init();
 
-	RigidBodyComponent* comp = new RigidBodyComponent();
-
-
-	comp->Shape = new btSphereShape(scale_x);
-	physics->GetCollisionShapes().push_back(comp->Shape);
-
-	comp->Transform.setIdentity();
-	comp->Transform.setOrigin(btVector3(trans_x, trans_y, trans_z));
-	comp->Transform.setRotation(btQuaternion(rot_x, rot_y, rot_z));
-
-	comp->Mass = mass;
-
-	btVector3 localInertia = btVector3(0, 0, 0);
-	if (mass != 0.0f)
-		comp->Shape->calculateLocalInertia(mass, localInertia);
-
-	btDefaultMotionState* myMotionState = new btDefaultMotionState(comp->Transform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(comp->Mass, myMotionState, comp->Shape, localInertia);
-	comp->Body = new btRigidBody(rbInfo);
-
-	physics->GetDynamicsWorls()->addRigidBody(comp->Body);
-
-	return comp;
+	return sphere;
 }
 
 void Sandbox::PrepareResources()
 {
 	Game::PrepareResources();
 	// create meshes
-	mono = new MonoSystem();
-
-	LoadGameFacade();
-
 	boxMesh = new BoxMesh();
 	boxMeshProxy = boxMesh->CreateMeshProxy();
 	circleMesh = new CircleMesh();
@@ -199,77 +146,40 @@ void Sandbox::PrepareResources()
 	Vector4 vec(0.0f, 0.0f, 1.0f, 1.0f);
 	vec = Vector4::Transform(vec, OrthoCamera->GetProjectionMatrix());
 
-	CreateCubeObject(5, -0.5, 0, 0, 0, 0, 10, 0.5, 10);
+	Transform tr;
+	tr.Position = Vector3(5, -0.5, 0);
+	tr.Rotation.SetEulerAngles(0, 0, 0);
+	tr.Scale = Vector3(10, 0.5, 10);
+	auto platform = CreateStaticBox(tr);
+	Actors.push_back(platform);
 
-	//CreateCubeObject(2.0f, 2.0f, 0.0f, 45.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
+	//CreateSphereObject(3.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1, 1, 1);
+	tr.Position = Vector3(3.0f, 10.0f, 0.0f);
+	tr.Rotation.SetEulerAngles(0, 0, 0);
+	tr.Scale = Vector3(1, 1, 1);
+	auto sphere = CreateDynamicSphere(tr);
+	sphere->UsePhysicsSimulation();
+	Actors.push_back(sphere);
 
 	for (int i = 0; i < 5; ++i)
 		for (int j = 0; j < 5; ++j)
 			for (int k = 0; k < 10; ++k)
-				box.push_back(CreateCubeObject(i, 40.0f + j, k, 45.0f, 45.0f, 0.0f, 1.0f, 1.0f, 1.0f));
-
-	
-
-	const char* bunny_path = "..\\Assets\\stanford-bunny.fbx";
-	bunny = CreateObject(0, 1, 0, 0, 0, 0, 0.005, 0.005, 0.005, bunny_path);
+			{
+				tr.Position = Vector3(i, 40.0f + j, k);
+				tr.Rotation.SetEulerAngles(45.0f, 45.0f, 0.0f);
+				tr.Scale = Vector3(1.0f, 1.0f, 1.0f);
+				auto box = CreateDynamicBox(tr);
+				box->UsePhysicsSimulation();
+				Actors.push_back(box);
+			}
 
 	FPSCC = CreateGameComponent<CameraController>();
 	FPSCC->SetCameraToControl(PerspCamera);
 
 
-	PlaneComponent* pc = CreateGameComponent<PlaneComponent>();
-	pc->SetPixelShader(basicPS);
-	pc->SetVertexShader(basicVS);
-
-
-	// Physics part
-
-
-	// Create rigid bodies
-	
-	// static platform
-	RigidBodyComponent* platform = CreateCubeComponent(5, -0.5, 0, 0, 0, 0, 10, 0.5, 10, 0);
-	rigidBodies.push_back(platform);
-	//btCollisionShape* platform = new btBoxShape(btVector3(5, 0.25, 5));
-	//collisionShapes.push_back(platform);
-
-	//btTransform platformTransform;
-	//platformTransform.setIdentity();
-	//platformTransform.setOrigin(btVector3(5, -0.5, 0));
-	//btScalar platformMass(0);
-
-	//bool isDynamic = (platformMass != 0.0f);
-
-	//btVector3 localInertia(0, 0, 0);
-	//if (isDynamic)
-	//	platform->calculateLocalInertia(platformMass, localInertia);
-
-	//btDefaultMotionState* platformMotionState = new btDefaultMotionState(platformTransform);
-	//btRigidBody::btRigidBodyConstructionInfo rbInfo(platformMass, platformMotionState, platform, localInertia);
-	//btRigidBody* body = new btRigidBody(rbInfo);
-
-	//dynamicWorld->addRigidBody(body);
-
-	// Dynamic cube
-	//btCollisionShape* box = new btBoxShape(btVector3(0.5, 0.5, 0.5));
-
-	RigidBodyComponent* sphere = CreateSphereComponent(3, 10, 0, 0, 0, 0, 1, 1, 1, 1);
-	rigidBodies.push_back(sphere);
-
-
-	RigidBodyComponent* box;
-	for (int i = 0; i < 5; ++i)
-	{
-		for (int j = 0; j < 5; ++j)
-		{
-			for (int k = 0; k < 10; ++k)
-			{
-
-				box = CreateCubeComponent(i, 40 + j, k, 45, 45, 0, 1, 1, 1, 1);
-				rigidBodies.push_back(box);
-			}
-		}
-	}
+	//PlaneComponent* pc = CreateGameComponent<PlaneComponent>();
+	//pc->SetPixelShader(basicPS);
+	//pc->SetVertexShader(basicVS);
 
 }
 
@@ -282,13 +192,9 @@ void Sandbox::Update(float DeltaTime)
 	auto physics = PhysicsModuleData::GetInstance();
 	physics->OnUpdate(DeltaTime);
 
-	int i = 0;
-	for (auto& body : rigidBodies)
+	for (auto actor : Actors)
 	{
-		btTransform trans = body->Update();
-		GameComponents[i]->mTransform.Position = Vector3(trans.getOrigin().x(), trans.getOrigin().y(), trans.getOrigin().z());
-		GameComponents[i]->mTransform.Rotation = Quaternion(trans.getRotation());
-		++i;
+		actor->Update(DeltaTime);
 	}
 
 	InputDevice& input = *Game::GetInstance()->GetInputDevice();
@@ -327,8 +233,11 @@ void Sandbox::Update(float DeltaTime)
 		}
 		if (keyboard->IsDown(KEY_I))
 		{
-			const char* bunny_path = "..\\Assets\\stanford-bunny.fbx";
-			CreateObject(0, 1, 0, 0, 0, 0, 0.005, 0.005, 0.005, bunny_path);
+			Actors[0]->UnUsePhysicsSimulation();
+		}		
+		if (input.IsKeyDown(50))
+		{
+			Actors[0]->UsePhysicsSimulation();
 		}
 	}
 
