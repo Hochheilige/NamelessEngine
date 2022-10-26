@@ -91,6 +91,7 @@ Actor* Sandbox::CreateDynamicSphere(Transform transform)
 void Sandbox::PrepareResources()
 {
 	Game::PrepareResources();
+	mono = new MonoSystem();
 	// create meshes
 	boxMesh = new BoxMesh();
 	boxMeshProxy = boxMesh->CreateMeshProxy();
@@ -185,8 +186,8 @@ void Sandbox::PrepareResources()
 
 void Sandbox::Update(float DeltaTime)
 {
-	const auto mGame_Update = mono->GetVirtualMethod("Scripts", "Game", "OnUpdate()", csGameInstance);
-	mono->InvokeMethod(mGame_Update, csGameInstance, nullptr, nullptr);
+	//const auto mGame_Update = mono->GetVirtualMethod("Scripts", "Game", "OnUpdate()", csGameInstance);
+	//mono->InvokeMethod(mGame_Update, csGameInstance, nullptr, nullptr);
 
 	// Physics Simulation
 	auto physics = PhysicsModuleData::GetInstance();
@@ -231,11 +232,11 @@ void Sandbox::Update(float DeltaTime)
 			}
 			pressTime = GetTotalElapsedTime();
 		}
-		if (keyboard->IsDown(KEY_I))
+		if (keyboard->IsDown(KEY_ONE))
 		{
 			Actors[0]->UnUsePhysicsSimulation();
 		}		
-		if (input.IsKeyDown(50))
+		if (input.GetKeyboard()->IsDown(KEY_TWO))
 		{
 			Actors[0]->UsePhysicsSimulation();
 		}
