@@ -2,7 +2,7 @@
 
 DisplayWin32::DisplayWin32(LONG ClientHeight, LONG ClientWidth, WNDPROC WndProc, LPCWSTR ApplicationName) : ClientHeight(ClientHeight), ClientWidth(ClientWidth)
 {
-	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+	wc.style = CS_HREDRAW | CS_VREDRAW | CS_CLASSDC;
 	wc.lpfnWndProc = WndProc;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
@@ -21,7 +21,7 @@ DisplayWin32::DisplayWin32(LONG ClientHeight, LONG ClientWidth, WNDPROC WndProc,
 	RECT windowRect = { 0, 0, ClientWidth, ClientHeight };
 	AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
 
-	auto dwStyle = WS_SYSMENU | WS_CAPTION | WS_MINIMIZEBOX | WS_THICKFRAME;
+	auto dwStyle = WS_SYSMENU | WS_CAPTION | WS_MINIMIZEBOX | WS_THICKFRAME | WS_OVERLAPPEDWINDOW;
 
 	auto posX = (GetSystemMetrics(SM_CXSCREEN) - ClientWidth) / 2;
 	auto posY = (GetSystemMetrics(SM_CYSCREEN) - ClientHeight) / 2;
