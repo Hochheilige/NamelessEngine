@@ -448,6 +448,10 @@ void RenderingSystem::PerformLightingPass(float DeltaTime)
 
 void RenderingSystem::HandleScreenResize(const Vector2& NewSize)
 {
+	if (NewSize.x < 1 || NewSize.y < 1)
+	{
+		return;
+	}
 	GeometryBuffer.Resize(NewSize.x, NewSize.y);
 	ResizeViewport(NewSize.x, NewSize.y);
 	MyGame->GetCurrentCamera()->UpdateAspectRatio(NewSize.x / NewSize.y);
