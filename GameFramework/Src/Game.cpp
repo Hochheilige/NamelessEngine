@@ -242,7 +242,7 @@ void Game::Run()
 		
 		drawDockspace(temp);
 		ImGui::ShowDemoWindow(&temp);
-		ImGui::Begin("Viewort");
+		ImGui::Begin("Viewport");
 		const ImVec2 viewportSize = ImGui::GetContentRegionAvail();
 		MyRenderingSystem->HandleScreenResize({ viewportSize.x, viewportSize.y });
 		ImGui::Image(MyRenderingSystem->GetViewportTextureID(), viewportSize);
@@ -329,6 +329,7 @@ void Game::Render()
 	viewport.TopLeftY = 0.0f;
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
+	Context->ClearRenderTargetView(RenderTargetView.Get(), Color());
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 	SwapChain->Present(1, 0);
