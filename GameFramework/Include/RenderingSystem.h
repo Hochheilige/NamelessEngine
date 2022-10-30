@@ -186,7 +186,7 @@ private:
 
 	std::vector<LightBase*> Lights;
 
-	Color DiffuseClearColor = Color(0.0f, 0.4f, 0.0f, 1.0f);
+	Color DiffuseClearColor = Color(0.15f, 0.1f, 0.3f, 1.0f);
 
 	ComPtr<ID3D11Texture2D> ViewportTex = nullptr;
 	ComPtr<ID3D11ShaderResourceView> ViewportSRV = nullptr;

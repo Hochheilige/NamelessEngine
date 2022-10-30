@@ -165,14 +165,14 @@ class BoxMesh : public ColoredMesh
 public:
 	BoxMesh()
 	{
-		AddVertex({ Vector3(0.5f, 0.5f, 0.5f),    Color(1.0f, 0.0f, 0.0f, 1.0f) }); // 0
-		AddVertex({ Vector3(-0.5f, -0.5f, 0.5f),  Color(0.0f, 0.0f, 1.0f, 1.0f) }); // 1
-		AddVertex({ Vector3(0.5f, -0.5f, 0.5f),   Color(0.0f, 1.0f, 0.0f, 1.0f) }); // 2
-		AddVertex({ Vector3(-0.5f, 0.5f, 0.5f),   Color(1.0f, 1.0f, 1.0f, 1.0f) }); // 3
-		AddVertex({ Vector3(0.5f, 0.5f, -0.5f),   Color(1.0f, 0.0f, 0.0f, 1.0f) }); // 4
-		AddVertex({ Vector3(-0.5f, -0.5f, -0.5f), Color(0.0f, 0.0f, 1.0f, 1.0f) }); // 5
-		AddVertex({ Vector3(0.5f, -0.5f, -0.5f),  Color(0.0f, 1.0f, 0.0f, 1.0f) }); // 6
-		AddVertex({ Vector3(-0.5f, 0.5f, -0.5f),  Color(1.0f, 1.0f, 1.0f, 1.0f) }); // 7
+		AddVertex({ Vector3(0.5f, 0.5f, 0.5f),    Color(1.0f, 1.0f, 0.0f, 1.0f) }); // 0
+		AddVertex({ Vector3(-0.5f, -0.5f, 0.5f),  Color(1.0f, 0.0f, 1.0f, 1.0f) }); // 1
+		AddVertex({ Vector3(0.5f, -0.5f, 0.5f),   Color(0.0f, 1.0f, 1.0f, 1.0f) }); // 2
+		AddVertex({ Vector3(-0.5f, 0.5f, 0.5f),   Color(1.0f, 1.0f, 0.0f, 1.0f) }); // 3
+		AddVertex({ Vector3(0.5f, 0.5f, -0.5f),   Color(1.0f, 0.0f, 1.0f, 1.0f) }); // 4
+		AddVertex({ Vector3(-0.5f, -0.5f, -0.5f), Color(1.0f, 0.0f, 1.0f, 1.0f) }); // 5
+		AddVertex({ Vector3(0.5f, -0.5f, -0.5f),  Color(0.0f, 1.0f, 1.0f, 1.0f) }); // 6
+		AddVertex({ Vector3(-0.5f, 0.5f, -0.5f),  Color(0.0f, 1.0f, 1.0f, 1.0f) }); // 7
 
 		AddFace(0, 1, 2);
 		AddFace(1, 0, 3);
