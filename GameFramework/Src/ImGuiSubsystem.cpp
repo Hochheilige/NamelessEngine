@@ -183,13 +183,27 @@ auto ImGuiSubsystem::DrawDockspace() -> void
 
 }
 
+auto operator-(const ImVec2& l, const ImVec2& r) -> ImVec2
+{
+	return ImVec2{ l.x - r.x, l.y - r.y };
+}
+
 auto ImGuiSubsystem::DrawViewport() -> void
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	ImGui::Begin("Viewport");
 	const ImVec2 viewportSize = ImGui::GetContentRegionAvail();
+	const ImVec2 mousePos = ImGui::GetMousePos() - ImGui::GetCursorScreenPos();
+	ViewportMousePos = {mousePos.x, mousePos.y};
 	MyGame->MyRenderingSystem->HandleScreenResize({ viewportSize.x, viewportSize.y });
 	ImGui::Image(MyGame->MyRenderingSystem->GetViewportTextureID(), viewportSize);
+	// todo: move this somewhere more appropriate
+	{
+		if (ImGui::IsItemClicked())
+		{
+			MyGame->MyEditorContext.SelectedActor = MyGame->MyRenderingSystem->GetActorUnderPosition(ViewportMousePos);
+		}
+	}
 	ImGui::End();
 	ImGui::PopStyleVar();
 }
@@ -232,6 +246,7 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 	else
 	{
 		ImGui::Text("No actor selected");
+		ImGui::Text(("x = " + std::to_string(ViewportMousePos.x) + "\ty = " + std::to_string(ViewportMousePos.y)).c_str());
 	}
 	ImGui::End();
 }

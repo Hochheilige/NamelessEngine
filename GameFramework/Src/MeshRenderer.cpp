@@ -46,14 +46,15 @@ void MeshRenderer::Render(const RenderingSystemContext& RSContext)
 	// checking which shader is set now
 	// and/or sorting meshes by used shaders
 	mVertexShader->UseShader(static_cast<ShaderFlag>(RSContext.ShaderFlags));
-	// todo: render the scene with override material instead of using a bool
-	if (game->bIsRenderingShadowMap)
+
+	PixelShader* psToUse = RSContext.OverridePixelShader.value_or(mPixelShader);
+	if (psToUse == nullptr)
 	{
 		context->PSSetShader(nullptr, nullptr, 0);
 	}
 	else
 	{
-		mPixelShader->UseShader(static_cast<ShaderFlag>(RSContext.ShaderFlags));
+		psToUse->UseShader(static_cast<ShaderFlag>(RSContext.ShaderFlags));
 	}
 
 	// Update constant buffer with world matrix
@@ -87,7 +88,7 @@ void MeshRenderer::Render(const RenderingSystemContext& RSContext)
 	if (mSpecularSRV != nullptr)
 	context->PSSetShaderResources(3, 1, mSpecularSRV.GetAddressOf());
 
-
+	// todo: render the scene with override material instead of using a bool
 	if (!game->bIsRenderingShadowMap)
 	{
 		context->PSSetShaderResources(1, 1, game->GetShadowMapSRV().GetAddressOf());

@@ -5,6 +5,8 @@
 #include "MathInclude.h"
 #include "GBuffer.h"
 
+#include <optional>
+
 #pragma pack(push, 4)
 struct LightData
 {
@@ -25,12 +27,13 @@ class Game;
 class Renderer;
 class LightBase;
 class Camera;
+class Actor;
+class PixelShader;
 
 struct ID3D11Buffer;
 struct ID3D11SamplerState;
 struct ID3D11DepthStencilState;
 
-// @TODO: move this to rendering system?
 #pragma pack(push, 4)
 struct CBPerDraw
 {
@@ -73,12 +76,51 @@ struct CBLights
 struct RenderingSystemContext
 {
 	int ShaderFlags = 0;
+	std::optional<PixelShader*> OverridePixelShader;
+};
+
+
+struct CBLookup
+{
+	uint32_t id;
+	float _pad[3];
+};
+// todo: move this to its own file
+class ObjectLookupHelper
+{
+public:
+
+	ObjectLookupHelper(class RenderingSystem* InRenderingSystem);
+
+	auto HandleScreenResize(const Vector2& NewSize) -> void;
+
+	auto GetRendererUnderPosition(const Vector2& Pos) -> Renderer*;
+	auto GetActorUnderPosition(const Vector2& Pos) -> Actor*;
+
+	auto Render() -> void;
+
+private:
+	auto ResizeViewport(int Width, int Height) -> void;
+
+	ComPtr<ID3D11Texture2D> RenderTex = nullptr;
+	ComPtr<ID3D11RenderTargetView> RenderTexRTV = nullptr;
+
+	ComPtr<ID3D11Texture2D> StagingTex = nullptr;
+
+	ComPtr<ID3D11Device> Device = nullptr;
+	ComPtr<ID3D11DeviceContext> DeviceContext = nullptr;
+
+	ComPtr<ID3D11Buffer> LookupCB;
+
+	PixelShader* LookupShader = nullptr;
+
+	class RenderingSystem* MyRenderingSystem;
 };
 
 
 class RenderingSystem
 {
-
+	friend ObjectLookupHelper;
 public:
 
 	RenderingSystem(class Game* InGame);
@@ -97,6 +139,7 @@ public:
 	// TODO: add a delegate and subscribe to resize event
 	void HandleScreenResize(const Vector2& NewSize);
 
+	auto GetActorUnderPosition(const Vector2& Pos)->Actor* { return MyObjectLookupHelper->GetActorUnderPosition(Pos); }
 
 private:
 
@@ -154,6 +197,7 @@ private:
 
 	Vector2 ViewportSize;
 
+	ObjectLookupHelper* MyObjectLookupHelper = nullptr;
 private:
 
 	void SetScreenSizeViewport();

@@ -27,7 +27,16 @@ void LineRenderer::Render(const RenderingSystemContext& RSContext)
 	// checking which shader is set now
 	// and/or sorting meshes by used shaders
 	mVertexShader->UseShader();
-	mPixelShader->UseShader();
+	
+	PixelShader* psToUse = RSContext.OverridePixelShader.value_or(mPixelShader);
+	if (psToUse == nullptr)
+	{
+		context->PSSetShader(nullptr, nullptr, 0);
+	}
+	else
+	{
+		psToUse->UseShader(static_cast<ShaderFlag>(RSContext.ShaderFlags));
+	}
 
 	// Update constant buffer with world matrix
 	CBPerObject cbData;
