@@ -21,6 +21,7 @@ private:
 	auto DrawDockspace() -> void;
 	auto DrawViewport() -> void;
 	auto DrawActorExplorer() -> void;
+	auto DrawActorInspector() -> void;
 private:
 	Game* MyGame;
 

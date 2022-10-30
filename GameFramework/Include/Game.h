@@ -14,6 +14,7 @@
 #include "Camera.h"
 
 #include "Actor.h"
+#include "EditorContext.h"
 
 class RenderingSystem;
 class ImGuiSubsystem;
@@ -149,6 +150,8 @@ public:
 
 
 	void HandleWindowResize(int Width, int Height);
+
+	EditorContext MyEditorContext;
 
 protected:
 

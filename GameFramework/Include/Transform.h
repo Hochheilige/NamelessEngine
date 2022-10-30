@@ -72,6 +72,6 @@ struct Transform
 
 	Matrix GetNormalMatrixTransposed() const;
 
-	//std::string ToString() const;
+	auto ToString() const -> std::string;
 };
 

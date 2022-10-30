@@ -1,11 +1,13 @@
 #pragma once
 
-#include "Game.h"
+
+class Actor;
 
 class EditorContext
 {
 
 public:
 
+	Actor* SelectedActor = nullptr;
 };
 

@@ -1,6 +1,9 @@
 #include "Transform.h"
 
+#include <sstream>
+
 using namespace DirectX;
+using namespace std;
 
 Rotator::Rotator()
 {
@@ -154,4 +157,15 @@ Matrix Transform::GetNormalMatrixTransposed() const
 	return tr.GetTransformMatrix().Invert();
 }
 
+auto Transform::ToString() const->std::string
+{
+	stringstream sstream;
+	std::string str = "Position: x=";
+	sstream << "Position: x = " << Position.x << "\t" << "y = " << Position.y << "\t" << "z = " << Position.x << endl;
+	sstream << "Scale: x = " << Scale.x << "\t" << "y = " << Scale.y << "\t" << "z = " << Scale.z << endl;
+	Vector3 euler = Rotation.GetEulerDegrees();
+	sstream << "Euler Degrees =  = " << euler.x << "\t" << "y = " << euler.y << "\t" << "z = " << euler.x << endl;
+
+	return sstream.str();
+}
 

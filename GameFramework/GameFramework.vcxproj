@@ -156,9 +156,9 @@
   <ItemGroup>
     <ClInclude Include="..\imgui\backends\imgui_impl_dx11.h" />
     <ClInclude Include="..\imgui\backends\imgui_impl_win32.h" />
-    <ClInclude Include="EditorContext.h" />
     <ClInclude Include="Include\AABB2DCollider.h" />
     <ClInclude Include="Include\CreateCommon.h" />
+    <ClInclude Include="Include\EditorContext.h" />
     <ClInclude Include="Include\Game.h" />
     <ClInclude Include="Include\GameComponent.h" />
     <ClInclude Include="Include\Camera.h" />

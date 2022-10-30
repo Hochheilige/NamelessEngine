@@ -7,6 +7,8 @@
 #include "Game.h"
 #include "DisplayWin32.h"
 
+#include <string>
+
 auto ImGuiSubsystem::Initialize(Game* const InGame) -> void
 {
 	MyGame = InGame;
@@ -66,6 +68,8 @@ auto ImGuiSubsystem::DoLayout() -> void
 	static bool temp = true;
 	ImGui::ShowDemoWindow(&temp);
 	DrawViewport();
+	DrawActorExplorer();
+	DrawActorInspector();
 }
 
 auto ImGuiSubsystem::Shutdown() -> void
@@ -181,16 +185,53 @@ auto ImGuiSubsystem::DrawDockspace() -> void
 
 auto ImGuiSubsystem::DrawViewport() -> void
 {
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	ImGui::Begin("Viewport");
 	const ImVec2 viewportSize = ImGui::GetContentRegionAvail();
 	MyGame->MyRenderingSystem->HandleScreenResize({ viewportSize.x, viewportSize.y });
 	ImGui::Image(MyGame->MyRenderingSystem->GetViewportTextureID(), viewportSize);
 	ImGui::End();
+	ImGui::PopStyleVar();
 }
 
 auto ImGuiSubsystem::DrawActorExplorer() -> void
 {
 	ImGui::Begin("Actor Explorer");
+	//ImGui::BeginListBox("Actors");
+	int i = 0;
+	for (Actor* actor : MyGame->Actors)
+	{
+		const bool isSelectedActor = MyGame->MyEditorContext.SelectedActor == actor;
+		if (isSelectedActor)
+		{
+			ImGui::PushStyleColor(0, {0.5f, 0.5, 0.5f, 1.0f});
+		}
+		ImGui::Button((std::string("Actor") + std::to_string(i)).c_str());
+		if (ImGui::IsItemClicked())
+		{
+			MyGame->MyEditorContext.SelectedActor = actor;
+		}
+		if (isSelectedActor)
+		{
+			ImGui::PopStyleColor();
+		}
+		++i;
+	}
 	
+	ImGui::End();
+}
+
+auto ImGuiSubsystem::DrawActorInspector() -> void
+{
+	ImGui::Begin("Actor Inspector");
+	if (Actor* actor = MyGame->MyEditorContext.SelectedActor)
+	{
+		Transform t = actor->GetTransform();
+		ImGui::Text(t.ToString().c_str());
+	}
+	else
+	{
+		ImGui::Text("No actor selected");
+	}
 	ImGui::End();
 }

@@ -99,13 +99,13 @@
     <ClInclude Include="Include\Keyboard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EditorContext.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Include\ImGuiSubsystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\CreateCommon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\EditorContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
