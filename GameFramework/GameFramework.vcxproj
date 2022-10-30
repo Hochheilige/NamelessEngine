@@ -165,6 +165,7 @@
     <ClInclude Include="Include\Collider.h" />
     <ClInclude Include="Include\DisplayWin32.h" />
     <ClInclude Include="Include\GBuffer.h" />
+    <ClInclude Include="Include\ImGuiSubsystem.h" />
     <ClInclude Include="Include\InputDevice.h" />
     <ClInclude Include="Include\LightBase.h" />
     <ClInclude Include="Include\LineRenderer.h" />
@@ -197,6 +198,7 @@
     <ClCompile Include="Src\Collider.cpp" />
     <ClCompile Include="Src\DisplayWin32.cpp" />
     <ClCompile Include="Src\GBuffer.cpp" />
+    <ClCompile Include="Src\ImGuiSubsystem.cpp" />
     <ClCompile Include="Src\InputDevice.cpp" />
     <ClCompile Include="Src\Keyboard.cpp" />
     <ClCompile Include="Src\LightBase.cpp" />

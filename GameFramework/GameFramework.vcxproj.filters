@@ -102,6 +102,9 @@
     <ClInclude Include="EditorContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\ImGuiSubsystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\AABB2DCollider.cpp">
@@ -186,6 +189,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="EditorContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\ImGuiSubsystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

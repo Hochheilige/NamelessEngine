@@ -16,6 +16,7 @@
 #include "Actor.h"
 
 class RenderingSystem;
+class ImGuiSubsystem;
 
 using namespace Microsoft::WRL;
 
@@ -202,5 +203,7 @@ private:
 
 	Camera DefaultCamera = Camera();
 
+	
+	ImGuiSubsystem* mImGuiSubsystem;
 };
 
