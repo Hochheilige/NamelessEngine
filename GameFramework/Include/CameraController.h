@@ -30,6 +30,6 @@ private:
 	float maxFov = 175.0f;
 	float minFov = 45.0f; 
 
-	float RotSpeedYaw = 100000.0f;
-	float RotSpeedPitch = 30000.0f;
+	float RotSpeedYaw = 40000.0f;
+	float RotSpeedPitch = 12000.0f;
 };
