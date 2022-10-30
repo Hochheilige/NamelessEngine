@@ -6,7 +6,7 @@ class RigidBodySphere : public RigidBodyComponent
 {
 public:
 
-	RigidBodySphere(std::shared_ptr<Transform> transform);
+	RigidBodySphere();
 
 	void SetMass(float mass);
 

@@ -6,6 +6,7 @@
 #include "Object.h"
 #include "Transform.h"
 #include "Component.h"
+#include "SceneComponent.h"
 
 class LineRenderer;
 class MeshRenderer;
@@ -15,52 +16,57 @@ class Actor : public Object
 {
 public:
 
-	Actor(Transform transform);
+	Actor() = default;
 
-	Transform GetTransform() const;
-	Transform GetWorldTransform() const;
-
-	Actor* GetParent() const;
-	void   SetParent(Actor* InParent);
-
-	Actor* GetChild(Actor* Child) const;
-	void   AddChild(Actor* Child);
+	auto GetTransform() const -> const Transform& { return RootComponent ? RootComponent->GetTransform() : Transform{}; }
+	auto SetTransform(const Transform& InTransform) const -> void { if (RootComponent)  RootComponent->SetRelativeTransform(InTransform); else assert(false, "attempting to set transform when actor doesn't have a root component"); }
 
 	template<typename T>
-	T* AddComponent(float mass = 0.0f)
+	auto AddComponent() -> T*
 	{
+		static_assert(std::is_base_of_v<Component, T>, "Only componentns can be added to an actor");
+
 		T* component = nullptr;
 
-		auto component_on_actor = std::find_if(Components.begin(), Components.end(),
-			[](Component* comp) {return dynamic_cast<T*>(comp); }
-		);
-		if (component_on_actor != Components.end())
+		// todo: do we need this?
+		if constexpr (std::is_same<T, MeshRenderer>())
 		{
-			printf("[Error]: Component of this type {%s} already exists", typeid(T).name());
-			return component;
-		}
-
-		if (std::is_same<T, MeshRenderer>())
-		{
-			is_mesh_renderer_enable = true;
+			is_mesh_renderer_enabled = true;
 		}		
 		
-		if (std::is_base_of<LineRenderer, T>())
+		if constexpr (std::is_base_of<LineRenderer, T>())
 		{
-			is_debug_renderer_enable = true;
+			is_debug_renderer_enabled = true;
 		}
 
-		component = new T(mTransform);
+		component = new T();
 		Components.push_back(component);
+		component->mOwner = this;
+
+		if constexpr (std::is_base_of<SceneComponent, T>())
+		{
+			if (RootComponent == nullptr)
+			{
+				RootComponent = component;
+			}
+			else
+			{
+				// Attach to RootComponent by default
+				component->SetAttachmentParent(RootComponent);
+			}
+		}
+
 		return component;
 	}
 
 	template<typename T>
-	void RemoveComponent()
+	void RemoveComponentsOfClass()
 	{
 		Components.erase(remove_if(Components.begin(), Components.end(),
 			[](Component* comp) {return dynamic_cast<T*>(comp); }), Components.end());
 	}
+
+	auto RemoveComponent(Component* InComponent) -> void;
 
 	void RemoveChild(Actor* Child);
 
@@ -77,13 +83,16 @@ public:
 private:
 	Actor* Parent = nullptr;
 
-	std::shared_ptr<Transform> mTransform;
-	std::vector<Actor*> Children;
+	// todo: Think about being able to update Root at Runtime
+	SceneComponent* RootComponent = nullptr;
 	std::vector<Component*> Components;
 
-	bool is_physics_enable = false;
-	bool is_debug_renderer_enable = false;
-	bool is_mesh_renderer_enable = false;
+	bool is_physics_enabled = false;
+	bool is_debug_renderer_enabled = false;
+	bool is_mesh_renderer_enabled = false;
 
+private:
+	
 	friend class Game;
+	friend class Component;
 };

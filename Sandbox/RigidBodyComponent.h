@@ -2,9 +2,9 @@
 
 #include "btBulletDynamicsCommon.h"
 #include "PhysicsModule.h"
-#include "Component.h"
+#include "SceneComponent.h"
 
-class RigidBodyComponent : public Component
+class RigidBodyComponent : public SceneComponent
 {
 public:
 

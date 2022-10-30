@@ -65,6 +65,8 @@ struct Transform
 	// todo: rename this function
 	Transform TransformToWorld(const Transform& ParentTransform) const;
 
+	auto TransformToLocal(const Transform& ParentTransform) const -> Transform;
+
 
 	Matrix GetNormalMatrix() const;
 

@@ -22,28 +22,30 @@
 
 Actor* Sandbox::CreateStaticBox(Transform transform)
 {
-	Actor* box = new Actor(transform);
+	Actor* box = new Actor();
+	auto box_rb = box->AddComponent<RigidBodyCube>();
+	box->SetTransform(transform);
+	box_rb->SetMass(0);
+	box_rb->Init();
 	auto mesh_component = box->AddComponent<MeshRenderer>();
 	mesh_component->SetMeshProxy(boxMeshProxy);
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
-	auto box_rb = box->AddComponent<RigidBodyCube>();
-	box_rb->SetMass(0);
-	box_rb->Init();
 
 	return box;
 }
 
 Actor* Sandbox::CreateDynamicBox(Transform transform)
 {
-	Actor* box = new Actor(transform);
+	Actor* box = new Actor();
+	auto box_rb = box->AddComponent<RigidBodyCube>();
+	box->SetTransform(transform);
+	box_rb->SetMass(1);
+	box_rb->Init();
 	auto mesh_component = box->AddComponent<MeshRenderer>();
 	mesh_component->SetMeshProxy(boxMeshProxy);
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
-	auto box_rb = box->AddComponent<RigidBodyCube>();
-	box_rb->SetMass(1);
-	box_rb->Init();
 
 	return box;
 }
@@ -62,28 +64,30 @@ void Sandbox::LoadGameFacade() {
 
 Actor* Sandbox::CreateStaticSphere(Transform transform)
 {
-	Actor* sphere = new Actor(transform);
+	Actor* sphere = new Actor();
+	auto sphere_rb = sphere->AddComponent<RigidBodySphere>();
+	sphere->SetTransform(transform);
+	sphere_rb->SetMass(0);
+	sphere_rb->Init();
 	auto mesh_component = sphere->AddComponent<MeshRenderer>();
 	mesh_component->SetMeshProxy(sphereMeshProxy);
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
-	auto sphere_rb = sphere->AddComponent<RigidBodySphere>();
-	sphere_rb->SetMass(0);
-	sphere_rb->Init();
 
 	return sphere;
 }
 
 Actor* Sandbox::CreateDynamicSphere(Transform transform)
 {
-	Actor* sphere = new Actor(transform);
+	Actor* sphere = new Actor();
+	auto sphere_rb = sphere->AddComponent<RigidBodySphere>();
+	sphere->SetTransform(transform);
+	sphere_rb->SetMass(1);
+	sphere_rb->Init();
 	auto mesh_component = sphere->AddComponent<MeshRenderer>();
 	mesh_component->SetMeshProxy(sphereMeshProxy);
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
-	auto sphere_rb = sphere->AddComponent<RigidBodySphere>();
-	sphere_rb->SetMass(1);
-	sphere_rb->Init();
 
 	return sphere;
 }
@@ -136,7 +140,8 @@ void Sandbox::PrepareResources()
 	PerspCamera = new Camera();
 	CurrentCamera = PerspCamera;
 	PerspCamera->UpdateProjectionMatrixPerspective(45.0f, Display->GetAspectRatio(), 0.01f, 1000.0f);
-	PerspCamera->Transform.Position = PerspCamera->Transform.Rotation.GetForwardVector() * -5.0f;
+	PerspCamera->Transform.Position = {-3.0f, 12.0f, 9.0f};
+	
 
 	OrthoCamera = new Camera();
 	const float height = 16.0f;
@@ -176,6 +181,7 @@ void Sandbox::PrepareResources()
 
 	FPSCC = CreateGameComponent<CameraController>();
 	FPSCC->SetCameraToControl(PerspCamera);
+	FPSCC->SetPitchYaw(-45.0f, -45.0f);
 
 
 	//PlaneComponent* pc = CreateGameComponent<PlaneComponent>();

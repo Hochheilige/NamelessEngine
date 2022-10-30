@@ -156,10 +156,12 @@ xcopy "$(SolutionDir)External\mono\lib\4.5\*" "$(TargetDir)mono\lib\4.5\" /y /i 
     <ClInclude Include="RigidBodyCube.h" />
     <ClInclude Include="RigidBodySphere.h" />
     <ClInclude Include="Sandbox.h" />
+    <ClInclude Include="SceneComponent.h" />
     <ClInclude Include="ScriptObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AudioComponent.cpp" />
+    <ClCompile Include="Component.cpp" />
     <ClCompile Include="Mappings.cpp" />
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="PhysicsModule.cpp" />
@@ -168,6 +170,7 @@ xcopy "$(SolutionDir)External\mono\lib\4.5\*" "$(TargetDir)mono\lib\4.5\" /y /i 
     <ClCompile Include="RigidBodyCube.cpp" />
     <ClCompile Include="RigidBodySphere.cpp" />
     <ClCompile Include="Sandbox.cpp" />
+    <ClCompile Include="SceneComponent.cpp" />
     <ClCompile Include="ScriptObject.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>

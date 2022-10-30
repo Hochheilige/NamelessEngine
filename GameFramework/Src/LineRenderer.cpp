@@ -3,10 +3,9 @@
 
 #include "RenderingSystem.h"
 
-LineRenderer::LineRenderer(std::shared_ptr<Transform> transform)
+LineRenderer::LineRenderer()
 {
 	bCastShadow = false;
-	mTransform = transform;
 	Game::GetInstance()->MyRenderingSystem->RegisterRenderer(this);
 }
 
@@ -32,7 +31,7 @@ void LineRenderer::Render(const RenderingSystemContext& RSContext)
 
 	// Update constant buffer with world matrix
 	CBPerObject cbData;
-	cbData.ObjectToWorld = mTransform->GetTransformMatrixTransposed();//GetWorldTransform().GetTransformMatrixTransposed();
+	cbData.ObjectToWorld = GetTransform().GetTransformMatrixTransposed();
 	cbData.Color = mColor;
 
 	D3D11_MAPPED_SUBRESOURCE resource = {};

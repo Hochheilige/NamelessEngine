@@ -11,7 +11,7 @@ class MeshRenderer : public Renderer
 {
 public:
 
-	MeshRenderer(std::shared_ptr<Transform> transform);
+	MeshRenderer();
 
 	virtual void Init() override {}
 	virtual void OnRegister() override {}

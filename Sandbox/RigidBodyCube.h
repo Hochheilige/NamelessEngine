@@ -6,7 +6,7 @@ class RigidBodyCube : public RigidBodyComponent
 {
 public:
 
-	RigidBodyCube(std::shared_ptr<Transform> transform);
+	RigidBodyCube();
 
 	void SetMass(float mass);
 

@@ -135,6 +135,11 @@ Transform Transform::TransformToWorld(const Transform& ParentTransform) const
 	return GetTransformMatrix() * ParentTransform.GetTransformMatrix();
 }
 
+auto Transform::TransformToLocal(const Transform& ParentTransform) const -> Transform
+{
+    return GetTransformMatrix() * ParentTransform.GetInverseTransformMatrix();
+}
+
 Matrix Transform::GetNormalMatrix() const
 {
 	Transform tr = *this;

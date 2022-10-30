@@ -9,7 +9,7 @@ class LineRenderer : public Renderer
 {
 public:
 
-	LineRenderer(std::shared_ptr<Transform> transform);
+	LineRenderer();
 
 	virtual void Init() override {}
 	virtual void OnRegister() override {}
@@ -32,7 +32,7 @@ class LineCircle : public LineRenderer
 {
 public:
 
-	LineCircle(std::shared_ptr<Transform> transform) : LineRenderer(transform)
+	LineCircle() : LineRenderer()
 	{
 		struct ConstrStatic
 		{
@@ -86,7 +86,7 @@ class LineSphere : public LineRenderer
 {
 public:
 
-	LineSphere(std::shared_ptr<Transform> transform) : LineRenderer(transform)
+	LineSphere() : LineRenderer()
 	{
 		struct ConstrStatic
 		{
