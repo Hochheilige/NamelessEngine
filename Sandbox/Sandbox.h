@@ -6,7 +6,8 @@
 
 #include "btBulletDynamicsCommon.h"
 #include "RigidBodyComponent.h"
-#include "Actor.h"
+
+class Actor;
 
 class Sandbox : public Game
 {
@@ -54,5 +55,7 @@ private:
 
 	std::vector<class MeshRenderer*> box;
 	class MeshRenderer* bunny;
+
+	Actor* platform;
 
 };

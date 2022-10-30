@@ -20,6 +20,7 @@ public:
 private:
 	auto DrawDockspace() -> void;
 	auto DrawViewport() -> void;
+	auto DrawActorExplorer() -> void;
 private:
 	Game* MyGame;
 

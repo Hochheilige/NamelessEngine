@@ -20,9 +20,11 @@
 #include "windows.h"
 #include "mono/metadata/debug-helpers.h"
 
+#include "CreateCommon.h"
+
 Actor* Sandbox::CreateStaticBox(Transform transform)
 {
-	Actor* box = new Actor();
+	Actor* box = CreateActor<Actor>();
 	auto box_rb = box->AddComponent<RigidBodyCube>();
 	box->SetTransform(transform);
 	box_rb->SetMass(0);
@@ -37,7 +39,7 @@ Actor* Sandbox::CreateStaticBox(Transform transform)
 
 Actor* Sandbox::CreateDynamicBox(Transform transform)
 {
-	Actor* box = new Actor();
+	Actor* box = CreateActor<Actor>();
 	auto box_rb = box->AddComponent<RigidBodyCube>();
 	box->SetTransform(transform);
 	box_rb->SetMass(1);
@@ -64,7 +66,7 @@ void Sandbox::LoadGameFacade() {
 
 Actor* Sandbox::CreateStaticSphere(Transform transform)
 {
-	Actor* sphere = new Actor();
+	Actor* sphere = CreateActor<Actor>();
 	auto sphere_rb = sphere->AddComponent<RigidBodySphere>();
 	sphere->SetTransform(transform);
 	sphere_rb->SetMass(0);
@@ -79,7 +81,7 @@ Actor* Sandbox::CreateStaticSphere(Transform transform)
 
 Actor* Sandbox::CreateDynamicSphere(Transform transform)
 {
-	Actor* sphere = new Actor();
+	Actor* sphere = CreateActor<Actor>();
 	auto sphere_rb = sphere->AddComponent<RigidBodySphere>();
 	sphere->SetTransform(transform);
 	sphere_rb->SetMass(1);
@@ -156,8 +158,7 @@ void Sandbox::PrepareResources()
 	tr.Position = Vector3(5, -0.5, 0);
 	tr.Rotation.SetEulerAngles(0, 0, 0);
 	tr.Scale = Vector3(10, 0.5, 10);
-	auto platform = CreateStaticBox(tr);
-	Actors.push_back(platform);
+	platform = CreateStaticBox(tr);
 
 	//CreateSphereObject(3.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1, 1, 1);
 	tr.Position = Vector3(3.0f, 10.0f, 0.0f);
@@ -165,7 +166,6 @@ void Sandbox::PrepareResources()
 	tr.Scale = Vector3(1, 1, 1);
 	auto sphere = CreateDynamicSphere(tr);
 	sphere->UsePhysicsSimulation();
-	Actors.push_back(sphere);
 
 	for (int i = 0; i < 5; ++i)
 		for (int j = 0; j < 5; ++j)
@@ -176,7 +176,6 @@ void Sandbox::PrepareResources()
 				tr.Scale = Vector3(1.0f, 1.0f, 1.0f);
 				auto box = CreateDynamicBox(tr);
 				box->UsePhysicsSimulation();
-				Actors.push_back(box);
 			}
 
 	FPSCC = CreateGameComponent<CameraController>();
@@ -199,6 +198,7 @@ void Sandbox::Update(float DeltaTime)
 	auto physics = PhysicsModuleData::GetInstance();
 	physics->OnUpdate(DeltaTime);
 
+	// TODO: base game class should do this
 	for (auto actor : Actors)
 	{
 		actor->Update(DeltaTime);
@@ -240,11 +240,11 @@ void Sandbox::Update(float DeltaTime)
 		}
 		if (keyboard->IsDown(KEY_ONE))
 		{
-			Actors[0]->UnUsePhysicsSimulation();
+			platform->UnUsePhysicsSimulation();
 		}		
 		if (input.GetKeyboard()->IsDown(KEY_TWO))
 		{
-			Actors[0]->UsePhysicsSimulation();
+			platform->UsePhysicsSimulation();
 		}
 	}
 

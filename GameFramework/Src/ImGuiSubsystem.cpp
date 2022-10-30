@@ -187,3 +187,10 @@ auto ImGuiSubsystem::DrawViewport() -> void
 	ImGui::Image(MyGame->MyRenderingSystem->GetViewportTextureID(), viewportSize);
 	ImGui::End();
 }
+
+auto ImGuiSubsystem::DrawActorExplorer() -> void
+{
+	ImGui::Begin("Actor Explorer");
+	
+	ImGui::End();
+}

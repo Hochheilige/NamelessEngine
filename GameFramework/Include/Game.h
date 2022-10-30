@@ -45,6 +45,9 @@ class Game
 public:
 	friend int main();
 	friend class Actor;
+	friend ImGuiSubsystem;
+	template<class T>
+	friend auto CreateActor()->T*;
 
 
 	void Initialize();
