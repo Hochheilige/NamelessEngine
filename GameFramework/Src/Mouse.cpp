@@ -69,8 +69,8 @@ void Mouse::SetPressStateByButton(Button button, bool press)
     if (press && IsDown(button) || !press && !IsDown(button)) return;
 
     if (button == LEFT) leftButtonPressed = press;
-    if (button == MIDDLE) middleButtonPressed = press;
-    rightButtonPressed = press;
+    else if (button == MIDDLE) middleButtonPressed = press;
+    else rightButtonPressed = press;
 }
 
 bool Mouse::IsDown(Button button) const
