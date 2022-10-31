@@ -238,15 +238,36 @@ auto ImGuiSubsystem::DrawActorExplorer() -> void
 auto ImGuiSubsystem::DrawActorInspector() -> void
 {
 	ImGui::Begin("Actor Inspector");
-	if (Actor* actor = MyGame->MyEditorContext.SelectedActor)
-	{
-		Transform t = actor->GetTransform();
-		ImGui::Text(t.ToString().c_str());
+	if (!ImGui::CollapsingHeader("Transform")) {
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
+		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+		ImGui::BeginChild("ChildR", ImVec2(0, 100), true, window_flags);
+
+		if (Actor* actor = MyGame->MyEditorContext.SelectedActor)
+		{
+			Transform t = actor->GetTransform();
+			float rot[] = {t.Rotation.GetEulerDegrees().x, t.Rotation.GetEulerDegrees().y,
+				t.Rotation.GetEulerDegrees().z };
+
+			ImGui::DragFloat3("\tPosition", static_cast<float*>(&t.Position.x));
+			ImGui::DragFloat3("\tScale", static_cast<float*>(&t.Scale.x), 0.1f);
+			ImGui::DragFloat3("\tRotation", rot);
+
+			t.Rotation.SetEulerAngles(rot[0], rot[1], rot[2]);
+
+			actor->SetTransform(t);
+
+			//ImGui::Text(t.ToString().c_str());
+		}
+		else
+		{
+			ImGui::Text("No actor selected");
+			ImGui::Text(("x = " + std::to_string(ViewportMousePos.x) + "\ty = " + std::to_string(ViewportMousePos.y)).c_str());
+		}
+
+		ImGui::EndChild();
+		ImGui::PopStyleVar();
 	}
-	else
-	{
-		ImGui::Text("No actor selected");
-		ImGui::Text(("x = " + std::to_string(ViewportMousePos.x) + "\ty = " + std::to_string(ViewportMousePos.y)).c_str());
-	}
+	
 	ImGui::End();
 }

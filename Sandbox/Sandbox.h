@@ -17,7 +17,10 @@ public:
 
 	virtual void Update(float DeltaTime) override;
 
+	
+
 	// Base objects with mesh and rigidbody components
+	Actor* CreateNonPhysicsBox(Transform transform);
 	Actor* CreateStaticBox(Transform transform);
 	Actor* CreateDynamicBox(Transform transform);
 	Actor* CreateStaticSphere(Transform transform);
@@ -57,5 +60,6 @@ private:
 	class MeshRenderer* bunny;
 
 	Actor* platform;
+	Actor* staticBox;
 
 };

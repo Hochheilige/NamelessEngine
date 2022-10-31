@@ -170,7 +170,7 @@ public:
 		AddVertex({ Vector3(0.5f, -0.5f, 0.5f),   Color(0.0f, 1.0f, 1.0f, 1.0f) }); // 2
 		AddVertex({ Vector3(-0.5f, 0.5f, 0.5f),   Color(1.0f, 1.0f, 0.0f, 1.0f) }); // 3
 		AddVertex({ Vector3(0.5f, 0.5f, -0.5f),   Color(1.0f, 0.0f, 1.0f, 1.0f) }); // 4
-		AddVertex({ Vector3(-0.5f, -0.5f, -0.5f), Color(1.0f, 0.0f, 1.0f, 1.0f) }); // 5
+		AddVertex({ Vector3(-0.5f, -0.5f, -0.5f), Color(1.0f, 1.0f, 0.0f, 1.0f) }); // 5
 		AddVertex({ Vector3(0.5f, -0.5f, -0.5f),  Color(0.0f, 1.0f, 1.0f, 1.0f) }); // 6
 		AddVertex({ Vector3(-0.5f, 0.5f, -0.5f),  Color(0.0f, 1.0f, 1.0f, 1.0f) }); // 7
 
@@ -200,7 +200,7 @@ public:
 
 #pragma region GeneratePoints
 		// Generate north pole point
-		AddVertex({ Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) });
+		AddVertex({ Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, 1.0f, 1.0f) });
 
 		// Generate lattitude points
 		const float phetaDelta = XM_PI / (numPointsVert + 1);
@@ -216,12 +216,20 @@ public:
 				const Vector3 position = Vector3(curRadius * cosf(alpha), y, curRadius * sinf(alpha));
 				Vector3 normal;
 				position.Normalize(normal);
+				/* trying to change sphere color
+				float x = normal.x;
+				float y = normal.y;
+				normal.x = normal.x + normal.y;
+				normal.y = normal.y + normal.z;
+				normal.z = x + y;
+				*/
+				normal.Normalize(normal);
 				AddVertex({ position, -normal });
 			}
 		}
 
 		// Generate south pole point
-		AddVertex({ Vector3(0.0f, -1.0f, 0.0f), Vector3(0.0f, -1.0f, 0.0f) });
+		AddVertex({ Vector3(0.0f, -1.0f, 0.0f), Vector3(1.0f, 1.0f, 0.0f) });
 #pragma endregion GeneratePoints
 
 #pragma region CreateTriangleIndices

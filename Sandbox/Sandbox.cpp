@@ -22,6 +22,18 @@
 
 #include "CreateCommon.h"
 
+Actor* Sandbox::CreateNonPhysicsBox(Transform transform) {
+	Actor* box = CreateActor<Actor>();
+	
+	auto mesh_component = box->AddComponent<MeshRenderer>();
+	mesh_component->SetMeshProxy(boxMeshProxy);
+	mesh_component->SetPixelShader(ps);
+	mesh_component->SetVertexShader(vs);
+
+
+	return box;
+}
+
 Actor* Sandbox::CreateStaticBox(Transform transform)
 {
 	Actor* box = CreateActor<Actor>();
@@ -187,6 +199,14 @@ void Sandbox::PrepareResources()
 	//pc->SetPixelShader(basicPS);
 	//pc->SetVertexShader(basicVS);
 
+
+	//Create simple static box for testing
+	tr.Position = Vector3(0, 5, 5);
+	tr.Rotation.SetEulerAngles(0, 0, 0);
+	tr.Scale = Vector3(2.0, 2.0, 10.0);
+	staticBox = CreateNonPhysicsBox(tr);
+	staticBox->SetTransform(tr);
+	
 }
 
 void Sandbox::Update(float DeltaTime)
