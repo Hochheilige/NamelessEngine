@@ -24,6 +24,7 @@
     <ClInclude Include="..\imgui\backends\imgui_impl_win32.h" />
     <ClInclude Include="..\imgui\imconfig.h" />
     <ClInclude Include="..\imgui\imgui.h" />
+    <ClInclude Include="..\imgui\imguizmo.h" />
     <ClInclude Include="..\imgui\imgui_internal.h" />
     <ClInclude Include="..\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\imgui\imstb_textedit.h" />
@@ -34,6 +35,7 @@
     <ClCompile Include="..\imgui\backends\imgui_impl_dx12.cpp" />
     <ClCompile Include="..\imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="..\imgui\imgui.cpp" />
+    <ClCompile Include="..\imgui\imguizmo.cpp" />
     <ClCompile Include="..\imgui\imgui_demo.cpp" />
     <ClCompile Include="..\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\imgui\imgui_tables.cpp" />

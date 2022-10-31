@@ -201,7 +201,7 @@ void Sandbox::PrepareResources()
 
 
 	//Create simple static box for testing
-	tr.Position = Vector3(0, 5, 5);
+	tr.Position = Vector3(16, 3, 0);
 	tr.Rotation.SetEulerAngles(0, 0, 0);
 	tr.Scale = Vector3(2.0, 2.0, 10.0);
 	staticBox = CreateNonPhysicsBox(tr);

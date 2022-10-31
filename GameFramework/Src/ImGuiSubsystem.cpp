@@ -4,6 +4,9 @@
 #include "backends/imgui_impl_dx11.h"
 #include "backends/imgui_impl_win32.h"
 
+#include "imguizmo.h"
+
+
 #include "Game.h"
 #include "DisplayWin32.h"
 
@@ -238,22 +241,62 @@ auto ImGuiSubsystem::DrawActorExplorer() -> void
 auto ImGuiSubsystem::DrawActorInspector() -> void
 {
 	ImGui::Begin("Actor Inspector");
+
+	static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::ROTATE);
+	static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::WORLD);
+	static bool useSnap(false);
+	Vector3 snap;
+
+	Camera* camera = Game::GetInstance()->GetCurrentCamera();
+
+	Matrix mView = camera->Transform.GetInverseTransformMatrix();
+	Matrix mProj = camera->GetProjectionMatrix();
+
+
 	if (!ImGui::CollapsingHeader("Transform")) {
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-		ImGui::BeginChild("ChildR", ImVec2(0, 100), true, window_flags);
+		ImGui::BeginChild("ChildR", ImVec2(0, 110), true, window_flags);
+
+		
 
 		if (Actor* actor = MyGame->MyEditorContext.SelectedActor)
 		{
+
+
+			if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
+				mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+			ImGui::SameLine();
+			if (ImGui::RadioButton("Rotate", mCurrentGizmoOperation == ImGuizmo::ROTATE))
+				mCurrentGizmoOperation = ImGuizmo::ROTATE;
+			ImGui::SameLine();
+			if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE))
+				mCurrentGizmoOperation = ImGuizmo::SCALE;
+
 			Transform t = actor->GetTransform();
 			float rot[] = {t.Rotation.GetEulerDegrees().x, t.Rotation.GetEulerDegrees().y,
 				t.Rotation.GetEulerDegrees().z };
 
-			ImGui::DragFloat3("\tPosition", static_cast<float*>(&t.Position.x));
+			Matrix tMatrix = t.GetTransformMatrix();
+
+			ImGui::DragFloat3("\tPosition", static_cast<float*>(&t.Position.x), 0.5f);
 			ImGui::DragFloat3("\tScale", static_cast<float*>(&t.Scale.x), 0.1f);
-			ImGui::DragFloat3("\tRotation", rot);
+			ImGui::DragFloat3("\tRotation", rot, 1.0f);
 
 			t.Rotation.SetEulerAngles(rot[0], rot[1], rot[2]);
+
+			if (mCurrentGizmoOperation != ImGuizmo::SCALE)
+			{
+				if (ImGui::RadioButton("Local", mCurrentGizmoMode == ImGuizmo::LOCAL))
+					mCurrentGizmoMode = ImGuizmo::LOCAL;
+				ImGui::SameLine();
+				if (ImGui::RadioButton("World", mCurrentGizmoMode == ImGuizmo::WORLD))
+					mCurrentGizmoMode = ImGuizmo::WORLD;
+			}
+
+			ImGuiIO& io = ImGui::GetIO();
+			ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+			//ImGuizmo::Manipulate(&mView._11, &(mProj._11), mCurrentGizmoOperation, mCurrentGizmoMode, &tMatrix._11, NULL, useSnap ? &snap.x : NULL);
 
 			actor->SetTransform(t);
 
