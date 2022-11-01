@@ -476,6 +476,11 @@ auto RenderingSystem::GetActorUnderPosition(const Vector2& Pos) -> Actor*
 	return MyObjectLookupHelper->GetActorUnderPosition(Pos);
 }
 
+auto RenderingSystem::GetWorldPositionUnerScreenPosition(const Vector2& Pos) -> Vector3
+{
+	return MyObjectLookupHelper->GetWorldPositionUnerScreenPosition(Pos);
+}
+
 void RenderingSystem::SetScreenSizeViewport()
 {
 	D3D11_VIEWPORT viewport = {};

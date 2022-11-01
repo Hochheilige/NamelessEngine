@@ -6,6 +6,8 @@
 #include "Shader.h"
 #include "ShaderCompiler.h"
 
+#include "ImGuiSubsystem.h"
+
 #include <d3d11.h>
 
 ObjectLookupHelper::ObjectLookupHelper(RenderingSystem* InRenderingSystem)
@@ -64,6 +66,26 @@ auto ObjectLookupHelper::ResizeViewport(int Width, int Height) -> void
 	Device->CreateRenderTargetView(RenderTex.Get(), nullptr, &RenderTexRTV);
 
 	Device->CreateTexture2D(&stagingTexDesc, nullptr, &StagingTex);
+
+	CreateDepthStagingTexture(Width, Height);
+}
+
+auto ObjectLookupHelper::CreateDepthStagingTexture(UINT Width, UINT Height) -> void
+{
+	D3D11_TEXTURE2D_DESC descDepth;
+	descDepth.Width = Width;
+	descDepth.Height = Height;
+	descDepth.MipLevels = 1;
+	descDepth.ArraySize = 1;
+	descDepth.Format = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+	descDepth.SampleDesc.Count = 1;
+	descDepth.SampleDesc.Quality = 0;
+	descDepth.Usage = D3D11_USAGE_STAGING;
+	descDepth.BindFlags = 0;
+	descDepth.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+	descDepth.MiscFlags = 0;
+
+	Device->CreateTexture2D(&descDepth, NULL, &DepthStagingTex);
 }
 
 auto ObjectLookupHelper::Render() -> void
@@ -144,4 +166,64 @@ auto ObjectLookupHelper::GetActorUnderPosition(const Vector2& Pos)->Actor*
 		return renderer->GetOwner();
 	}
 	return nullptr;
+}
+
+auto ObjectLookupHelper::GetWorldPositionUnerScreenPosition(const Vector2& Pos) -> Vector3
+{
+	UINT x = static_cast<UINT>(Pos.x);
+	UINT y = static_cast<UINT>(Pos.y);
+
+	// todo: check viewport size bounds
+	DeviceContext->CopySubresourceRegion(DepthStagingTex.Get(), 0, 0, 0, 0, MyRenderingSystem->DepthStencilTex.Get(), 0, nullptr);
+
+	D3D11_MAPPED_SUBRESOURCE mappedResource = {};
+	HRESULT res = DeviceContext->Map(DepthStagingTex.Get(), 0, D3D11_MAP_READ, 0, &mappedResource);
+
+	struct DepthTexData
+	{
+		float depth;
+		uint8_t stencil;
+		uint8_t smthElse[3];
+	};
+	DepthTexData* row = reinterpret_cast<DepthTexData*>(static_cast<uint8_t*>(mappedResource.pData) + mappedResource.RowPitch * y);
+	const float depth = row[x].depth;
+	
+	DeviceContext->Unmap(DepthStagingTex.Get(), 0);
+
+	Vector3 ndc;
+	ndc.x = static_cast<float>(x) / MyRenderingSystem->ViewportSize.x * 2.0f - 1.0f;
+	ndc.y = static_cast<float>(y) / MyRenderingSystem->ViewportSize.y * 2.0f - 1.0f;
+	ndc.y *= -1.0f;
+	//ndc.z = depth * 2.0f - 1.0f; - apperently the depth we get is already from -1.0f to 1.0f
+	ndc.z = depth;
+
+	//ImGuiSubsystem::GetInstance()->AddMessageToDisplay("depth = " + std::to_string(depth));
+	//ImGuiSubsystem::GetInstance()->AddMessageToDisplay("ndc = " + std::to_string(ndc.x) + ", " + std::to_string(ndc.y) + ", " + std::to_string(ndc.z));
+
+	Camera* cam = MyRenderingSystem->MyGame->GetCurrentCamera();
+	return NdcToWorld(ndc, cam->GetViewMatrix(), cam->GetProjectionMatrix());
+}
+
+auto ObjectLookupHelper::WorldToNdc(const Vector3& WorldPos, const Matrix& ViewMatrix, const Matrix& ProjMatrix) -> Vector3
+{
+	const Vector4 worldPos = { WorldPos.x, WorldPos.y, WorldPos.z, 1.0f };
+	const Vector4 viewPos = DirectX::XMVector4Transform(worldPos, ViewMatrix);
+	const Vector4 clipPos = DirectX::XMVector4Transform(viewPos, ProjMatrix);
+	const Vector4 ndcPos = clipPos / clipPos.w;
+	
+	const Vector4 clipPos2 = DirectX::XMVector4Transform(worldPos, MyRenderingSystem->MyGame->GetCurrentCamera()->GetWorldToClipMatrixTransposed().Transpose());
+	const Vector4 ndcPos2 = clipPos2 / clipPos2.w;
+	return Vector3(ndcPos.x, ndcPos.y, ndcPos.z);
+}
+
+auto ObjectLookupHelper::NdcToWorld(const Vector3& NdcPos, const Matrix& ViewMatrix, const Matrix& ProjMatrix) -> Vector3
+{
+	const Vector4 ndcPos = { NdcPos.x, NdcPos.y, NdcPos.z, 1.0f };
+
+	const Vector4 clipSpacePos = DirectX::XMVector4Transform(ndcPos, ProjMatrix.Invert());
+	const Vector4 viewPos = clipSpacePos / clipSpacePos.w;
+
+	const Vector4 worldPos = DirectX::XMVector4Transform(viewPos, ViewMatrix.Invert());
+
+	return Vector3{ worldPos.x, worldPos.y, worldPos.z };
 }
