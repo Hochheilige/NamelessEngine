@@ -164,7 +164,7 @@ void Sandbox::PrepareResources()
 	OrthoCamera->Transform.Rotation.SetEulerAngles(90.0f, 0.0f, 0.0f);
 
 	Vector4 vec(0.0f, 0.0f, 1.0f, 1.0f);
-	vec = Vector4::Transform(vec, OrthoCamera->GetProjectionMatrix());
+	vec = Vector4::Transform(vec, OrthoCamera->GetProjectionMatrixTransposed());
 
 	Transform tr;
 	tr.Position = Vector3(5, -0.5, 0);

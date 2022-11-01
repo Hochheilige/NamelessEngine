@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MathInclude.h"
+#include "imgui.h"
 class Game;
 
 class ImGuiSubsystem
@@ -18,7 +19,6 @@ public:
 
 	~ImGuiSubsystem();
 
-
 private:
 	auto DrawDockspace() -> void;
 	auto DrawViewport() -> void;
@@ -28,4 +28,7 @@ private:
 	Game* MyGame;
 
 	Vector2 ViewportMousePos;
+
+	ImVec2 ViewportStart;
+	ImVec2 ViewportSize;
 };

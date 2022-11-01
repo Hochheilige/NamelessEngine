@@ -310,7 +310,7 @@ void RenderingSystem::PerformShadowmapPass()
 	context->VSSetConstantBuffers(0, 1, PerDrawCB.GetAddressOf());
 	CBPerDraw cbData;
 	const Camera& cam = MyGame->LightCam;
-	cbData.WorldToClip = cam.GetWorldToClipMatrix();
+	cbData.WorldToClip = cam.GetWorldToClipMatrixTransposed();
 
 	D3D11_MAPPED_SUBRESOURCE resource = {};
 	auto res = context->Map(PerDrawCB.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
@@ -352,10 +352,10 @@ void RenderingSystem::PerformForwardOpaquePass()
 
 	CBPerDraw cbData;
 	const Camera& cam = *(MyGame->GetCurrentCamera());
-	cbData.WorldToClip = cam.GetWorldToClipMatrix();
+	cbData.WorldToClip = cam.GetWorldToClipMatrixTransposed();
 	cbData.CameraWorldPos = cam.Transform.Position;
-	cbData.ViewToClip = cam.GetProjectionMatrix();
-	cbData.WorldToView = cam.GetViewMatrix();
+	cbData.ViewToClip = cam.GetProjectionMatrixTransposed();
+	cbData.WorldToView = cam.GetViewMatrixTransposed();
 
 	D3D11_MAPPED_SUBRESOURCE resource = {};
 	auto res = context->Map(PerDrawCB.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
@@ -374,7 +374,7 @@ void RenderingSystem::PerformForwardOpaquePass()
 	lightsCBData.LightData.Color = MyGame->DirectiLight.color;
 	lightsCBData.LightData.Direction = MyGame->DirectiLight.direction;
 	lightsCBData.LightData.Intensity = MyGame->DirectiLight.intensity;
-	lightsCBData.LightData.WorldToLightClip = MyGame->LightCam.GetWorldToClipMatrix();
+	lightsCBData.LightData.WorldToLightClip = MyGame->LightCam.GetWorldToClipMatrixTransposed();
 	D3D11_MAPPED_SUBRESOURCE lightsCBResource = {};
 	res = context->Map(LightsCB.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &lightsCBResource);
 
@@ -387,13 +387,14 @@ void RenderingSystem::PerformForwardOpaquePass()
 	context->PSSetSamplers(1, 1, ShadowmapSampler.GetAddressOf());
 
 	SetScreenSizeViewport();
-
-	context->ClearRenderTargetView(ViewportRTV.Get(), DiffuseClearColor);
+	ID3D11RenderTargetView* const target = ViewportRTV.Get();
+	//ID3D11RenderTargetView* const target = MyGame->RenderTargetView.Get();
+	context->ClearRenderTargetView(target, DiffuseClearColor);
 	context->ClearDepthStencilView(DepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	context->PSSetShaderResources(1, 1, MyGame->ShadowMapSRV.GetAddressOf());
 
-	ID3D11RenderTargetView* views[8] = { ViewportRTV.Get(), nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+	ID3D11RenderTargetView* views[8] = { target, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 	context->OMSetRenderTargets(8, views, DepthStencilView.Get());
 
 	RenderingSystemContext rsContext;
@@ -427,7 +428,7 @@ void RenderingSystem::PerformOpaquePass(float DeltaTime)
 
 	CBPerDraw cbData;
 	const Camera& cam = *(MyGame->GetCurrentCamera());
-	cbData.WorldToClip = cam.GetWorldToClipMatrix();
+	cbData.WorldToClip = cam.GetWorldToClipMatrixTransposed();
 	cbData.CameraWorldPos = cam.Transform.Position;
 
 	D3D11_MAPPED_SUBRESOURCE resource = {};
@@ -477,7 +478,7 @@ void RenderingSystem::PerformLightingPass(float DeltaTime)
 
 	CBPerDraw cbData;
 	const Camera& cam = *(MyGame->GetCurrentCamera());
-	cbData.WorldToClip = cam.GetWorldToClipMatrix();
+	cbData.WorldToClip = cam.GetWorldToClipMatrixTransposed();
 	cbData.CameraWorldPos = cam.Transform.Position;;
 
 	D3D11_MAPPED_SUBRESOURCE resource = {};
@@ -546,7 +547,7 @@ void RenderingSystem::PerformLightingPass(float DeltaTime)
 			lightsCBData.LightData.Color = MyGame->DirectiLight.color;
 			lightsCBData.LightData.Direction = MyGame->DirectiLight.direction;
 			lightsCBData.LightData.Intensity = MyGame->DirectiLight.intensity;
-			lightsCBData.LightData.WorldToLightClip = MyGame->LightCam.GetWorldToClipMatrix();
+			lightsCBData.LightData.WorldToLightClip = MyGame->LightCam.GetWorldToClipMatrixTransposed();
 			D3D11_MAPPED_SUBRESOURCE lightsCBResource = {};
 			res = context->Map(LightsCB.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &lightsCBResource);
 

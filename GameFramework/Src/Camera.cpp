@@ -2,10 +2,20 @@
 
 Matrix Camera::GetViewMatrix() const
 {
+	return Transform.GetInverseTransformMatrix();
+}
+
+Matrix Camera::GetViewMatrixTransposed() const
+{
 	return Transform.GetInverseTransformMatrixTransposed();
 }
 
 Matrix Camera::GetProjectionMatrix() const
+{
+	return ProjectionMatrix;
+}
+
+Matrix Camera::GetProjectionMatrixTransposed() const
 {
 	return ProjectionMatrix.Transpose();
 }
@@ -42,10 +52,9 @@ void Camera::HandleViewportResize(int NewWidth, int NewHeight)
 	// todo: sace camera type and update projection matrix accordingly
 }
 
-// @TODO: Rename the function to signify we get a transposed matrix? Same for other functions
-Matrix Camera::GetWorldToClipMatrix() const
+Matrix Camera::GetWorldToClipMatrixTransposed() const
 {
-	return (GetProjectionMatrix() * GetViewMatrix());
+	return (GetProjectionMatrixTransposed() * GetViewMatrixTransposed());
 }
 
 float Camera::GetFOV() const

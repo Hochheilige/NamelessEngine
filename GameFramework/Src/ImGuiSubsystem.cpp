@@ -37,6 +37,8 @@ auto ImGuiSubsystem::Initialize(Game* const InGame) -> void
 	ImGui_ImplWin32_Init(MyGame->GetDisplay()->GetWindowHandle());
 	ImGui_ImplDX11_Init(MyGame->GetD3DDevice().Get(), MyGame->GetD3DDeviceContext().Get());
 
+	// TODO: get this from current camera and update it
+	ImGuizmo::SetOrthographic(false);
 }
 
 auto ImGuiSubsystem::NewFrame() -> void
@@ -44,6 +46,7 @@ auto ImGuiSubsystem::NewFrame() -> void
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
+	ImGuizmo::BeginFrame();
 }
 
 auto ImGuiSubsystem::Render() -> void
@@ -70,9 +73,10 @@ auto ImGuiSubsystem::DoLayout() -> void
 	DrawDockspace();
 	static bool temp = true;
 	ImGui::ShowDemoWindow(&temp);
-	DrawViewport();
 	DrawActorExplorer();
 	DrawActorInspector();
+	// need to draw this after gizmos to have a relevant ImGuizmo::IsUsing
+	DrawViewport();
 }
 
 auto ImGuiSubsystem::Shutdown() -> void
@@ -195,14 +199,15 @@ auto ImGuiSubsystem::DrawViewport() -> void
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	ImGui::Begin("Viewport");
-	const ImVec2 viewportSize = ImGui::GetContentRegionAvail();
-	const ImVec2 mousePos = ImGui::GetMousePos() - ImGui::GetCursorScreenPos();
+	ViewportStart = ImGui::GetCursorScreenPos();
+	ViewportSize = ImGui::GetContentRegionAvail();
+	const ImVec2 mousePos = ImGui::GetMousePos() - ViewportStart;
 	ViewportMousePos = {mousePos.x, mousePos.y};
-	MyGame->MyRenderingSystem->HandleScreenResize({ viewportSize.x, viewportSize.y });
-	ImGui::Image(MyGame->MyRenderingSystem->GetViewportTextureID(), viewportSize);
+	MyGame->MyRenderingSystem->HandleScreenResize({ ViewportSize.x, ViewportSize.y });
+	ImGui::Image(MyGame->MyRenderingSystem->GetViewportTextureID(), ViewportSize);
 	// todo: move this somewhere more appropriate
 	{
-		if (ImGui::IsItemClicked())
+		if (ImGui::IsItemClicked() && !ImGuizmo::IsUsing())
 		{
 			MyGame->MyEditorContext.SelectedActor = MyGame->MyRenderingSystem->GetActorUnderPosition(ViewportMousePos);
 		}
@@ -249,7 +254,7 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 
 	Camera* camera = Game::GetInstance()->GetCurrentCamera();
 
-	Matrix mView = camera->Transform.GetInverseTransformMatrix();
+	Matrix mView = camera->GetViewMatrix();
 	Matrix mProj = camera->GetProjectionMatrix();
 
 
@@ -277,13 +282,15 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 			float rot[] = {t.Rotation.GetEulerDegrees().x, t.Rotation.GetEulerDegrees().y,
 				t.Rotation.GetEulerDegrees().z };
 
-			Matrix tMatrix = t.GetTransformMatrix();
+			bool transformUpdated = false;
+			transformUpdated |= ImGui::DragFloat3("\tPosition", static_cast<float*>(&t.Position.x), 0.5f);
+			transformUpdated |= ImGui::DragFloat3("\tScale", static_cast<float*>(&t.Scale.x), 0.1f);
+			if (ImGui::DragFloat3("\tRotation", rot, 1.0f))
+			{
+				t.Rotation.SetEulerAngles(rot[0], rot[1], rot[2]);
+				transformUpdated = true;
+			}
 
-			ImGui::DragFloat3("\tPosition", static_cast<float*>(&t.Position.x), 0.5f);
-			ImGui::DragFloat3("\tScale", static_cast<float*>(&t.Scale.x), 0.1f);
-			ImGui::DragFloat3("\tRotation", rot, 1.0f);
-
-			t.Rotation.SetEulerAngles(rot[0], rot[1], rot[2]);
 
 			if (mCurrentGizmoOperation != ImGuizmo::SCALE)
 			{
@@ -294,13 +301,20 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 					mCurrentGizmoMode = ImGuizmo::WORLD;
 			}
 
-			ImGuiIO& io = ImGui::GetIO();
-			ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-			//ImGuizmo::Manipulate(&mView._11, &(mProj._11), mCurrentGizmoOperation, mCurrentGizmoMode, &tMatrix._11, NULL, useSnap ? &snap.x : NULL);
+			ImGuizmo::SetRect(ViewportStart.x, ViewportStart.y, ViewportSize.x, ViewportSize.y);
+			Matrix identityMatrix = Matrix::Identity;
 
-			actor->SetTransform(t);
-
-			//ImGui::Text(t.ToString().c_str());
+			Matrix tMatrix = t.GetTransformMatrix();
+			if (ImGuizmo::Manipulate(&mView._11, &(mProj._11), mCurrentGizmoOperation, mCurrentGizmoMode, &tMatrix._11, NULL, useSnap ? &snap.x : NULL))
+			{
+				transformUpdated = true;
+				t.SetFromMatrix(tMatrix);
+			}
+			
+			if (transformUpdated)
+			{
+				actor->SetTransform(t);
+			}
 		}
 		else
 		{

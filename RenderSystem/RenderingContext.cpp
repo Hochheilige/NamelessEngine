@@ -96,10 +96,10 @@ void RenderingContext::Initialize(Scene* current_scene)
 
 	CBPerDraw cbData;
 	const Camera& cam = gf->GetCurrentCamera();
-	cbData.WorldToClip = cam.GetWorldToClipMatrix();
+	cbData.WorldToClip = cam.GetWorldToClipMatrixTransposed();
 	cbData.CameraWorldPos = cam.Transform.Position;
-	cbData.ViewToClip = cam.GetProjectionMatrix();
-	cbData.WorldToView = cam.GetViewMatrix();
+	cbData.ViewToClip = cam.GetProjectionMatrixTransposed();
+	cbData.WorldToView = cam.GetViewMatrixTransposed();
 
 	D3D11_MAPPED_SUBRESOURCE resource = {};
 	auto res = context->Map(PerDrawCB.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
