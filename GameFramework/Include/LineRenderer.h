@@ -23,7 +23,7 @@ protected:
 
 	bool DrawAsStrip = false;
 
-	int numVerts = 0;
+	UINT numVerts = 0;
 };
 
 // todo: move to a separate file
@@ -37,7 +37,7 @@ public:
 		struct ConstrStatic
 		{
 			ComPtr<ID3D11Buffer> VertexBuffer;
-			int numVerts;
+			UINT numVerts;
 
 			ConstrStatic()
 			{
@@ -57,7 +57,7 @@ public:
 				vertexBufDesc.CPUAccessFlags = 0;
 				vertexBufDesc.MiscFlags = 0;
 				vertexBufDesc.StructureByteStride = 0;
-				vertexBufDesc.ByteWidth = sizeof(points[0]) * points.size();
+				vertexBufDesc.ByteWidth = static_cast<UINT>(sizeof(points[0]) * points.size());
 
 				D3D11_SUBRESOURCE_DATA vertexData = {};
 				vertexData.pSysMem = &points[0];
@@ -67,7 +67,7 @@ public:
 				ComPtr<ID3D11Device> device = Game::GetInstance()->GetD3DDevice();
 				device->CreateBuffer(&vertexBufDesc, &vertexData, VertexBuffer.GetAddressOf());
 
-				numVerts = points.size();
+				numVerts = static_cast<UINT>(points.size());
 			}
 		};
 
@@ -91,7 +91,7 @@ public:
 		struct ConstrStatic
 		{
 			ComPtr<ID3D11Buffer> VertexBuffer;
-			int numVerts;
+			UINT numVerts;
 
 			ConstrStatic()
 			{
@@ -116,7 +116,7 @@ public:
 				vertexBufDesc.CPUAccessFlags = 0;
 				vertexBufDesc.MiscFlags = 0;
 				vertexBufDesc.StructureByteStride = 0;
-				vertexBufDesc.ByteWidth = sizeof(points[0]) * points.size();
+				vertexBufDesc.ByteWidth = static_cast<UINT>(sizeof(points[0]) * points.size());
 
 				D3D11_SUBRESOURCE_DATA vertexData = {};
 				vertexData.pSysMem = &points[0];
@@ -126,7 +126,7 @@ public:
 				ComPtr<ID3D11Device> device = Game::GetInstance()->GetD3DDevice();
 				device->CreateBuffer(&vertexBufDesc, &vertexData, VertexBuffer.GetAddressOf());
 
-				numVerts = points.size();
+				numVerts = static_cast<UINT>(points.size());
 			}
 		};
 

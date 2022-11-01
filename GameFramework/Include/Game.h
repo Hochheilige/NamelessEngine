@@ -207,6 +207,6 @@ private:
 	Camera DefaultCamera = Camera();
 
 	
-	ImGuiSubsystem* mImGuiSubsystem;
+	ImGuiSubsystem* mImGuiSubsystem = nullptr;
 };
 

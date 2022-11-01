@@ -24,8 +24,8 @@ RenderingSystem::RenderingSystem(Game* InGame)
 	samplerDesc.BorderColor[1] = 0.0f;
 	samplerDesc.BorderColor[2] = 0.0f;
 	samplerDesc.BorderColor[3] = 1.0f;
-	samplerDesc.MaxLOD = INT_MAX;
-	samplerDesc.MaxAnisotropy = 1.0f;
+	samplerDesc.MaxLOD = FLT_MAX;
+	samplerDesc.MaxAnisotropy = 1;
 
 	device->CreateSamplerState(&samplerDesc, &DefaultSampler);
 

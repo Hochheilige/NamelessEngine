@@ -12,7 +12,7 @@ struct LightData
 	Matrix WorldToLightClip;
 	Vector4 Position;
 	Vector3 Direction;
-	float pad;
+	float pad = 0.0f;
 	// @TODO: replace with proper 4 floats
 	float Intensity = 1.0f;
 	Vector3 Params;

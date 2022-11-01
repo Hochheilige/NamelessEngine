@@ -30,8 +30,8 @@ public:
 private:
 	Matrix ProjectionMatrix = Matrix::Identity;
 
-	float FOV;
-	float AspectRatio;
-	float NearPlane;
-	float FarPlane;
+	float FOV = 20.0f;
+	float AspectRatio = 1.0f;
+	float NearPlane = 0.1f;
+	float FarPlane = 100.0f;
 };

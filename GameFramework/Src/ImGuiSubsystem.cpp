@@ -17,6 +17,7 @@ ImGuiSubsystem::ImGuiSubsystem()
 	: mCurrentGizmoOperation(ImGuizmo::OPERATION::TRANSLATE)
 	, mCurrentGizmoMode(ImGuizmo::MODE::WORLD)
 	, useSnap(false)
+	, MyGame(nullptr)
 {
 }
 

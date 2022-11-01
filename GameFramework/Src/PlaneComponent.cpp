@@ -11,7 +11,7 @@ PlaneComponent::PlaneComponent() : LineRenderer()
 	struct ConstrStatic
 	{
 		ComPtr<ID3D11Buffer> VertexBuffer;
-		int numVerts;
+		UINT numVerts;
 
 		ConstrStatic()
 		{
@@ -40,7 +40,7 @@ PlaneComponent::PlaneComponent() : LineRenderer()
 			vertexBufDesc.CPUAccessFlags = 0;
 			vertexBufDesc.MiscFlags = 0;
 			vertexBufDesc.StructureByteStride = 0;
-			vertexBufDesc.ByteWidth = sizeof(points[0]) * points.size();
+			vertexBufDesc.ByteWidth = static_cast<UINT>(sizeof(points[0]) * points.size());
 
 			D3D11_SUBRESOURCE_DATA vertexData = {};
 			vertexData.pSysMem = &points[0];
@@ -50,7 +50,7 @@ PlaneComponent::PlaneComponent() : LineRenderer()
 			ComPtr<ID3D11Device> device = Game::GetInstance()->GetD3DDevice();
 			device->CreateBuffer(&vertexBufDesc, &vertexData, VertexBuffer.GetAddressOf());
 
-			numVerts = points.size();
+			numVerts = static_cast<UINT>(points.size());
 		}
 	};
 	

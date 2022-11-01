@@ -50,7 +50,7 @@ LRESULT InputDevice::HandleMessage(HWND hwnd, UINT umessage, WPARAM wparam, LPAR
 			const RECT* suggested_rect = (RECT*)lparam;
 			::SetWindowPos(Game::GetInstance()->GetDisplay()->GetWindowHandle(), NULL, suggested_rect->left, suggested_rect->top, suggested_rect->right - suggested_rect->left, suggested_rect->bottom - suggested_rect->top, SWP_NOZORDER | SWP_NOACTIVATE);
 		}
-		break;
+		return 0;
 	default:
 		return DefWindowProc(hwnd, umessage, wparam, lparam);
 	}

@@ -5,6 +5,8 @@
 using namespace DirectX;
 using namespace std;
 
+Transform Transform::Identity = Transform{ Vector3::Zero, Rotator{ Vector3::Zero}, Vector3::Zero };
+
 Rotator::Rotator()
 {
 	SetEulerAngles(XMFLOAT3(0.0f, 0.0f, 0.0f));

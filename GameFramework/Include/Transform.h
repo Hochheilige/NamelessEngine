@@ -49,6 +49,8 @@ struct Transform
 
 	Transform() = default;
 	Transform(Matrix mat);
+	Transform(const Vector3& Position, const Rotator& Rotation, const Vector3& Scale)
+		: Position(Position), Rotation(Rotation), Scale(Scale) {}
 
 	Matrix GetTransformMatrix() const;
 
@@ -73,5 +75,7 @@ struct Transform
 	Matrix GetNormalMatrixTransposed() const;
 
 	auto ToString() const -> std::string;
+
+	static Transform Identity;
 };
 
