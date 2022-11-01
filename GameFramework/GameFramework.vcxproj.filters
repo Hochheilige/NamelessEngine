@@ -108,6 +108,12 @@
     <ClInclude Include="Include\EditorContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\ObjectLookupHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\RenderingSystemTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\AABB2DCollider.cpp">
@@ -195,6 +201,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\ImGuiSubsystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\ObjectLookupHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

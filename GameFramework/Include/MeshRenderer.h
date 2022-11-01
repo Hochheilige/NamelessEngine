@@ -3,9 +3,7 @@
 #include "Renderer.h"
 #include "Game.h"
 
-#include <DirectXMath.h>
-
-#include "RenderingSystem.h"
+#include "RenderingSystemTypes.h"
 
 class MeshRenderer : public Renderer
 {

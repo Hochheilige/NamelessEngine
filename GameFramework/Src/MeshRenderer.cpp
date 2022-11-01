@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "Shader.h"
 #include "MeshProxy.h"
+#include "RenderingSystem.h"
 
 #include "Mesh.h"
 

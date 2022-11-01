@@ -6,8 +6,9 @@
 
 #include "imguizmo.h"
 
-
+#include "Actor.h"
 #include "Game.h"
+#include "RenderingSystem.h"
 #include "DisplayWin32.h"
 
 #include <string>

@@ -5,17 +5,14 @@
 #include <d3d.h>
 #include <d3d11.h>
 #include "MathInclude.h"
-#include <DirectXMath.h>
-
-#include "RenderingSystem.h"
 
 #include <vector>
 
 #include "Camera.h"
 
-#include "Actor.h"
 #include "EditorContext.h"
 
+class Actor;
 class RenderingSystem;
 class ImGuiSubsystem;
 

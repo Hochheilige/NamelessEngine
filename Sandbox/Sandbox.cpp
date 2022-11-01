@@ -1,5 +1,6 @@
 #include "Sandbox.h"
 
+#include "Actor.h"
 #include "ShaderCompiler.h"
 #include "Shader.h"
 #include "Mesh.h"

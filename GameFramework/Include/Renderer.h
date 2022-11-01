@@ -1,8 +1,8 @@
 #pragma once
 
-#include "GameComponent.h"
+#include "SceneComponent.h"
 
-#include "Component.h"
+struct RenderingSystemContext;
 
 class Renderer : public SceneComponent
 {

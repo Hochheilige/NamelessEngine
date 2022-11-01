@@ -1,5 +1,7 @@
 #include "Renderer.h"
 
+#include "Game.h"
+#include "RenderingSystemTypes.h"
 #include "Shader.h"
 
 void QuadRenderer::Render(const RenderingSystemContext& RSContext)

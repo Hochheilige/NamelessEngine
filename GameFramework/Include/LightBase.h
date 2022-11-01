@@ -1,7 +1,7 @@
 #pragma once
 
-//#include "GameComponent.h"
-#include "RenderingSystem.h"
+#include "RenderingSystemTypes.h"
+#include "SceneComponent.h"
 
 class Renderer;
 
@@ -17,7 +17,7 @@ enum class LightType
 
 
 // @TODO: uncomment and remove cyclic include
-class LightBase : public GameComponent
+class LightBase : public SceneComponent
 {
 public:
 
@@ -73,7 +73,8 @@ public:
 	virtual LightData GetLightData()
 	{ 
 		LightData light;
-		light.Position = Vector4(mTransform.Position.x, mTransform.Position.y, mTransform.Position.z, 1.0f);
+		Transform t = GetTransform();
+		light.Position = Vector4(t.Position.x, t.Position.y, t.Position.z, 1.0f);
 		light.Params = Vector3(0.3f, 0.3f, 0.3f);
 		light.Intensity = 1.0f;
 		light.Color = color;

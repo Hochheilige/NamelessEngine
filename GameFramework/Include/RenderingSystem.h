@@ -4,119 +4,17 @@
 
 #include "MathInclude.h"
 #include "GBuffer.h"
-
-#include <optional>
-
-#pragma pack(push, 4)
-struct LightData
-{
-	Matrix WorldToLightClip;
-	Vector4 Position;
-	Vector3 Direction;
-	float pad;
-	// @TODO: replace with proper 4 floats
-	float Intensity = 1.0f;
-	Vector3 Params;
-	Vector4 Color = Vector4(1.0f, 1.0f, 1.0f, 0.0f);
-};
-#pragma pack(pop)
+#include "RenderingSystemTypes.h"
 
 using namespace Microsoft::WRL;
 
-class Game;
-class Renderer;
-class LightBase;
-class Camera;
 class Actor;
+class Camera;
+class Game;
+class LightBase;
+class ObjectLookupHelper;
 class PixelShader;
-
-struct ID3D11Buffer;
-struct ID3D11SamplerState;
-struct ID3D11DepthStencilState;
-
-#pragma pack(push, 4)
-struct CBPerDraw
-{
-	Matrix WorldToView;
-	Matrix ViewToClip;
-	Matrix WorldToClip;
-	Vector3 CameraWorldPos;
-	float pad;
-};
-
-struct LitMaterial
-{
-	float ambientCoef = 0.1f;
-	float specularCoef = 0.5f;
-	float specularExponent = 1.0f;
-	float diffuesCoef = 0.8f;
-};
-
-struct CBPerObject
-{
-	Matrix ObjectToWorld;
-	Matrix NormalObjectToWorld;
-	Color Color;
-	LitMaterial Mat;
-};
-
-struct CBLights
-{
-	LightData LightData;
-};
-#pragma pack(pop)
-
-// @TODO: create rendering system context and pass it to mesh renderer
-// RenderingSystemContext should contain:
-// Camera to use
-// Scene to render?
-// Shaders override with an equivalent of TOptional
-// Different flags that would tell us:
-//  rendering type (deferred or forward) - we'll need to use them to select the right shader type
-struct RenderingSystemContext
-{
-	int ShaderFlags = 0;
-	std::optional<PixelShader*> OverridePixelShader;
-};
-
-
-struct CBLookup
-{
-	uint32_t id;
-	float _pad[3];
-};
-// todo: move this to its own file
-class ObjectLookupHelper
-{
-public:
-
-	ObjectLookupHelper(class RenderingSystem* InRenderingSystem);
-
-	auto HandleScreenResize(const Vector2& NewSize) -> void;
-
-	auto GetRendererUnderPosition(const Vector2& Pos) -> Renderer*;
-	auto GetActorUnderPosition(const Vector2& Pos) -> Actor*;
-
-	auto Render() -> void;
-
-private:
-	auto ResizeViewport(int Width, int Height) -> void;
-
-	ComPtr<ID3D11Texture2D> RenderTex = nullptr;
-	ComPtr<ID3D11RenderTargetView> RenderTexRTV = nullptr;
-
-	ComPtr<ID3D11Texture2D> StagingTex = nullptr;
-
-	ComPtr<ID3D11Device> Device = nullptr;
-	ComPtr<ID3D11DeviceContext> DeviceContext = nullptr;
-
-	ComPtr<ID3D11Buffer> LookupCB;
-
-	PixelShader* LookupShader = nullptr;
-
-	class RenderingSystem* MyRenderingSystem;
-};
-
+class Renderer;
 
 class RenderingSystem
 {
@@ -139,7 +37,7 @@ public:
 	// TODO: add a delegate and subscribe to resize event
 	void HandleScreenResize(const Vector2& NewSize);
 
-	auto GetActorUnderPosition(const Vector2& Pos)->Actor* { return MyObjectLookupHelper->GetActorUnderPosition(Pos); }
+	auto GetActorUnderPosition(const Vector2& Pos)->Actor*;
 
 private:
 

@@ -3,6 +3,7 @@
 #include "MeshRenderer.h"
 #include "LineRenderer.h"
 #include "RigidBodyComponent.h"
+#include "RenderingSystem.h"
 
 void Actor::Update(float DeltaTime)
 {
