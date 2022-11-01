@@ -25,14 +25,18 @@ public:
 
 	auto Shutdown() -> void;
 
+	auto AddMessageToDisplay(const std::string& Msg) -> void;
+
 	~ImGuiSubsystem();
 
+	static auto GetInstance() { return Instance; }
 private:
 	auto DrawDockspace() -> void;
 	auto DrawViewport() -> void;
 	auto DrawActorExplorer() -> void;
 	auto DrawActorInspector() -> void;
 	auto DrawGizmos() -> void;
+	auto DrawMessagesWindow() -> void;
 private:
 	Game* MyGame;
 
@@ -48,4 +52,7 @@ private:
 	bool useSnap;
 	Vector3 snap;
 
+	std::vector<std::string> MessagesToDisplay;
+
+	static ImGuiSubsystem* Instance;
 };

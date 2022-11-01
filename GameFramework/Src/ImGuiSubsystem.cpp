@@ -13,12 +13,15 @@
 
 #include <string>
 
+ImGuiSubsystem* ImGuiSubsystem::Instance = nullptr;
+
 ImGuiSubsystem::ImGuiSubsystem()
 	: mCurrentGizmoOperation(ImGuizmo::OPERATION::TRANSLATE)
 	, mCurrentGizmoMode(ImGuizmo::MODE::WORLD)
 	, useSnap(false)
 	, MyGame(nullptr)
 {
+	Instance = this;
 }
 
 auto ImGuiSubsystem::Initialize(Game* const InGame) -> void
@@ -85,6 +88,7 @@ auto ImGuiSubsystem::DoLayout() -> void
 	DrawViewport();
 	DrawActorExplorer();
 	DrawActorInspector();
+	DrawMessagesWindow();
 }
 
 auto ImGuiSubsystem::Shutdown() -> void
@@ -92,6 +96,11 @@ auto ImGuiSubsystem::Shutdown() -> void
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
+}
+
+auto ImGuiSubsystem::AddMessageToDisplay(const std::string& Msg) -> void
+{
+	MessagesToDisplay.push_back(Msg);
 }
 
 ImGuiSubsystem::~ImGuiSubsystem()
@@ -318,7 +327,7 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 		ImGui::Text("Mouse position in viewport:");
 		ImGui::Text(("x = " + std::to_string(ViewportMousePos.x) + "\ty = " + std::to_string(ViewportMousePos.y)).c_str());
 	}
-	
+
 	ImGui::End();
 }
 
@@ -341,4 +350,15 @@ auto ImGuiSubsystem::DrawGizmos() -> void
 			actor->SetTransform(t);
 		}
 	}
+}
+
+auto ImGuiSubsystem::DrawMessagesWindow() -> void
+{
+	ImGui::Begin("Msgs");
+	for (const std::string& str : MessagesToDisplay)
+	{
+		ImGui::Text(str.c_str());
+	}
+	ImGui::End();
+	MessagesToDisplay.clear();
 }
