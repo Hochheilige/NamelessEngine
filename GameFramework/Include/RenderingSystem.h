@@ -39,6 +39,8 @@ public:
 
 	auto GetActorUnderPosition(const Vector2& Pos)->Actor*;
 
+	auto GetWorldPositionUnerScreenPosition(const Vector2& Pos)->Vector3;
+
 private:
 
 	void PerformShadowmapPass();
