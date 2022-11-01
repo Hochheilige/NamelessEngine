@@ -12,6 +12,13 @@
 
 #include <string>
 
+ImGuiSubsystem::ImGuiSubsystem()
+	: mCurrentGizmoOperation(ImGuizmo::OPERATION::TRANSLATE)
+	, mCurrentGizmoMode(ImGuizmo::MODE::WORLD)
+	, useSnap(false)
+{
+}
+
 auto ImGuiSubsystem::Initialize(Game* const InGame) -> void
 {
 	MyGame = InGame;
@@ -73,10 +80,9 @@ auto ImGuiSubsystem::DoLayout() -> void
 	DrawDockspace();
 	static bool temp = true;
 	ImGui::ShowDemoWindow(&temp);
+	DrawViewport();
 	DrawActorExplorer();
 	DrawActorInspector();
-	// need to draw this after gizmos to have a relevant ImGuizmo::IsUsing
-	DrawViewport();
 }
 
 auto ImGuiSubsystem::Shutdown() -> void
@@ -205,6 +211,12 @@ auto ImGuiSubsystem::DrawViewport() -> void
 	ViewportMousePos = {mousePos.x, mousePos.y};
 	MyGame->MyRenderingSystem->HandleScreenResize({ ViewportSize.x, ViewportSize.y });
 	ImGui::Image(MyGame->MyRenderingSystem->GetViewportTextureID(), ViewportSize);
+
+	// Draw gizmos in the viewport
+	{
+		ImGuizmo::SetDrawlist(ImGui::GetWindowDrawList());
+		DrawGizmos();
+	}
 	// todo: move this somewhere more appropriate
 	{
 		if (ImGui::IsItemClicked() && !ImGuizmo::IsUsing())
@@ -247,16 +259,6 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 {
 	ImGui::Begin("Actor Inspector");
 
-	static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::ROTATE);
-	static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::WORLD);
-	static bool useSnap(false);
-	Vector3 snap;
-
-	Camera* camera = Game::GetInstance()->GetCurrentCamera();
-
-	Matrix mView = camera->GetViewMatrix();
-	Matrix mProj = camera->GetProjectionMatrix();
-
 	if (Actor* actor = MyGame->MyEditorContext.SelectedActor)
 	{
 
@@ -264,7 +266,6 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 			ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 			ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
 			ImGui::BeginChild("ChildR", ImVec2(0, 130), true, window_flags);
-
 
 			if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
 				mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
@@ -297,34 +298,45 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 				if (ImGui::RadioButton("World", mCurrentGizmoMode == ImGuizmo::WORLD))
 					mCurrentGizmoMode = ImGuizmo::WORLD;
 			}
-
-			ImGuizmo::SetRect(ViewportStart.x, ViewportStart.y, ViewportSize.x, ViewportSize.y);
-			Matrix identityMatrix = Matrix::Identity;
-
-			Matrix tMatrix = t.GetTransformMatrix();
-			if (ImGuizmo::Manipulate(&mView._11, &(mProj._11), mCurrentGizmoOperation, mCurrentGizmoMode, &tMatrix._11, NULL, useSnap ? &snap.x : NULL))
-			{
-				transformUpdated = true;
-				t.SetFromMatrix(tMatrix);
-			}
+			
 			
 			if (transformUpdated)
 			{
 				actor->SetTransform(t);
 			}
 
-				ImGui::EndChild();
-				ImGui::PopStyleVar();
-			}
-
-		}
-		else
-		{
-			ImGui::Text("No actor selected");
-			ImGui::Text(("x = " + std::to_string(ViewportMousePos.x) + "\ty = " + std::to_string(ViewportMousePos.y)).c_str());
+			ImGui::EndChild();
+			ImGui::PopStyleVar();
 		}
 
-	
+	}
+	else
+	{
+		ImGui::Text("No actor selected");
+		ImGui::Text("Mouse position in viewport:");
+		ImGui::Text(("x = " + std::to_string(ViewportMousePos.x) + "\ty = " + std::to_string(ViewportMousePos.y)).c_str());
+	}
 	
 	ImGui::End();
+}
+
+auto ImGuiSubsystem::DrawGizmos() -> void
+{
+	if (Actor* actor = MyGame->MyEditorContext.SelectedActor)
+	{
+		ImGuizmo::SetRect(ViewportStart.x, ViewportStart.y, ViewportSize.x, ViewportSize.y);
+
+		Camera* camera = Game::GetInstance()->GetCurrentCamera();
+
+		Matrix mView = camera->GetViewMatrix();
+		Matrix mProj = camera->GetProjectionMatrix();
+
+		Transform t = actor->GetTransform();
+		Matrix tMatrix = t.GetTransformMatrix();
+		if (ImGuizmo::Manipulate(&mView._11, &(mProj._11), mCurrentGizmoOperation, mCurrentGizmoMode, &tMatrix._11, NULL, useSnap ? &snap.x : NULL))
+		{
+			t.SetFromMatrix(tMatrix);
+			actor->SetTransform(t);
+		}
+	}
 }

@@ -4,9 +4,17 @@
 #include "imgui.h"
 class Game;
 
+namespace ImGuizmo
+{
+	enum OPERATION;
+	enum MODE;
+}
+
 class ImGuiSubsystem
 {
 public:
+	ImGuiSubsystem();
+
 	auto Initialize(Game* const InGame) -> void;
 
 	auto NewFrame() -> void;
@@ -24,6 +32,7 @@ private:
 	auto DrawViewport() -> void;
 	auto DrawActorExplorer() -> void;
 	auto DrawActorInspector() -> void;
+	auto DrawGizmos() -> void;
 private:
 	Game* MyGame;
 
@@ -31,4 +40,12 @@ private:
 
 	ImVec2 ViewportStart;
 	ImVec2 ViewportSize;
+
+	// Gizmo state
+private:
+	ImGuizmo::OPERATION mCurrentGizmoOperation;
+	ImGuizmo::MODE mCurrentGizmoMode;
+	bool useSnap;
+	Vector3 snap;
+
 };

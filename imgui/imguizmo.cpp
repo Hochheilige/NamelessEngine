@@ -923,8 +923,8 @@ namespace IMGUIZMO_NAMESPACE
         ImGuiWindow* window = ImGui::FindWindowByName(gContext.mDrawList->_OwnerName);
         if (g.HoveredWindow == window)   // Mouse hovering drawlist window
             return true;
-       // if (g.HoveredWindow != NULL)     // Any other window is hovered
-       //     return false;
+        if (g.HoveredWindow != NULL)     // Any other window is hovered
+            return false;
         if (ImGui::IsMouseHoveringRect(window->InnerRect.Min, window->InnerRect.Max, false))   // Hovering drawlist window rect, while no other window is hovered (for _NoInputs windows)
             return true;
         return false;
