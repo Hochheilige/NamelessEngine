@@ -257,16 +257,13 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 	Matrix mView = camera->GetViewMatrix();
 	Matrix mProj = camera->GetProjectionMatrix();
 
+	if (Actor* actor = MyGame->MyEditorContext.SelectedActor)
+	{
 
-	if (!ImGui::CollapsingHeader("Transform")) {
-		ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
-		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-		ImGui::BeginChild("ChildR", ImVec2(0, 110), true, window_flags);
-
-		
-
-		if (Actor* actor = MyGame->MyEditorContext.SelectedActor)
-		{
+		if (!ImGui::CollapsingHeader("Transform")) {
+			ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
+			ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+			ImGui::BeginChild("ChildR", ImVec2(0, 130), true, window_flags);
 
 
 			if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
@@ -315,6 +312,11 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 			{
 				actor->SetTransform(t);
 			}
+
+				ImGui::EndChild();
+				ImGui::PopStyleVar();
+			}
+
 		}
 		else
 		{
@@ -322,9 +324,7 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 			ImGui::Text(("x = " + std::to_string(ViewportMousePos.x) + "\ty = " + std::to_string(ViewportMousePos.y)).c_str());
 		}
 
-		ImGui::EndChild();
-		ImGui::PopStyleVar();
-	}
+	
 	
 	ImGui::End();
 }
