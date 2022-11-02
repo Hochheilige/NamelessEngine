@@ -1,15 +1,14 @@
 ﻿#pragma once
 
-#include "MonoComponent.h"
-#include "Transform.h"
 #include "..\MonoSystem.h"
+#include "..\Component.h"
 
 class MonoActor
 {
 public:
     MonoActor();
-    void SetTransform(Transform transform);
-    void AddComponent(MonoComponent* component);
+    void AddComponent(Component* component);
+    void RemoveComponent(Component* component);
 private:
     MonoObject* CsInstance = nullptr;
 };

@@ -56,6 +56,8 @@ public:
 				component->SetAttachmentParent(RootComponent);
 			}
 		}
+		
+		mMonoActor->AddComponent(component);
 
 		return component;
 	}

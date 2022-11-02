@@ -1,7 +1,9 @@
 #pragma once
 
-#include "Transform.h"
+#include "ComponentsEnum.h"
+//#include "MonoObjects/MonoComponent.h"
 
+class MonoComponent;
 class Actor;
 class Game;
 
@@ -15,7 +17,9 @@ public:
 	virtual void OnRegister() = 0;
 	virtual void Update(float DeltaTime) = 0;
 
-
+	virtual MonoComponent* GetMonoComponent();
+	virtual ComponentType GetComponentType();
+	
 	Actor* GetOwner() const { return mOwner; }
 
 private:

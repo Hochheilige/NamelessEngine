@@ -14,14 +14,18 @@ namespace Scripts
         
         public Component AddComponent(int componentType)
         {
+            Console.WriteLine("Component type to add " + componentType);
             ComponentsEnum type = (ComponentsEnum) componentType;
             Component component = default;
             switch (type)
             {
-                case ComponentsEnum.AudioComponent:
+                case ComponentsEnum.MeshRenderer:
                     component = new AudioComponent(this);
                     break;
-                case ComponentsEnum.PhysicsComponent:
+                case ComponentsEnum.RigidBodyCube:
+                    component = new PhysicsComponent(this);
+                    break;
+                case ComponentsEnum.RigidBodySphere:
                     component = new PhysicsComponent(this);
                     break;
             }

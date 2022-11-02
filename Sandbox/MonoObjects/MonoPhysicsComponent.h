@@ -4,5 +4,5 @@
 class MonoPhysicsComponent : public MonoComponent
 {
 public:
-    
+    void SetMass(float mass);
 };

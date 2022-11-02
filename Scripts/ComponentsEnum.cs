@@ -2,7 +2,8 @@
 {
     public enum ComponentsEnum
     {
-        PhysicsComponent = 1,
-        AudioComponent = 2,
+        MeshRenderer = 1,
+        RigidBodyCube,
+        RigidBodySphere
     }
 }

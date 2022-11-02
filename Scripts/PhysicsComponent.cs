@@ -15,6 +15,7 @@ namespace Scripts
 
         public void SetMass(float mass)
         {
+            Console.WriteLine("Setted new Mass");
             PhysicsSetMass(CppInstance, mass);
         }
 

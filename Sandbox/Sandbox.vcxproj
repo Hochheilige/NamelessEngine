@@ -108,7 +108,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\mono\include;$(SolutionDir)External\bullet3\src\;$(SolutionDir)External\assimp\include\;$(SolutionDir)DirectXTK\Include\;$(SolutionDir)GameFramework\Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\mono\include\;$(SolutionDir)External\bullet3\src\;$(SolutionDir)External\assimp\include\;$(SolutionDir)DirectXTK\Include\;$(SolutionDir)GameFramework\Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
@@ -146,6 +146,7 @@ xcopy "$(SolutionDir)External\mono\lib\4.5\*" "$(TargetDir)mono\lib\4.5\" /y /i 
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AudioComponent.h" />
+    <ClInclude Include="ComponentsEnum.h" />
     <ClInclude Include="Mappings.h" />
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Component.h" />

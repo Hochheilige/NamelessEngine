@@ -1,4 +1,5 @@
 ﻿#include "MonoActor.h"
+#include "MonoComponent.h"
 
 MonoActor::MonoActor()
 {
@@ -8,7 +9,22 @@ MonoActor::MonoActor()
     CsInstance = mono->CreateClassInstance(klass);
 }
 
-void MonoActor::AddComponent(MonoComponent* component)
+void MonoActor::AddComponent(Component* component)
 {
+    auto type = component->GetComponentType();
+    auto monoComp = component->GetMonoComponent();
+   
+    auto mono = MonoSystem::GetInstance();
     
+    void *args [1];
+    args [0] = &type;
+    
+    MonoMethod* method = mono->GetMethod("Scripts", "Actor", "AddComponent");
+    MonoObject* result = mono->InvokeMethod(method, CsInstance, args, nullptr);
+
+    monoComp->SetCsInstance(result);
+}
+
+void MonoActor::RemoveComponent(Component* component)
+{
 }
