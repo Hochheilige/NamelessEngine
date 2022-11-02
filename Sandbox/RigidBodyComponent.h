@@ -14,11 +14,19 @@ public:
 	btCollisionShape* GetCollisionShape();
 	btScalar GetMass();
 
+	void Update(float DeltaTime);
+
+	void MakeKinematic();
+	//void MakeNonKinematic();
+
 protected:
 	btCollisionShape* Shape;
 	btRigidBody* Body;
 	btScalar Mass;
 	btTransform PhysicsTransform;
+
+public:
+	bool is_kinematic = false;
 };
 
 

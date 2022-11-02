@@ -66,6 +66,14 @@ public:
 			[](Component* comp) {return dynamic_cast<T*>(comp); }), Components.end());
 	}
 
+	template<typename T>
+	T* GetComponentOfClass()
+	{
+		T* comp = dynamic_cast<T*>(*std::find_if(Components.begin(), Components.end(),
+			[](Component* comp) {return dynamic_cast<T*>(comp); }));
+		return comp;
+	}
+
 	auto RemoveComponent(Component* InComponent) -> void;
 
 	void RemoveChild(Actor* Child);
@@ -87,6 +95,7 @@ private:
 	SceneComponent* RootComponent = nullptr;
 	std::vector<Component*> Components;
 
+public:
 	bool is_physics_enabled = false;
 	bool is_debug_renderer_enabled = false;
 	bool is_mesh_renderer_enabled = false;

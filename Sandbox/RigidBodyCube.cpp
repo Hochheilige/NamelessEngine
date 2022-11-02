@@ -43,16 +43,16 @@ void RigidBodyCube::OnRegister()
 {
 }
 
-void RigidBodyCube::Update(float DeltaTime)
-{
-	// TODO: this is literally the same code as in the other RigidBody's update -> this can be moved to the parent class
-	if (Body && Body->getMotionState())
-    {
-        Body->getMotionState()->getWorldTransform(PhysicsTransform);
-    }
-
-	Transform t = GetTransform();
-	t.Position = Vector3(PhysicsTransform.getOrigin().x(), PhysicsTransform.getOrigin().y(), PhysicsTransform.getOrigin().z());
-	t.Rotation = Quaternion(PhysicsTransform.getRotation());
-	SetTransform(t);
-}
+//void RigidBodyCube::Update(float DeltaTime)
+//{
+//	// TODO: this is literally the same code as in the other RigidBody's update -> this can be moved to the parent class
+//	if (Body && Body->getMotionState())
+//    {
+//        Body->getMotionState()->getWorldTransform(PhysicsTransform);
+//    }
+//
+//	Transform t = GetTransform();
+//	t.Position = Vector3(PhysicsTransform.getOrigin().x(), PhysicsTransform.getOrigin().y(), PhysicsTransform.getOrigin().z());
+//	t.Rotation = Quaternion(PhysicsTransform.getRotation());
+//	SetTransform(t);
+//}

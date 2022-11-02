@@ -260,13 +260,15 @@ void Sandbox::PrepareResources()
 	tr.Rotation.SetEulerAngles(0, 0, 0);
 	tr.Scale = Vector3(20, 0.5, 20);
 	platform = CreateStaticBox(tr);
+	platform->UsePhysicsSimulation();
 
 	//CreateSphereObject(3.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1, 1, 1);
 	tr.Position = Vector3(3.0f, 10.0f, 0.0f);
 	tr.Rotation.SetEulerAngles(0, 0, 0);
 	tr.Scale = Vector3(1, 1, 1);
-	auto sphere = CreateDynamicSphere(tr);
+	sphere = CreateDynamicSphere(tr);
 	sphere->UsePhysicsSimulation();
+	sphere->GetComponentOfClass<RigidBodyComponent>()->MakeKinematic();
 
 	for (int i = 0; i < 5; ++i)
 		for (int j = 0; j < 5; ++j)
@@ -374,11 +376,11 @@ void Sandbox::Update(float DeltaTime)
 		}
 		if (keyboard->IsDown(KEY_ONE))
 		{
-			platform->UnUsePhysicsSimulation();
+			sphere->UnUsePhysicsSimulation();
 		}		
 		if (input.GetKeyboard()->IsDown(KEY_TWO))
 		{
-			platform->UsePhysicsSimulation();
+			sphere->UsePhysicsSimulation();
 		}
 	}
 

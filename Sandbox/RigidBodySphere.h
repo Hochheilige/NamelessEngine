@@ -14,7 +14,7 @@ public:
 
 	virtual void OnRegister() override;
 
-	virtual void Update(float DeltaTime) override;
+	//virtual void Update(float DeltaTime) override;
 
 private:
 
