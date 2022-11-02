@@ -149,6 +149,10 @@ xcopy "$(SolutionDir)External\mono\lib\4.5\*" "$(TargetDir)mono\lib\4.5\" /y /i 
     <ClInclude Include="Mappings.h" />
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="MonoObjects\MeshRendererComponent.h" />
+    <ClInclude Include="MonoObjects\MonoActor.h" />
+    <ClInclude Include="MonoObjects\MonoComponent.h" />
+    <ClInclude Include="MonoObjects\MonoPhysicsComponent.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="PhysicsModule.h" />
     <ClInclude Include="RigidBodyComponent.h" />
@@ -164,6 +168,10 @@ xcopy "$(SolutionDir)External\mono\lib\4.5\*" "$(TargetDir)mono\lib\4.5\" /y /i 
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Mappings.cpp" />
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="MonoObjects\MeshRendererComponent.cpp" />
+    <ClCompile Include="MonoObjects\MonoActor.cpp" />
+    <ClCompile Include="MonoObjects\MonoComponent.cpp" />
+    <ClCompile Include="MonoObjects\MonoPhysicsComponent.cpp" />
     <ClCompile Include="PhysicsModule.cpp" />
     <ClCompile Include="RigidBodyComponent.cpp" />
     <ClCompile Include="MonoSystem.cpp" />

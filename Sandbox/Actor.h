@@ -7,6 +7,7 @@
 #include "Transform.h"
 #include "Component.h"
 #include "SceneComponent.h"
+#include "MonoObjects/MonoActor.h"
 
 class LineRenderer;
 class MeshRenderer;
@@ -16,7 +17,7 @@ class Actor : public Object
 {
 public:
 
-	Actor() = default;
+	Actor();
 
 	auto GetTransform() const -> const Transform& { return RootComponent ? RootComponent->GetTransform() : Transform{}; }
 	auto SetTransform(const Transform& InTransform) const -> void { if (RootComponent)  RootComponent->SetRelativeTransform(InTransform); else assert(false, "attempting to set transform when actor doesn't have a root component"); }
@@ -87,6 +88,8 @@ private:
 	SceneComponent* RootComponent = nullptr;
 	std::vector<Component*> Components;
 
+	MonoActor* mMonoActor;
+	
 	bool is_physics_enabled = false;
 	bool is_debug_renderer_enabled = false;
 	bool is_mesh_renderer_enabled = false;

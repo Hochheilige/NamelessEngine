@@ -1,33 +1,26 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Scripts
 {
     public class PhysicsComponent : Component
     {
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        public static extern void InternalOnUnregister();
+        private static extern void PhysicsSetMass(IntPtr handle, float mass);
         
-        public override void OnRegister()
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private static extern void PhysicsSetGravity(IntPtr handle, float gravity);
+
+        public PhysicsComponent(Actor owner) : base(owner) { }
+
+        public void SetMass(float mass)
         {
-            throw new System.NotImplementedException();
+            PhysicsSetMass(CppInstance, mass);
         }
 
-        public override void OnUnregister()
+        public void SetGravity(float gravity)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public override void Update(float deltaTime)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public PhysicsComponent(Transform transform, GameObject parent) : base(transform, parent)
-        {
-        }
-
-        public PhysicsComponent(GameObject parent) : base(parent)
-        {
+            PhysicsSetGravity(CppInstance, gravity);
         }
     }
 }

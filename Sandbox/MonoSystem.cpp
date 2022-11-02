@@ -2,6 +2,8 @@
 #include "Mappings.h"
 #include <filesystem>
 
+MonoSystem* MonoSystem::Instance = nullptr;
+
 //TODO move to GameFramework
 MonoSystem::MonoSystem()
 {
@@ -27,8 +29,8 @@ MonoSystem::MonoSystem()
 			PrintAssemblyTypes(scriptAssembly);
 			image = mono_assembly_get_image(scriptAssembly);
 			if (image) {
-				mono_add_internal_call("Scripts.Script::CreateCubeObject", &Mappings::CS_CreateObj);
-				mono_add_internal_call("Scripts.AudioComponent::InternalOnRegister", &Mappings::CS_AudioOnCreate);
+				/*mono_add_internal_call("Scripts.Script::CreateCubeObject", &Mappings::CS_CreateObj);
+				mono_add_internal_call("Scripts.AudioComponent::InternalOnRegister", &Mappings::CS_AudioOnCreate);*/
 			}
 		}
 	}
@@ -119,4 +121,14 @@ void MonoSystem::PrintAssemblyTypes(MonoAssembly* assembly) {
 
 		printf("%s.%s\n", nameSpace, name);
 	}
+}
+
+MonoSystem* MonoSystem::GetInstance()
+{
+	if(Instance == nullptr)
+	{
+		Instance = new MonoSystem;
+	}
+
+	return Instance;
 }
