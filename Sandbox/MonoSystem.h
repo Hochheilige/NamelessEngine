@@ -7,8 +7,9 @@
 
 class MonoSystem
 {
-public:
+protected:
 	MonoSystem();
+public:
 	~MonoSystem();
 
 	MonoImage* GetImage();
@@ -25,11 +26,15 @@ public:
 	MonoObject* CreateClassInstance(MonoClass* klass);
 	void PrintAssemblyTypes(MonoAssembly* assembly);
 
+	static MonoSystem* GetInstance();
+
+	
 	MonoDomain* rootDomain = nullptr;
 	MonoDomain* appDomain = nullptr;
 	MonoAssembly* scriptAssembly = nullptr;
 	MonoImage* image = nullptr;
 
+	static MonoSystem* Instance;
 	std::map<std::string, MonoMethodDesc*> monoDescsCache;
 	/**
 	 * Name of the main namespace in the 

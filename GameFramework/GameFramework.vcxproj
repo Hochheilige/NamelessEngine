@@ -121,7 +121,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Sandbox\;$(ProjectDir)Include\;$(SolutionDir)DirectXTK\Include\;$(SolutionDir)External\assimp\include\;$(SolutionDir)imgui</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Sandbox\;$(ProjectDir)Include\;$(SolutionDir)DirectXTK\Include\;$(SolutionDir)External\assimp\include\;$(SolutionDir)External\mono\include\;$(SolutionDir)imgui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

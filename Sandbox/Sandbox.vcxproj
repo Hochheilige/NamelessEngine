@@ -108,7 +108,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\mono\include;$(SolutionDir)External\bullet3\src\;$(SolutionDir)External\assimp\include\;$(SolutionDir)DirectXTK\Include\;$(SolutionDir)GameFramework\Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\mono\include\;$(SolutionDir)External\bullet3\src\;$(SolutionDir)External\assimp\include\;$(SolutionDir)DirectXTK\Include\;$(SolutionDir)GameFramework\Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
@@ -146,9 +146,14 @@ xcopy "$(SolutionDir)External\mono\lib\4.5\*" "$(TargetDir)mono\lib\4.5\" /y /i 
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AudioComponent.h" />
+    <ClInclude Include="ComponentsEnum.h" />
     <ClInclude Include="Mappings.h" />
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="MonoObjects\MeshRendererComponent.h" />
+    <ClInclude Include="MonoObjects\MonoActor.h" />
+    <ClInclude Include="MonoObjects\MonoComponent.h" />
+    <ClInclude Include="MonoObjects\MonoPhysicsComponent.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="PhysicsModule.h" />
     <ClInclude Include="RigidBodyComponent.h" />
@@ -164,6 +169,10 @@ xcopy "$(SolutionDir)External\mono\lib\4.5\*" "$(TargetDir)mono\lib\4.5\" /y /i 
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Mappings.cpp" />
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="MonoObjects\MeshRendererComponent.cpp" />
+    <ClCompile Include="MonoObjects\MonoActor.cpp" />
+    <ClCompile Include="MonoObjects\MonoComponent.cpp" />
+    <ClCompile Include="MonoObjects\MonoPhysicsComponent.cpp" />
     <ClCompile Include="PhysicsModule.cpp" />
     <ClCompile Include="RigidBodyComponent.cpp" />
     <ClCompile Include="MonoSystem.cpp" />

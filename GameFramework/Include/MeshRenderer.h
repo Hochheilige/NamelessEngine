@@ -5,6 +5,9 @@
 
 #include "RenderingSystemTypes.h"
 
+#include "RenderingSystem.h"
+#include "MonoObjects/MeshRendererComponent.h"
+
 class MeshRenderer : public Renderer
 {
 public:
@@ -23,9 +26,16 @@ public:
 
 	virtual void Render(const RenderingSystemContext& RSContext) override;
 
+	ComponentType GetComponentType() override { return mType; }
+
+	MonoComponent* GetMonoComponent() override { return mMonoComponent; }
+	
 	LitMaterial Mat;
 
 protected:
+	ComponentType mType = ComponentType::MeshRendererType;
+	MonoComponent* mMonoComponent = new MeshRendererComponent;
+	
 	class MeshProxy* mMeshProxy = nullptr;
 
 	ComPtr<ID3D11ShaderResourceView> mAlbedoSRV = nullptr;

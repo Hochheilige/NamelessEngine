@@ -172,7 +172,7 @@ auto Sandbox::CreatePointLight(Transform transform) -> Actor*
 void Sandbox::PrepareResources()
 {
 	Game::PrepareResources();
-	mono = new MonoSystem();
+	mono = MonoSystem::GetInstance();
 	// create meshes
 	boxMesh = new BoxMesh();
 	boxMeshProxy = boxMesh->CreateMeshProxy();
@@ -181,12 +181,12 @@ void Sandbox::PrepareResources()
 	sphereMesh = new SphereMesh();
 	sphereMeshProxy = sphereMesh->CreateMeshProxy();
 
-	auto obj = new ScriptObject("Cargo", mono);
+	/*auto obj = new ScriptObject("Cargo", mono);
 	auto m = obj->GetTransform();
 	std::cout << m.Position.x;
 	obj->Update(2.0f);
 	std::cout << m.Position.x;
-	auto m2 = obj->GetTransform();
+	auto m2 = obj->GetTransform();*/
 
 	// create shaders
 	ShaderCompiler sc;

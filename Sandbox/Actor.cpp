@@ -34,6 +34,11 @@ void Actor::Update(float DeltaTime)
 	}
 }
 
+Actor::Actor()
+{
+	mMonoActor = new MonoActor();
+}
+
 auto Actor::RemoveComponent(Component* InComponent) -> void
 {
 	if (InComponent == nullptr)
