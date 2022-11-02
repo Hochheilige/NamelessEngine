@@ -2,6 +2,7 @@
 
 #include "RenderingSystemTypes.h"
 #include "SceneComponent.h"
+#include "MonoObjects/MonoPhysicsComponent.h"
 
 class Renderer;
 
@@ -30,8 +31,14 @@ public:
 
 	Renderer* renderer;
 
+	MonoComponent* GetMonoComponent() override { return mMonoComponent; }
+	ComponentType GetComponentType() override { return ComponentType::LightPoint; }
+
 	void SetRenderer(Renderer* InRenderer) { renderer = InRenderer; }
 
+private:
+	//TODO: POPRAVIT'
+	MonoPhysicsComponent* mMonoComponent = new MonoPhysicsComponent;
 };
 
 //@TODO: move this to a separate file

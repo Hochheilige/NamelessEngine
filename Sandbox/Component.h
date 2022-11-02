@@ -1,5 +1,7 @@
 #pragma once
 
+#include <assert.h>
+
 #include "ComponentsEnum.h"
 #include "../External/assimp/code/AssetLib/FBX/FBXDocument.h"
 //#include "MonoObjects/MonoComponent.h"
@@ -20,12 +22,17 @@ public:
 
 	virtual MonoComponent* GetMonoComponent()
 	{
-		return  nullptr;
-	};
+		assert(false, "Not Defined");
+		return nullptr;
+		//throw std::exception("Not Defined");
+	}
+	
 	virtual ComponentType GetComponentType()
 	{
-		return ComponentType::MeshRendererType;
-	};
+		assert(false, "Not Defined");
+		return ComponentType::Unddefined;
+		//throw std::exception("Not Defined");
+	}
 	
 	Actor* GetOwner() const { return mOwner; }
 

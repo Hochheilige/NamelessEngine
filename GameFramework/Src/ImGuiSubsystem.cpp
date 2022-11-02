@@ -13,6 +13,11 @@
 
 #include <string>
 
+#include "Sandbox.h"
+
+//temporary include
+//#include "../External/bullet3/src/"
+
 ImGuiSubsystem* ImGuiSubsystem::Instance = nullptr;
 
 ImGuiSubsystem::ImGuiSubsystem()
@@ -381,6 +386,12 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 
 		//General properties
 		DrawGeneralProperties(actor);
+
+		if (ImGui::Button("Create"))
+		{
+			Transform t = {};
+			dynamic_cast<Sandbox*>(MyGame)->CreateBun(t);
+		}
 	}
 	else
 	{
