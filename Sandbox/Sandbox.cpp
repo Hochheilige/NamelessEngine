@@ -20,6 +20,8 @@
 #include "ScriptObject.h"
 #include "windows.h"
 #include "mono/metadata/debug-helpers.h"
+#include "RenderingSystem.h"
+#include "LightBase.h"
 
 #include "CreateCommon.h"
 
@@ -27,10 +29,10 @@ Actor* Sandbox::CreateNonPhysicsBox(Transform transform) {
 	Actor* box = CreateActor<Actor>();
 	
 	auto mesh_component = box->AddComponent<MeshRenderer>();
-	mesh_component->SetMeshProxy(boxMeshProxy);
+	mesh_component->SetMeshProxy(texturedBoxMeshProxy);
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
-
+	mesh_component->SetAlbedoSRV(whiteTexSRV);
 
 	return box;
 }
@@ -43,9 +45,12 @@ Actor* Sandbox::CreateStaticBox(Transform transform)
 	box_rb->SetMass(0);
 	box_rb->Init();
 	auto mesh_component = box->AddComponent<MeshRenderer>();
-	mesh_component->SetMeshProxy(boxMeshProxy);
+	mesh_component->SetMeshProxy(texturedBoxMeshProxy);
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
+	mesh_component->SetAlbedoSRV(whiteTexSRV);
+	mesh_component->SetAlbedoSRV(whiteTexSRV);
+	mesh_component->SetNormalSRV(basicNormalTexSRV);
 
 	return box;
 }
@@ -58,11 +63,42 @@ Actor* Sandbox::CreateDynamicBox(Transform transform)
 	box_rb->SetMass(1);
 	box_rb->Init();
 	auto mesh_component = box->AddComponent<MeshRenderer>();
-	mesh_component->SetMeshProxy(boxMeshProxy);
+	mesh_component->SetMeshProxy(texturedBoxMeshProxy);
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
+	mesh_component->SetAlbedoSRV(whiteTexSRV);
+	mesh_component->SetNormalSRV(basicNormalTexSRV);
 
 	return box;
+}
+
+Actor* Sandbox::CreateBunny(Transform transform)
+{
+	Actor* bunny = CreateActor<Actor>();
+	auto mesh_component = bunny->AddComponent<MeshRenderer>();
+	bunny->SetTransform(transform);
+	mesh_component->SetMeshProxy(bunnyMeshProxy);
+	mesh_component->SetPixelShader(ps);
+	mesh_component->SetVertexShader(vs);
+	mesh_component->SetAlbedoSRV(whiteTexSRV);
+	mesh_component->SetNormalSRV(basicNormalTexSRV);
+
+	return bunny;
+}
+
+Actor* Sandbox::CreateBun(Transform transform)
+{
+	Actor* actor = CreateActor<Actor>();
+	auto mesh_component = actor->AddComponent<MeshRenderer>();
+	actor->SetTransform(transform);
+	mesh_component->SetMeshProxy(burgerMeshProxy);
+	mesh_component->SetPixelShader(ps);
+	mesh_component->SetVertexShader(vs);
+	mesh_component->SetAlbedoSRV(burgerTexSRV);
+	mesh_component->SetNormalSRV(burgerNormalSRV);
+	mesh_component->SetSpecularSRV(burgerSpecSRV);
+
+	return actor;
 }
 
 void Sandbox::LoadGameFacade() {
@@ -88,6 +124,8 @@ Actor* Sandbox::CreateStaticSphere(Transform transform)
 	mesh_component->SetMeshProxy(sphereMeshProxy);
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
+	mesh_component->SetAlbedoSRV(whiteTexSRV);
+	mesh_component->SetNormalSRV(basicNormalTexSRV);
 
 	return sphere;
 }
@@ -103,8 +141,32 @@ Actor* Sandbox::CreateDynamicSphere(Transform transform)
 	mesh_component->SetMeshProxy(sphereMeshProxy);
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
+	mesh_component->SetAlbedoSRV(whiteTexSRV);
+	mesh_component->SetNormalSRV(basicNormalTexSRV);
 
 	return sphere;
+}
+
+auto Sandbox::CreatePointLight(Transform transform) -> Actor*
+{
+	Actor* light = CreateActor<Actor>();
+
+	PointLight* pl = light->AddComponent<PointLight>();
+	pl->SetRelativePosition(transform.Position);
+	MyRenderingSystem->RegisterLight(pl);
+
+	MeshRenderer* mr = new MeshRenderer(false);
+	mr->SetMeshProxy(boxMeshProxy);
+	mr->SetVertexShader(vs);
+	mr->SetPixelShader(ps);
+	// todo: calculate size based on intensity
+	mr->SetRelativeScale(Vector3::One * 50.0f);
+	mr->SetAttachmentParent(pl);
+
+	pl->SetRenderer(mr);
+	//pl->color = Color(0.5f, 1.0f, 1.0f);
+
+	return light;
 }
 
 void Sandbox::PrepareResources()
@@ -131,15 +193,16 @@ void Sandbox::PrepareResources()
 	sc.SetIsDebug(true);
 	sc.SetEntryPoint("VSMain");
 	sc.SetTarget("vs_5_0");
-	sc.SetPathToShader(L"../Shaders/MyVeryFirstShader.hlsl");
+	sc.SetPathToShader(L"../Shaders/TexturedShader.hlsl");
 
-	vs = sc.CreateShader<SimpleVertexShader>();
+	vs = sc.CreateShader<TexturedVertexShader>();
 
 	sc.SetEntryPoint("PSMain");
 	sc.SetTarget("ps_5_0");
 
 	ps = sc.CreateShader<PixelShader>();
 
+	sc.SetPathToShader(L"../Shaders/MyVeryFirstShader.hlsl");
 	sc.SetEntryPoint("PSPlainColor");
 	psPlain = sc.CreateShader<PixelShader>();
 
@@ -150,6 +213,31 @@ void Sandbox::PrepareResources()
 	sc.SetEntryPoint("VSMain");
 	sc.SetTarget("vs_5_0");
 	BasicVertexShader* basicVS = sc.CreateShader<BasicVertexShader>();
+
+
+	CreateWICTextureFromFile(GetD3DDevice().Get(), L"../Assets/white.png", whiteTex.GetAddressOf(), whiteTexSRV.GetAddressOf(), 16);
+	CreateNormalMapTextureFromFile(L"../Assets/basicNormal.png", basicNormalTex.GetAddressOf(), basicNormalTexSRV.GetAddressOf());
+
+	{
+		MeshLoader ml = MeshLoader("../Assets/stanford-bunny.fbx");
+		TexturedMesh mesh = ml.GetMesh(0);
+		bunnyMeshProxy = mesh.CreateMeshProxy();
+	}
+
+	{
+		MeshLoader ml = MeshLoader("../Assets/box.fbx");
+		TexturedMesh mesh = ml.GetMesh(0);
+		texturedBoxMeshProxy = mesh.CreateMeshProxy();
+
+		ml.OpenFile("../Assets/tjciddjqx_LOD0.fbx");
+		TexturedMesh burgerMesh = ml.GetMesh(0);
+		burgerMeshProxy = burgerMesh.CreateMeshProxy();
+	}
+
+	CreateWICTextureFromFile(GetD3DDevice().Get(), L"../Assets/tjciddjqx_2K_Albedo.jpg", burgerTexResource.GetAddressOf(), burgerTexSRV.GetAddressOf());
+	CreateNormalMapTextureFromFile(L"../Assets/tjciddjqx_2K_Normal_LOD0.jpg", burgerNormal.GetAddressOf(), burgerNormalSRV.GetAddressOf());
+	CreateNormalMapTextureFromFile(L"../Assets/tjciddjqx_2K_Roughness.jpg", burgerSpecular.GetAddressOf(), burgerSpecSRV.GetAddressOf());
+
 
 	// Setup PerspCamera
 	PerspCamera = new Camera();
@@ -170,7 +258,7 @@ void Sandbox::PrepareResources()
 	Transform tr;
 	tr.Position = Vector3(5, -0.5, 0);
 	tr.Rotation.SetEulerAngles(0, 0, 0);
-	tr.Scale = Vector3(10, 0.5, 10);
+	tr.Scale = Vector3(20, 0.5, 20);
 	platform = CreateStaticBox(tr);
 
 	//CreateSphereObject(3.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1, 1, 1);
@@ -200,14 +288,39 @@ void Sandbox::PrepareResources()
 	//pc->SetPixelShader(basicPS);
 	//pc->SetVertexShader(basicVS);
 
+	LightCam.Transform.Rotation = Vector3(-70.0f, 0.0f, 0.0f);
+	LightCam.Transform.Position = Vector3(0.0f, 20.0f, 0.0f);
+	LightCam.UpdateProjectionMatrixOrthographic(40.0f, 40.0f, 0.0f, 100.0f);
+	DirectiLight.direction = LightCam.Transform.Rotation.GetForwardVector();
+
+	AmbientLight* al = new AmbientLight();
+	MyRenderingSystem->RegisterLight(al);
+	QuadRenderer* qr = new QuadRenderer();
+	qr->SetVertexShader(vs);
+	qr->SetPixelShader(ps);
+	al->SetRenderer(qr);
+
+	DirectionalLight* dr = new DirectionalLight();
+	MyRenderingSystem->RegisterLight(dr);
+
+	dr->SetRenderer(qr);
 
 	//Create simple static box for testing
 	tr.Position = Vector3(16, 3, 0);
 	tr.Rotation.SetEulerAngles(0, 0, 0);
-	tr.Scale = Vector3(2.0, 2.0, 10.0);
+	tr.Scale = Vector3(4.0, 4.0, 20.0);
 	staticBox = CreateNonPhysicsBox(tr);
 	staticBox->SetTransform(tr);
 	
+	tr.Scale = Vector3::One * 0.015f;
+	tr.Position = { 11.638, 3.463, -7.674 };
+	CreateBunny(tr);
+
+	CreatePointLight(tr);
+
+	tr.Scale = Vector3::One * 0.4f;
+	tr.Position = { 11.436f, 0.843f, -2.502f };
+	CreateBun(tr);
 }
 
 void Sandbox::Update(float DeltaTime)

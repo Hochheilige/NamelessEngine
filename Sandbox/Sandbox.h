@@ -26,6 +26,12 @@ public:
 	Actor* CreateStaticSphere(Transform transform);
 	Actor* CreateDynamicSphere(Transform transform);
 
+	auto CreatePointLight(Transform transform)->Actor*;
+
+	Actor* CreateBunny(Transform transform);
+
+	Actor* CreateBun(Transform transform);
+
 private:
 	void LoadGameFacade();
 
@@ -35,13 +41,15 @@ private:
 	class BoxMesh* boxMesh;
 	class CircleMesh* circleMesh;
 	class SphereMesh* sphereMesh;
-	class SimpleVertexShader* vs;
+	class VertexShader* vs;
 	class PixelShader* ps;
 	class PixelShader* psPlain;
 
 	class MeshProxy* boxMeshProxy;
 	class MeshProxy* circleMeshProxy;
 	class MeshProxy* sphereMeshProxy;
+	MeshProxy* bunnyMeshProxy;
+	MeshProxy* texturedBoxMeshProxy;
 
 	class Camera* PerspCamera;
 	class Camera* OrthoCamera;
@@ -49,8 +57,11 @@ private:
 	class CameraController* FPSCC;
 	class GameComponent* CurrentCC = nullptr;
 
-	ComPtr<ID3D11Resource> cupTexResource;
-	ComPtr<ID3D11ShaderResourceView> cupTexSRV;
+	ComPtr<ID3D11Resource> whiteTex;
+	ComPtr<ID3D11ShaderResourceView> whiteTexSRV;
+
+	ComPtr<ID3D11Resource> basicNormalTex;
+	ComPtr<ID3D11ShaderResourceView> basicNormalTexSRV;
 
 	class MeshRenderer* updateBox;
 
@@ -61,5 +72,18 @@ private:
 
 	Actor* platform;
 	Actor* staticBox;
+
+
+	// burger bun
+	MeshProxy* burgerMeshProxy;
+
+	ComPtr<ID3D11Resource> burgerTexResource;
+	ComPtr<ID3D11ShaderResourceView> burgerTexSRV;
+
+	ComPtr<ID3D11Resource> burgerNormal;
+	ComPtr<ID3D11ShaderResourceView> burgerNormalSRV;
+
+	ComPtr<ID3D11Resource> burgerSpecular;
+	ComPtr<ID3D11ShaderResourceView> burgerSpecSRV;
 
 };

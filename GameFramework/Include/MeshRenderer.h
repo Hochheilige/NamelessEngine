@@ -9,7 +9,7 @@ class MeshRenderer : public Renderer
 {
 public:
 
-	MeshRenderer();
+	MeshRenderer(bool ShouldRegister = true);
 
 	virtual void Init() override {}
 	virtual void OnRegister() override {}
@@ -19,7 +19,7 @@ public:
 
 	void SetAlbedoSRV(ComPtr<ID3D11ShaderResourceView> InAlbedoSRV);
 	void SetNormalSRV(ComPtr<ID3D11ShaderResourceView> InSRV) { mNormalSRV = InSRV; }
-	void SetSpecularSRV(ComPtr<ID3D11ShaderResourceView> InSRV) { mSpecularSRV = InSRV;; }
+	void SetSpecularSRV(ComPtr<ID3D11ShaderResourceView> InSRV) { mSpecularSRV = InSRV; }
 
 	virtual void Render(const RenderingSystemContext& RSContext) override;
 

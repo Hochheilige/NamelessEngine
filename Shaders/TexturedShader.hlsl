@@ -90,31 +90,32 @@ PSOutput PSMain(PS_IN input) : SV_Target
 	float4 col = DiffuseMap.Sample(DefaultSampler, input.uv) * Color;
 	float specular = SpecularMap.Sample(DefaultSampler, input.uv.xy).r;
 	float3 normal = NormalMap.Sample(DefaultSampler, input.uv.xy).xyz;
-	
+	///*temp*/ normal = float3(0.5f, 0.5f, 1.0f);
+
 	//float3 normal = normalize(input.normal);
 	//float3 normal = float3(0.5f, 0.0f, 0.5f);
 	float3 pixelPos = input.worldPos;
 #else
 	float4 col = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	float specular = 0.5f;
-	float3 normal = float3(0.0f, 0.0f, 1.0f);
+	float3 normal = float3(0.5f, 0.5f, 1.0f);
 	float3 pixelPos = input.worldPos;
 #endif
 #endif
-	
+
 
 #if !defined(DEFERRED_LIGHTING)
 	float3 T = normalize(input.tangent.xyz);
-	float3 B = normalize(input.normal.xyz);
-	float3 N = normalize(input.binormal.xyz);
+	float3 B = normalize(input.binormal.xyz);
+	float3 N = normalize(input.normal.xyz);
 	float3x3 TBN = float3x3(T, B, N);
 
 	float3 unpackedNormal = normalize(normal * 2.0f - 1.0f);
-	unpackedNormal.rb = -1.0f * unpackedNormal.rb ;
+	//unpackedNormal.rb = -1.0f * unpackedNormal.rb;
 
 	unpackedNormal = mul(unpackedNormal, TBN);
 #else
-	float3 unpackedNormal = normalize(NormalMap.Load(float3(input.pos.xy, 0)).xyz);
+	float3 unpackedNormal = NormalMap.Load(float3(input.pos.xy, 0)).xyz;
 	float4 col = DiffuseMap.Load(float3(input.pos.xy, 0));
 	float3 pixelPos = WorldPosMap.Load(float3(input.pos.xy, 0)).xyz;
 	float specular = col.a;

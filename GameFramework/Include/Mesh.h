@@ -189,6 +189,35 @@ public:
 	}
 };
 
+//class TexturedBoxMesh : public TexturedMesh
+//{
+//public:
+//	TexturedBoxMesh()
+//	{
+//		AddVertex({ Vector3(0.5f, 0.5f, 0.5f),    Color(1.0f, 1.0f, 0.0f, 1.0f) }); // 0
+//		AddVertex({ Vector3(-0.5f, -0.5f, 0.5f),  Color(1.0f, 0.0f, 1.0f, 1.0f) }); // 1
+//		AddVertex({ Vector3(0.5f, -0.5f, 0.5f),   Color(0.0f, 1.0f, 1.0f, 1.0f) }); // 2
+//		AddVertex({ Vector3(-0.5f, 0.5f, 0.5f),   Color(1.0f, 1.0f, 0.0f, 1.0f) }); // 3
+//		AddVertex({ Vector3(0.5f, 0.5f, -0.5f),   Color(1.0f, 0.0f, 1.0f, 1.0f) }); // 4
+//		AddVertex({ Vector3(-0.5f, -0.5f, -0.5f), Color(1.0f, 1.0f, 0.0f, 1.0f) }); // 5
+//		AddVertex({ Vector3(0.5f, -0.5f, -0.5f),  Color(0.0f, 1.0f, 1.0f, 1.0f) }); // 6
+//		AddVertex({ Vector3(-0.5f, 0.5f, -0.5f),  Color(0.0f, 1.0f, 1.0f, 1.0f) }); // 7
+//
+//		AddFace(0, 1, 2);
+//		AddFace(1, 0, 3);
+//		AddFace(4, 5, 6);
+//		AddFace(5, 4, 7);
+//		AddFace(4, 0, 2);
+//		AddFace(4, 2, 6);
+//		AddFace(7, 5, 1);
+//		AddFace(7, 1, 3);
+//		AddFace(4, 0, 3);
+//		AddFace(4, 3, 7);
+//		AddFace(6, 1, 2);
+//		AddFace(6, 5, 1);
+//	}
+//};
+
 #include "MathInclude.h"
 class SphereMesh : public TexturedMesh
 {

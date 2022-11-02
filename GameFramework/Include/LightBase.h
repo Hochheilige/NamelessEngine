@@ -44,7 +44,7 @@ public:
 	virtual LightData GetLightData() 
 	{ 
 		LightData light;
-		light.Intensity = 0.15f;
+		light.Intensity = 0.45f;
 		return light; 
 	};
 

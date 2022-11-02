@@ -150,6 +150,8 @@ public:
 
 	EditorContext MyEditorContext;
 
+	void CreateNormalMapTextureFromFile(const wchar_t* fileName, ID3D11Resource** texture, ID3D11ShaderResourceView** textureView);
+
 protected:
 
 	Game();

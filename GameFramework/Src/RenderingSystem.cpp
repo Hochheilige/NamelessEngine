@@ -19,10 +19,10 @@ RenderingSystem::RenderingSystem(Game* InGame)
 	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-	samplerDesc.BorderColor[0] = 1.0f;
-	samplerDesc.BorderColor[1] = 0.0f;
-	samplerDesc.BorderColor[2] = 0.0f;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDesc.BorderColor[0] = 0.5f;
+	samplerDesc.BorderColor[1] = 0.5f;
+	samplerDesc.BorderColor[2] = 1.0f;
 	samplerDesc.BorderColor[3] = 1.0f;
 	samplerDesc.MaxLOD = FLT_MAX;
 	samplerDesc.MaxAnisotropy = 1;
@@ -201,9 +201,6 @@ void RenderingSystem::PerformForwardOpaquePass()
 	// @TODO: Move context to rendering system?
 	ID3D11DeviceContext* context = MyGame->GetD3DDeviceContext().Get();
 
-	
-
-
 	context->RSSetState(CullNoneRasterizerState.Get());
 	context->OMSetBlendState(OpaqueBlendState.Get(), nullptr, D3D11_DEFAULT_SAMPLE_MASK);
 	context->OMSetDepthStencilState(OpaqueDepthStencilState.Get(), 0);
@@ -273,6 +270,7 @@ void RenderingSystem::PerformOpaquePass(float DeltaTime)
 {
 	ID3D11DeviceContext* context = MyGame->GetD3DDeviceContext().Get();
 
+	// todo: move this to material
 	context->RSSetState(CullBackRasterizerState.Get());
 	context->OMSetBlendState(OpaqueBlendState.Get(), nullptr, D3D11_DEFAULT_SAMPLE_MASK);
 	context->OMSetDepthStencilState(OpaqueDepthStencilState.Get(), 0);
@@ -308,15 +306,14 @@ void RenderingSystem::PerformOpaquePass(float DeltaTime)
 
 	SetScreenSizeViewport();
 
+	ID3D11RenderTargetView* views[8] = { GeometryBuffer.GetDiffuseRTV(), GeometryBuffer.GetNormalRTV(), GeometryBuffer.GetWorldPositionRTV(), nullptr, nullptr, nullptr, nullptr, nullptr };
+	context->OMSetRenderTargets(8, views, DepthStencilView.Get());
+
 	context->ClearRenderTargetView(GeometryBuffer.GetDiffuseRTV(), DiffuseClearColor);
 	context->ClearRenderTargetView(GeometryBuffer.GetNormalRTV(), Color(0.0f, 0.0f, 0.0f, 1.0f));
 	context->ClearRenderTargetView(GeometryBuffer.GetWorldPositionRTV(), Color(0.0f, 0.0f, 0.0f, 1.0f));
 	context->ClearDepthStencilView(DepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-
-	ID3D11RenderTargetView* views[8] = { GeometryBuffer.GetDiffuseRTV(), GeometryBuffer.GetNormalRTV(), GeometryBuffer.GetWorldPositionRTV(), nullptr, nullptr, nullptr, nullptr, nullptr };
-	// @TODO: move depth stencil view to rendering system
-	context->OMSetRenderTargets(8, views, DepthStencilView.Get());
 
 	RenderingSystemContext rsContext;
 	rsContext.ShaderFlags = static_cast<int>(ShaderFlag::DeferredOpaque);
@@ -342,7 +339,7 @@ void RenderingSystem::PerformLightingPass(float DeltaTime)
 	CBPerDraw cbData;
 	const Camera& cam = *(MyGame->GetCurrentCamera());
 	cbData.WorldToClip = cam.GetWorldToClipMatrixTransposed();
-	cbData.CameraWorldPos = cam.Transform.Position;;
+	cbData.CameraWorldPos = cam.Transform.Position;
 
 	D3D11_MAPPED_SUBRESOURCE resource = {};
 	auto res = context->Map(PerDrawCB.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
@@ -358,11 +355,11 @@ void RenderingSystem::PerformLightingPass(float DeltaTime)
 
 	SetScreenSizeViewport();
 
-	context->ClearRenderTargetView(MyGame->RenderTargetView.Get(), Color(0.0f, 0.0f, 0.0f, 1.0f));
-
 	// @TODO: pass a pointer to render target view to render to
-	ID3D11RenderTargetView* views[8] = { MyGame->RenderTargetView.Get(), nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+	ID3D11RenderTargetView* views[8] = { ViewportRTV.Get(), nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 	context->OMSetRenderTargets(8, views, DepthStencilView.Get());
+
+	context->ClearRenderTargetView(ViewportRTV.Get(), Color(0.0f, 0.0f, 0.0f, 1.0f));
 
 	ID3D11ShaderResourceView* resources[] = {GeometryBuffer.GetDiffuseSRV(), MyGame->ShadowMapSRV.Get(), GeometryBuffer.GetNormalSRV(), GeometryBuffer.GetWorldPositionSRV()};
 	context->PSSetShaderResources(0, sizeof(resources)/sizeof(resources[0]), resources);
@@ -438,7 +435,7 @@ void RenderingSystem::PerformLightingPass(float DeltaTime)
 		case LightType::Point:
 		case LightType::Spot:
 			// @TODO: add depth bounds check
-			context->RSSetState(CullFrontRasterizerState.Get());
+			context->RSSetState(CullNoneRasterizerState.Get());
 			context->OMSetDepthStencilState(DisabledDepthStencilState.Get(), 0);
 			// @TODO: add shadows via shadow volumes?
 			rsContext.ShaderFlags = static_cast<int>(ShaderFlag::DeferredLighting | ShaderFlag::PointLight);
@@ -500,13 +497,13 @@ void RenderingSystem::Draw(float DeltaTime, const Camera* InCamera)
 
 	context->ClearState();
 
-	//PerformShadowmapPass();
+	PerformShadowmapPass();
 
 	// @TODO: uncomment this
-	//PerformOpaquePass(DeltaTime);
-	//PerformLightingPass(DeltaTime);
+	PerformOpaquePass(DeltaTime);
+	PerformLightingPass(DeltaTime);
 
-	PerformForwardOpaquePass();
+	//PerformForwardOpaquePass();
 
 	MyObjectLookupHelper->Render();
 }

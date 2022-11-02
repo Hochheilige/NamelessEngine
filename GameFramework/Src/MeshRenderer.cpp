@@ -9,9 +9,10 @@
 
 #include <d3d11.h>
 
-MeshRenderer::MeshRenderer()
+MeshRenderer::MeshRenderer(bool ShouldRegister/* = true*/)
 {
-	Game::GetInstance()->MyRenderingSystem->RegisterRenderer(this);
+	if (ShouldRegister)
+		Game::GetInstance()->MyRenderingSystem->RegisterRenderer(this);
 }
 
 void MeshRenderer::Update(float DeltaTime)
@@ -79,15 +80,15 @@ void MeshRenderer::Render(const RenderingSystemContext& RSContext)
 	context->VSSetConstantBuffers(2, 1, game->GetPerObjectConstantBuffer().GetAddressOf());
 
 	// Textures
-	if (mAlbedoSRV != nullptr)
-	context->PSSetShaderResources(0, 1, mAlbedoSRV.GetAddressOf());
+	if (!(RSContext.ShaderFlags & static_cast<int>(ShaderFlag::DeferredLighting)))
+		context->PSSetShaderResources(0, 1, mAlbedoSRV.GetAddressOf());
 	context->PSSetSamplers(0, 1, defaultSamplerState.GetAddressOf());
 
-	if (mNormalSRV != nullptr)
-	context->PSSetShaderResources(2, 1, mNormalSRV.GetAddressOf());
+	if (!(RSContext.ShaderFlags & static_cast<int>(ShaderFlag::DeferredLighting)))
+		context->PSSetShaderResources(2, 1, mNormalSRV.GetAddressOf());
 
-	if (mSpecularSRV != nullptr)
-	context->PSSetShaderResources(3, 1, mSpecularSRV.GetAddressOf());
+	if (!(RSContext.ShaderFlags & static_cast<int>(ShaderFlag::DeferredLighting)))
+		context->PSSetShaderResources(3, 1, mSpecularSRV.GetAddressOf());
 
 	// todo: render the scene with override material instead of using a bool
 	if (!game->bIsRenderingShadowMap)

@@ -11,9 +11,9 @@ class Component
 	friend Game;
 
 public:
-	virtual void Init() = 0;
-	virtual void OnRegister() = 0;
-	virtual void Update(float DeltaTime) = 0;
+	virtual void Init() {};
+	virtual void OnRegister() {};
+	virtual void Update(float DeltaTime) {};
 
 
 	Actor* GetOwner() const { return mOwner; }

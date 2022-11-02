@@ -48,7 +48,7 @@ TexturedMesh MeshLoader::GetMesh(size_t meshIndex)
 	if (mesh->mTextureCoords != nullptr) {
 		for (size_t i = 0; i < mesh->mNumVertices; ++i) {
 			res.GetVertex(i).TexCoord.x = mesh->mTextureCoords[0][i].x;
-			res.GetVertex(i).TexCoord.y = 1.0f - mesh->mTextureCoords[0][i].y;
+			res.GetVertex(i).TexCoord.y = mesh->mTextureCoords[0][i].y;
 		}
 	}
 
@@ -65,7 +65,7 @@ TexturedMesh MeshLoader::GetMesh(size_t meshIndex)
 
 void MeshLoader::OpenFile(std::string filepath)
 {
-	const aiScene* scene = importer.ReadFile(filepath, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_CalcTangentSpace);
+	const aiScene* scene = importer.ReadFile(filepath, aiProcess_FlipUVs | aiProcess_FlipWindingOrder | aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_CalcTangentSpace);
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
 		cout << "ERROR::ASSIMP::" << importer.GetErrorString() << endl;

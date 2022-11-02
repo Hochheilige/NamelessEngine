@@ -7,6 +7,7 @@
 #include "AABB2DCollider.h"
 #include "RenderingSystem.h"
 #include "ImGuiSubsystem.h"
+#include "WICTextureLoader.h"
 
 #include <chrono>
 
@@ -412,6 +413,20 @@ void Game::HandleWindowResize(int Width, int Height)
 	SwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
 	SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(BackBuf.GetAddressOf()));
 	Device->CreateRenderTargetView(BackBuf.Get(), nullptr, RenderTargetView.GetAddressOf());
+}
+
+void Game::CreateNormalMapTextureFromFile(const wchar_t* fileName, ID3D11Resource** texture, ID3D11ShaderResourceView** textureView)
+{
+	DirectX::CreateWICTextureFromFileEx(
+		GetD3DDevice().Get(),
+		fileName,
+		0,
+		D3D11_USAGE_DEFAULT,
+		D3D11_BIND_SHADER_RESOURCE,
+		0, 0,
+		DirectX::WIC_LOADER_IGNORE_SRGB,
+		texture,
+		textureView);
 }
 
 Game::Game()
