@@ -14,8 +14,9 @@ namespace Scripts
         
         public Component AddComponent(int componentType)
         {
-            Console.WriteLine("Component type to add " + componentType);
             ComponentsEnum type = (ComponentsEnum) componentType;
+            Console.WriteLine("Component type to add " + type.ToString());
+           
             Component component = default;
             switch (type)
             {

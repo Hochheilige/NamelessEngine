@@ -8,7 +8,7 @@ RigidBodySphere::RigidBodySphere()
 void RigidBodySphere::SetMass(float mass)
 {
 	Mass = mass;
-	mMonoComponent->SetMass(mass);
+	//mMonoComponent->SetMass(mass);
 }
 
 void RigidBodySphere::Init()

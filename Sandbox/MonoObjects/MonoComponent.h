@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "MonoActor.h"
+#include "..\MonoSystem.h"
 
 class MonoComponent
 {

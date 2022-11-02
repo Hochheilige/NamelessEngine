@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ComponentsEnum.h"
+#include "../External/assimp/code/AssetLib/FBX/FBXDocument.h"
 //#include "MonoObjects/MonoComponent.h"
 
 class MonoComponent;
@@ -17,8 +18,14 @@ public:
 	virtual void OnRegister() = 0;
 	virtual void Update(float DeltaTime) = 0;
 
-	virtual MonoComponent* GetMonoComponent();
-	virtual ComponentType GetComponentType();
+	virtual MonoComponent* GetMonoComponent()
+	{
+		return  nullptr;
+	};
+	virtual ComponentType GetComponentType()
+	{
+		return ComponentType::MeshRendererType;
+	};
 	
 	Actor* GetOwner() const { return mOwner; }
 

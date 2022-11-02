@@ -11,7 +11,7 @@ RigidBodyCube::RigidBodyCube()
 void RigidBodyCube::SetMass(float mass)
 {
 	Mass = mass;
-	mMonoComponent->SetMass(mass);
+	//mMonoComponent->SetMass(mass);
 }
 
 void RigidBodyCube::Init()
