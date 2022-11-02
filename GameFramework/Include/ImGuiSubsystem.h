@@ -34,7 +34,10 @@ private:
 	auto DrawDockspace() -> void;
 	auto DrawViewport() -> void;
 	auto DrawActorExplorer() -> void;
+	//inspector
+	auto DrawComponentSelector(class Actor* actor) -> void;
 	auto DrawActorInspector() -> void;
+	auto DrawGeneralProperties(class Actor* actor) -> void;
 	auto DrawGizmos() -> void;
 	auto DrawMessagesWindow() -> void;
 private:

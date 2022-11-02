@@ -247,23 +247,34 @@ auto ImGuiSubsystem::DrawActorExplorer() -> void
 	for (Actor* actor : MyGame->Actors)
 	{
 		const bool isSelectedActor = MyGame->MyEditorContext.SelectedActor == actor;
-		if (isSelectedActor)
-		{
-			ImGui::PushStyleColor(0, {0.5f, 0.5, 0.5f, 1.0f});
-		}
-		ImGui::Button((std::string("Actor") + std::to_string(i)).c_str());
+
+		//ImGui::Button((std::string("Actor") + std::to_string(i)).c_str());
+		ImGui::Selectable((std::string("Actor") + std::to_string(i)).c_str(), isSelectedActor);
 		if (ImGui::IsItemClicked())
 		{
 			MyGame->MyEditorContext.SelectedActor = actor;
 		}
-		if (isSelectedActor)
-		{
-			ImGui::PopStyleColor();
-		}
+
 		++i;
 	}
 	
 	ImGui::End();
+}
+
+auto ImGuiSubsystem::DrawComponentSelector(class Actor* actor) -> void {
+
+	static bool isSelectedComponent(false);
+	if (ImGui::CollapsingHeader("Components", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed)) {
+		if (ImGui::TreeNode("Actor")) {
+
+			ImGui::Separator();
+
+			ImGui::Selectable("mY CoMpOnEeNt", &isSelectedComponent);
+
+			ImGui::TreePop();
+		}
+
+	}
 }
 
 auto ImGuiSubsystem::DrawActorInspector() -> void
@@ -271,7 +282,9 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 	ImGui::Begin("Actor Inspector");
 
 	if (Actor* actor = MyGame->MyEditorContext.SelectedActor)
-	{
+	{	
+
+		DrawComponentSelector(actor);
 
 		if (!ImGui::CollapsingHeader("Transform")) {
 			ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
@@ -300,7 +313,6 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 				transformUpdated = true;
 			}
 
-
 			if (mCurrentGizmoOperation != ImGuizmo::SCALE)
 			{
 				if (ImGui::RadioButton("Local", mCurrentGizmoMode == ImGuizmo::LOCAL))
@@ -320,6 +332,8 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 			ImGui::PopStyleVar();
 		}
 
+		//General properties
+		DrawGeneralProperties(actor);
 	}
 	else
 	{
@@ -329,6 +343,23 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 	}
 
 	ImGui::End();
+}
+
+auto ImGuiSubsystem::DrawGeneralProperties(Actor* actor) -> void
+{
+	
+	static char tempName[] = "My Name Is who";
+
+	if (ImGui::CollapsingHeader("General", ImGuiTreeNodeFlags_DefaultOpen)) {
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
+		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+		ImGui::BeginChild("ChildGeneral", ImVec2(0, 35), true, window_flags);
+
+		ImGui::InputText("\tName", tempName, 20);
+
+		ImGui::EndChild();
+		ImGui::PopStyleVar();
+	}
 }
 
 auto ImGuiSubsystem::DrawGizmos() -> void
@@ -362,3 +393,5 @@ auto ImGuiSubsystem::DrawMessagesWindow() -> void
 	ImGui::End();
 	MessagesToDisplay.clear();
 }
+
+
