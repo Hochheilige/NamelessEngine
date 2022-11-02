@@ -1,6 +1,15 @@
 #include "MonoSystem.h"
 #include "Mappings.h"
 #include <filesystem>
+#include <fstream>
+#include "mono/metadata/mono-debug.h"
+
+#ifndef MONO_DEBUG
+#define __DEBUG = true
+#define _DEBUG = true
+#define MONO_DEBUG = false
+#endif
+
 
 //TODO move to GameFramework
 MonoSystem::MonoSystem()
@@ -14,13 +23,33 @@ MonoSystem::MonoSystem()
 
 	//TODO add exceptions/message if domain/assembly/image can't be loaded
 
-	rootDomain = mono_jit_init("NamelessEngine");
+#if defined(MONO_DEBUG)
+	const char* params[2] = { "--debugger-agent=transport=dt_socket,server=y,address=127.0.0.1:22,loglevel=2", "--use-fallback-tls" };
+	mono_jit_parse_options(2, (char**)params);
+	mono_debug_init(MONO_DEBUG_FORMAT_MONO);
+#endif
+
+	rootDomain = mono_jit_init_version("Scripts", "4.5");
 
 	if (rootDomain) {
 		auto pathStr = parentPath + "\\Scripts.dll";
 
 		appDomain = mono_domain_create_appdomain(const_cast<char*>("EngineAppDomain"), nullptr);
 		mono_domain_set(appDomain, true);
+
+#if defined(MONO_DEBUG)
+		// std::filesystem::path pdbPath = path.c_str();
+		// pdbPath.replace_extension("pdb");
+		//
+		// if (exists(pdbPath)) {
+		// 	uintmax_t pdbFileSize;
+		// 	const auto pdb_data = ReadFile(pdbPath, pdbFileSize);
+		//
+		// 	mono_debug_open_image_from_memory(image, reinterpret_cast<const mono_byte*>(pdb_data), pdbFileSize);
+		//
+		// 	delete[] pdb_data;
+		// }
+#endif
 
 		scriptAssembly = mono_domain_assembly_open(appDomain, pathStr.c_str());
 		if (scriptAssembly) {
@@ -119,4 +148,21 @@ void MonoSystem::PrintAssemblyTypes(MonoAssembly* assembly) {
 
 		printf("%s.%s\n", nameSpace, name);
 	}
+}
+
+char* MonoSystem::ReadFile(const std::filesystem::path& assemblyPath, uintmax_t& fileSize) const
+{
+	std::fstream file;
+	file.open(assemblyPath, std::ios_base::in | std::ios::binary);
+
+	if (!file.is_open()) {
+		// Lets talk about it!
+		return nullptr;
+	}
+	fileSize = file_size(assemblyPath);
+
+	const auto fileData = new char[fileSize];
+	file.read(fileData, fileSize);
+
+	return fileData;
 }
