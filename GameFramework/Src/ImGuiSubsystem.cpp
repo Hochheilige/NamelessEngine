@@ -318,6 +318,53 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 
 			ImGui::EndChild();
 			ImGui::PopStyleVar();
+
+			if (!ImGui::CollapsingHeader("RigidBody Component")) {
+				ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
+				ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+				ImGui::BeginChild("RB", ImVec2(0, 130), true, window_flags);
+
+				bool is_p_enabled = actor->is_physics_enabled;
+				bool is_p_enabled_old = actor->is_physics_enabled;
+				ImGui::Checkbox("Simulate Physics", &is_p_enabled);
+
+				if (is_p_enabled != is_p_enabled_old)
+				{
+					is_p_enabled_old = is_p_enabled;
+					if (actor->is_physics_enabled) {
+						actor->UnUsePhysicsSimulation();
+					}
+					else {
+						actor->UsePhysicsSimulation();
+					}
+				}
+
+				ImGui::EndChild();
+				ImGui::PopStyleVar();
+
+				/*ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
+				ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+				ImGui::BeginChild("Kinematic", ImVec2(0, 130), true, window_flags);
+
+				auto rb_comp = actor->GetComponentOfClass<RigidBodyComponent>();
+				bool is_kinematic = rb_comp->is_kinematic;
+				bool is_kinematic_old = rb_comp->is_kinematic;
+				ImGui::Checkbox("Simulate Physics", &is_kinematic);
+
+				if (is_kinematic != is_kinematic_old)
+				{
+					is_kinematic_old = is_kinematic;
+					if (rb_comp->is_kinematic) {
+						rb_comp->MakeNonKinematic();
+					}
+					else {
+						rb_comp->MakeKinematic();
+					}
+				}
+
+				ImGui::EndChild();
+				ImGui::PopStyleVar();*/
+			}
 		}
 
 	}
