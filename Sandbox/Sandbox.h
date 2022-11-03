@@ -26,8 +26,6 @@ public:
 	Actor* CreateStaticSphere(Transform transform);
 	Actor* CreateDynamicSphere(Transform transform);
 
-	auto CreatePointLight(Transform transform)->Actor*;
-
 	Actor* CreateBunny(Transform transform);
 
 	Actor* CreateBun(Transform transform);
@@ -56,12 +54,6 @@ private:
 	class OrbitCameraController* OrbitCC;
 	class CameraController* FPSCC;
 	class GameComponent* CurrentCC = nullptr;
-
-	ComPtr<ID3D11Resource> whiteTex;
-	ComPtr<ID3D11ShaderResourceView> whiteTexSRV;
-
-	ComPtr<ID3D11Resource> basicNormalTex;
-	ComPtr<ID3D11ShaderResourceView> basicNormalTexSRV;
 
 	class MeshRenderer* updateBox;
 

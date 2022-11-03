@@ -22,6 +22,7 @@
 #include "mono/metadata/debug-helpers.h"
 #include "RenderingSystem.h"
 #include "LightBase.h"
+#include "EngineContentRegistry.h"
 
 #include "CreateCommon.h"
 
@@ -32,7 +33,9 @@ Actor* Sandbox::CreateNonPhysicsBox(Transform transform) {
 	mesh_component->SetMeshProxy(texturedBoxMeshProxy);
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
-	mesh_component->SetAlbedoSRV(whiteTexSRV);
+	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
+	mesh_component->SetNormalSRV(EngineContentRegistry::GetInstance()->GetBasicNormalTexSRV());
+	mesh_component->SetRelativeTransform(transform);
 
 	return box;
 }
@@ -48,9 +51,8 @@ Actor* Sandbox::CreateStaticBox(Transform transform)
 	mesh_component->SetMeshProxy(texturedBoxMeshProxy);
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
-	mesh_component->SetAlbedoSRV(whiteTexSRV);
-	mesh_component->SetAlbedoSRV(whiteTexSRV);
-	mesh_component->SetNormalSRV(basicNormalTexSRV);
+	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
+	mesh_component->SetNormalSRV(EngineContentRegistry::GetInstance()->GetBasicNormalTexSRV());
 
 	return box;
 }
@@ -66,8 +68,8 @@ Actor* Sandbox::CreateDynamicBox(Transform transform)
 	mesh_component->SetMeshProxy(texturedBoxMeshProxy);
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
-	mesh_component->SetAlbedoSRV(whiteTexSRV);
-	mesh_component->SetNormalSRV(basicNormalTexSRV);
+	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
+	mesh_component->SetNormalSRV(EngineContentRegistry::GetInstance()->GetBasicNormalTexSRV());
 
 	return box;
 }
@@ -80,8 +82,8 @@ Actor* Sandbox::CreateBunny(Transform transform)
 	mesh_component->SetMeshProxy(bunnyMeshProxy);
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
-	mesh_component->SetAlbedoSRV(whiteTexSRV);
-	mesh_component->SetNormalSRV(basicNormalTexSRV);
+	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
+	mesh_component->SetNormalSRV(EngineContentRegistry::GetInstance()->GetBasicNormalTexSRV());
 
 	return bunny;
 }
@@ -124,8 +126,8 @@ Actor* Sandbox::CreateStaticSphere(Transform transform)
 	mesh_component->SetMeshProxy(sphereMeshProxy);
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
-	mesh_component->SetAlbedoSRV(whiteTexSRV);
-	mesh_component->SetNormalSRV(basicNormalTexSRV);
+	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
+	mesh_component->SetNormalSRV(EngineContentRegistry::GetInstance()->GetBasicNormalTexSRV());
 
 	return sphere;
 }
@@ -141,32 +143,10 @@ Actor* Sandbox::CreateDynamicSphere(Transform transform)
 	mesh_component->SetMeshProxy(sphereMeshProxy);
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
-	mesh_component->SetAlbedoSRV(whiteTexSRV);
-	mesh_component->SetNormalSRV(basicNormalTexSRV);
+	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
+	mesh_component->SetNormalSRV(EngineContentRegistry::GetInstance()->GetBasicNormalTexSRV());
 
 	return sphere;
-}
-
-auto Sandbox::CreatePointLight(Transform transform) -> Actor*
-{
-	Actor* light = CreateActor<Actor>();
-
-	PointLight* pl = light->AddComponent<PointLight>();
-	pl->SetRelativePosition(transform.Position);
-	MyRenderingSystem->RegisterLight(pl);
-
-	MeshRenderer* mr = new MeshRenderer(false);
-	mr->SetMeshProxy(boxMeshProxy);
-	mr->SetVertexShader(vs);
-	mr->SetPixelShader(ps);
-	// todo: calculate size based on intensity
-	mr->SetRelativeScale(Vector3::One * 50.0f);
-	mr->SetAttachmentParent(pl);
-
-	pl->SetRenderer(mr);
-	//pl->color = Color(0.5f, 1.0f, 1.0f);
-
-	return light;
 }
 
 void Sandbox::PrepareResources()
@@ -213,10 +193,6 @@ void Sandbox::PrepareResources()
 	sc.SetEntryPoint("VSMain");
 	sc.SetTarget("vs_5_0");
 	BasicVertexShader* basicVS = sc.CreateShader<BasicVertexShader>();
-
-
-	CreateWICTextureFromFile(GetD3DDevice().Get(), L"../Assets/white.png", whiteTex.GetAddressOf(), whiteTexSRV.GetAddressOf(), 16);
-	CreateNormalMapTextureFromFile(L"../Assets/basicNormal.png", basicNormalTex.GetAddressOf(), basicNormalTexSRV.GetAddressOf());
 
 	{
 		MeshLoader ml = MeshLoader("../Assets/stanford-bunny.fbx");
@@ -318,7 +294,7 @@ void Sandbox::PrepareResources()
 	tr.Position = { 11.638, 3.463, -7.674 };
 	CreateBunny(tr);
 
-	CreatePointLight(tr);
+	EngineContentRegistry::GetInstance()->CreatePointLight(tr);
 
 	tr.Scale = Vector3::One * 0.4f;
 	tr.Position = { 11.436f, 0.843f, -2.502f };

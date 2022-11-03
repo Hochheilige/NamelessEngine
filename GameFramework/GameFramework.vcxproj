@@ -159,6 +159,7 @@
     <ClInclude Include="Include\AABB2DCollider.h" />
     <ClInclude Include="Include\CreateCommon.h" />
     <ClInclude Include="Include\EditorContext.h" />
+    <ClInclude Include="Include\EngineContentRegistry.h" />
     <ClInclude Include="Include\Game.h" />
     <ClInclude Include="Include\GameComponent.h" />
     <ClInclude Include="Include\Camera.h" />
@@ -194,6 +195,7 @@
     <ClCompile Include="EditorContext.cpp" />
     <ClCompile Include="Include\Renderer.cpp" />
     <ClCompile Include="Src\AABB2DCollider.cpp" />
+    <ClCompile Include="Src\EngineContentRegistry.cpp" />
     <ClCompile Include="Src\Game.cpp" />
     <ClCompile Include="Src\GameComponent.cpp" />
     <ClCompile Include="Src\Camera.cpp" />

@@ -15,6 +15,7 @@
 class Actor;
 class RenderingSystem;
 class ImGuiSubsystem;
+class EngineContentRegistry;
 
 using namespace Microsoft::WRL;
 
@@ -210,5 +211,7 @@ private:
 
 	
 	ImGuiSubsystem* mImGuiSubsystem = nullptr;
+
+	EngineContentRegistry* mEngineContentRegistry = nullptr;
 };
 

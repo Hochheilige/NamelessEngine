@@ -13,12 +13,14 @@
 
 #include <string>
 
-#include "Sandbox.h"
+#include "EngineContentRegistry.h"
 
 //temporary include
 //#include "../External/bullet3/src/"
 
 ImGuiSubsystem* ImGuiSubsystem::Instance = nullptr;
+
+static const char* ActorDragDropSourceType = "ActorDragDropSourceType";
 
 ImGuiSubsystem::ImGuiSubsystem()
 	: mCurrentGizmoOperation(ImGuizmo::OPERATION::TRANSLATE)
@@ -94,6 +96,7 @@ auto ImGuiSubsystem::DoLayout() -> void
 	DrawActorExplorer();
 	DrawActorInspector();
 	DrawMessagesWindow();
+	DrawBasicActorsWindow();
 }
 
 auto ImGuiSubsystem::Shutdown() -> void
@@ -228,6 +231,20 @@ auto ImGuiSubsystem::DrawViewport() -> void
 	MyGame->MyRenderingSystem->HandleScreenResize({ ViewportSize.x, ViewportSize.y });
 	ImGui::Image(MyGame->MyRenderingSystem->GetViewportTextureID(), ViewportSize);
 
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(ActorDragDropSourceType))
+		{
+			const std::string actorName = static_cast<const char*>(payload->Data);
+			
+			Transform t;
+			t.Position = MyGame->MyRenderingSystem->GetWorldPositionUnerScreenPosition(ViewportMousePos);
+			MyGame->MyEditorContext.SelectedActor = EngineContentRegistry::GetInstance()->CreateBasicActor(actorName, t);
+		}
+
+		ImGui::EndDragDropTarget();
+	}
+
 	// Draw gizmos in the viewport
 	{
 		ImGuizmo::SetDrawlist(ImGui::GetWindowDrawList());
@@ -270,15 +287,36 @@ auto ImGuiSubsystem::DrawComponentSelector(class Actor* actor) -> void {
 
 	static bool isSelectedComponent(false);
 	if (ImGui::CollapsingHeader("Components", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed)) {
-		if (ImGui::TreeNode("Actor")) {
+		ImGui::Selectable("Actor", &isSelectedComponent);
+		ImGui::Separator();
 
-			ImGui::Separator();
+		// scene components:
 
-			ImGui::Selectable("mY CoMpOnEeNt", &isSelectedComponent);
+		for (int i = 0; i < 1; ++i) // depth first search
+		{
+			// selected style var if selected
+			if (ImGui::TreeNode("mY CoMpOnEeNt")) {
+				if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+				{
+					// select the component
+				}
 
-			ImGui::TreePop();
+				ImGui::TreePop();
+			}
+			// pop 
 		}
 
+		ImGui::Separator();
+		
+		// non scene components
+		for (int i = 0; i < 1; ++i)
+		{
+			static bool isSelectedComponent2(false);
+			ImGui::Selectable("Non Scene Component", &isSelectedComponent2);
+		}
+
+		ImGui::Separator();
+		ImGui::Separator();
 	}
 }
 
@@ -387,11 +425,6 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 		//General properties
 		DrawGeneralProperties(actor);
 
-		if (ImGui::Button("Create"))
-		{
-			Transform t = {};
-			dynamic_cast<Sandbox*>(MyGame)->CreateBun(t);
-		}
 	}
 	else
 	{
@@ -450,6 +483,29 @@ auto ImGuiSubsystem::DrawMessagesWindow() -> void
 	}
 	ImGui::End();
 	MessagesToDisplay.clear();
+}
+
+auto ImGuiSubsystem::DrawBasicActorsWindow() -> void
+{
+	EngineContentRegistry::GetInstance();
+	ImGui::Begin("Basic Actors");
+	for (const std::string& name : EngineContentRegistry::GetInstance()->GetBasicActorNames())
+	{
+		ImGui::Selectable(name.c_str());
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("Drag to place in scene");
+
+		if (ImGui::BeginDragDropSource())
+		{
+			ImGui::SetDragDropPayload(ActorDragDropSourceType, name.c_str(), name.size() + 1);
+
+			ImGui::Text(name.c_str());
+
+			ImGui::EndDragDropSource();
+		}
+	}
+
+	ImGui::End();
 }
 
 

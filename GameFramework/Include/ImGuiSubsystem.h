@@ -2,6 +2,7 @@
 
 #include "MathInclude.h"
 #include "imgui.h"
+
 class Game;
 
 namespace ImGuizmo
@@ -40,6 +41,7 @@ private:
 	auto DrawGeneralProperties(class Actor* actor) -> void;
 	auto DrawGizmos() -> void;
 	auto DrawMessagesWindow() -> void;
+	auto DrawBasicActorsWindow() -> void;
 private:
 	Game* MyGame;
 

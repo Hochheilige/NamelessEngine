@@ -8,6 +8,7 @@
 #include "RenderingSystem.h"
 #include "ImGuiSubsystem.h"
 #include "WICTextureLoader.h"
+#include "EngineContentRegistry.h"
 
 #include <chrono>
 
@@ -28,10 +29,13 @@ void Game::Initialize()
 
 	CreateBackBuffer();
 
+	mEngineContentRegistry = new EngineContentRegistry(this);
+
 	PrepareResources();
 	
 	mImGuiSubsystem = new ImGuiSubsystem();
 	mImGuiSubsystem->Initialize(this);
+	
 }
 
 void Game::CreateBackBuffer()
@@ -202,7 +206,7 @@ void Game::Run()
 			DispatchMessage(&msg);
 		}
 
-		if (msg.message == WM_QUIT)
+		if (msg.message == WM_QUIT || msg.message == WM_CLOSE)
 		{
 			Exit();
 			break;
