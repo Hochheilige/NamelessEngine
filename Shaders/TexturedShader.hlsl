@@ -90,10 +90,7 @@ PSOutput PSMain(PS_IN input) : SV_Target
 	float4 col = DiffuseMap.Sample(DefaultSampler, input.uv) * Color;
 	float specular = SpecularMap.Sample(DefaultSampler, input.uv.xy).r;
 	float3 normal = NormalMap.Sample(DefaultSampler, input.uv.xy).xyz;
-	///*temp*/ normal = float3(0.5f, 0.5f, 1.0f);
 
-	//float3 normal = normalize(input.normal);
-	//float3 normal = float3(0.5f, 0.0f, 0.5f);
 	float3 pixelPos = input.worldPos;
 #else
 	float4 col = float4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -105,13 +102,15 @@ PSOutput PSMain(PS_IN input) : SV_Target
 
 
 #if !defined(DEFERRED_LIGHTING)
+	// todo: reorthogonize normal?
 	float3 T = normalize(input.tangent.xyz);
 	float3 B = normalize(input.binormal.xyz);
 	float3 N = normalize(input.normal.xyz);
 	float3x3 TBN = float3x3(T, B, N);
 
 	float3 unpackedNormal = normalize(normal * 2.0f - 1.0f);
-	//unpackedNormal.rb = -1.0f * unpackedNormal.rb;
+	// This is here because the normal maps I have have a non-inverted y (which is okay for OpenGL, but not for DirectX)
+	unpackedNormal.g = -1.0f * unpackedNormal.g;
 
 	unpackedNormal = mul(unpackedNormal, TBN);
 #else

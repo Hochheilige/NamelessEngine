@@ -435,7 +435,7 @@ void RenderingSystem::PerformLightingPass(float DeltaTime)
 		case LightType::Point:
 		case LightType::Spot:
 			// @TODO: add depth bounds check
-			context->RSSetState(CullNoneRasterizerState.Get());
+			context->RSSetState(CullFrontRasterizerState.Get());
 			context->OMSetDepthStencilState(DisabledDepthStencilState.Get(), 0);
 			// @TODO: add shadows via shadow volumes?
 			rsContext.ShaderFlags = static_cast<int>(ShaderFlag::DeferredLighting | ShaderFlag::PointLight);
