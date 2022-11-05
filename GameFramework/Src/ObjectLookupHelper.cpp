@@ -170,6 +170,7 @@ auto ObjectLookupHelper::GetActorUnderPosition(const Vector2& Pos)->Actor*
 
 auto ObjectLookupHelper::GetWorldPositionUnerScreenPosition(const Vector2& Pos) -> Vector3
 {
+	// TODO: When using deferred rendering just take the position from gbuffer
 	UINT x = static_cast<UINT>(Pos.x);
 	UINT y = static_cast<UINT>(Pos.y);
 

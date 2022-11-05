@@ -311,7 +311,7 @@ void RenderingSystem::PerformOpaquePass(float DeltaTime)
 
 	context->ClearRenderTargetView(GeometryBuffer.GetDiffuseRTV(), DiffuseClearColor);
 	context->ClearRenderTargetView(GeometryBuffer.GetNormalRTV(), Color(0.0f, 0.0f, 0.0f, 1.0f));
-	context->ClearRenderTargetView(GeometryBuffer.GetWorldPositionRTV(), Color(0.0f, 0.0f, 0.0f, 1.0f));
+	context->ClearRenderTargetView(GeometryBuffer.GetWorldPositionRTV(), Color(-FLT_MAX, -FLT_MAX, -FLT_MAX, 1.0f));
 	context->ClearDepthStencilView(DepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 

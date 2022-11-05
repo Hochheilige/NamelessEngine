@@ -102,7 +102,7 @@ PSOutput PSMain(PS_IN input) : SV_Target
 
 
 #if !defined(DEFERRED_LIGHTING)
-	// todo: reorthogonize normal?
+	// todo: reorthogonize tbn matrix?
 	float3 T = normalize(input.tangent.xyz);
 	float3 B = normalize(input.binormal.xyz);
 	float3 N = normalize(input.normal.xyz);

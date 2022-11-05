@@ -33,12 +33,14 @@ public:
 	static auto GetInstance() { return Instance; }
 private:
 	auto DrawDockspace() -> void;
+	auto DrawToolbar() -> void;
 	auto DrawViewport() -> void;
 	auto DrawActorExplorer() -> void;
-	//inspector
+	// begin inspector
 	auto DrawComponentSelector(class Actor* actor) -> void;
 	auto DrawActorInspector() -> void;
 	auto DrawGeneralProperties(class Actor* actor) -> void;
+	// end instpector
 	auto DrawGizmos() -> void;
 	auto DrawMessagesWindow() -> void;
 	auto DrawBasicActorsWindow() -> void;

@@ -30,13 +30,12 @@ struct DirLight
 };
 #pragma pack(pop)
 
-//template<class T> 
-//T* CreateGameInstance()
-//{
-//	T* game = new T();
-//	T::Instance = game;
-//	return game;
-//}
+enum class PlayState : uint8_t
+{
+	Editor,
+	Playing,
+	Paused
+};
 
 class Game
 {
@@ -153,6 +152,14 @@ public:
 
 	void CreateNormalMapTextureFromFile(const wchar_t* fileName, ID3D11Resource** texture, ID3D11ShaderResourceView** textureView);
 
+	auto GetPlayState() const -> PlayState { return mPlayState; }
+
+	// TODO: make propter implementations of these functions
+	auto StartPlay() -> void;
+	auto PausePlay() -> void;
+	auto ResumePlay() -> void;
+	auto StopPlay() -> void;
+
 protected:
 
 	Game();
@@ -213,5 +220,7 @@ private:
 	ImGuiSubsystem* mImGuiSubsystem = nullptr;
 
 	EngineContentRegistry* mEngineContentRegistry = nullptr;
+
+	PlayState mPlayState = PlayState::Editor;
 };
 

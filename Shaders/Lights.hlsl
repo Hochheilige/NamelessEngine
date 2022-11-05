@@ -60,7 +60,7 @@ float3 CalculatePointLight
 	// diffuse shading
 	float3 lightDir = normalize(light.position - pixelPos);
 	float3 diffuse = saturate(dot(normal, lightDir)) * baseColor;
-	// spucular shading
+	// specular shading
 	float3 reflectDir = reflect(-lightDir, normal);
 	float3 specular = pow(saturate(dot(viewDir, reflectDir)), mat.specularExponent) * mat.specularCoef;
 

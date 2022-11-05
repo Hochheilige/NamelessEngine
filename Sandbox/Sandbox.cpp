@@ -306,14 +306,16 @@ void Sandbox::Update(float DeltaTime)
 	//const auto mGame_Update = mono->GetVirtualMethod("Scripts", "Game", "OnUpdate()", csGameInstance);
 	//mono->InvokeMethod(mGame_Update, csGameInstance, nullptr, nullptr);
 
-	// Physics Simulation
-	auto physics = PhysicsModuleData::GetInstance();
-	physics->OnUpdate(DeltaTime);
-
 	// TODO: base game class should do this
-	for (auto actor : Actors)
+	if (GetPlayState() == PlayState::Playing)
 	{
-		actor->Update(DeltaTime);
+		// Physics Simulation
+		auto physics = PhysicsModuleData::GetInstance();
+		physics->OnUpdate(DeltaTime);
+		for (auto actor : Actors)
+		{
+			actor->Update(DeltaTime);
+		}
 	}
 
 	InputDevice& input = *Game::GetInstance()->GetInputDevice();

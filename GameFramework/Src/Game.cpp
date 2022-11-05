@@ -206,7 +206,7 @@ void Game::Run()
 			DispatchMessage(&msg);
 		}
 
-		if (msg.message == WM_QUIT || msg.message == WM_CLOSE)
+		if (msg.message == WM_QUIT || ExitRequested)
 		{
 			Exit();
 			break;
@@ -233,6 +233,12 @@ void Game::Exit()
 
 LRESULT Game::HandleMessage(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
+	switch (umessage) {
+	case WM_CLOSE:
+		DestroyWindow(hwnd);
+		Exit();
+		return 0;
+	}
 	return Input->HandleMessage(hwnd, umessage, wparam, lparam);
 }
 
@@ -431,6 +437,38 @@ void Game::CreateNormalMapTextureFromFile(const wchar_t* fileName, ID3D11Resourc
 		DirectX::WIC_LOADER_IGNORE_SRGB,
 		texture,
 		textureView);
+}
+
+auto Game::StartPlay() -> void
+{
+	if (mPlayState == PlayState::Editor)
+	{
+		mPlayState = PlayState::Playing;
+	}
+}
+
+auto Game::PausePlay() -> void
+{
+	if (mPlayState == PlayState::Playing)
+	{
+		mPlayState = PlayState::Paused;
+	}
+}
+
+auto Game::ResumePlay() -> void
+{
+	if (mPlayState == PlayState::Paused)
+	{
+		mPlayState = PlayState::Playing;
+	}
+}
+
+auto Game::StopPlay() -> void
+{
+	if (mPlayState == PlayState::Playing || mPlayState == PlayState::Paused)
+	{
+		mPlayState = PlayState::Editor;
+	}
 }
 
 Game::Game()

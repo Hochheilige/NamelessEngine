@@ -92,6 +92,7 @@ auto ImGuiSubsystem::DoLayout() -> void
 	DrawDockspace();
 	static bool temp = true;
 	ImGui::ShowDemoWindow(&temp);
+	DrawToolbar();
 	DrawViewport();
 	DrawActorExplorer();
 	DrawActorInspector();
@@ -213,6 +214,50 @@ auto ImGuiSubsystem::DrawDockspace() -> void
 
 	ImGui::End();
 
+}
+
+auto ImGuiSubsystem::DrawToolbar() -> void
+{
+	ImGui::Begin("Toolbar");
+
+	const char playText[] = "Play";
+	const char pauseText[] = "Pause";
+	const char resumeText[] = "Resume";
+	const char stopText[] = "Stop";
+
+	switch (MyGame->GetPlayState())
+	{
+	case PlayState::Editor:
+		if (ImGui::Button(playText))
+		{
+			MyGame->StartPlay();
+		}
+		break;
+	case PlayState::Playing:
+		if (ImGui::Button(pauseText))
+		{
+			MyGame->PausePlay();
+		}
+		/*ImGui::SameLine();
+		if (ImGui::Button(stopText))
+		{
+			MyGame->StopPlay();
+		}*/
+		break;
+	case PlayState::Paused:
+		if (ImGui::Button(resumeText))
+		{
+			MyGame->ResumePlay();
+		}
+		/*ImGui::SameLine();
+		if (ImGui::Button(stopText))
+		{
+			MyGame->StopPlay();
+		}*/
+		break;
+	}
+
+	ImGui::End();
 }
 
 auto operator-(const ImVec2& l, const ImVec2& r) -> ImVec2
