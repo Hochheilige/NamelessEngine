@@ -286,24 +286,43 @@ auto ImGuiSubsystem::DrawActorExplorer() -> void
 auto ImGuiSubsystem::DrawComponentSelector(class Actor* actor) -> void {
 
 	static bool isSelectedComponent(false);
+
+
 	if (ImGui::CollapsingHeader("Components", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed)) {
 		ImGui::Selectable("Actor", &isSelectedComponent);
 		ImGui::Separator();
 
 		// scene components:
+		for (auto comp: actor->Components) // depth first search
+		{	
+			SceneComponent* sceneComp = dynamic_cast<SceneComponent*>(comp);
+			
+			if (sceneComp) {
+				
+				if (sceneComp->AttachedChildren.empty()) {
+					if (ImGui::Selectable("Name")) {
 
-		for (int i = 0; i < 1; ++i) // depth first search
-		{
-			// selected style var if selected
-			if (ImGui::TreeNode("mY CoMpOnEeNt")) {
-				if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
-				{
-					// select the component
+					}
+				}
+				else {
+					// selected style var if selected
+					if (ImGui::TreeNode("")) {
+						if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+						{
+							// select the component
+						}
+
+						ImGui::TreePop();
+					}
+					// pop style
+					
 				}
 
-				ImGui::TreePop();
+				
+
 			}
-			// pop 
+			
+			
 		}
 
 		ImGui::Separator();
@@ -364,7 +383,6 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 				if (ImGui::RadioButton("World", mCurrentGizmoMode == ImGuizmo::WORLD))
 					mCurrentGizmoMode = ImGuizmo::WORLD;
 			}
-			
 			
 			if (transformUpdated)
 			{

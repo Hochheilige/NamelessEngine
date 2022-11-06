@@ -17,6 +17,8 @@ class Actor : public Object
 {
 public:
 
+	friend class ImGuiSubsystem;
+
 	Actor();
 
 	auto GetTransform() const -> const Transform& { return RootComponent ? RootComponent->GetTransform() : Transform::Identity; }
@@ -78,6 +80,8 @@ public:
 	}
 
 	auto RemoveComponent(Component* InComponent) -> void;
+
+	auto GetComponentsArray()->const std::vector<Component*> { return Components; };
 
 	void RemoveChild(Actor* Child);
 
