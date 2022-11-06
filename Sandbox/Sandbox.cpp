@@ -103,6 +103,41 @@ Actor* Sandbox::CreateBun(Transform transform)
 	return actor;
 }
 
+auto Sandbox::CreateHierarcyTestActor() -> Actor*
+{
+	Actor* actor = CreateActor<Actor>();
+	actor->AddComponent<MeshRenderer>();
+	auto mesh_component = actor->AddComponent<MeshRenderer>();
+
+	Transform tr;
+	tr.Scale = Vector3::One * 0.4f;
+	actor->SetTransform(tr);
+	mesh_component->SetMeshProxy(burgerMeshProxy);
+	mesh_component->SetPixelShader(ps);
+	mesh_component->SetVertexShader(vs);
+	mesh_component->SetAlbedoSRV(burgerTexSRV);
+	mesh_component->SetNormalSRV(burgerNormalSRV);
+	mesh_component->SetSpecularSRV(burgerSpecSRV);
+
+	SceneComponent* sceneComp = actor->AddComponent<MeshRenderer>();
+
+	mesh_component = actor->AddComponent<MeshRenderer>();
+	mesh_component->SetAttachmentParent(sceneComp);
+	tr.Scale = Vector3::One * 0.015f;
+	tr.Position = { 0, 3.463, 0 };
+	mesh_component->SetRelativeTransform(tr);
+	mesh_component->SetMeshProxy(bunnyMeshProxy);
+	mesh_component->SetPixelShader(ps);
+	mesh_component->SetVertexShader(vs);
+	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
+	mesh_component->SetNormalSRV(EngineContentRegistry::GetInstance()->GetBasicNormalTexSRV());
+
+	/*actor->AddComponent<Component>();
+	actor->AddComponent<Component>();*/
+
+	return nullptr;
+}
+
 void Sandbox::LoadGameFacade() {
 	const auto mLoader_Boot = mono->GetMethod("Scripts.Internal", "Loader", "Boot()");
 	csGameInstance = mono->InvokeMethod(mLoader_Boot, nullptr, nullptr, nullptr);
@@ -299,6 +334,8 @@ void Sandbox::PrepareResources()
 	tr.Scale = Vector3::One * 0.4f;
 	tr.Position = { 11.436f, 0.843f, -2.502f };
 	CreateBun(tr);
+
+	CreateHierarcyTestActor();
 }
 
 void Sandbox::Update(float DeltaTime)

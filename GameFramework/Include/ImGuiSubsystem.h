@@ -4,6 +4,7 @@
 #include "imgui.h"
 
 class Game;
+class EditorContext;
 
 namespace ImGuizmo
 {
@@ -44,6 +45,9 @@ private:
 	auto DrawGizmos() -> void;
 	auto DrawMessagesWindow() -> void;
 	auto DrawBasicActorsWindow() -> void;
+
+private:
+	auto GetEditorContext() const -> EditorContext&;
 private:
 	Game* MyGame;
 

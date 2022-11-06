@@ -284,7 +284,8 @@ auto ImGuiSubsystem::DrawViewport() -> void
 			
 			Transform t;
 			t.Position = MyGame->MyRenderingSystem->GetWorldPositionUnerScreenPosition(ViewportMousePos);
-			MyGame->MyEditorContext.SelectedActor = EngineContentRegistry::GetInstance()->CreateBasicActor(actorName, t);
+			Actor* newActor = EngineContentRegistry::GetInstance()->CreateBasicActor(actorName, t);
+			GetEditorContext().SetSelectedActor(newActor);
 		}
 
 		ImGui::EndDragDropTarget();
@@ -299,7 +300,7 @@ auto ImGuiSubsystem::DrawViewport() -> void
 	{
 		if (ImGui::IsItemClicked() && !ImGuizmo::IsUsing())
 		{
-			MyGame->MyEditorContext.SelectedActor = MyGame->MyRenderingSystem->GetActorUnderPosition(ViewportMousePos);
+			GetEditorContext().SetSelectedActor(MyGame->MyRenderingSystem->GetActorUnderPosition(ViewportMousePos));
 		}
 	}
 	ImGui::End();
@@ -313,13 +314,13 @@ auto ImGuiSubsystem::DrawActorExplorer() -> void
 	int i = 0;
 	for (Actor* actor : MyGame->Actors)
 	{
-		const bool isSelectedActor = MyGame->MyEditorContext.SelectedActor == actor;
+		const bool isSelectedActor = GetEditorContext().GetSelectedActor() == actor;
 
 		//ImGui::Button((std::string("Actor") + std::to_string(i)).c_str());
 		ImGui::Selectable((std::string("Actor") + std::to_string(i)).c_str(), isSelectedActor);
 		if (ImGui::IsItemClicked())
 		{
-			MyGame->MyEditorContext.SelectedActor = actor;
+			GetEditorContext().SetSelectedActor(actor);
 		}
 
 		++i;
@@ -330,53 +331,78 @@ auto ImGuiSubsystem::DrawActorExplorer() -> void
 
 auto ImGuiSubsystem::DrawComponentSelector(class Actor* actor) -> void {
 
-	static bool isSelectedComponent(false);
-
-
 	if (ImGui::CollapsingHeader("Components", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed)) {
-		ImGui::Selectable("Actor", &isSelectedComponent);
+		const bool isActorSelected = GetEditorContext().GetSelectedComponent() == nullptr;
+		if (ImGui::Selectable("Actor", isActorSelected))
+		{
+			GetEditorContext().SetSelectedComponent(nullptr);
+		}
 		ImGui::Separator();
 
 		// scene components:
-		for (auto comp: actor->Components) // depth first search
-		{	
-			SceneComponent* sceneComp = dynamic_cast<SceneComponent*>(comp);
-			
-			if (sceneComp) {
+		std::vector<SceneComponent*> stack;
+		stack.push_back(actor->RootComponent);
+		while (!stack.empty())
+		{
+			SceneComponent* comp = stack.back();
+			stack.pop_back();
+
+			if (comp == nullptr)
+			{
+				ImGui::TreePop();
 				
-				if (sceneComp->AttachedChildren.empty()) {
-					if (ImGui::Selectable("Name")) {
-
-					}
-				}
-				else {
-					// selected style var if selected
-					if (ImGui::TreeNode("")) {
-						if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
-						{
-							// select the component
-						}
-
-						ImGui::TreePop();
-					}
-					// pop style
-					
-				}
-
-				
-
+				continue;
 			}
-			
-			
+
+			std::vector<SceneComponent*> ownChildren;
+			ownChildren.reserve(comp->AttachedChildren.size());
+			for (SceneComponent* child : comp->AttachedChildren)
+			{
+				// ignore attached components of other actors
+				if (child->GetOwner() == actor)
+				{
+					ownChildren.push_back(child);
+				}
+			}
+
+			ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
+			const bool isLeaf = ownChildren.size() == 0;
+			if (isLeaf)
+			{
+				nodeFlags |= ImGuiTreeNodeFlags_Leaf;
+			}
+			const bool isSelected = comp == MyGame->MyEditorContext.GetSelectedComponent();
+			if (isSelected)
+			{
+				nodeFlags |= ImGuiTreeNodeFlags_Selected;
+			}
+
+			if (ImGui::TreeNodeEx("Scene Component", nodeFlags))
+			{
+				if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+				{
+					GetEditorContext().SetSelectedComponent(comp);
+				}
+				if (isLeaf)
+				{
+					ImGui::TreePop();
+				}
+				else
+				{
+					stack.push_back(nullptr); // hack: use nullptr as a command to pop tree node
+					stack.insert(stack.end(), ownChildren.begin(), ownChildren.end());
+				}
+			}
 		}
 
-		ImGui::Separator();
 		
 		// non scene components
-		for (int i = 0; i < 1; ++i)
+		for (auto comp : actor->Components)
 		{
-			static bool isSelectedComponent2(false);
-			ImGui::Selectable("Non Scene Component", &isSelectedComponent2);
+			if (!dynamic_cast<SceneComponent*>(comp))
+			{
+				ImGui::Selectable("Non Scene Component", comp == MyGame->MyEditorContext.GetSelectedComponent());
+			}
 		}
 
 		ImGui::Separator();
@@ -388,7 +414,7 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 {
 	ImGui::Begin("Actor Inspector");
 
-	if (Actor* actor = MyGame->MyEditorContext.SelectedActor)
+	if (Actor* actor = GetEditorContext().GetSelectedActor())
 	{	
 
 		DrawComponentSelector(actor);
@@ -518,7 +544,7 @@ auto ImGuiSubsystem::DrawGeneralProperties(Actor* actor) -> void
 
 auto ImGuiSubsystem::DrawGizmos() -> void
 {
-	if (Actor* actor = MyGame->MyEditorContext.SelectedActor)
+	if (Actor* actor = GetEditorContext().GetSelectedActor())
 	{
 		ImGuizmo::SetRect(ViewportStart.x, ViewportStart.y, ViewportSize.x, ViewportSize.y);
 
@@ -569,6 +595,11 @@ auto ImGuiSubsystem::DrawBasicActorsWindow() -> void
 	}
 
 	ImGui::End();
+}
+
+auto ImGuiSubsystem::GetEditorContext() const -> EditorContext&
+{
+	return MyGame->MyEditorContext;
 }
 
 
