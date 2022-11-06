@@ -333,11 +333,11 @@ auto ImGuiSubsystem::DrawComponentSelector(class Actor* actor) -> void {
 
 	if (ImGui::CollapsingHeader("Components", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed)) {
 		const bool isActorSelected = GetEditorContext().GetSelectedComponent() == nullptr;
+		ImGui::AlignTextToFramePadding();
 		if (ImGui::Selectable("Actor", isActorSelected))
 		{
 			GetEditorContext().SetSelectedComponent(nullptr);
 		}
-		ImGui::Separator();
 
 		// scene components:
 		std::vector<SceneComponent*> stack;
@@ -365,7 +365,7 @@ auto ImGuiSubsystem::DrawComponentSelector(class Actor* actor) -> void {
 				}
 			}
 
-			ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
+			ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_FramePadding;
 			const bool isLeaf = ownChildren.size() == 0;
 			if (isLeaf)
 			{
@@ -377,12 +377,14 @@ auto ImGuiSubsystem::DrawComponentSelector(class Actor* actor) -> void {
 				nodeFlags |= ImGuiTreeNodeFlags_Selected;
 			}
 
-			if (ImGui::TreeNodeEx("Scene Component", nodeFlags))
+			const bool isNodeOpen = ImGui::TreeNodeEx("Scene Component", nodeFlags);
+			if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
 			{
-				if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
-				{
-					GetEditorContext().SetSelectedComponent(comp);
-				}
+				GetEditorContext().SetSelectedComponent(comp);
+			}
+			
+			if (isNodeOpen)
+			{
 				if (isLeaf)
 				{
 					ImGui::TreePop();
@@ -394,19 +396,78 @@ auto ImGuiSubsystem::DrawComponentSelector(class Actor* actor) -> void {
 				}
 			}
 		}
-
+		
+		// TODO: Draw this only if the selected actor has non-scene components
+		ImGui::Separator();
 		
 		// non scene components
 		for (auto comp : actor->Components)
 		{
 			if (!dynamic_cast<SceneComponent*>(comp))
 			{
-				ImGui::Selectable("Non Scene Component", comp == MyGame->MyEditorContext.GetSelectedComponent());
+				if (ImGui::Selectable("Non Scene Component", comp == MyGame->MyEditorContext.GetSelectedComponent()))
+				{
+					GetEditorContext().SetSelectedComponent(comp);
+				}
 			}
 		}
 
 		ImGui::Separator();
 		ImGui::Separator();
+	}
+}
+
+auto ImGuiSubsystem::LayOutTransform() -> void
+{
+	SceneComponent* ssc = GetSelectedSceneComponent();
+	if (ssc == nullptr)
+	{
+		return;
+	}
+
+	if (!ImGui::CollapsingHeader("Transform")) {
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
+		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+		ImGui::BeginChild("ChildR", ImVec2(0, 130), true, window_flags);
+
+		if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
+			mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+		ImGui::SameLine();
+		if (ImGui::RadioButton("Rotate", mCurrentGizmoOperation == ImGuizmo::ROTATE))
+			mCurrentGizmoOperation = ImGuizmo::ROTATE;
+		ImGui::SameLine();
+		if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE))
+			mCurrentGizmoOperation = ImGuizmo::SCALE;
+
+		Transform t = mCurrentGizmoMode == ImGuizmo::MODE::LOCAL ? ssc->GetRelativeTransform() : ssc->GetTransform();
+		float rot[] = { t.Rotation.GetEulerDegrees().x, t.Rotation.GetEulerDegrees().y,
+			t.Rotation.GetEulerDegrees().z };
+
+		bool transformUpdated = false;
+		transformUpdated |= ImGui::DragFloat3("\tPosition", static_cast<float*>(&t.Position.x), 0.5f);
+		transformUpdated |= ImGui::DragFloat3("\tScale", static_cast<float*>(&t.Scale.x), 0.1f);
+		if (ImGui::DragFloat3("\tRotation", rot, 1.0f))
+		{
+			t.Rotation.SetEulerAngles(rot[0], rot[1], rot[2]);
+			transformUpdated = true;
+		}
+
+		if (mCurrentGizmoOperation != ImGuizmo::SCALE)
+		{
+			if (ImGui::RadioButton("Local", mCurrentGizmoMode == ImGuizmo::LOCAL))
+				mCurrentGizmoMode = ImGuizmo::LOCAL;
+			ImGui::SameLine();
+			if (ImGui::RadioButton("World", mCurrentGizmoMode == ImGuizmo::WORLD))
+				mCurrentGizmoMode = ImGuizmo::WORLD;
+		}
+
+		if (transformUpdated)
+		{
+			mCurrentGizmoMode == ImGuizmo::MODE::LOCAL ? ssc->SetRelativeTransform(t) : ssc->SetTransform(t);
+		}
+
+		ImGui::EndChild();
+		ImGui::PopStyleVar();
 	}
 }
 
@@ -419,96 +480,53 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 
 		DrawComponentSelector(actor);
 
-		if (!ImGui::CollapsingHeader("Transform")) {
+		LayOutTransform();
+
+		if (!ImGui::CollapsingHeader("RigidBody Component")) {
 			ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 			ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-			ImGui::BeginChild("ChildR", ImVec2(0, 130), true, window_flags);
+			ImGui::BeginChild("RB", ImVec2(0, 130), true, window_flags);
 
-			if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
-				mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
-			ImGui::SameLine();
-			if (ImGui::RadioButton("Rotate", mCurrentGizmoOperation == ImGuizmo::ROTATE))
-				mCurrentGizmoOperation = ImGuizmo::ROTATE;
-			ImGui::SameLine();
-			if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE))
-				mCurrentGizmoOperation = ImGuizmo::SCALE;
+			bool is_p_enabled = actor->is_physics_enabled;
+			bool is_p_enabled_old = actor->is_physics_enabled;
+			ImGui::Checkbox("Simulate Physics", &is_p_enabled);
 
-			Transform t = actor->GetTransform();
-			float rot[] = {t.Rotation.GetEulerDegrees().x, t.Rotation.GetEulerDegrees().y,
-				t.Rotation.GetEulerDegrees().z };
-
-			bool transformUpdated = false;
-			transformUpdated |= ImGui::DragFloat3("\tPosition", static_cast<float*>(&t.Position.x), 0.5f);
-			transformUpdated |= ImGui::DragFloat3("\tScale", static_cast<float*>(&t.Scale.x), 0.1f);
-			if (ImGui::DragFloat3("\tRotation", rot, 1.0f))
+			if (is_p_enabled != is_p_enabled_old)
 			{
-				t.Rotation.SetEulerAngles(rot[0], rot[1], rot[2]);
-				transformUpdated = true;
-			}
-
-			if (mCurrentGizmoOperation != ImGuizmo::SCALE)
-			{
-				if (ImGui::RadioButton("Local", mCurrentGizmoMode == ImGuizmo::LOCAL))
-					mCurrentGizmoMode = ImGuizmo::LOCAL;
-				ImGui::SameLine();
-				if (ImGui::RadioButton("World", mCurrentGizmoMode == ImGuizmo::WORLD))
-					mCurrentGizmoMode = ImGuizmo::WORLD;
-			}
-			
-			if (transformUpdated)
-			{
-				actor->SetTransform(t);
+				is_p_enabled_old = is_p_enabled;
+				if (actor->is_physics_enabled) {
+					actor->UnUsePhysicsSimulation();
+				}
+				else {
+					actor->UsePhysicsSimulation();
+				}
 			}
 
 			ImGui::EndChild();
 			ImGui::PopStyleVar();
 
-			if (!ImGui::CollapsingHeader("RigidBody Component")) {
-				ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
-				ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-				ImGui::BeginChild("RB", ImVec2(0, 130), true, window_flags);
+			/*ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
+			ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+			ImGui::BeginChild("Kinematic", ImVec2(0, 130), true, window_flags);
 
-				bool is_p_enabled = actor->is_physics_enabled;
-				bool is_p_enabled_old = actor->is_physics_enabled;
-				ImGui::Checkbox("Simulate Physics", &is_p_enabled);
+			auto rb_comp = actor->GetComponentOfClass<RigidBodyComponent>();
+			bool is_kinematic = rb_comp->is_kinematic;
+			bool is_kinematic_old = rb_comp->is_kinematic;
+			ImGui::Checkbox("Simulate Physics", &is_kinematic);
 
-				if (is_p_enabled != is_p_enabled_old)
-				{
-					is_p_enabled_old = is_p_enabled;
-					if (actor->is_physics_enabled) {
-						actor->UnUsePhysicsSimulation();
-					}
-					else {
-						actor->UsePhysicsSimulation();
-					}
+			if (is_kinematic != is_kinematic_old)
+			{
+				is_kinematic_old = is_kinematic;
+				if (rb_comp->is_kinematic) {
+					rb_comp->MakeNonKinematic();
 				}
-
-				ImGui::EndChild();
-				ImGui::PopStyleVar();
-
-				/*ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
-				ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-				ImGui::BeginChild("Kinematic", ImVec2(0, 130), true, window_flags);
-
-				auto rb_comp = actor->GetComponentOfClass<RigidBodyComponent>();
-				bool is_kinematic = rb_comp->is_kinematic;
-				bool is_kinematic_old = rb_comp->is_kinematic;
-				ImGui::Checkbox("Simulate Physics", &is_kinematic);
-
-				if (is_kinematic != is_kinematic_old)
-				{
-					is_kinematic_old = is_kinematic;
-					if (rb_comp->is_kinematic) {
-						rb_comp->MakeNonKinematic();
-					}
-					else {
-						rb_comp->MakeKinematic();
-					}
+				else {
+					rb_comp->MakeKinematic();
 				}
-
-				ImGui::EndChild();
-				ImGui::PopStyleVar();*/
 			}
+
+			ImGui::EndChild();
+			ImGui::PopStyleVar();*/
 		}
 
 		//General properties
@@ -544,7 +562,9 @@ auto ImGuiSubsystem::DrawGeneralProperties(Actor* actor) -> void
 
 auto ImGuiSubsystem::DrawGizmos() -> void
 {
-	if (Actor* actor = GetEditorContext().GetSelectedActor())
+	SceneComponent* selectedSceneComponent = GetSelectedSceneComponent();
+
+	if (selectedSceneComponent)
 	{
 		ImGuizmo::SetRect(ViewportStart.x, ViewportStart.y, ViewportSize.x, ViewportSize.y);
 
@@ -553,12 +573,12 @@ auto ImGuiSubsystem::DrawGizmos() -> void
 		Matrix mView = camera->GetViewMatrix();
 		Matrix mProj = camera->GetProjectionMatrix();
 
-		Transform t = actor->GetTransform();
+		Transform t = selectedSceneComponent->GetTransform();
 		Matrix tMatrix = t.GetTransformMatrix();
 		if (ImGuizmo::Manipulate(&mView._11, &(mProj._11), mCurrentGizmoOperation, mCurrentGizmoMode, &tMatrix._11, NULL, useSnap ? &snap.x : NULL))
 		{
 			t.SetFromMatrix(tMatrix);
-			actor->SetTransform(t);
+			selectedSceneComponent->SetTransform(t);
 		}
 	}
 }
@@ -602,4 +622,24 @@ auto ImGuiSubsystem::GetEditorContext() const -> EditorContext&
 	return MyGame->MyEditorContext;
 }
 
+auto ImGuiSubsystem::GetSelectedSceneComponent() const -> SceneComponent*
+{
+	Component* comp = GetEditorContext().GetSelectedComponent();
+	SceneComponent* selectedSceneComponent = dynamic_cast<SceneComponent*>(comp);
+	// Don't check selected actor if selected component is a non scene component
+	if (comp && !selectedSceneComponent)
+	{
+		return nullptr;
+	}
 
+	if (selectedSceneComponent == nullptr)
+	{
+		Actor* actor = GetEditorContext().GetSelectedActor();
+		if (actor)
+		{
+			selectedSceneComponent = actor->RootComponent;
+		}
+	}
+
+	return selectedSceneComponent;
+}

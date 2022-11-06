@@ -28,7 +28,7 @@ public:
 
 	
 public: // Relative transform get/update funcions
-	auto GetRelativeTransform() const -> const Transform& { mTransform; }
+	auto GetRelativeTransform() const -> const Transform& { return mTransform; }
 	auto SetRelativeTransform(const Transform& InTransform) -> void { mTransform = InTransform; }
 
 	auto SetRelativePosition(const Vector3& InPosition) -> void { mTransform.Position = InPosition; }

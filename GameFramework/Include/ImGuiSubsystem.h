@@ -5,6 +5,7 @@
 
 class Game;
 class EditorContext;
+class SceneComponent;
 
 namespace ImGuizmo
 {
@@ -39,6 +40,7 @@ private:
 	auto DrawActorExplorer() -> void;
 	// begin inspector
 	auto DrawComponentSelector(class Actor* actor) -> void;
+	auto LayOutTransform() -> void;
 	auto DrawActorInspector() -> void;
 	auto DrawGeneralProperties(class Actor* actor) -> void;
 	// end instpector
@@ -48,6 +50,7 @@ private:
 
 private:
 	auto GetEditorContext() const -> EditorContext&;
+	auto GetSelectedSceneComponent() const->SceneComponent*;
 private:
 	Game* MyGame;
 
@@ -62,6 +65,7 @@ private:
 	ImGuizmo::MODE mCurrentGizmoMode;
 	bool useSnap;
 	Vector3 snap;
+private:
 
 	std::vector<std::string> MessagesToDisplay;
 
