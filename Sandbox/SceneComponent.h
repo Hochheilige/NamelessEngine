@@ -8,6 +8,9 @@
 class SceneComponent : public Component
 {
 public:
+
+	friend class ImGuiSubsystem;
+	
 	// todo: add funcions to set world transform of scene components
 	// Transform get/update funcions
 	auto SetTransform(const Transform& InTransform) -> void;
