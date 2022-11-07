@@ -188,10 +188,9 @@ Actor* Sandbox::CreateDynamicSphere(Transform transform)
 
 void Sandbox::PrepareResources()
 {
-
-
-
 	Game::PrepareResources();
+
+
 	mono = MonoSystem::GetInstance();
 	// create meshes
 	boxMesh = new BoxMesh();
@@ -345,15 +344,24 @@ void Sandbox::PrepareResources()
 	CreateHierarcyTestActor();
 }
 
+auto Sandbox::Initialize() -> void
+{
+	// copy imgui context and allocator functions to imgui in c#
+	const auto mGame_InitImGui = mono->GetMethod("Scripts", "Game", "InitImGui");
+	ImGuiContext* ctx = ImGui::GetCurrentContext();
+	ImGuiMemAllocFunc allocFunc;
+	ImGuiMemFreeFunc freeFunc;
+	void* userData;
+	ImGui::GetAllocatorFunctions(&allocFunc, &freeFunc, &userData);
+	void* params[] = { &ctx, &allocFunc, &freeFunc, &userData };
+	MonoObject* exception;
+	mono->InvokeMethod(mGame_InitImGui, csGameInstance, params, nullptr);
+}
+
 void Sandbox::Update(float DeltaTime)
 {
-	const auto mGame_SetImGuiContext = mono->GetVirtualMethod("Scripts", "Game", "SetImGuiContext", csGameInstance);
-	auto ctx = ImGui::GetCurrentContext();
-	long long ptr = reinterpret_cast<long long>(ctx);
-	void* ptrAdr = &ptr;
-	mono->InvokeMethod(mGame_SetImGuiContext, csGameInstance, &ptrAdr, nullptr);
-
-	int frameCount = ImGui::GetFrameCount();
+	const auto mGame_OnGUI = mono->GetVirtualMethod("Scripts", "Game", "OnGUI", csGameInstance);
+	mono->InvokeMethod(mGame_OnGUI, csGameInstance, nullptr, nullptr);
 
 	const auto mGame_Update = mono->GetVirtualMethod("Scripts", "Game", "OnUpdate()", csGameInstance);
 	mono->InvokeMethod(mGame_Update, csGameInstance, nullptr, nullptr);

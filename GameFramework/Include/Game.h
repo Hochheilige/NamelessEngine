@@ -47,8 +47,8 @@ public:
 	template<class T>
 	friend auto CreateActor()->T*;
 
-
-	void Initialize();
+	// Called after the base sysyems have been initialized
+	virtual void Initialize();
 
 	void Run();
 
