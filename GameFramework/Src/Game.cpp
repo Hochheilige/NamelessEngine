@@ -20,7 +20,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 	return Game::GetInstance()->HandleMessage(hwnd, umessage, wparam, lparam);
 }
 
-void Game::Initialize()
+void Game::InitializeInternal()
 {
 	StartTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count() / 1000.0f;
 
@@ -32,9 +32,15 @@ void Game::Initialize()
 	mEngineContentRegistry = new EngineContentRegistry(this);
 
 	PrepareResources();
-	
+
 	mImGuiSubsystem = new ImGuiSubsystem();
 	mImGuiSubsystem->Initialize(this);
+
+	Initialize();
+}
+
+void Game::Initialize()
+{
 	
 }
 
@@ -186,7 +192,7 @@ void Game::CreateBackBuffer()
 
 void Game::Run()
 {
-	Initialize();
+	InitializeInternal();
 
 	auto PrevTime = std::chrono::steady_clock::now();
 
@@ -476,8 +482,4 @@ Game::Game()
 	Instance = this;
 }
 
-void Game::InitializeInternal()
-{
-	
-	Initialize();
-}
+

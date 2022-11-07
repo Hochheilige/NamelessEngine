@@ -13,11 +13,11 @@ class Sandbox : public Game
 {
 public:
 
+	virtual auto Initialize() -> void override;
+
 	virtual void PrepareResources() override;
 
 	virtual void Update(float DeltaTime) override;
-
-	
 
 	// Base objects with mesh and rigidbody components
 	Actor* CreateNonPhysicsBox(Transform transform);

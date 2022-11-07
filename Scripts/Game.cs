@@ -54,31 +54,31 @@ namespace Scripts
          */
         internal virtual void OnUpdate()
         {
-            ImGui.GetIO();
-            ImGuiIOPtr io = ImGui.GetIO();
+           
+        }
 
-            Console.WriteLine(io.ConfigFlags);
-            Console.WriteLine(ImGui.GetFrameCount());
+        internal virtual void OnGUI()
+        {
             if (ImGui.GetCurrentContext() == null)
             {
                 Console.WriteLine("No imGui Context");
                 return;
-            } else
+            }
+            else
             {
-                Console.WriteLine("Trying to imgui");
-                Console.WriteLine(ImGui.GetCurrentContext());
                 ImGui.Begin("Testing testing c# window incoming");
                 ImGui.Text("I came from C#!!!");
                 //
                 ImGui.End();
             }
-
-
         }
 
-        internal virtual void SetImGuiContext(IntPtr contextPtr)
+        internal void InitImGui(IntPtr contextPtr, IntPtr allocFunc, IntPtr freeFunc, IntPtr userData)
         {
+            Console.WriteLine("Initing ImGui");
             ImGui.SetCurrentContext(contextPtr);
+
+            ImGui.SetAllocatorFunctions(allocFunc, freeFunc, userData);
         }
 
         /**
