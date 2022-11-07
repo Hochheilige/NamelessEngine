@@ -24,6 +24,8 @@
 #include "LightBase.h"
 #include "EngineContentRegistry.h"
 
+#include "imgui.h"
+
 #include "CreateCommon.h"
 
 Actor* Sandbox::CreateNonPhysicsBox(Transform transform) {
@@ -345,6 +347,14 @@ void Sandbox::PrepareResources()
 
 void Sandbox::Update(float DeltaTime)
 {
+	const auto mGame_SetImGuiContext = mono->GetVirtualMethod("Scripts", "Game", "SetImGuiContext", csGameInstance);
+	auto ctx = ImGui::GetCurrentContext();
+	long long ptr = reinterpret_cast<long long>(ctx);
+	void* ptrAdr = &ptr;
+	mono->InvokeMethod(mGame_SetImGuiContext, csGameInstance, &ptrAdr, nullptr);
+
+	int frameCount = ImGui::GetFrameCount();
+
 	const auto mGame_Update = mono->GetVirtualMethod("Scripts", "Game", "OnUpdate()", csGameInstance);
 	mono->InvokeMethod(mGame_Update, csGameInstance, nullptr, nullptr);
 
