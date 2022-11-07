@@ -34,6 +34,7 @@
     <Compile Include="Actor.cs" />
     <Compile Include="AudioComponent.cs" />
     <Compile Include="ComponentsEnum.cs" />
+    <Compile Include="CustomActor.cs" />
     <Compile Include="EngineSettings.cs" />
     <Compile Include="EntryPoint.cs" />
     <Compile Include="Game.cs" />

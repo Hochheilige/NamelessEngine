@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Scripts
 {
@@ -33,6 +34,19 @@ namespace Scripts
             
             Components.Add(component);
             return component;
+        }
+
+        public string GetInheritors()
+        {
+            var listOfBs = (
+                    from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
+                    from type in domainAssembly.GetTypes()
+                    where typeof(Actor).IsAssignableFrom(type)
+                    select type.ToString()).ToArray();
+            
+            var result = string.Join("\n", listOfBs);
+            //Console.WriteLine(result);
+            return result;
         }
 
         public void Dispose()

@@ -60,6 +60,7 @@ public:
 		}
 		
 		mMonoActor->AddComponent(component);
+		auto a = mMonoActor->GetInheritors();
 
 		return component;
 	}
