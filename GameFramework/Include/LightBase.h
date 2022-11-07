@@ -32,7 +32,7 @@ public:
 	Renderer* renderer;
 
 	MonoComponent* GetMonoComponent() override { return mMonoComponent; }
-	ComponentType GetComponentType() override { return ComponentType::LightPoint; }
+	ComponentType GetComponentType() override { return ComponentType::LightPointType; }
 
 	void SetRenderer(Renderer* InRenderer) { renderer = InRenderer; }
 
