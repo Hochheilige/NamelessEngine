@@ -75,7 +75,6 @@ namespace Scripts
 
         internal void InitImGui(IntPtr contextPtr, IntPtr allocFunc, IntPtr freeFunc, IntPtr userData)
         {
-            Console.WriteLine("Initing ImGui");
             ImGui.SetCurrentContext(contextPtr);
 
             ImGui.SetAllocatorFunctions(allocFunc, freeFunc, userData);
