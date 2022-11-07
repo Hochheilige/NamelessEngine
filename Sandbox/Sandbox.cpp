@@ -186,6 +186,9 @@ Actor* Sandbox::CreateDynamicSphere(Transform transform)
 
 void Sandbox::PrepareResources()
 {
+
+
+
 	Game::PrepareResources();
 	mono = MonoSystem::GetInstance();
 	// create meshes
@@ -195,6 +198,8 @@ void Sandbox::PrepareResources()
 	circleMeshProxy = circleMesh->CreateMeshProxy();
 	sphereMesh = new SphereMesh();
 	sphereMeshProxy = sphereMesh->CreateMeshProxy();
+
+	LoadGameFacade();
 
 	/*auto obj = new ScriptObject("Cargo", mono);
 	auto m = obj->GetTransform();
@@ -340,8 +345,8 @@ void Sandbox::PrepareResources()
 
 void Sandbox::Update(float DeltaTime)
 {
-	//const auto mGame_Update = mono->GetVirtualMethod("Scripts", "Game", "OnUpdate()", csGameInstance);
-	//mono->InvokeMethod(mGame_Update, csGameInstance, nullptr, nullptr);
+	const auto mGame_Update = mono->GetVirtualMethod("Scripts", "Game", "OnUpdate()", csGameInstance);
+	mono->InvokeMethod(mGame_Update, csGameInstance, nullptr, nullptr);
 
 	// TODO: base game class should do this
 	if (GetPlayState() == PlayState::Playing)

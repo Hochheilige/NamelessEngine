@@ -59,5 +59,16 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ImGui.NET\ImGui.NET\ImGui.NET.csproj">
+      <Project>{d9679d15-cb53-48a2-b9a8-65e0f7045bba}</Project>
+      <Name>ImGui.NET</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="../deps/cimgui/win-x64/cimgui.dll" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../deps/cimgui/osx/cimgui.dylib" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../deps/cimgui/linux-x64/cimgui.so" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
