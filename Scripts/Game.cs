@@ -5,6 +5,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
+using ImGuiNET;
+
 namespace Scripts
 {
     public class Game
@@ -52,6 +54,19 @@ namespace Scripts
          */
         internal virtual void OnUpdate()
         {
+            if (ImGui.GetCurrentContext() == null)
+            {
+                Console.WriteLine("No imGui Context");
+                return;
+            } else
+            {
+                Console.WriteLine("Trying to imgui");
+                //ImGui.Begin("Testing testing c# window incoming");
+                ImGui.Text("I came from C#!!!");
+                //
+                //ImGui.End();
+            }
+
 
         }
 
