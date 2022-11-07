@@ -54,6 +54,11 @@ namespace Scripts
          */
         internal virtual void OnUpdate()
         {
+            ImGui.GetIO();
+            ImGuiIOPtr io = ImGui.GetIO();
+
+            Console.WriteLine(io.ConfigFlags);
+            Console.WriteLine(ImGui.GetFrameCount());
             if (ImGui.GetCurrentContext() == null)
             {
                 Console.WriteLine("No imGui Context");
@@ -61,13 +66,19 @@ namespace Scripts
             } else
             {
                 Console.WriteLine("Trying to imgui");
-                //ImGui.Begin("Testing testing c# window incoming");
+                Console.WriteLine(ImGui.GetCurrentContext());
+                ImGui.Begin("Testing testing c# window incoming");
                 ImGui.Text("I came from C#!!!");
                 //
-                //ImGui.End();
+                ImGui.End();
             }
 
 
+        }
+
+        internal virtual void SetImGuiContext(IntPtr contextPtr)
+        {
+            ImGui.SetCurrentContext(contextPtr);
         }
 
         /**
