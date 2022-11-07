@@ -2,8 +2,11 @@
 {
     public enum ComponentsEnum
     {
-        MeshRenderer = 1,
-        RigidBodyCube,
-        RigidBodySphere
+        Undefined = -1,
+        MeshRendererType = 1,
+        RigidBodyCubeType, 
+        RigidBodySphereType, 
+        LightPoint,
+        SceneComponent
     }
 }

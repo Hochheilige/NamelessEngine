@@ -5,6 +5,8 @@
 
 #include <string>
 
+#include "MonoObjects/MonoSceneComponent.h"
+
 class SceneComponent : public Component
 {
 public:
@@ -48,6 +50,12 @@ public: // Attachment related fucntions
 
 	auto GetAttachedChildren() const -> const std::vector<SceneComponent*>& { return AttachedChildren; }
 
+	ComponentType GetComponentType() override { return mType; }
+	MonoComponent* GetMonoComponent() override { return mMonoComponent; }
+private:
+
+	ComponentType mType = ComponentType::SceneComponentType;
+	MonoSceneComponent* mMonoComponent = new MonoSceneComponent;
 private:
 	auto GetAttahcmentRoot() -> SceneComponent*;
 

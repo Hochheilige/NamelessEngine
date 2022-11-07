@@ -20,13 +20,13 @@ namespace Scripts
             Component component = default;
             switch (type)
             {
-                case ComponentsEnum.MeshRenderer:
+                case ComponentsEnum.MeshRendererType:
                     component = new AudioComponent(this);
                     break;
-                case ComponentsEnum.RigidBodyCube:
+                case ComponentsEnum.RigidBodyCubeType:
                     component = new PhysicsComponent(this);
                     break;
-                case ComponentsEnum.RigidBodySphere:
+                case ComponentsEnum.RigidBodySphereType:
                     component = new PhysicsComponent(this);
                     break;
             }
