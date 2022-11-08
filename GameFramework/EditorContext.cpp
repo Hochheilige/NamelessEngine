@@ -17,6 +17,8 @@ auto EditorContext::SetSelectedActor(Actor* InActor) -> void
 {
 	SelectedActor = InActor;
 	SelectedComponent = nullptr;
+
+	OnSelectedComponentChanged.Broadcast(SelectedComponent);
 }
 
 auto EditorContext::SetSelectedComponent(Component* InComponent) -> void
@@ -26,4 +28,6 @@ auto EditorContext::SetSelectedComponent(Component* InComponent) -> void
 	{
 		SelectedActor = SelectedComponent->GetOwner();
 	}
+
+	OnSelectedComponentChanged.Broadcast(SelectedComponent);
 }
