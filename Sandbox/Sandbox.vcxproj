@@ -113,10 +113,11 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)External\bullet3\lib\Debug;$(SolutionDir)External\mono\lib\$(Configuration)\;$(SolutionDir)External\assimp\lib\Debug</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(CoreLibraryDependencies);mono-2.0-sgen.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)External\mono\bin\$(Configuration)\mono-2.0-sgen.dll" "$(TargetDir)" /y
