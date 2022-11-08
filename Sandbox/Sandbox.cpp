@@ -363,6 +363,10 @@ void Sandbox::Update(float DeltaTime)
 	const auto mGame_OnGUI = mono->GetVirtualMethod("Scripts", "Game", "OnGUI", csGameInstance);
 	mono->InvokeMethod(mGame_OnGUI, csGameInstance, nullptr, nullptr);
 
+	/*const auto mGame_GetInheritors = mono->GetVirtualMethod("Scripts", "Game", "GetActorInheritors()", csGameInstance);
+	auto res = mono->InvokeMethod(mGame_GetInheritors, csGameInstance, nullptr, nullptr);
+	auto str = mono_string_to_utf8(mono_object_to_string(res, nullptr));*/
+	
 	const auto mGame_Update = mono->GetVirtualMethod("Scripts", "Game", "OnUpdate()", csGameInstance);
 	mono->InvokeMethod(mGame_Update, csGameInstance, nullptr, nullptr);
 

@@ -36,7 +36,7 @@ namespace Scripts
             return component;
         }
 
-        public string GetInheritors()
+        /*public virtual string GetInheritors()
         {
             var listOfBs = (
                     from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
@@ -47,7 +47,7 @@ namespace Scripts
             var result = string.Join("\n", listOfBs);
             //Console.WriteLine(result);
             return result;
-        }
+        }*/
 
         public void Dispose()
         {
