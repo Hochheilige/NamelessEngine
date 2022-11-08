@@ -6,7 +6,7 @@
         MeshRendererType = 1,
         RigidBodyCubeType, 
         RigidBodySphereType, 
-        LightPoint,
-        SceneComponent
+        LightPointType,
+        SceneComponentType
     }
 }

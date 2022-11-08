@@ -29,6 +29,7 @@ MonoSystem::MonoSystem()
 			PrintAssemblyTypes(scriptAssembly);
 			image = mono_assembly_get_image(scriptAssembly);
 			if (image) {
+				mono_add_internal_call("Scripts.PhysicsComponent::PhysicsSetMass", &Mappings::CubeSetGravity);
 				/*mono_add_internal_call("Scripts.Script::CreateCubeObject", &Mappings::CS_CreateObj);
 				mono_add_internal_call("Scripts.AudioComponent::InternalOnRegister", &Mappings::CS_AudioOnCreate);*/
 			}

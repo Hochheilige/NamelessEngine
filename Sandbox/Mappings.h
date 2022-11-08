@@ -2,10 +2,9 @@
 #include "Transform.h"
 #include <iostream>
 
-/*
- * Создать лоадер и проверяльщик, что все методы валидны
- * Надо будет разнести байндинги по различным классам, для различных объектов
- */
+#include "RigidBodyCube.h"
+#include "RigidBodySphere.h"
+
 class Mappings
 {
 public:
@@ -14,5 +13,8 @@ public:
         float rot_x, float rot_y, float rot_z,
         float scale_x, float scale_y, float scale_z);
     static void CS_AudioOnCreate();
+
+    static void CubeSetGravity(RigidBodyCube* component, float mass){component->SetMass(mass);}
+    static void SphereSetGravity(RigidBodySphere* component, float mass){component->SetMass(mass);}
 };
 

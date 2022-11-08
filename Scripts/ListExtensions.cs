@@ -8,7 +8,13 @@ namespace Scripts
     {
         public static T GetComponent<T>(this List<Component> components) where T : Component
         {
-            return components.First(x => x.GetType() == typeof(T)) as T;
+            var result = components.FirstOrDefault(x => x.GetType() == typeof(T)) as T;
+            /*if (result is null)
+            {
+                throw new Exception("Component Was Not Found");
+            }*/
+
+            return result;
         }
     }
 }

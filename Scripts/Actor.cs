@@ -12,8 +12,18 @@ namespace Scripts
         {
             Console.WriteLine("YA RODILSYA");
         }
+
+        public virtual void OnBeginPlay()
+        {
+            
+        }
         
-        public Component AddComponent(int componentType)
+        public virtual void Update(float deltaTime)
+        {
+            Console.WriteLine("Base Update");
+        }
+        
+        public virtual Component AddComponent(int componentType)
         {
             ComponentsEnum type = (ComponentsEnum) componentType;
             Console.WriteLine("Component type to add " + type.ToString());
@@ -30,6 +40,7 @@ namespace Scripts
                 case ComponentsEnum.RigidBodySphereType:
                     component = new PhysicsComponent(this);
                     break;
+                default: component = new Component(this); break;
             }
             
             Components.Add(component);

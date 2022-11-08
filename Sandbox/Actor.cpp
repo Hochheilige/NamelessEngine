@@ -32,6 +32,8 @@ void Actor::Update(float DeltaTime)
 			component->Update(DeltaTime);
 		}
 	}
+
+	mMonoActor->Update(DeltaTime);
 }
 
 Actor::Actor()
