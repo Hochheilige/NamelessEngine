@@ -43,9 +43,6 @@ void RigidBodyComponent::SetRigidBodyType(RigidBodyType type)
 
 void RigidBodyComponent::SetPhysicsTransform(Transform transform)
 {
-   // auto dynamicsWorld = PhysicsModuleData::GetInstance()->GetDynamicsWorls();
-   // dynamicsWorld->removeRigidBody(Body);
-
     MakeKinematic();
     PhysicsTransform.setOrigin(btVector3(transform.Position.x, transform.Position.y, transform.Position.z));
     btQuaternion quat = btQuaternion(transform.Rotation.GetQuaterion().x, transform.Rotation.GetQuaterion().y, 
@@ -53,8 +50,6 @@ void RigidBodyComponent::SetPhysicsTransform(Transform transform)
     PhysicsTransform.setRotation(quat);
     Body->setWorldTransform(PhysicsTransform);
     MakeDynamic();
-
-   // dynamicsWorld->addRigidBody(Body);
 }
 
 void RigidBodyComponent::MakeKinematic()

@@ -412,7 +412,6 @@ void Sandbox::Update(float DeltaTime)
 	// TODO: base game class should do this
 	if (GetPlayState() == PlayState::Playing)
 	{ 
-		// TODO sync physics transform with root transform
 		if (prevPlayState == PlayState::Editor || prevPlayState == PlayState::Paused)
 		{
 			for (auto actor : Actors)
@@ -428,9 +427,10 @@ void Sandbox::Update(float DeltaTime)
 		{
 			actor->Update(DeltaTime);
 		}
-
-		prevPlayState = GetPlayState();
+		
 	}
+
+	prevPlayState = GetPlayState();
 
 	InputDevice& input = *Game::GetInstance()->GetInputDevice();
 
