@@ -22,6 +22,23 @@ ImGuiSubsystem* ImGuiSubsystem::Instance = nullptr;
 
 static const char* ActorDragDropSourceType = "ActorDragDropSourceType";
 
+auto GetComponentTypeName(ComponentType type) -> std::string {
+	std::string name = "";
+	switch (type) {
+	case MeshRendererType:
+		name = "Mesh Renderer"; break;
+	case RigidBodyCubeType:
+		name = "Rigid Body Cube"; break;
+	case RigidBodySphereType:
+		name = "Rigid Body Sphere"; break;
+	case LightPointType:
+		name = "Point Light"; break;
+	case SceneComponentType:
+		name = "Scene Component"; break;
+	}
+	return name;
+};
+
 ImGuiSubsystem::ImGuiSubsystem()
 	: mCurrentGizmoOperation(ImGuizmo::OPERATION::TRANSLATE)
 	, mCurrentGizmoMode(ImGuizmo::MODE::WORLD)
@@ -382,7 +399,7 @@ auto ImGuiSubsystem::DrawComponentSelector(class Actor* actor) -> void {
 				nodeFlags |= ImGuiTreeNodeFlags_Selected;
 			}
 
-			const bool isNodeOpen = ImGui::TreeNodeEx("Scene Component", nodeFlags);
+			const bool isNodeOpen = ImGui::TreeNodeEx(GetComponentTypeName(comp->GetComponentType()).c_str(), nodeFlags);
 			if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
 			{
 				GetEditorContext().SetSelectedComponent(comp);
@@ -416,9 +433,6 @@ auto ImGuiSubsystem::DrawComponentSelector(class Actor* actor) -> void {
 				}
 			}
 		}
-
-		ImGui::Separator();
-		ImGui::Separator();
 	}
 }
 
@@ -476,66 +490,75 @@ auto ImGuiSubsystem::LayOutTransform() -> void
 	}
 }
 
+auto ImGuiSubsystem::DrawRigidBodyProperties(Actor* actor) -> void {
+	if (!ImGui::CollapsingHeader("RigidBody Component")) {
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
+		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+		ImGui::BeginChild("RB", ImVec2(0, 35), true, window_flags);
+
+		bool is_p_enabled = actor->is_physics_enabled;
+		bool is_p_enabled_old = actor->is_physics_enabled;
+		ImGui::Checkbox("Simulate Physics", &is_p_enabled);
+
+		if (is_p_enabled != is_p_enabled_old)
+		{
+			is_p_enabled_old = is_p_enabled;
+			if (actor->is_physics_enabled) {
+				actor->UnUsePhysicsSimulation();
+			}
+			else {
+				actor->UsePhysicsSimulation();
+			}
+		}
+
+		ImGui::EndChild();
+		ImGui::PopStyleVar();
+
+		/*ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
+		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+		ImGui::BeginChild("Kinematic", ImVec2(0, 130), true, window_flags);
+
+		auto rb_comp = actor->GetComponentOfClass<RigidBodyComponent>();
+		bool is_kinematic = rb_comp->is_kinematic;
+		bool is_kinematic_old = rb_comp->is_kinematic;
+		ImGui::Checkbox("Simulate Physics", &is_kinematic);
+
+		if (is_kinematic != is_kinematic_old)
+		{
+			is_kinematic_old = is_kinematic;
+			if (rb_comp->is_kinematic) {
+				rb_comp->MakeNonKinematic();
+			}
+			else {
+				rb_comp->MakeKinematic();
+			}
+		}
+
+		ImGui::EndChild();
+		ImGui::PopStyleVar();*/
+	}
+}
+
 auto ImGuiSubsystem::DrawActorInspector() -> void
 {
 	ImGui::Begin("Actor Inspector");
 
 	if (Actor* actor = GetEditorContext().GetSelectedActor())
 	{	
-
-		DrawComponentSelector(actor);
-
-		LayOutTransform();
-
-		if (!ImGui::CollapsingHeader("RigidBody Component")) {
-			ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
-			ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-			ImGui::BeginChild("RB", ImVec2(0, 130), true, window_flags);
-
-			bool is_p_enabled = actor->is_physics_enabled;
-			bool is_p_enabled_old = actor->is_physics_enabled;
-			ImGui::Checkbox("Simulate Physics", &is_p_enabled);
-
-			if (is_p_enabled != is_p_enabled_old)
-			{
-				is_p_enabled_old = is_p_enabled;
-				if (actor->is_physics_enabled) {
-					actor->UnUsePhysicsSimulation();
-				}
-				else {
-					actor->UsePhysicsSimulation();
-				}
-			}
-
-			ImGui::EndChild();
-			ImGui::PopStyleVar();
-
-			/*ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
-			ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-			ImGui::BeginChild("Kinematic", ImVec2(0, 130), true, window_flags);
-
-			auto rb_comp = actor->GetComponentOfClass<RigidBodyComponent>();
-			bool is_kinematic = rb_comp->is_kinematic;
-			bool is_kinematic_old = rb_comp->is_kinematic;
-			ImGui::Checkbox("Simulate Physics", &is_kinematic);
-
-			if (is_kinematic != is_kinematic_old)
-			{
-				is_kinematic_old = is_kinematic;
-				if (rb_comp->is_kinematic) {
-					rb_comp->MakeNonKinematic();
-				}
-				else {
-					rb_comp->MakeKinematic();
-				}
-			}
-
-			ImGui::EndChild();
-			ImGui::PopStyleVar();*/
-		}
-
 		//General properties
 		DrawGeneralProperties(actor);
+		DrawComponentSelector(actor);
+
+		switch(GetSelectedSceneComponent()->GetComponentType()) {
+		case MeshRendererType:
+			LayOutTransform();
+			break;
+		case RigidBodyCubeType:
+		case RigidBodySphereType:
+			LayOutTransform();
+			DrawRigidBodyProperties(actor);
+			break;
+		}		
 
 	}
 	else
