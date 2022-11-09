@@ -33,12 +33,15 @@ void Actor::Update(float DeltaTime)
 		}
 	}
 
-	mMonoActor->Update(DeltaTime);
+	if(mMonoActor)
+	{
+		mMonoActor->Update(DeltaTime);
+	}
+	
 }
 
 Actor::Actor()
 {
-	mMonoActor = new MonoActor();
 }
 
 auto Actor::RemoveComponent(Component* InComponent) -> void
@@ -49,6 +52,19 @@ auto Actor::RemoveComponent(Component* InComponent) -> void
 	}
 
 	Components.erase(remove(Components.begin(), Components.end(), InComponent), Components.end());
+}
+
+void Actor::InitializeMonoActor(const char* name)
+{
+	mMonoActor = new MonoActor(name);
+}
+
+void Actor::OnBeginPlay()
+{
+	if(mMonoActor)
+	{
+		mMonoActor->OnBeginPlay();
+	}
 }
 
 void Actor::UseDebugRendererOnly()

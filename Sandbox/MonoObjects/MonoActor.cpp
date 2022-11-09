@@ -1,15 +1,16 @@
 ﻿#include "MonoActor.h"
 #include "MonoComponent.h"
 
-MonoActor::MonoActor()
+MonoActor::MonoActor(const char* className) : ClassName(className)
 {
+    
     auto mono = MonoSystem::GetInstance();
     auto image = mono->GetImage();
     auto klass = mono->FindClass("Scripts", ClassName);
     CsInstance = mono->CreateClassInstance(klass);
 }
 
-MonoActor::MonoActor(const char* className) : ClassName(className){}
+MonoActor::MonoActor() : MonoActor("Actor") {}
 
 void MonoActor::AddComponent(Component* component)
 {
@@ -41,6 +42,14 @@ void MonoActor::Update(float deltaTime)
     //MonoMethod* method = mono->GetVirtualMethod("Scripts", ClassName, "Update", CsInstance);
     MonoMethod* method = mono->GetMethod("Scripts", ClassName, "Update");
     MonoObject* result = mono->InvokeMethod(method, CsInstance, args, nullptr);
+}
+
+void MonoActor::OnBeginPlay()
+{
+    auto mono = MonoSystem::GetInstance();
+
+    MonoMethod* method = mono->GetMethod("Scripts", ClassName, "OnBeginPlay");
+    MonoObject* result = mono->InvokeMethod(method, CsInstance, nullptr, nullptr);
 }
 
 const char* MonoActor::GetInheritors()

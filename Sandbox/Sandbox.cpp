@@ -62,6 +62,7 @@ Actor* Sandbox::CreateStaticBox(Transform transform)
 Actor* Sandbox::CreateDynamicBox(Transform transform)
 {
 	Actor* box = CreateActor<Actor>();
+	box->InitializeMonoActor("CustomActor");
 	auto box_rb = box->AddComponent<RigidBodyCube>();
 	box->SetTransform(transform);
 	box_rb->SetMass(1);
@@ -289,7 +290,7 @@ void Sandbox::PrepareResources()
 
 	for (int i = 0; i < 5; ++i)
 		for (int j = 0; j < 5; ++j)
-			for (int k = 0; k < 10; ++k)
+			for (int k = 0; k < 1; ++k)
 			{
 				tr.Position = Vector3(i, 40.0f + j, k);
 				tr.Rotation.SetEulerAngles(45.0f, 45.0f, 0.0f);
@@ -446,5 +447,10 @@ auto Sandbox::OnBeginPlay() -> void {
 	OrbitCC->SetCameraToControl(PerspCamera);
 	FPSCC->bShouldUpdate = false;
 	OrbitCC->bShouldUpdate = true;
+
+	for (auto actor : Actors)
+	{
+		actor->OnBeginPlay();
+	}
 }
 

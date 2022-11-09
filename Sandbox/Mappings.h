@@ -14,7 +14,7 @@ public:
         float scale_x, float scale_y, float scale_z);
     static void CS_AudioOnCreate();
 
-    static void CubeSetGravity(RigidBodyCube* component, float mass){component->SetMass(mass);}
+    static void CubeSetMass(RigidBodyCube* component, float mass){component->SetMass(mass);}
     static void SphereSetGravity(RigidBodySphere* component, float mass){component->SetMass(mass);}
 };
 
