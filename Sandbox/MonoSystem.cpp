@@ -3,12 +3,6 @@
 #include <fstream>
 #include "mono/metadata/mono-debug.h"
 
-#define MONO_DEBUG
-
-// #ifndef MONO_DEBUG
-// 
-// #endif
-
 MonoSystem* MonoSystem::Instance = nullptr;
 
 //TODO move to GameFramework
