@@ -160,6 +160,8 @@ public:
 	auto ResumePlay() -> void;
 	auto StopPlay() -> void;
 
+	virtual auto OnBeginPlay() -> void;
+
 protected:
 
 	Game();

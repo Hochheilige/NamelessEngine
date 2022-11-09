@@ -81,4 +81,6 @@ private:
 	ComPtr<ID3D11Resource> burgerSpecular;
 	ComPtr<ID3D11ShaderResourceView> burgerSpecSRV;
 
+
+	virtual auto OnBeginPlay() -> void override;
 };
