@@ -96,6 +96,10 @@ public:
 
 	virtual void Update(float DeltaTime) override;
 
+	auto GetRoot() const -> SceneComponent* {
+		return RootComponent;
+	}
+
 private:
 	Actor* Parent = nullptr;
 

@@ -1,6 +1,8 @@
 #include "OrbitCameraController.h"
 
 #include "InputDevice.h"
+#include "SceneComponent.h"
+#include "Game.h"
 
 
 OrbitCameraController::OrbitCameraController()
@@ -48,5 +50,35 @@ void OrbitCameraController::Update(float DeltaTime)
 	// todo: ignore only GCToOrbit's yaw and pitch rotation and scale
 	Cam->Transform = Matrix::CreateTranslation(Vector3(0.0f, 0.0f, OrbitRadius)) * 
 		Matrix::CreateFromYawPitchRoll(DirectX::XMConvertToRadians(Yaw), DirectX::XMConvertToRadians(Pitch), 0.0f) * 
-		Matrix::CreateTranslation(GCToOrbit->GetWorldTransform().Position);
+		Matrix::CreateTranslation(SCToOrbit->GetTransform().Position);
+
+	Vector3 movementDelta;
+	
+	if (input.GetKeyboard()->IsDown(87))
+	{
+		movementDelta.x += DeltaTime * characterSpeed;
+	}
+	if (input.GetKeyboard()->IsDown(83))
+	{
+		movementDelta.x -= DeltaTime * characterSpeed;
+	}
+	if (input.GetKeyboard()->IsDown(68))
+	{
+		movementDelta.y += DeltaTime * characterSpeed;
+	}
+	if (input.GetKeyboard()->IsDown(65))
+	{
+		movementDelta.y -= DeltaTime * characterSpeed;
+	}
+	const float radius = 1.0f;
+	const float rotAngleX = -movementDelta.x / radius;
+	const float rotAngleY = -movementDelta.y / radius;
+	Transform tempTransform = SCToOrbit->GetTransform();
+	const Vector3 right = Cam->Transform.Rotation.GetRightVector();
+	//tempTransform.Rotation.RotateAroundAxis(right, rotAngleX);
+	const Vector3 forward = right.Cross(Vector3::Up);
+	//tempTransform.Rotation.RotateAroundAxis(forward, rotAngleY);
+	tempTransform.Position -= forward * movementDelta.x;
+	tempTransform.Position += right * movementDelta.y;
+	SCToOrbit->SetTransform(tempTransform);
 }

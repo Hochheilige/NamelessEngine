@@ -12,9 +12,11 @@ public:
 
 	float Speed = 3.0f;
 
-	float OrbitRadius = 30.0f;
+	float OrbitRadius = 10.0f;
 
-	GameComponent* GCToOrbit = nullptr;
+	class SceneComponent* SCToOrbit = nullptr;
+
+	auto SetSpeed(float s) -> void { characterSpeed = s; }
 
 private:
 
@@ -23,10 +25,10 @@ private:
 	float Pitch = 0.0f;
 	float Yaw = 0.0f;
 
-	
+	float characterSpeed = 10.0f;
 
 	const float MaxPitch = 85.0f;
 
-	float RotSpeedYaw = 100000.0f;
+	float RotSpeedYaw = 50000.0f;
 	float RotSpeedPitch = 30000.0f;
 };
