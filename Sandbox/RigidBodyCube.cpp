@@ -8,12 +8,6 @@ RigidBodyCube::RigidBodyCube()
 
 }
 
-void RigidBodyCube::SetMass(float mass)
-{
-	Mass = mass;
-	//mMonoComponent->SetMass(mass);
-}
-
 void RigidBodyCube::Init()
 {
 	auto physics = PhysicsModuleData::GetInstance();
@@ -22,7 +16,6 @@ void RigidBodyCube::Init()
 
 	Shape = new btBoxShape(btVector3(transform.Scale.x / 2, transform.Scale.y / 2, transform.Scale.z / 2));
 	physics->AddCollisionShape(Shape);
-
 
 	PhysicsTransform.setIdentity();
 	PhysicsTransform.setOrigin(btVector3(transform.Position.x, transform.Position.y, transform.Position.z));
@@ -37,6 +30,8 @@ void RigidBodyCube::Init()
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(Mass, myMotionState, Shape, localInertia);
 	Body = new btRigidBody(rbInfo);
 
+	RegisterRigidBodyType();
+
 	//physics->GetDynamicsWorls()->addRigidBody(Body);
 }
 
@@ -44,16 +39,4 @@ void RigidBodyCube::OnRegister()
 {
 }
 
-//void RigidBodyCube::Update(float DeltaTime)
-//{
-//	// TODO: this is literally the same code as in the other RigidBody's update -> this can be moved to the parent class
-//	if (Body && Body->getMotionState())
-//    {
-//        Body->getMotionState()->getWorldTransform(PhysicsTransform);
-//    }
-//
-//	Transform t = GetTransform();
-//	t.Position = Vector3(PhysicsTransform.getOrigin().x(), PhysicsTransform.getOrigin().y(), PhysicsTransform.getOrigin().z());
-//	t.Rotation = Quaternion(PhysicsTransform.getRotation());
-//	SetTransform(t);
-//}
+

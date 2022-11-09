@@ -47,6 +47,7 @@ Actor* Sandbox::CreateStaticBox(Transform transform)
 	Actor* box = CreateActor<Actor>();
 	auto box_rb = box->AddComponent<RigidBodyCube>();
 	box->SetTransform(transform);
+	box_rb->SetRigidBodyType(RigidBodyType::STATIC);
 	box_rb->SetMass(0);
 	box_rb->Init();
 	auto mesh_component = box->AddComponent<MeshRenderer>();
@@ -64,6 +65,7 @@ Actor* Sandbox::CreateDynamicBox(Transform transform)
 	Actor* box = CreateActor<Actor>();
 	auto box_rb = box->AddComponent<RigidBodyCube>();
 	box->SetTransform(transform);
+	box_rb->SetRigidBodyType(RigidBodyType::DYNAMIC);
 	box_rb->SetMass(1);
 	box_rb->Init();
 	auto mesh_component = box->AddComponent<MeshRenderer>();
@@ -74,6 +76,78 @@ Actor* Sandbox::CreateDynamicBox(Transform transform)
 	mesh_component->SetNormalSRV(EngineContentRegistry::GetInstance()->GetBasicNormalTexSRV());
 
 	return box;
+}
+
+Actor* Sandbox::CreateKinematicBox(Transform transform)
+{
+	Actor* box = CreateActor<Actor>();
+	auto box_rb = box->AddComponent<RigidBodyCube>();
+	box->SetTransform(transform);
+	box_rb->SetRigidBodyType(RigidBodyType::KINEMATIC);
+	box_rb->SetMass(1);
+	box_rb->Init();
+	auto mesh_component = box->AddComponent<MeshRenderer>();
+	mesh_component->SetMeshProxy(texturedBoxMeshProxy);
+	mesh_component->SetPixelShader(ps);
+	mesh_component->SetVertexShader(vs);
+	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
+	mesh_component->SetNormalSRV(EngineContentRegistry::GetInstance()->GetBasicNormalTexSRV());
+
+	return box;
+}
+
+Actor* Sandbox::CreateStaticSphere(Transform transform)
+{
+	Actor* sphere = CreateActor<Actor>();
+	auto sphere_rb = sphere->AddComponent<RigidBodySphere>();
+	sphere->SetTransform(transform);
+	sphere_rb->SetRigidBodyType(RigidBodyType::STATIC);
+	sphere_rb->SetMass(0);
+	sphere_rb->Init();
+	auto mesh_component = sphere->AddComponent<MeshRenderer>();
+	mesh_component->SetMeshProxy(sphereMeshProxy);
+	mesh_component->SetPixelShader(ps);
+	mesh_component->SetVertexShader(vs);
+	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
+	mesh_component->SetNormalSRV(EngineContentRegistry::GetInstance()->GetBasicNormalTexSRV());
+
+	return sphere;
+}
+
+Actor* Sandbox::CreateDynamicSphere(Transform transform)
+{
+	Actor* sphere = CreateActor<Actor>();
+	auto sphere_rb = sphere->AddComponent<RigidBodySphere>();
+	sphere->SetTransform(transform);
+	sphere_rb->SetRigidBodyType(RigidBodyType::DYNAMIC);
+	sphere_rb->SetMass(1);
+	sphere_rb->Init();
+	auto mesh_component = sphere->AddComponent<MeshRenderer>();
+	mesh_component->SetMeshProxy(sphereMeshProxy);
+	mesh_component->SetPixelShader(ps);
+	mesh_component->SetVertexShader(vs);
+	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
+	mesh_component->SetNormalSRV(EngineContentRegistry::GetInstance()->GetBasicNormalTexSRV());
+
+	return sphere;
+}
+
+Actor* Sandbox::CreateKinematicSphere(Transform transform)
+{
+	Actor* sphere = CreateActor<Actor>();
+	auto sphere_rb = sphere->AddComponent<RigidBodySphere>();
+	sphere->SetTransform(transform);
+	sphere_rb->SetRigidBodyType(RigidBodyType::KINEMATIC);
+	sphere_rb->SetMass(1);
+	sphere_rb->Init();
+	auto mesh_component = sphere->AddComponent<MeshRenderer>();
+	mesh_component->SetMeshProxy(sphereMeshProxy);
+	mesh_component->SetPixelShader(ps);
+	mesh_component->SetVertexShader(vs);
+	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
+	mesh_component->SetNormalSRV(EngineContentRegistry::GetInstance()->GetBasicNormalTexSRV());
+
+	return sphere;
 }
 
 Actor* Sandbox::CreateBunny(Transform transform)
@@ -150,40 +224,6 @@ void Sandbox::LoadGameFacade() {
 
 	const auto mGame_Load = mono->GetVirtualMethod("Scripts", "Game", "OnLoad()", csGameInstance);
 	mono->InvokeMethod(mGame_Load, csGameInstance, nullptr, nullptr);
-}
-
-Actor* Sandbox::CreateStaticSphere(Transform transform)
-{
-	Actor* sphere = CreateActor<Actor>();
-	auto sphere_rb = sphere->AddComponent<RigidBodySphere>();
-	sphere->SetTransform(transform);
-	sphere_rb->SetMass(0);
-	sphere_rb->Init();
-	auto mesh_component = sphere->AddComponent<MeshRenderer>();
-	mesh_component->SetMeshProxy(sphereMeshProxy);
-	mesh_component->SetPixelShader(ps);
-	mesh_component->SetVertexShader(vs);
-	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
-	mesh_component->SetNormalSRV(EngineContentRegistry::GetInstance()->GetBasicNormalTexSRV());
-
-	return sphere;
-}
-
-Actor* Sandbox::CreateDynamicSphere(Transform transform)
-{
-	Actor* sphere = CreateActor<Actor>();
-	auto sphere_rb = sphere->AddComponent<RigidBodySphere>();
-	sphere->SetTransform(transform);
-	sphere_rb->SetMass(1);
-	sphere_rb->Init();
-	auto mesh_component = sphere->AddComponent<MeshRenderer>();
-	mesh_component->SetMeshProxy(sphereMeshProxy);
-	mesh_component->SetPixelShader(ps);
-	mesh_component->SetVertexShader(vs);
-	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
-	mesh_component->SetNormalSRV(EngineContentRegistry::GetInstance()->GetBasicNormalTexSRV());
-
-	return sphere;
 }
 
 void Sandbox::PrepareResources()
@@ -283,9 +323,8 @@ void Sandbox::PrepareResources()
 	tr.Position = Vector3(3.0f, 10.0f, 0.0f);
 	tr.Rotation.SetEulerAngles(0, 0, 0);
 	tr.Scale = Vector3(1, 1, 1);
-	sphere = CreateDynamicSphere(tr);
+	sphere = CreateKinematicSphere(tr);
 	sphere->UsePhysicsSimulation();
-	sphere->GetComponentOfClass<RigidBodyComponent>()->MakeKinematic();
 
 	for (int i = 0; i < 5; ++i)
 		for (int j = 0; j < 5; ++j)
@@ -372,7 +411,16 @@ void Sandbox::Update(float DeltaTime)
 
 	// TODO: base game class should do this
 	if (GetPlayState() == PlayState::Playing)
-	{
+	{ 
+		// TODO sync physics transform with root transform
+		if (prevPlayState == PlayState::Editor || prevPlayState == PlayState::Paused)
+		{
+			for (auto actor : Actors)
+			{
+				actor->SyncPhysicsTransform();
+			}
+		}
+
 		// Physics Simulation
 		auto physics = PhysicsModuleData::GetInstance();
 		physics->OnUpdate(DeltaTime);
@@ -380,6 +428,8 @@ void Sandbox::Update(float DeltaTime)
 		{
 			actor->Update(DeltaTime);
 		}
+
+		prevPlayState = GetPlayState();
 	}
 
 	InputDevice& input = *Game::GetInstance()->GetInputDevice();

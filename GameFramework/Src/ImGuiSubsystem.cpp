@@ -15,6 +15,8 @@
 
 #include "EngineContentRegistry.h"
 
+#include "RigidBodyComponent.h"
+
 //temporary include
 //#include "../External/bullet3/src/"
 
@@ -575,6 +577,24 @@ auto ImGuiSubsystem::DrawGizmos() -> void
 
 		Transform t = selectedSceneComponent->GetTransform();
 		Matrix tMatrix = t.GetTransformMatrix();
+
+		auto rb_comp = selectedSceneComponent->GetOwner()->GetComponentOfClass<RigidBodyComponent>();
+		switch (rb_comp->GetType())
+		{
+		case RigidBodyType::STATIC: // Not sure about it
+		{
+			rb_comp->MakeKinematic();
+			break;
+		}
+		case RigidBodyType::DYNAMIC:
+		{
+			rb_comp->MakeKinematic();
+			break;
+		}
+		default:
+			break;
+		}
+
 		if (ImGuizmo::Manipulate(&mView._11, &(mProj._11), mCurrentGizmoOperation, mCurrentGizmoMode, &tMatrix._11, NULL, useSnap ? &snap.x : NULL))
 		{
 			t.SetFromMatrix(tMatrix);

@@ -23,8 +23,10 @@ public:
 	Actor* CreateNonPhysicsBox(Transform transform);
 	Actor* CreateStaticBox(Transform transform);
 	Actor* CreateDynamicBox(Transform transform);
+	Actor* CreateKinematicBox(Transform transform);
 	Actor* CreateStaticSphere(Transform transform);
 	Actor* CreateDynamicSphere(Transform transform);
+	Actor* CreateKinematicSphere(Transform transform);
 
 	Actor* CreateBunny(Transform transform);
 
@@ -80,5 +82,7 @@ private:
 
 	ComPtr<ID3D11Resource> burgerSpecular;
 	ComPtr<ID3D11ShaderResourceView> burgerSpecSRV;
+
+	PlayState prevPlayState = PlayState::Editor;
 
 };

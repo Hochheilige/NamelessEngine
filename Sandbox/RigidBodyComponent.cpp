@@ -25,39 +25,80 @@ btScalar RigidBodyComponent::GetMass()
     return Mass;
 }
 
-void RigidBodyComponent::MakeKinematic()
+RigidBodyType RigidBodyComponent::GetType()
 {
-    Body->setCollisionFlags(this->Body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-    Body->forceActivationState(DISABLE_DEACTIVATION);
-    is_kinematic = true;
+    return rbType;
 }
 
-//void RigidBodyComponent::MakeNonKinematic()
-//{
-//    //btCollisionObject::CollisionFlags flag;
-//
-//    //if (Mass == 0)
-//    //{
-//    //    flag = btCollisionObject::CF_STATIC_OBJECT;
-//    //}
-//    //else
-//    //{
-//    //    flag = btCollisionObject::CF_DYNAMIC_OBJECT;
-//    //}
-//    //Body->setCollisionFlags(this->Body->getCollisionFlags() | flag);
-//    //Body->forceActivationState(DISABLE_DEACTIVATION);
-//    is_kinematic = false;
-//}
+void RigidBodyComponent::SetMass(float mass)
+{
+    Mass = mass;
+    //mMonoComponent->SetMass(mass);
+}
+
+void RigidBodyComponent::SetRigidBodyType(RigidBodyType type)
+{
+    rbType = type;
+}
+
+void RigidBodyComponent::SetPhysicsTransform(Transform transform)
+{
+   // auto dynamicsWorld = PhysicsModuleData::GetInstance()->GetDynamicsWorls();
+   // dynamicsWorld->removeRigidBody(Body);
+
+    MakeKinematic();
+    PhysicsTransform.setOrigin(btVector3(transform.Position.x, transform.Position.y, transform.Position.z));
+    btQuaternion quat = btQuaternion(transform.Rotation.GetQuaterion().x, transform.Rotation.GetQuaterion().y, 
+        transform.Rotation.GetQuaterion().z, transform.Rotation.GetQuaterion().w);
+    PhysicsTransform.setRotation(quat);
+    Body->setWorldTransform(PhysicsTransform);
+    MakeDynamic();
+
+   // dynamicsWorld->addRigidBody(Body);
+}
+
+void RigidBodyComponent::MakeKinematic()
+{
+    Body->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
+    rbType = RigidBodyType::KINEMATIC;
+}
+
+void RigidBodyComponent::MakeDynamic()
+{
+    Body->setCollisionFlags(btCollisionObject::CF_DYNAMIC_OBJECT);
+    rbType = RigidBodyType::DYNAMIC;
+}
+
+void RigidBodyComponent::RegisterRigidBodyType()
+{
+    switch (rbType)
+    {
+    case RigidBodyType::STATIC:
+        Body->setCollisionFlags(this->Body->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT);
+        break;
+    case RigidBodyType::DYNAMIC:
+        Body->setCollisionFlags(this->Body->getCollisionFlags() | btCollisionObject::CF_DYNAMIC_OBJECT);
+        break;
+    case RigidBodyType::KINEMATIC:
+        Body->setCollisionFlags(this->Body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+        break;
+    default:
+        break;
+    }
+
+    Body->forceActivationState(DISABLE_DEACTIVATION);
+}
 
 void RigidBodyComponent::Update(float DeltaTime)
 {
     Transform t = GetTransform();
-    if (is_kinematic)
+    switch (rbType)
     {
-        PhysicsTransform.setOrigin(btVector3(t.Position.x, t.Position.y, t.Position.z));
-        Body->getMotionState()->setWorldTransform(PhysicsTransform);
+    case RigidBodyType::STATIC:
+    {
+        break;
     }
-    else
+    case RigidBodyType::DYNAMIC:
     {
         if (Body && Body->getMotionState())
         {
@@ -65,7 +106,20 @@ void RigidBodyComponent::Update(float DeltaTime)
         }
         t.Position = Vector3(PhysicsTransform.getOrigin().x(), PhysicsTransform.getOrigin().y(), PhysicsTransform.getOrigin().z());
         t.Rotation = Quaternion(PhysicsTransform.getRotation());
+        break;
     }
+    case RigidBodyType::KINEMATIC:
+    {
+        PhysicsTransform.setOrigin(btVector3(t.Position.x, t.Position.y, t.Position.z));
+        btQuaternion quat = btQuaternion(t.Rotation.GetQuaterion().x, t.Rotation.GetQuaterion().y, t.Rotation.GetQuaterion().z, t.Rotation.GetQuaterion().w);
+        PhysicsTransform.setRotation(quat);
+        Body->setWorldTransform(PhysicsTransform);
+        break;
+    }
+    default:
+        break;
+    }
+
     SetTransform(t);
 
 }
