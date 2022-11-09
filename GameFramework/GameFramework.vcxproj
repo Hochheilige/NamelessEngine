@@ -158,6 +158,7 @@
     <ClInclude Include="..\imgui\backends\imgui_impl_win32.h" />
     <ClInclude Include="Include\AABB2DCollider.h" />
     <ClInclude Include="Include\CreateCommon.h" />
+    <ClInclude Include="Include\Delegates.h" />
     <ClInclude Include="Include\EditorContext.h" />
     <ClInclude Include="Include\EngineContentRegistry.h" />
     <ClInclude Include="Include\Game.h" />
@@ -195,6 +196,7 @@
     <ClCompile Include="EditorContext.cpp" />
     <ClCompile Include="Include\Renderer.cpp" />
     <ClCompile Include="Src\AABB2DCollider.cpp" />
+    <ClCompile Include="Src\Delegates.cpp" />
     <ClCompile Include="Src\EngineContentRegistry.cpp" />
     <ClCompile Include="Src\Game.cpp" />
     <ClCompile Include="Src\GameComponent.cpp" />
@@ -232,6 +234,9 @@
     <ProjectReference Include="..\External\assimp\code\assimp.vcxproj">
       <Project>{986855ab-de08-31c3-89a0-1eb21d2c3a87}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="Delegates.natvis" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -320,7 +320,7 @@ void Sandbox::PrepareResources()
 	platform->UsePhysicsSimulation();
 
 	//CreateSphereObject(3.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1, 1, 1);
-	tr.Position = Vector3(3.0f, 10.0f, 0.0f);
+	tr.Position = Vector3(3.0f, 0.8f, 0.0f);
 	tr.Rotation.SetEulerAngles(0, 0, 0);
 	tr.Scale = Vector3(1, 1, 1);
 	sphere = CreateKinematicSphere(tr);
@@ -340,6 +340,10 @@ void Sandbox::PrepareResources()
 	FPSCC = CreateGameComponent<CameraController>();
 	FPSCC->SetCameraToControl(PerspCamera);
 	FPSCC->SetPitchYaw(-45.0f, -45.0f);
+
+	OrbitCC = CreateGameComponent<OrbitCameraController>();
+	OrbitCC->SCToOrbit = sphere->GetRoot();
+	OrbitCC->OrbitRadius = 10.0f;
 
 
 	//PlaneComponent* pc = CreateGameComponent<PlaneComponent>();
@@ -486,4 +490,11 @@ void Sandbox::Update(float DeltaTime)
 	}
 }
 
+auto Sandbox::OnBeginPlay() -> void {
+	CurrentCC = OrbitCC;
+	FPSCC->SetCameraToControl(nullptr);
+	OrbitCC->SetCameraToControl(PerspCamera);
+	FPSCC->bShouldUpdate = false;
+	OrbitCC->bShouldUpdate = true;
+}
 

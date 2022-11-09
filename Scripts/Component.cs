@@ -15,6 +15,7 @@ namespace Scripts
 
         public void SetCppInstance(IntPtr obj)
         {
+            Console.WriteLine("Instance was set");
             CppInstance = obj;
         }
 

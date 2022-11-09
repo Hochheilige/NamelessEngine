@@ -85,4 +85,6 @@ private:
 
 	PlayState prevPlayState = PlayState::Editor;
 
+
+	virtual auto OnBeginPlay() -> void override;
 };

@@ -12,6 +12,8 @@
 
 #include <chrono>
 
+#include <iostream>
+
 
 Game* Game::Instance = nullptr;
 
@@ -450,7 +452,12 @@ auto Game::StartPlay() -> void
 	if (mPlayState == PlayState::Editor)
 	{
 		mPlayState = PlayState::Playing;
+		OnBeginPlay();
 	}
+}
+
+auto Game::OnBeginPlay() -> void {
+	std::cout << "Play has begun";
 }
 
 auto Game::PausePlay() -> void

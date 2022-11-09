@@ -318,8 +318,13 @@ auto ImGuiSubsystem::DrawActorExplorer() -> void
 	{
 		const bool isSelectedActor = GetEditorContext().GetSelectedActor() == actor;
 
-		//ImGui::Button((std::string("Actor") + std::to_string(i)).c_str());
-		ImGui::Selectable((std::string("Actor") + std::to_string(i)).c_str(), isSelectedActor);
+		if (actor->GetName() == "") {
+			ImGui::Selectable((std::string("Actor") + std::to_string(i)).c_str(), isSelectedActor);
+		}
+		else {
+			ImGui::Selectable(actor->GetName().c_str(), isSelectedActor);
+		}
+		
 		if (ImGui::IsItemClicked())
 		{
 			GetEditorContext().SetSelectedActor(actor);
@@ -548,14 +553,18 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 auto ImGuiSubsystem::DrawGeneralProperties(Actor* actor) -> void
 {
 	
-	static char tempName[] = "My Name Is who";
+	static char tempName[128];
+	memcpy(tempName, actor->GetName().c_str(), actor->GetName().length() + 1);
 
 	if (ImGui::CollapsingHeader("General", ImGuiTreeNodeFlags_DefaultOpen)) {
+
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
 		ImGui::BeginChild("ChildGeneral", ImVec2(0, 35), true, window_flags);
 
 		ImGui::InputText("\tName", tempName, 20);
+
+		actor->SetName(tempName);
 
 		ImGui::EndChild();
 		ImGui::PopStyleVar();
