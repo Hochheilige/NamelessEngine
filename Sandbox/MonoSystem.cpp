@@ -1,6 +1,13 @@
 #include "MonoSystem.h"
 #include "Mappings.h"
-#include <filesystem>
+#include <fstream>
+#include "mono/metadata/mono-debug.h"
+
+#define MONO_DEBUG
+
+// #ifndef MONO_DEBUG
+// 
+// #endif
 
 MonoSystem* MonoSystem::Instance = nullptr;
 
@@ -16,6 +23,12 @@ MonoSystem::MonoSystem()
 
 	//TODO add exceptions/message if domain/assembly/image can't be loaded
 
+#if defined(MONO_DEBUG)
+	const char* params[3] = { "--soft-breakpoints", "--debugger-agent=transport=dt_socket,server=y,address=127.0.0.1:52222,loglevel=2", "--use-fallback-tls" };
+	mono_jit_parse_options(3, (char**)params);
+	mono_debug_init(MONO_DEBUG_FORMAT_MONO);
+#endif
+
 	rootDomain = mono_jit_init("NamelessEngine");
 
 	if (rootDomain) {
@@ -24,10 +37,12 @@ MonoSystem::MonoSystem()
 		appDomain = mono_domain_create_appdomain(const_cast<char*>("EngineAppDomain"), nullptr);
 		mono_domain_set(appDomain, true);
 
+		LoadMonoAssembly(pathStr);
+
 		scriptAssembly = mono_domain_assembly_open(appDomain, pathStr.c_str());
 		if (scriptAssembly) {
-			PrintAssemblyTypes(scriptAssembly);
 			image = mono_assembly_get_image(scriptAssembly);
+			PrintAssemblyTypes(scriptAssembly);
 			if (image) {
 				mono_add_internal_call("Scripts.PhysicsComponent::PhysicsSetMass", &Mappings::CubeSetGravity);
 				/*mono_add_internal_call("Scripts.Script::CreateCubeObject", &Mappings::CS_CreateObj);
@@ -133,3 +148,62 @@ MonoSystem* MonoSystem::GetInstance()
 
 	return Instance;
 }
+
+char* MonoSystem::ReadFile(const std::filesystem::path& assemblyPath, uintmax_t& fileSize)
+{
+	std::fstream file;
+	file.open(assemblyPath, std::ios_base::in | std::ios::binary);
+
+	if (!file.is_open()) {
+		// Lets talk about it!
+		return nullptr;
+	}
+	fileSize = file_size(assemblyPath);
+
+	const auto fileData = new char[fileSize];
+	file.read(fileData, fileSize);
+
+	return fileData;
+}
+
+MonoAssembly* MonoSystem::LoadMonoAssembly(const std::filesystem::path& assemblyPath)
+{
+	uintmax_t fileSize;
+
+
+	auto fileData = ReadFile(assemblyPath, fileSize);
+
+	// NOTE: We can't use this image for anything other than loading the assembly because this image doesn't have a reference to the assembly
+	MonoImageOpenStatus status;
+	MonoImage* image = mono_image_open_from_data_full(fileData, fileSize, 1, &status, 0);
+
+	if (status != MONO_IMAGE_OK) {
+		const char* errorMessage = mono_image_strerror(status);
+		// Log some error message using the errorMessage data
+		return nullptr;
+	}
+
+#ifdef MONO_DEBUG
+	std::filesystem::path pdbPath = assemblyPath;
+	// NOTE: Should be Portable
+	pdbPath.replace_extension("pdb");
+
+	if (std::filesystem::exists(pdbPath)) {
+		uintmax_t pdbFileSize;
+		auto pdb_data = ReadFile(pdbPath, pdbFileSize);
+
+		mono_debug_open_image_from_memory(image, (const mono_byte*)pdb_data, pdbFileSize);
+
+		delete[] pdb_data;
+	}
+#endif
+
+	std::string pathString = assemblyPath.string();
+	MonoAssembly* assembly = mono_assembly_load_from_full(image, pathString.data(), &status, 0);
+	mono_image_close(image);
+
+	delete[] fileData;
+
+	return assembly;
+}
+

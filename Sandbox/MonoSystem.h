@@ -1,4 +1,5 @@
 #pragma once
+#include <filesystem>
 #include <map>
 #include <xstring>
 #include <mono/jit/jit.h>
@@ -24,7 +25,9 @@ public:
 	                             const char* methodDesc, MonoObject* obj);
 	MonoObject* InvokeMethod(MonoMethod* method, void* obj, void** params, MonoObject** exc);
 	MonoObject* CreateClassInstance(MonoClass* klass);
-	void PrintAssemblyTypes(MonoAssembly* assembly);
+	static void PrintAssemblyTypes(MonoAssembly* assembly);
+	static char* ReadFile(const std::filesystem::path& assemblyPath, uintmax_t& fileSize);
+	static MonoAssembly* LoadMonoAssembly(const std::filesystem::path& assemblyPath);
 
 	static MonoSystem* GetInstance();
 
