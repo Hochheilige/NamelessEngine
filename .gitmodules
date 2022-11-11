@@ -4,3 +4,6 @@
 [submodule "External/bullet3"]
 	path = External/bullet3
 	url = https://github.com/bulletphysics/bullet3.git
+[submodule "External/json"]
+	path = External/json
+	url = https://github.com/nlohmann/json.git
