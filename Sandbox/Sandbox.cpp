@@ -109,7 +109,7 @@ Actor* Sandbox::CreateBun(Transform transform)
 auto Sandbox::CreateHierarcyTestActor() -> Actor*
 {
 	Actor* actor = CreateActor<Actor>();
-	actor->AddComponent<MeshRenderer>();
+	actor->AddComponent<SceneComponent>();
 	auto mesh_component = actor->AddComponent<MeshRenderer>();
 
 	Transform tr;
@@ -122,7 +122,7 @@ auto Sandbox::CreateHierarcyTestActor() -> Actor*
 	mesh_component->SetNormalSRV(burgerNormalSRV);
 	mesh_component->SetSpecularSRV(burgerSpecSRV);
 
-	SceneComponent* sceneComp = actor->AddComponent<MeshRenderer>();
+	SceneComponent* sceneComp = actor->AddComponent<SceneComponent>();
 
 	mesh_component = actor->AddComponent<MeshRenderer>();
 	mesh_component->SetAttachmentParent(sceneComp);

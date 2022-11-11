@@ -548,14 +548,13 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 		//General properties
 		DrawGeneralProperties(actor);
 		DrawComponentSelector(actor);
+		LayOutTransform();
 
 		switch(GetSelectedSceneComponent()->GetComponentType()) {
 		case MeshRendererType:
-			LayOutTransform();
 			break;
 		case RigidBodyCubeType:
 		case RigidBodySphereType:
-			LayOutTransform();
 			DrawRigidBodyProperties(actor);
 			break;
 		}		
