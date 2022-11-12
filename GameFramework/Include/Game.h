@@ -12,8 +12,8 @@
 
 #include "EditorContext.h"
 
-#include "DirectoryTree.h"
-
+#include <filesystem>
+using Path = std::filesystem::path;
 
 class Actor;
 class RenderingSystem;

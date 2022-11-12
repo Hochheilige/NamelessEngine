@@ -15,7 +15,7 @@
 
 #include "EngineContentRegistry.h"
 
-#include <filesystem>
+#include "DirectoryTree.h"
 
 //temporary include
 //#include "../External/bullet3/src/"
@@ -210,7 +210,6 @@ auto ImGuiSubsystem::DrawDockspace() -> void
 		{
 			// Disabling fullscreen would allow the window to be moved to the front of other windows,
 			// which we can't undo at the moment without finer window depth/z control.
-			ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen);
 			ImGui::MenuItem("Padding", NULL, &opt_padding);
 			ImGui::Separator();
 
@@ -704,7 +703,23 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 					ImGui::TreePop();
 					continue;
 				}
-				const bool isOpen = ImGui::TreeNode(dt_node->GetPath().string().c_str());
+				ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth;
+				const bool isLeaf = dt_node->GetChildren().size() == 0;
+				if (isLeaf)
+				{
+					nodeFlags |= ImGuiTreeNodeFlags_Leaf;
+				}
+				const Path currentPathFromRoot = dt->GetPathFromRoot(dt_node);
+				const bool isSelected = GetEditorContext().GetSelectedDirectory() == currentPathFromRoot;
+				if (isSelected)
+				{
+					nodeFlags |= ImGuiTreeNodeFlags_Selected;
+				}
+				const bool isOpen = ImGui::TreeNodeEx(dt_node->GetPath().string().c_str(), nodeFlags);
+				if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+				{
+					GetEditorContext().SetSelectedDirectory(currentPathFromRoot);
+				}
 				if (isOpen) {
 					stack.push_back(nullptr);
 					stack.insert(stack.end(), dt_node->GetChildren().begin(), dt_node->GetChildren().end());
@@ -720,8 +735,11 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 
 		if (ImGui::BeginChild("Asset browser", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), false, window_flags)) {
 
-			
-			for ( auto entry : std::filesystem::directory_iterator(game->assetsPath)) {
+			Path path = game->assetsPath;
+			path._Remove_filename_and_separator();
+			path = path / GetEditorContext().GetSelectedDirectory();
+
+			for (auto entry : std::filesystem::directory_iterator(path)) {
 				ImGui::Text(entry.path().string().c_str());
 			}
 				

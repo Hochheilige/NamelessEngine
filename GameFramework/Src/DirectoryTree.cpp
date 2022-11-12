@@ -1,10 +1,8 @@
 #include "DirectoryTree.h"
 
-auto DirectoryTree::AddPath(Path path) -> void {
+auto DirectoryTree::AddPath(const Path& path) -> void {
 
 	DirectoryTreeNode* node = root;
-
-	
 
 	auto current = path.begin();
 	auto end = path.end();
@@ -75,3 +73,48 @@ auto DirectoryTree::AddPath(Path path) -> void {
 	//	}
 	//}
 }
+
+auto DirectoryTree::GetNode(const Path& path) -> DirectoryTreeNode*
+{
+	DirectoryTreeNode* node = root;
+
+	if (node && node->path == path)
+	{
+		return node;
+	}
+
+	auto current = path.begin();
+	auto end = path.end();
+	while (current != end) {
+		DirectoryTreeNode* n = nullptr;
+		for (DirectoryTreeNode* dir : node->children) {
+			if (dir->path == *current) {
+				n = dir;
+				break;
+			}
+		}
+		if (n != nullptr)
+		{
+			node = n;
+		}
+		else
+		{
+			break;
+		}
+	}
+    return nullptr;
+}
+
+auto DirectoryTree::GetPathFromRoot(DirectoryTreeNode* node) const -> Path
+{
+	Path path;
+
+	while (node != nullptr)
+	{
+		path = node->path / path;
+		node = node->parent;
+	}
+
+	return path;
+}
+

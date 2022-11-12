@@ -3,7 +3,8 @@
 #include "MathInclude.h"
 #include "imgui.h"
 
-
+#include <string>
+#include <vector>
 
 class Game;
 class EditorContext;

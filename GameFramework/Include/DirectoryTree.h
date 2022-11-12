@@ -32,15 +32,18 @@ class DirectoryTree {
 private:
 
 	DirectoryTreeNode* root;
-	Path rootPath = Path("../Assets");
 	
 public:
 
-	auto AddPath(Path path) -> void;
+	auto AddPath(const Path& path) -> void;
 	DirectoryTree(Path path) {
 		root = new DirectoryTreeNode(path);
 	}
 	auto GetRootNode() const -> DirectoryTreeNode* { return root; }
+
+	auto GetNode(const Path& path)->DirectoryTreeNode*;
+
+	auto GetPathFromRoot(DirectoryTreeNode* node) const->Path;
 
 };
 
