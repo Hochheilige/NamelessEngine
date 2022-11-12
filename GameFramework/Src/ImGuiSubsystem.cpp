@@ -15,6 +15,8 @@
 
 #include "EngineContentRegistry.h"
 
+#include <filesystem>
+
 //temporary include
 //#include "../External/bullet3/src/"
 
@@ -115,6 +117,7 @@ auto ImGuiSubsystem::DoLayout() -> void
 	DrawActorInspector();
 	DrawMessagesWindow();
 	DrawBasicActorsWindow();
+	DrawAssetBrowser();
 }
 
 auto ImGuiSubsystem::Shutdown() -> void
@@ -407,11 +410,6 @@ auto ImGuiSubsystem::DrawComponentSelector(class Actor* actor) -> void {
 			
 			if (isNodeOpen)
 			{
-				if (isLeaf)
-				{
-					ImGui::TreePop();
-				}
-				else
 				{
 					stack.push_back(nullptr); // hack: use nullptr as a command to pop tree node
 					stack.insert(stack.end(), ownChildren.begin(), ownChildren.end());
@@ -674,3 +672,66 @@ auto ImGuiSubsystem::GetSelectedSceneComponent() const -> SceneComponent*
 
 	return selectedSceneComponent;
 }
+
+auto ImGuiSubsystem::DrawAssetBrowser() -> void 
+{
+	ImGui::Begin("Content browser", 0, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+	ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerV;
+
+	Game* game = Game::GetInstance();
+
+	if (ImGui::BeginTable("Asset browser", 2, tableFlags)) {
+
+		std::string path = "../Assets";
+
+		ImGui::TableNextRow();
+		ImGui::TableNextColumn();
+
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
+
+		if (ImGui::BeginChild("File browser", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), false, window_flags)) {
+
+			DirectoryTree* dt = game->GetDirectoryTree();
+			DirectoryTreeNode* dt_node = dt->GetRootNode();
+
+			std::vector<DirectoryTreeNode*> stack;
+			stack.push_back(dt_node);
+
+			while (!stack.empty()) {
+				dt_node = stack.back();
+				stack.pop_back();
+				if (dt_node == nullptr) {
+					ImGui::TreePop();
+					continue;
+				}
+				const bool isOpen = ImGui::TreeNode(dt_node->GetPath().string().c_str());
+				if (isOpen) {
+					stack.push_back(nullptr);
+					stack.insert(stack.end(), dt_node->GetChildren().begin(), dt_node->GetChildren().end());
+				}	
+			}
+
+			ImGui::EndChild();
+		}
+
+		ImGui::TableNextColumn();
+
+
+
+		if (ImGui::BeginChild("Asset browser", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), false, window_flags)) {
+
+			
+			for ( auto entry : std::filesystem::directory_iterator(game->assetsPath)) {
+				ImGui::Text(entry.path().string().c_str());
+			}
+				
+			ImGui::EndChild();
+		}
+
+		ImGui::EndTable();
+	}
+
+
+	ImGui::End();
+}
+

@@ -223,6 +223,7 @@
     <ClInclude Include="Include\AABB2DCollider.h" />
     <ClInclude Include="Include\CreateCommon.h" />
     <ClInclude Include="Include\Delegates.h" />
+    <ClInclude Include="Include\DirectoryTree.h" />
     <ClInclude Include="Include\EditorContext.h" />
     <ClInclude Include="Include\EngineContentRegistry.h" />
     <ClInclude Include="Include\Game.h" />
@@ -262,6 +263,7 @@
     <ClCompile Include="Include\Renderer.cpp" />
     <ClCompile Include="Src\AABB2DCollider.cpp" />
     <ClCompile Include="Src\Delegates.cpp" />
+    <ClCompile Include="Src\DirectoryTree.cpp" />
     <ClCompile Include="Src\EngineContentRegistry.cpp" />
     <ClCompile Include="Src\Game.cpp" />
     <ClCompile Include="Src\GameComponent.cpp" />

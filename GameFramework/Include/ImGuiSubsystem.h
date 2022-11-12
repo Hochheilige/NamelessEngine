@@ -3,6 +3,8 @@
 #include "MathInclude.h"
 #include "imgui.h"
 
+
+
 class Game;
 class EditorContext;
 class SceneComponent;
@@ -48,6 +50,8 @@ private:
 	auto DrawGizmos() -> void;
 	auto DrawMessagesWindow() -> void;
 	auto DrawBasicActorsWindow() -> void;
+	// asset browser
+	auto DrawAssetBrowser() -> void;
 
 private:
 	auto GetEditorContext() const -> EditorContext&;
