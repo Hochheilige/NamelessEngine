@@ -9,6 +9,8 @@
 #include "ImGuiSubsystem.h"
 #include "WICTextureLoader.h"
 #include "EngineContentRegistry.h"
+#include "DirectoryTree.h"
+
 
 #include <chrono>
 
@@ -37,6 +39,10 @@ void Game::InitializeInternal()
 
 	mImGuiSubsystem = new ImGuiSubsystem();
 	mImGuiSubsystem->Initialize(this);
+
+	directoryTree.reset(new DirectoryTree(Path("Assets")));
+
+	FillDirectoryTree();
 
 	Initialize();
 }
@@ -490,3 +496,12 @@ Game::Game()
 }
 
 
+auto Game::FillDirectoryTree() -> void {
+	
+	for (auto dir_entry : std::filesystem::recursive_directory_iterator(assetsPath)) {
+		if (dir_entry.is_directory()) {
+			directoryTree->AddPath(dir_entry.path().lexically_relative(assetsPath));
+		}
+	}
+
+}
