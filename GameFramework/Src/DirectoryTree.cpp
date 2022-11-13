@@ -7,19 +7,6 @@ auto DirectoryTree::AddPath(const Path& path) -> void {
 	auto current = path.begin();
 	auto end = path.end();
 
-	////Clean path temp fix
-	//Path tempPath = *current;
-	//while (tempPath != rootPath) {
-	//	tempPath /= *++current;
-	//}
-	//tempPath = *current;
-	//while (current != end) {
-	//	tempPath /= *++current;
-	//}
-	//path = tempPath;
-	//current = path.begin();
-
-
 	while (current != end) {
 		//find child with matching directory name
 		if (current->empty()) continue;
@@ -36,42 +23,6 @@ auto DirectoryTree::AddPath(const Path& path) -> void {
 		}
 		++current;
 	}
-
-	/*size_t start = root->name.length();
-	DirectoryTreeNode* node = root;
-	Path dir_name;*/
-
-	////repeat untill a place for child found
-	//while (true) {
-	//	//get substring of a path
-	//	size_t end = path.find_first_of('\\', start);
-	//	if (end == static_cast<size_t>(-1)) {
-	//		dir_name = path.substr(start);
-	//		//find child with matching substring
-	//		for (auto dir : node->children) {
-	//			if (dir->name == dir_name)
-	//				return;
-	//		}
-	//		node->AddChild(new DirectoryTreeNode(dir_name));
-	//		return;
-	//	}
-	//	else {
-	//		bool isFound = false;
-	//		dir_name = path.substr(start, end - 1);
-	//		start = end + 1;
-	//		//find child with matching substring
-	//		for (auto dir : node->children) {
-	//			if (dir->name == dir_name) {
-	//				node = dir;
-	//				isFound = true;
-	//				break;
-	//			}		
-	//		}
-	//		if (!isFound) {
-	//			node = node->AddChild(new DirectoryTreeNode(dir_name));
-	//		}
-	//	}
-	//}
 }
 
 auto DirectoryTree::GetNode(const Path& path) -> DirectoryTreeNode*
@@ -85,24 +36,10 @@ auto DirectoryTree::GetNode(const Path& path) -> DirectoryTreeNode*
 
 	auto current = path.begin();
 	auto end = path.end();
-	while (current != end) {
-		DirectoryTreeNode* n = nullptr;
-		for (DirectoryTreeNode* dir : node->children) {
-			if (dir->path == *current) {
-				n = dir;
-				break;
-			}
-		}
-		if (n != nullptr)
-		{
-			node = n;
-		}
-		else
-		{
-			break;
-		}
+	while (node != nullptr && current != end) {
+		node = node->GetChildWithName(*current);
 	}
-    return nullptr;
+    return node;
 }
 
 auto DirectoryTree::GetPathFromRoot(DirectoryTreeNode* node) const -> Path
@@ -118,3 +55,14 @@ auto DirectoryTree::GetPathFromRoot(DirectoryTreeNode* node) const -> Path
 	return path;
 }
 
+auto DirectoryTreeNode::GetChildWithName(const Path& name) const -> DirectoryTreeNode*
+{
+	DirectoryTreeNode* node = nullptr;
+	for (DirectoryTreeNode* dir : children) {
+		if (dir->path == name) {
+			node = dir;
+			break;
+		}
+	}
+	return node;
+}

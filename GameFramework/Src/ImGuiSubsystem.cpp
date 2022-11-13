@@ -71,6 +71,8 @@ auto ImGuiSubsystem::Initialize(Game* const InGame) -> void
 	ImGuizmo::SetOrthographic(false);
 
 	InitStyle();
+
+	GetEditorContext().SetSelectedDirectory("Assets");
 }
 
 auto ImGuiSubsystem::NewFrame() -> void
@@ -807,10 +809,47 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 			path._Remove_filename_and_separator();
 			path = path / GetEditorContext().GetSelectedDirectory();
 
-			for (auto entry : std::filesystem::directory_iterator(path)) {
-				ImGui::Text(entry.path().string().c_str());
-			}
+			ImVec2 itemSize(80, 110);
+
+			ImGuiStyle& style = ImGui::GetStyle();
+			float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+			for (auto entry : std::filesystem::directory_iterator(path)) 
+			{
 				
+				ImGui::BeginGroup();
+				const ImVec2 selectableCursorPos = ImGui::GetCursorPos() + style.ItemSpacing;
+				ImGui::SetCursorPos(selectableCursorPos);
+				std::string pathAsString = entry.path().filename().string();
+				ImGui::Selectable(("##" + pathAsString).c_str(), false, 0, itemSize);
+				ImGui::SetItemAllowOverlap();
+
+				const ImVec2 imageCursorPosition = selectableCursorPos + ImVec2{ 0.0f, style.ItemSpacing.y };
+				ImGui::SetCursorPos(imageCursorPosition);
+				// todo: replace with a proper image
+				ImTextureID imageId = nullptr;
+				if (entry.is_directory())
+				{
+					imageId = EngineContentRegistry::GetInstance()->GetFolderTexSRV().Get();
+				}
+				if (imageId == nullptr)
+				{
+					imageId = EngineContentRegistry::GetInstance()->GetGenericFileTexSRV().Get();
+				}
+				ImGui::Image(imageId, ImVec2(itemSize.x, itemSize.x));
+				std::string str = entry.path().filename().string();
+				// todo properly habdle text not fully fitting
+				if (str.length() > 11)
+					str = str.substr(0, 8) + "...";
+				ImGui::SetCursorPos(ImGui::GetCursorPos() + style.ItemSpacing);
+				ImGui::Text(str.c_str());
+				ImGui::EndGroup();
+
+				float last_button_x2 = ImGui::GetItemRectMax().x;
+				float next_button_x2 = last_button_x2 + style.ItemSpacing.x + itemSize.x; // Expected position if next button was on same line
+				if (next_button_x2 < window_visible_x2)
+					ImGui::SameLine(0.0f, 0.0f);
+			}
+
 			ImGui::EndChild();
 		}
 

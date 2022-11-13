@@ -25,6 +25,8 @@ public:
 	auto GetChildren() const -> const std::vector<DirectoryTreeNode*>& {
 		return children;
 	}
+
+	auto GetChildWithName(const Path& name) const -> DirectoryTreeNode*;
 };
 
 
