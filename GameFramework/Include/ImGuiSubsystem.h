@@ -1,7 +1,6 @@
 #pragma once
 
 #include "MathInclude.h"
-#include "imgui.h"
 
 #include <string>
 #include <vector>
@@ -57,13 +56,15 @@ private:
 private:
 	auto GetEditorContext() const -> EditorContext&;
 	auto GetSelectedSceneComponent() const->SceneComponent*;
+
+	auto InitStyle() -> void;
 private:
 	Game* MyGame;
 
 	Vector2 ViewportMousePos;
 
-	ImVec2 ViewportStart;
-	ImVec2 ViewportSize;
+	Vector2 ViewportStart;
+	Vector2 ViewportSize;
 
 	// Gizmo state
 private:

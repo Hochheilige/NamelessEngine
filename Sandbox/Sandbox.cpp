@@ -24,7 +24,7 @@
 #include "LightBase.h"
 #include "EngineContentRegistry.h"
 
-#include "imgui.h"
+#include "ImGuiInclude.h"
 
 #include "CreateCommon.h"
 

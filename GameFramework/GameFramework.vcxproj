@@ -233,6 +233,7 @@
     <ClInclude Include="Include\Collider.h" />
     <ClInclude Include="Include\DisplayWin32.h" />
     <ClInclude Include="Include\GBuffer.h" />
+    <ClInclude Include="Include\ImGuiInclude.h" />
     <ClInclude Include="Include\ImGuiSubsystem.h" />
     <ClInclude Include="Include\InputDevice.h" />
     <ClInclude Include="Include\LightBase.h" />

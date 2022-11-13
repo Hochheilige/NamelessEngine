@@ -126,6 +126,9 @@
     <ClInclude Include="Include\DirectoryTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\ImGuiInclude.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\AABB2DCollider.cpp">
