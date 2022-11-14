@@ -70,6 +70,10 @@ auto ImGuiSubsystem::Initialize(Game* const InGame) -> void
 	// TODO: get this from current camera and update it
 	ImGuizmo::SetOrthographic(false);
 
+	io.Fonts->AddFontDefault();
+	mainFont = io.Fonts->AddFontFromFileTTF("../Assets/EngineContent/Fonts/Ubuntu-Light.ttf", 13.0f);
+	IM_ASSERT(mainFont != NULL);
+
 	InitStyle();
 
 	GetEditorContext().SetSelectedDirectory("Assets");
@@ -112,6 +116,9 @@ auto ImGuiSubsystem::EndFrame() -> void
 
 auto ImGuiSubsystem::DoLayout() -> void
 {
+
+	ImGui::PushFont(mainFont);
+
 	LayOutMainMenuBar();
 
 	// Add top-level dockspace
@@ -145,6 +152,8 @@ auto ImGuiSubsystem::DoLayout() -> void
 	// common(unclassed) windows
 	DrawAssetBrowser();
 	DrawMessagesWindow();
+
+	ImGui::PopFont();
 }
 
 auto ImGuiSubsystem::Shutdown() -> void
@@ -727,6 +736,15 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 			ImGui::TableNextRow();
 			ImGui::TableNextColumn();
 
+			// DirectoryTree control buttons
+
+			ImGui::Button("Add +");
+
+			ImGui::Separator();
+
+
+			// Directory tree
+
 			DirectoryTree* dt = game->GetDirectoryTree();
 
 			ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
@@ -773,6 +791,26 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 			}
 
 			ImGui::TableNextColumn();
+
+			//control buttons
+
+			ImGui::ArrowButton("DirectoryUP", ImGuiDir_Up);
+			Path currentSelectedDirectory = GetEditorContext().GetSelectedDirectory();
+
+			// TODO disabble the button properly
+			if (currentSelectedDirectory != "Assets") {
+				
+			}
+
+			if (ImGui::IsItemClicked() && currentSelectedDirectory != "Assets") {
+				currentSelectedDirectory._Remove_filename_and_separator();
+				GetEditorContext().SetSelectedDirectory(currentSelectedDirectory);
+			}
+			ImGui::SameLine();
+			ImGui::Text(GetEditorContext().GetSelectedDirectory().string().c_str());
+			ImGui::Separator();
+
+			// Assets
 
 			if (ImGui::BeginChild("Asset browser", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), false, window_flags)) {
 
@@ -821,8 +859,8 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 					ImGui::Image(imageId, ImVec2(itemSize.x, itemSize.x));
 					std::string str = entry.path().filename().string();
 					// todo properly habdle text not fully fitting
-					if (str.length() > 11)
-						str = str.substr(0, 8) + "...";
+					if (str.length() > 15)
+						str = str.substr(0, 12) + "...";
 					ImGui::SetCursorPos(ImGui::GetCursorPos() + style.ItemSpacing);
 					ImGui::Text(str.c_str());
 					ImGui::EndGroup();

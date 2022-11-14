@@ -68,6 +68,8 @@ private:
 	Vector2 ViewportStart;
 	Vector2 ViewportSize;
 
+	ImFont* mainFont;
+
 	// Gizmo state
 private:
 	ImGuizmo::OPERATION mCurrentGizmoOperation;
