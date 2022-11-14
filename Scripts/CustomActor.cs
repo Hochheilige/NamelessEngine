@@ -11,10 +11,7 @@ namespace Scripts
         
         public override void Update(float deltaTime)
         {
-
-            //Console.WriteLine(" PIZDEC");
-
-            //Console.WriteLine(" Custom Update");
+            //Console.WriteLine(Components.Count + " Custom Update");
             
             /*var phys = Components.GetComponent<PhysicsComponent>();
             if (!(phys is null))
@@ -25,13 +22,14 @@ namespace Scripts
 
         public override void OnBeginPlay()
         {
+            //Console.WriteLine("BeginPlay CustomActor");
             var phys = Components.GetComponent<PhysicsComponent>();
             if (!(phys is null))
             {
                 phys.SetMass(5.2f);
             }
             
-            Console.WriteLine(ToString() + " Begin Play");
+            //Console.WriteLine(ToString() + " Begin Play");
         }
     }
 }

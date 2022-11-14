@@ -54,6 +54,9 @@ public:
 	auto GetWhiteTexSRV()->ComPtr<ID3D11ShaderResourceView> { return WhiteTexSRV; }
 	auto GetBasicNormalTexSRV()->ComPtr<ID3D11ShaderResourceView> { return BasicNormalTexSRV; }
 
+	auto GetFolderTexSRV()->ComPtr<ID3D11ShaderResourceView> { return FolderTexSRV; }
+	auto GetGenericFileTexSRV()->ComPtr<ID3D11ShaderResourceView> { return GenericFileTexSRV; }
+
 	auto GetBasicActorNames() const-> const std::vector<std::string>& { return BasicActorNames; }
 
 private:
@@ -71,6 +74,12 @@ private:
 
 	ComPtr<ID3D11Resource> BasicNormalTex;
 	ComPtr<ID3D11ShaderResourceView> BasicNormalTexSRV;
+
+	ComPtr<ID3D11Resource> FolderTex;
+	ComPtr<ID3D11ShaderResourceView> FolderTexSRV;
+
+	ComPtr<ID3D11Resource> GenericFileTex;
+	ComPtr<ID3D11ShaderResourceView>GenericFileTexSRV;
 
 	MeshProxy* TexturedBoxMeshProxy;
 	MeshProxy* SphereMeshProxy;

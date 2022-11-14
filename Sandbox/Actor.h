@@ -58,8 +58,12 @@ public:
 				component->SetAttachmentParent(RootComponent);
 			}
 		}
+
+		if(mMonoActor != nullptr)
+		{
+			mMonoActor->AddComponent(component);
+		}
 		
-		mMonoActor->AddComponent(component);
 		//auto a = mMonoActor->GetInheritors();
 
 		return component;
@@ -90,6 +94,10 @@ public:
 
 	void RemoveChild(Actor* Child);
 
+	void InitializeMonoActor(const char* name);
+
+	void OnBeginPlay();
+
 	void UseDebugRendererOnly();
 	void UseMeshRendererOnly();
 	void UseDebugAndMeshRenderer();
@@ -112,7 +120,7 @@ private:
 	SceneComponent* RootComponent = nullptr;
 	std::vector<Component*> Components;
 
-	MonoActor* mMonoActor;
+	MonoActor* mMonoActor = nullptr;
 	
 public:
 	bool is_physics_enabled = false;

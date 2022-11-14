@@ -1,7 +1,10 @@
 #pragma once
 
 #include "MathInclude.h"
-#include "imgui.h"
+#include "ImGuiInclude.h"
+
+#include <string>
+#include <vector>
 
 class Game;
 class EditorContext;
@@ -34,6 +37,7 @@ public:
 
 	static auto GetInstance() { return Instance; }
 private:
+	auto LayOutMainMenuBar() -> void;
 	auto DrawDockspace() -> void;
 	auto DrawToolbar() -> void;
 	auto DrawViewport() -> void;
@@ -43,21 +47,26 @@ private:
 	auto LayOutTransform() -> void;
 	auto DrawActorInspector() -> void;
 	auto DrawGeneralProperties(class Actor* actor) -> void;
+	auto DrawRigidBodyProperties(Actor* actor) -> void;
 	// end instpector
 	auto DrawGizmos() -> void;
 	auto DrawMessagesWindow() -> void;
 	auto DrawBasicActorsWindow() -> void;
+	// asset browser
+	auto DrawAssetBrowser() -> void;
 
 private:
 	auto GetEditorContext() const -> EditorContext&;
 	auto GetSelectedSceneComponent() const->SceneComponent*;
+
+	auto InitStyle() -> void;
 private:
 	Game* MyGame;
 
 	Vector2 ViewportMousePos;
 
-	ImVec2 ViewportStart;
-	ImVec2 ViewportSize;
+	Vector2 ViewportStart;
+	Vector2 ViewportSize;
 
 	// Gizmo state
 private:
@@ -70,4 +79,7 @@ private:
 	std::vector<std::string> MessagesToDisplay;
 
 	static ImGuiSubsystem* Instance;
+
+	ImGuiWindowClass topLevelClass;
+	ImGuiWindowClass levelEditorClass;
 };

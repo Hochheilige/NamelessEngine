@@ -12,6 +12,9 @@
 
 #include "EditorContext.h"
 
+#include <filesystem>
+using Path = std::filesystem::path;
+
 class Actor;
 class RenderingSystem;
 class ImGuiSubsystem;
@@ -224,5 +227,19 @@ private:
 	EngineContentRegistry* mEngineContentRegistry = nullptr;
 
 	PlayState mPlayState = PlayState::Editor;
+
+	std::unique_ptr<class DirectoryTree> directoryTree;
+
+
+public:
+
+	Path assetsPath = "../Assets";
+
+	auto FillDirectoryTree() -> void;
+
+	auto GetDirectoryTree() -> DirectoryTree* {
+		return directoryTree.get();
+	};
+
 };
 

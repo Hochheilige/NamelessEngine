@@ -11,6 +11,7 @@ public:
     void AddComponent(Component* component);
     void RemoveComponent(Component* component);
     void Update(float deltaTime);
+    void OnBeginPlay();
     
     const char* GetInheritors();
 private:
