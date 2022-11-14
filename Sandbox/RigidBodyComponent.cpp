@@ -36,6 +36,22 @@ void RigidBodyComponent::SetMass(float mass)
     //mMonoComponent->SetMass(mass);
 }
 
+void RigidBodyComponent::UpdateMass(float mass)
+{
+    Mass = mass;
+    auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorls();
+    world->removeRigidBody(Body);
+    btVector3 inertia;
+    Body->getCollisionShape()->calculateLocalInertia(mass, inertia);
+    Body->setActivationState(DISABLE_DEACTIVATION);
+    Body->setMassProps(mass, inertia);
+    Body->setLinearFactor(btVector3(1, 1, 1));
+    Body->setAngularFactor(btVector3(1, 1, 1));
+    Body->updateInertiaTensor();
+    Body->clearForces();
+    world->addRigidBody(Body);
+}
+
 void RigidBodyComponent::SetRigidBodyType(RigidBodyType type)
 {
     rbType = type;
