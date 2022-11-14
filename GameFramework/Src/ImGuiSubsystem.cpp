@@ -112,6 +112,8 @@ auto ImGuiSubsystem::EndFrame() -> void
 
 auto ImGuiSubsystem::DoLayout() -> void
 {
+	LayOutMainMenuBar();
+
 	// Add top-level dockspace
 	ImGui::DockSpaceOverViewport(NULL, ImGuiDockNodeFlags_NoSplit, &topLevelClass);
 
@@ -697,6 +699,17 @@ auto ImGuiSubsystem::InitStyle() -> void
 		imguiStyle.WindowRounding = 0.0f;
 		imguiStyle.Colors[ImGuiCol_WindowBg].w = 1.0f;
 	}
+
+	ImGuizmo::Style& imguizmoStyle = ImGuizmo::GetStyle();
+	imguizmoStyle.Colors[ImGuizmo::COLOR::DIRECTION_X] = Vector4(0.549f, 0.136f, 0.136f, 1.0f);
+	imguizmoStyle.Colors[ImGuizmo::COLOR::DIRECTION_Y] = Vector4(0.136f, 0.549f, 0.136f, 1.0f);
+	imguizmoStyle.Colors[ImGuizmo::COLOR::DIRECTION_Z] = Vector4(0.136f, 0.136f, 0.549f, 1.000f);
+	imguizmoStyle.Colors[ImGuizmo::COLOR::PLANE_X] = Vector4::Lerp(imguizmoStyle.Colors[ImGuizmo::COLOR::DIRECTION_Y], imguizmoStyle.Colors[ImGuizmo::COLOR::DIRECTION_Z], 0.5f);
+	imguizmoStyle.Colors[ImGuizmo::COLOR::PLANE_Y] = Vector4::Lerp(imguizmoStyle.Colors[ImGuizmo::COLOR::DIRECTION_X], imguizmoStyle.Colors[ImGuizmo::COLOR::DIRECTION_Z], 0.5f);
+	imguizmoStyle.Colors[ImGuizmo::COLOR::PLANE_Z] = Vector4::Lerp(imguizmoStyle.Colors[ImGuizmo::COLOR::DIRECTION_Y], imguizmoStyle.Colors[ImGuizmo::COLOR::DIRECTION_X], 0.5f);
+
+	//imguizmoStyle.TranslationLineArrowSize = 10.0f;
+	//imguizmoStyle.TranslationLineThickness = 6.0f;
 }
 
 auto ImGuiSubsystem::DrawAssetBrowser() -> void 
