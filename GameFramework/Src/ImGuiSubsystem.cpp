@@ -73,6 +73,14 @@ auto ImGuiSubsystem::Initialize(Game* const InGame) -> void
 	InitStyle();
 
 	GetEditorContext().SetSelectedDirectory("Assets");
+
+	// Create imgui winodw classes
+	// todo: use ImGui::GetID ?
+	topLevelClass.ClassId = 1;
+	topLevelClass.DockingAllowUnclassed = true;
+
+	levelEditorClass.ClassId = 2;
+	levelEditorClass.DockingAllowUnclassed = true;
 }
 
 auto ImGuiSubsystem::NewFrame() -> void
@@ -104,16 +112,39 @@ auto ImGuiSubsystem::EndFrame() -> void
 
 auto ImGuiSubsystem::DoLayout() -> void
 {
-	DrawDockspace();
+	LayOutMainMenuBar();
+
+	// Add top-level dockspace
+	ImGui::DockSpaceOverViewport(NULL, ImGuiDockNodeFlags_NoSplit, &topLevelClass);
+
+	ImGui::SetNextWindowClass(&topLevelClass);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2());
+	// todo: put level name here
+	const bool levelEditorOpen = ImGui::Begin("Level Editor");
+	// add a level editor dockspace
+	// Note: add this dockspace regardless of whether level editor window is open or not
+	// otherwise the windows will get undocked
+	ImGuiID dockspace_id = ImGui::GetID("LevelEditorDockSpace");
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None, &levelEditorClass);
+	ImGui::End();
+	ImGui::PopStyleVar();
+
+	ImGui::SetNextWindowClass(&topLevelClass);
 	static bool temp = true;
 	ImGui::ShowDemoWindow(&temp);
-	DrawToolbar();
-	DrawViewport();
-	DrawActorExplorer();
-	DrawActorInspector();
-	DrawMessagesWindow();
-	DrawBasicActorsWindow();
+
+	// level editor windows
+	if (levelEditorOpen)
+	{
+		DrawToolbar();
+		DrawViewport();
+		DrawActorExplorer();
+		DrawActorInspector();
+		DrawBasicActorsWindow();
+	}
+	// common(unclassed) windows
 	DrawAssetBrowser();
+	DrawMessagesWindow();
 }
 
 auto ImGuiSubsystem::Shutdown() -> void
@@ -133,145 +164,60 @@ ImGuiSubsystem::~ImGuiSubsystem()
 	Shutdown();
 }
 
+auto ImGuiSubsystem::LayOutMainMenuBar() -> void
+{
+	ImGui::BeginMainMenuBar();
+	ImGui::EndMainMenuBar();
+}
+
 auto ImGuiSubsystem::DrawDockspace() -> void
 {
-	// If you strip some features of, this demo is pretty much equivalent to calling DockSpaceOverViewport()!
-	// In most cases you should be able to just call DockSpaceOverViewport() and ignore all the code below!
-	// In this specific demo, we are not using DockSpaceOverViewport() because:
-	// - we allow the host window to be floating/moveable instead of filling the viewport (when opt_fullscreen == false)
-	// - we allow the host window to have padding (when opt_padding == true)
-	// - we have a local menu bar in the host window (vs. you could use BeginMainMenuBar() + DockSpaceOverViewport() in your code!)
-	// TL;DR; this demo is more complicated than what you would normally use.
-	// If we removed all the options we are showcasing, this demo would become:
-	//     void ShowExampleAppDockSpace()
-	//     {
-	//         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
-	//     }
-
-	static bool opt_fullscreen = true;
-	static bool opt_padding = false;
-	static bool dockspaceOpen = true;
-	static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
-
-	// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
-	// because it would be confusing to have two docking targets within each others.
-	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-	if (opt_fullscreen)
-	{
-		const ImGuiViewport* viewport = ImGui::GetMainViewport();
-		ImGui::SetNextWindowPos(viewport->WorkPos);
-		ImGui::SetNextWindowSize(viewport->WorkSize);
-		ImGui::SetNextWindowViewport(viewport->ID);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-		window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-		window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-	}
-	else
-	{
-		dockspace_flags &= ~ImGuiDockNodeFlags_PassthruCentralNode;
-	}
-
-	// When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background
-	// and handle the pass-thru hole, so we ask Begin() to not render a background.
-	if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
-		window_flags |= ImGuiWindowFlags_NoBackground;
-
-	// Important: note that we proceed even if Begin() returns false (aka window is collapsed).
-	// This is because we want to keep our DockSpace() active. If a DockSpace() is inactive,
-	// all active windows docked into it will lose their parent and become undocked.
-	// We cannot preserve the docking relationship between an active window and an inactive docking, otherwise
-	// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
-	if (!opt_padding)
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-	ImGui::Begin("DockSpace Demo", &dockspaceOpen, window_flags);
-	if (!opt_padding)
-		ImGui::PopStyleVar();
-
-	if (opt_fullscreen)
-		ImGui::PopStyleVar(2);
-
-	// Submit the DockSpace
-	ImGuiIO& io = ImGui::GetIO();
-	if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
-	{
-		ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
-	}
-
-
-	if (ImGui::BeginMenuBar())
-	{
-		if (ImGui::BeginMenu("Options"))
-		{
-			// Disabling fullscreen would allow the window to be moved to the front of other windows,
-			// which we can't undo at the moment without finer window depth/z control.
-			ImGui::MenuItem("Padding", NULL, &opt_padding);
-			ImGui::Separator();
-
-			if (ImGui::MenuItem("Flag: NoSplit", "", (dockspace_flags & ImGuiDockNodeFlags_NoSplit) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoSplit; }
-			if (ImGui::MenuItem("Flag: NoResize", "", (dockspace_flags & ImGuiDockNodeFlags_NoResize) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoResize; }
-			if (ImGui::MenuItem("Flag: NoDockingInCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_NoDockingInCentralNode) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoDockingInCentralNode; }
-			if (ImGui::MenuItem("Flag: AutoHideTabBar", "", (dockspace_flags & ImGuiDockNodeFlags_AutoHideTabBar) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_AutoHideTabBar; }
-			if (ImGui::MenuItem("Flag: PassthruCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode) != 0, opt_fullscreen)) { dockspace_flags ^= ImGuiDockNodeFlags_PassthruCentralNode; }
-			ImGui::Separator();
-
-			if (ImGui::MenuItem("Close", NULL, false, dockspaceOpen != NULL))
-				dockspaceOpen = false;
-			ImGui::EndMenu();
-		}
-
-
-		ImGui::EndMenuBar();
-	}
-
-
-
-	ImGui::End();
-
+	
 }
 
 auto ImGuiSubsystem::DrawToolbar() -> void
 {
-	ImGui::Begin("Toolbar");
+	ImGui::SetNextWindowClass(&levelEditorClass);
 
-	const char playText[] = "Play";
-	const char pauseText[] = "Pause";
-	const char resumeText[] = "Resume";
-	const char stopText[] = "Stop";
-
-	switch (MyGame->GetPlayState())
+	if (ImGui::Begin("Toolbar"))
 	{
-	case PlayState::Editor:
-		if (ImGui::Button(playText))
-		{
-			MyGame->StartPlay();
-		}
-		break;
-	case PlayState::Playing:
-		if (ImGui::Button(pauseText))
-		{
-			MyGame->PausePlay();
-		}
-		/*ImGui::SameLine();
-		if (ImGui::Button(stopText))
-		{
-			MyGame->StopPlay();
-		}*/
-		break;
-	case PlayState::Paused:
-		if (ImGui::Button(resumeText))
-		{
-			MyGame->ResumePlay();
-		}
-		/*ImGui::SameLine();
-		if (ImGui::Button(stopText))
-		{
-			MyGame->StopPlay();
-		}*/
-		break;
-	}
+		const char playText[] = "Play";
+		const char pauseText[] = "Pause";
+		const char resumeText[] = "Resume";
+		const char stopText[] = "Stop";
 
+		switch (MyGame->GetPlayState())
+		{
+		case PlayState::Editor:
+			if (ImGui::Button(playText))
+			{
+				MyGame->StartPlay();
+			}
+			break;
+		case PlayState::Playing:
+			if (ImGui::Button(pauseText))
+			{
+				MyGame->PausePlay();
+			}
+			/*ImGui::SameLine();
+			if (ImGui::Button(stopText))
+			{
+				MyGame->StopPlay();
+			}*/
+			break;
+		case PlayState::Paused:
+			if (ImGui::Button(resumeText))
+			{
+				MyGame->ResumePlay();
+			}
+			/*ImGui::SameLine();
+			if (ImGui::Button(stopText))
+			{
+				MyGame->StopPlay();
+			}*/
+			break;
+		}
+	}
 	ImGui::End();
 }
 
@@ -282,39 +228,42 @@ auto operator-(const ImVec2& l, const ImVec2& r) -> ImVec2
 
 auto ImGuiSubsystem::DrawViewport() -> void
 {
+	ImGui::SetNextWindowClass(&levelEditorClass);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-	ImGui::Begin("Viewport");
-	ViewportStart = ImGui::GetCursorScreenPos();
-	ViewportSize = ImGui::GetContentRegionAvail();
-	ViewportMousePos = Vector2(ImGui::GetMousePos()) - ViewportStart;
-	MyGame->MyRenderingSystem->HandleScreenResize({ ViewportSize.x, ViewportSize.y });
-	ImGui::Image(MyGame->MyRenderingSystem->GetViewportTextureID(), ViewportSize);
-
-	if (ImGui::BeginDragDropTarget())
+	if (ImGui::Begin("Viewport"))
 	{
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(ActorDragDropSourceType))
+		ViewportStart = ImGui::GetCursorScreenPos();
+		ViewportSize = ImGui::GetContentRegionAvail();
+		ViewportMousePos = Vector2(ImGui::GetMousePos()) - ViewportStart;
+		MyGame->MyRenderingSystem->HandleScreenResize({ ViewportSize.x, ViewportSize.y });
+		ImGui::Image(MyGame->MyRenderingSystem->GetViewportTextureID(), ViewportSize);
+
+		if (ImGui::BeginDragDropTarget())
 		{
-			const std::string actorName = static_cast<const char*>(payload->Data);
-			
-			Transform t;
-			t.Position = MyGame->MyRenderingSystem->GetWorldPositionUnerScreenPosition(ViewportMousePos);
-			Actor* newActor = EngineContentRegistry::GetInstance()->CreateBasicActor(actorName, t);
-			GetEditorContext().SetSelectedActor(newActor);
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(ActorDragDropSourceType))
+			{
+				const std::string actorName = static_cast<const char*>(payload->Data);
+
+				Transform t;
+				t.Position = MyGame->MyRenderingSystem->GetWorldPositionUnerScreenPosition(ViewportMousePos);
+				Actor* newActor = EngineContentRegistry::GetInstance()->CreateBasicActor(actorName, t);
+				GetEditorContext().SetSelectedActor(newActor);
+			}
+
+			ImGui::EndDragDropTarget();
 		}
 
-		ImGui::EndDragDropTarget();
-	}
-
-	// Draw gizmos in the viewport
-	{
-		ImGuizmo::SetDrawlist(ImGui::GetWindowDrawList());
-		DrawGizmos();
-	}
-	// todo: move this somewhere more appropriate
-	{
-		if (ImGui::IsItemClicked() && !ImGuizmo::IsUsing())
+		// Draw gizmos in the viewport
 		{
-			GetEditorContext().SetSelectedActor(MyGame->MyRenderingSystem->GetActorUnderPosition(ViewportMousePos));
+			ImGuizmo::SetDrawlist(ImGui::GetWindowDrawList());
+			DrawGizmos();
+		}
+		// todo: move this somewhere more appropriate
+		{
+			if (ImGui::IsItemClicked() && !ImGuizmo::IsUsing())
+			{
+				GetEditorContext().SetSelectedActor(MyGame->MyRenderingSystem->GetActorUnderPosition(ViewportMousePos));
+			}
 		}
 	}
 	ImGui::End();
@@ -323,28 +272,30 @@ auto ImGuiSubsystem::DrawViewport() -> void
 
 auto ImGuiSubsystem::DrawActorExplorer() -> void
 {
-	ImGui::Begin("Actor Explorer");
-	//ImGui::BeginListBox("Actors");
-	int i = 0;
-	for (Actor* actor : MyGame->Actors)
+	ImGui::SetNextWindowClass(&levelEditorClass);
+	if (ImGui::Begin("Actor Explorer"))
 	{
-		const bool isSelectedActor = GetEditorContext().GetSelectedActor() == actor;
-
-		if (actor->GetName() == "") {
-			ImGui::Selectable((std::string("Actor") + std::to_string(i)).c_str(), isSelectedActor);
-		}
-		else {
-			ImGui::Selectable(actor->GetName().c_str(), isSelectedActor);
-		}
-		
-		if (ImGui::IsItemClicked())
+		int i = 0;
+		for (Actor* actor : MyGame->Actors)
 		{
-			GetEditorContext().SetSelectedActor(actor);
-		}
+			const bool isSelectedActor = GetEditorContext().GetSelectedActor() == actor;
 
-		++i;
+			if (actor->GetName() == "") {
+				ImGui::Selectable((std::string("Actor") + std::to_string(i)).c_str(), isSelectedActor);
+			}
+			else {
+				ImGui::Selectable(actor->GetName().c_str(), isSelectedActor);
+			}
+
+			if (ImGui::IsItemClicked())
+			{
+				GetEditorContext().SetSelectedActor(actor);
+			}
+
+			++i;
+		}
 	}
-	
+
 	ImGui::End();
 }
 
@@ -482,7 +433,8 @@ auto ImGuiSubsystem::LayOutTransform() -> void
 	}
 }
 
-auto ImGuiSubsystem::DrawRigidBodyProperties(Actor* actor) -> void {
+auto ImGuiSubsystem::DrawRigidBodyProperties(Actor* actor) -> void 
+{
 	if (!ImGui::CollapsingHeader("RigidBody Component")) {
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
@@ -533,30 +485,33 @@ auto ImGuiSubsystem::DrawRigidBodyProperties(Actor* actor) -> void {
 
 auto ImGuiSubsystem::DrawActorInspector() -> void
 {
-	ImGui::Begin("Actor Inspector");
-
-	if (Actor* actor = GetEditorContext().GetSelectedActor())
-	{	
-		//General properties
-		DrawGeneralProperties(actor);
-		DrawComponentSelector(actor);
-		LayOutTransform();
-
-		switch(GetSelectedSceneComponent()->GetComponentType()) {
-		case MeshRendererType:
-			break;
-		case RigidBodyCubeType:
-		case RigidBodySphereType:
-			DrawRigidBodyProperties(actor);
-			break;
-		}		
-
-	}
-	else
+	ImGui::SetNextWindowClass(&levelEditorClass);
+	if (ImGui::Begin("Actor Inspector"))
 	{
-		ImGui::Text("No actor selected");
-		ImGui::Text("Mouse position in viewport:");
-		ImGui::Text(("x = " + std::to_string(ViewportMousePos.x) + "\ty = " + std::to_string(ViewportMousePos.y)).c_str());
+
+		if (Actor* actor = GetEditorContext().GetSelectedActor())
+		{
+			//General properties
+			DrawGeneralProperties(actor);
+			DrawComponentSelector(actor);
+			LayOutTransform();
+
+			switch (GetSelectedSceneComponent()->GetComponentType()) {
+			case MeshRendererType:
+				break;
+			case RigidBodyCubeType:
+			case RigidBodySphereType:
+				DrawRigidBodyProperties(actor);
+				break;
+			}
+
+		}
+		else
+		{
+			ImGui::Text("No actor selected");
+			ImGui::Text("Mouse position in viewport:");
+			ImGui::Text(("x = " + std::to_string(ViewportMousePos.x) + "\ty = " + std::to_string(ViewportMousePos.y)).c_str());
+		}
 	}
 
 	ImGui::End();
@@ -564,7 +519,6 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 
 auto ImGuiSubsystem::DrawGeneralProperties(Actor* actor) -> void
 {
-	
 	static char tempName[128];
 	memcpy(tempName, actor->GetName().c_str(), actor->GetName().length() + 1);
 
@@ -608,32 +562,37 @@ auto ImGuiSubsystem::DrawGizmos() -> void
 
 auto ImGuiSubsystem::DrawMessagesWindow() -> void
 {
-	ImGui::Begin("Msgs");
-	for (const std::string& str : MessagesToDisplay)
+	if (ImGui::Begin("Msgs"))
 	{
-		ImGui::Text(str.c_str());
+		for (const std::string& str : MessagesToDisplay)
+		{
+			ImGui::Text(str.c_str());
+		}
+		MessagesToDisplay.clear();
 	}
 	ImGui::End();
-	MessagesToDisplay.clear();
 }
 
 auto ImGuiSubsystem::DrawBasicActorsWindow() -> void
 {
+	ImGui::SetNextWindowClass(&levelEditorClass);
 	EngineContentRegistry::GetInstance();
-	ImGui::Begin("Basic Actors");
-	for (const std::string& name : EngineContentRegistry::GetInstance()->GetBasicActorNames())
+	if (ImGui::Begin("Basic Actors"))
 	{
-		ImGui::Selectable(name.c_str());
-		if (ImGui::IsItemHovered())
-			ImGui::SetTooltip("Drag to place in scene");
-
-		if (ImGui::BeginDragDropSource())
+		for (const std::string& name : EngineContentRegistry::GetInstance()->GetBasicActorNames())
 		{
-			ImGui::SetDragDropPayload(ActorDragDropSourceType, name.c_str(), name.size() + 1);
+			ImGui::Selectable(name.c_str());
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip("Drag to place in scene");
 
-			ImGui::Text(name.c_str());
+			if (ImGui::BeginDragDropSource())
+			{
+				ImGui::SetDragDropPayload(ActorDragDropSourceType, name.c_str(), name.size() + 1);
 
-			ImGui::EndDragDropSource();
+				ImGui::Text(name.c_str());
+
+				ImGui::EndDragDropSource();
+			}
 		}
 	}
 
@@ -740,76 +699,86 @@ auto ImGuiSubsystem::InitStyle() -> void
 		imguiStyle.WindowRounding = 0.0f;
 		imguiStyle.Colors[ImGuiCol_WindowBg].w = 1.0f;
 	}
+
+	ImGuizmo::Style& imguizmoStyle = ImGuizmo::GetStyle();
+	imguizmoStyle.Colors[ImGuizmo::COLOR::DIRECTION_X] = Vector4(0.549f, 0.136f, 0.136f, 1.0f);
+	imguizmoStyle.Colors[ImGuizmo::COLOR::DIRECTION_Y] = Vector4(0.136f, 0.549f, 0.136f, 1.0f);
+	imguizmoStyle.Colors[ImGuizmo::COLOR::DIRECTION_Z] = Vector4(0.136f, 0.136f, 0.549f, 1.000f);
+	imguizmoStyle.Colors[ImGuizmo::COLOR::PLANE_X] = Vector4::Lerp(imguizmoStyle.Colors[ImGuizmo::COLOR::DIRECTION_Y], imguizmoStyle.Colors[ImGuizmo::COLOR::DIRECTION_Z], 0.5f);
+	imguizmoStyle.Colors[ImGuizmo::COLOR::PLANE_Y] = Vector4::Lerp(imguizmoStyle.Colors[ImGuizmo::COLOR::DIRECTION_X], imguizmoStyle.Colors[ImGuizmo::COLOR::DIRECTION_Z], 0.5f);
+	imguizmoStyle.Colors[ImGuizmo::COLOR::PLANE_Z] = Vector4::Lerp(imguizmoStyle.Colors[ImGuizmo::COLOR::DIRECTION_Y], imguizmoStyle.Colors[ImGuizmo::COLOR::DIRECTION_X], 0.5f);
+
+	//imguizmoStyle.TranslationLineArrowSize = 10.0f;
+	//imguizmoStyle.TranslationLineThickness = 6.0f;
 }
 
 auto ImGuiSubsystem::DrawAssetBrowser() -> void 
 {
-	ImGui::Begin("Content browser", 0, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-	ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerV;
+	if (ImGui::Begin("Content browser", 0, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse))
+	{
+		ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerV;
 
-	Game* game = Game::GetInstance();
+		Game* game = Game::GetInstance();
 
-	if (ImGui::BeginTable("Asset browser", 2, tableFlags)) {
+		if (ImGui::BeginTable("Asset browser", 2, tableFlags)) {
 
-		std::string path = "../Assets";
+			std::string path = "../Assets";
 
-		ImGui::TableNextRow();
-		ImGui::TableNextColumn();
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
 
-		ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
+			ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 
-		if (ImGui::BeginChild("File browser", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), false, window_flags)) {
+			if (ImGui::BeginChild("File browser", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), false, window_flags)) {
 
-			DirectoryTree* dt = game->GetDirectoryTree();
-			DirectoryTreeNode* dt_node = dt->GetRootNode();
+				DirectoryTree* dt = game->GetDirectoryTree();
+				DirectoryTreeNode* dt_node = dt->GetRootNode();
 
-			std::vector<DirectoryTreeNode*> stack;
-			stack.push_back(dt_node);
+				std::vector<DirectoryTreeNode*> stack;
+				stack.push_back(dt_node);
 
-			while (!stack.empty()) {
-				dt_node = stack.back();
-				stack.pop_back();
-				if (dt_node == nullptr) {
-					ImGui::TreePop();
-					continue;
+				while (!stack.empty()) {
+					dt_node = stack.back();
+					stack.pop_back();
+					if (dt_node == nullptr) {
+						ImGui::TreePop();
+						continue;
+					}
+					ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth;
+					const bool isLeaf = dt_node->GetChildren().size() == 0;
+					if (isLeaf)
+					{
+						nodeFlags |= ImGuiTreeNodeFlags_Leaf;
+					}
+					const Path currentPathFromRoot = dt->GetPathFromRoot(dt_node);
+					const bool isSelected = GetEditorContext().GetSelectedDirectory() == currentPathFromRoot;
+					if (isSelected)
+					{
+						nodeFlags |= ImGuiTreeNodeFlags_Selected;
+					}
+					const bool isOpen = ImGui::TreeNodeEx(dt_node->GetPath().string().c_str(), nodeFlags);
+					if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+					{
+						GetEditorContext().SetSelectedDirectory(currentPathFromRoot);
+					}
+					if (isOpen) {
+						stack.push_back(nullptr);
+						stack.insert(stack.end(), dt_node->GetChildren().begin(), dt_node->GetChildren().end());
+					}
 				}
-				ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth;
-				const bool isLeaf = dt_node->GetChildren().size() == 0;
-				if (isLeaf)
-				{
-					nodeFlags |= ImGuiTreeNodeFlags_Leaf;
-				}
-				const Path currentPathFromRoot = dt->GetPathFromRoot(dt_node);
-				const bool isSelected = GetEditorContext().GetSelectedDirectory() == currentPathFromRoot;
-				if (isSelected)
-				{
-					nodeFlags |= ImGuiTreeNodeFlags_Selected;
-				}
-				const bool isOpen = ImGui::TreeNodeEx(dt_node->GetPath().string().c_str(), nodeFlags);
-				if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
-				{
-					GetEditorContext().SetSelectedDirectory(currentPathFromRoot);
-				}
-				if (isOpen) {
-					stack.push_back(nullptr);
-					stack.insert(stack.end(), dt_node->GetChildren().begin(), dt_node->GetChildren().end());
-				}	
+
+				ImGui::EndChild();
 			}
 
-			ImGui::EndChild();
-		}
+			ImGui::TableNextColumn();
 
-		ImGui::TableNextColumn();
+			if (ImGui::BeginChild("Asset browser", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), false, window_flags)) {
 
+				Path path = game->assetsPath;
+				path._Remove_filename_and_separator();
+				path = path / GetEditorContext().GetSelectedDirectory();
 
-
-		if (ImGui::BeginChild("Asset browser", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), false, window_flags)) {
-
-			Path path = game->assetsPath;
-			path._Remove_filename_and_separator();
-			path = path / GetEditorContext().GetSelectedDirectory();
-
-			ImVec2 itemSize(80, 110);
+				ImVec2 itemSize(80, 110);
 
 			ImGuiStyle& style = ImGui::GetStyle();
 			float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
@@ -825,40 +794,39 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 					ImGui::SetTooltip(pathAsString.c_str());
 				ImGui::SetItemAllowOverlap();
 
-				const ImVec2 imageCursorPosition = selectableCursorPos + ImVec2{ 0.0f, style.ItemSpacing.y };
-				ImGui::SetCursorPos(imageCursorPosition);
-				// todo: replace with a proper image
-				ImTextureID imageId = nullptr;
-				if (entry.is_directory())
-				{
-					imageId = EngineContentRegistry::GetInstance()->GetFolderTexSRV().Get();
-				}
-				if (imageId == nullptr)
-				{
-					imageId = EngineContentRegistry::GetInstance()->GetGenericFileTexSRV().Get();
-				}
-				ImGui::Image(imageId, ImVec2(itemSize.x, itemSize.x));
-				std::string str = entry.path().filename().string();
-				// todo properly habdle text not fully fitting
-				if (str.length() > 11)
-					str = str.substr(0, 8) + "...";
-				ImGui::SetCursorPos(ImGui::GetCursorPos() + style.ItemSpacing);
-				ImGui::Text(str.c_str());
-				ImGui::EndGroup();
+					const ImVec2 imageCursorPosition = selectableCursorPos + ImVec2{ 0.0f, style.ItemSpacing.y };
+					ImGui::SetCursorPos(imageCursorPosition);
+					// todo: replace with a proper image
+					ImTextureID imageId = nullptr;
+					if (entry.is_directory())
+					{
+						imageId = EngineContentRegistry::GetInstance()->GetFolderTexSRV().Get();
+					}
+					if (imageId == nullptr)
+					{
+						imageId = EngineContentRegistry::GetInstance()->GetGenericFileTexSRV().Get();
+					}
+					ImGui::Image(imageId, ImVec2(itemSize.x, itemSize.x));
+					std::string str = entry.path().filename().string();
+					// todo properly habdle text not fully fitting
+					if (str.length() > 11)
+						str = str.substr(0, 8) + "...";
+					ImGui::SetCursorPos(ImGui::GetCursorPos() + style.ItemSpacing);
+					ImGui::Text(str.c_str());
+					ImGui::EndGroup();
 
-				float last_button_x2 = ImGui::GetItemRectMax().x;
-				float next_button_x2 = last_button_x2 + style.ItemSpacing.x + itemSize.x; // Expected position if next button was on same line
-				if (next_button_x2 < window_visible_x2)
-					ImGui::SameLine(0.0f, 0.0f);
+					float last_button_x2 = ImGui::GetItemRectMax().x;
+					float next_button_x2 = last_button_x2 + style.ItemSpacing.x + itemSize.x; // Expected position if next button was on same line
+					if (next_button_x2 < window_visible_x2)
+						ImGui::SameLine(0.0f, 0.0f);
+				}
+
+				ImGui::EndChild();
 			}
 
-			ImGui::EndChild();
+			ImGui::EndTable();
 		}
-
-		ImGui::EndTable();
 	}
-
-
 	ImGui::End();
 }
 

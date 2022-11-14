@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MathInclude.h"
+#include "ImGuiInclude.h"
 
 #include <string>
 #include <vector>
@@ -36,6 +37,7 @@ public:
 
 	static auto GetInstance() { return Instance; }
 private:
+	auto LayOutMainMenuBar() -> void;
 	auto DrawDockspace() -> void;
 	auto DrawToolbar() -> void;
 	auto DrawViewport() -> void;
@@ -77,4 +79,7 @@ private:
 	std::vector<std::string> MessagesToDisplay;
 
 	static ImGuiSubsystem* Instance;
+
+	ImGuiWindowClass topLevelClass;
+	ImGuiWindowClass levelEditorClass;
 };
