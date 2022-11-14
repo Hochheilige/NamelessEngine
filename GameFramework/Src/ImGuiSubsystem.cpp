@@ -821,6 +821,8 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 				ImGui::SetCursorPos(selectableCursorPos);
 				std::string pathAsString = entry.path().filename().string();
 				ImGui::Selectable(("##" + pathAsString).c_str(), false, 0, itemSize);
+				if (ImGui::IsItemHovered())
+					ImGui::SetTooltip(pathAsString.c_str());
 				ImGui::SetItemAllowOverlap();
 
 				const ImVec2 imageCursorPosition = selectableCursorPos + ImVec2{ 0.0f, style.ItemSpacing.y };
