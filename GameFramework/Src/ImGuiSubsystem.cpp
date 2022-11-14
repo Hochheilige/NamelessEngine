@@ -796,7 +796,7 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 						flags = ImGuiSelectableFlags_AllowDoubleClick;
 					ImGui::Selectable(("##" + pathAsString).c_str(), false, flags, itemSize);
 					// double-clicking to choose directories
-					if (ImGui::IsMouseDoubleClicked(0) && entry.is_directory()) {
+					if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered() && entry.is_directory()) {
 						GetEditorContext().SetSelectedDirectory(entry.path().lexically_relative(".."));
 						ImGui::EndGroup();
 						break;
