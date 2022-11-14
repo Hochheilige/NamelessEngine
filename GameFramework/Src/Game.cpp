@@ -496,12 +496,17 @@ Game::Game()
 }
 
 
-auto Game::FillDirectoryTree() -> void {
-	
+auto Game::FillDirectoryTree() -> void 
+{
 	for (auto dir_entry : std::filesystem::recursive_directory_iterator(assetsPath)) {
-		if (dir_entry.is_directory()) {
-			directoryTree->AddPath(dir_entry.path().lexically_relative(assetsPath));
+		const Path path = dir_entry.path().lexically_relative(assetsPath);
+		const bool isDirectory = dir_entry.is_directory() || dir_entry.is_regular_file() && dir_entry.path().extension() == Path(".fbx");
+		if (isDirectory) {
+			directoryTree->AddDirectoryByPath(path);
+		}
+		else if (dir_entry.is_regular_file())
+		{
+			directoryTree->AddFileByPath(path);
 		}
 	}
-
 }

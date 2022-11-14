@@ -6,9 +6,13 @@
 #include <string>
 #include <vector>
 
+#include <filesystem>
+using Path = std::filesystem::path;
+
 class Game;
 class EditorContext;
 class SceneComponent;
+class DirectoryTreeLeaf;
 
 namespace ImGuizmo
 {
@@ -54,6 +58,7 @@ private:
 	auto DrawBasicActorsWindow() -> void;
 	// asset browser
 	auto DrawAssetBrowser() -> void;
+	auto DrawAsset(const DirectoryTreeLeaf* file, const Vector2& itemSize = Vector2(80, 110)) -> void;
 
 private:
 	auto GetEditorContext() const -> EditorContext&;
@@ -84,4 +89,8 @@ private:
 
 	ImGuiWindowClass topLevelClass;
 	ImGuiWindowClass levelEditorClass;
+
+	auto DrawFBXInspector(const Path& path) -> void;
+
+	std::vector<Path> OpenedFbxInspectorWindows;
 };

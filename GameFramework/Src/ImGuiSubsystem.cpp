@@ -157,6 +157,12 @@ auto ImGuiSubsystem::DoLayout() -> void
 	DrawAssetBrowser();
 	DrawMessagesWindow();
 
+	// todo: remove this
+	/*for (const Path& path : OpenedFbxInspectorWindows)
+	{
+		DrawFBXInspector(path);
+	}*/
+
 	ImGui::PopFont();
 }
 
@@ -767,27 +773,27 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 						ImGui::TreePop();
 						continue;
 					}
-					ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth;
-					const bool isLeaf = dt_node->GetChildren().size() == 0;
+					ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+					const bool isLeaf = dt_node->GetChildDirectories().size() == 0;
 					if (isLeaf)
 					{
 						nodeFlags |= ImGuiTreeNodeFlags_Leaf;
 					}
-					const Path currentPathFromRoot = dt->GetPathFromRoot(dt_node);
+					const Path currentPathFromRoot = dt_node->GetPathFromTreeRoot();
 					Path currentSelectedDirectory = GetEditorContext().GetSelectedDirectory();
 					const bool isSelected = GetEditorContext().GetSelectedDirectory() == currentPathFromRoot;
 					if (isSelected)
 					{
 						nodeFlags |= ImGuiTreeNodeFlags_Selected;
 					}
-					const bool isOpen = ImGui::TreeNodeEx(dt_node->GetPath().string().c_str(), nodeFlags);
+					const bool isOpen = ImGui::TreeNodeEx(dt_node->GetName().string().c_str(), nodeFlags);
 					if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
 					{
 						GetEditorContext().SetSelectedDirectory(currentPathFromRoot);
 					}
 					if (isOpen) {
 						stack.push_back(nullptr);
-						stack.insert(stack.end(), dt_node->GetChildren().begin(), dt_node->GetChildren().end());
+						stack.insert(stack.end(), dt_node->GetChildDirectories().begin(), dt_node->GetChildDirectories().end());
 					}
 				}
 
@@ -816,63 +822,33 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 
 			// Assets
 
-			if (ImGui::BeginChild("Asset browser", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), false, window_flags)) {
-
-				Path path = game->assetsPath;
-				path._Remove_filename_and_separator();
-				path = path / GetEditorContext().GetSelectedDirectory();
-
+			if (ImGui::BeginChild("Asset browser", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), false, window_flags)) 
+			{
 				ImVec2 itemSize(80, 110);
-
 				ImGuiStyle& style = ImGui::GetStyle();
+
 				float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-				for (auto entry : std::filesystem::directory_iterator(path)) 
+				DirectoryTreeNode* selectedDirectory = dt->GetDirectoryByPath(GetEditorContext().GetSelectedDirectory());
+				if (selectedDirectory != nullptr)
 				{
-				
-					ImGui::BeginGroup();
-					const ImVec2 selectableCursorPos = ImGui::GetCursorPos() + style.ItemSpacing;
-					ImGui::SetCursorPos(selectableCursorPos);
-					std::string pathAsString = entry.path().filename().string();
-					ImGuiSelectableFlags flags =  0;
-					if (entry.is_directory())
-						flags = ImGuiSelectableFlags_AllowDoubleClick;
-					ImGui::Selectable(("##" + pathAsString).c_str(), false, flags, itemSize);
-					// double-clicking to choose directories
-					if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered() && entry.is_directory()) {
-						GetEditorContext().SetSelectedDirectory(entry.path().lexically_relative(".."));
-						ImGui::EndGroup();
-						break;
-					}
-					
-					if (ImGui::IsItemHovered())
-						ImGui::SetTooltip(pathAsString.c_str());
-					ImGui::SetItemAllowOverlap();
-
-					const ImVec2 imageCursorPosition = selectableCursorPos + ImVec2{ 0.0f, style.ItemSpacing.y };
-					ImGui::SetCursorPos(imageCursorPosition);
-					// todo: replace with a proper image
-					ImTextureID imageId = nullptr;
-					if (entry.is_directory())
+					for (const DirectoryTreeNode* file : selectedDirectory->GetChildDirectories())
 					{
-						imageId = EngineContentRegistry::GetInstance()->GetFolderTexSRV().Get();
+						DrawAsset(file, itemSize);
+						float last_button_x2 = ImGui::GetItemRectMax().x;
+						float next_button_x2 = last_button_x2 + style.ItemSpacing.x + itemSize.x; // Expected position if next button was on same line
+						if (next_button_x2 < window_visible_x2)
+							ImGui::SameLine(0.0f, 0.0f);
 					}
-					if (imageId == nullptr)
-					{
-						imageId = EngineContentRegistry::GetInstance()->GetGenericFileTexSRV().Get();
-					}
-					ImGui::Image(imageId, ImVec2(itemSize.x, itemSize.x));
-					std::string str = entry.path().filename().string();
-					// todo properly habdle text not fully fitting
-					if (str.length() > 15)
-						str = str.substr(0, 12) + "...";
-					ImGui::SetCursorPos(ImGui::GetCursorPos() + style.ItemSpacing);
-					ImGui::Text(str.c_str());
-					ImGui::EndGroup();
 
-					float last_button_x2 = ImGui::GetItemRectMax().x;
-					float next_button_x2 = last_button_x2 + style.ItemSpacing.x + itemSize.x; // Expected position if next button was on same line
-					if (next_button_x2 < window_visible_x2)
-						ImGui::SameLine(0.0f, 0.0f);
+					for (const DirectoryTreeLeaf* file : selectedDirectory->GetChildFiles())
+					{
+						DrawAsset(file, itemSize);
+
+						float last_button_x2 = ImGui::GetItemRectMax().x;
+						float next_button_x2 = last_button_x2 + style.ItemSpacing.x + itemSize.x; // Expected position if next button was on same line
+						if (next_button_x2 < window_visible_x2)
+							ImGui::SameLine(0.0f, 0.0f);
+					}
 				}
 
 				ImGui::EndChild();
@@ -884,3 +860,117 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 	ImGui::End();
 }
 
+auto ImGuiSubsystem::DrawAsset(const DirectoryTreeLeaf* file, const Vector2& itemSize/* = Vector2(80, 110)*/) -> void
+{
+	ImGuiStyle& style = ImGui::GetStyle();
+	
+	ImGui::BeginGroup();
+	const ImVec2 selectableCursorPos = ImGui::GetCursorPos() + style.ItemSpacing;
+	ImGui::SetCursorPos(selectableCursorPos);
+	const std::string nameAsString = file->GetName().string();
+	ImGuiSelectableFlags flags = 0;
+	const bool isDirectory = file->IsDirectory();
+	if (isDirectory)
+		flags = ImGuiSelectableFlags_AllowDoubleClick;
+	ImGui::Selectable(("##" + nameAsString).c_str(), false, flags, itemSize);
+	const bool bItemDoubleClicked = ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered();
+	// double-clicking to choose directories
+	if (bItemDoubleClicked && isDirectory) {
+		GetEditorContext().SetSelectedDirectory(file->GetPathFromTreeRoot());
+		// todo: return false to signify that we can stop rendering other items
+		// or pass a callback to this function?
+		//ImGui::EndGroup();
+		//break;
+	}
+
+	// todo: remove this
+	//if (bItemDoubleClicked && file->GetName().extension() == Path(".fbx"))
+	//{
+	//	// todo add unique
+	//	// todo: fix apth generation
+	//	OpenedFbxInspectorWindows.push_back(Path("..")/ file->GetPathFromTreeRoot());
+	//}
+
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip(nameAsString.c_str());
+	ImGui::SetItemAllowOverlap();
+
+	const ImVec2 imageCursorPosition = selectableCursorPos + ImVec2{ 0.0f, style.ItemSpacing.y };
+	ImGui::SetCursorPos(imageCursorPosition);
+	// todo: replace with a proper image
+	ImTextureID imageId = nullptr;
+	if (isDirectory)
+	{
+		imageId = EngineContentRegistry::GetInstance()->GetFolderTexSRV().Get();
+	}
+	if (imageId == nullptr)
+	{
+		imageId = EngineContentRegistry::GetInstance()->GetGenericFileTexSRV().Get();
+	}
+	ImGui::Image(imageId, ImVec2(itemSize.x, itemSize.x));
+	std::string str = nameAsString;
+	// todo properly habdle text not fully fitting
+	if (str.length() > 15)
+		str = str.substr(0, 12) + "...";
+	ImGui::SetCursorPos(ImGui::GetCursorPos() + style.ItemSpacing);
+	ImGui::Text(str.c_str());
+	ImGui::EndGroup();
+}
+
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
+auto ImGuiSubsystem::DrawFBXInspector(const Path& path) -> void
+{
+	ImGui::SetNextWindowClass(&topLevelClass);
+	if (ImGui::Begin((path.filename().string() + "##FbxInspector").c_str()))
+	{
+		Assimp::Importer importer;
+		const aiScene* scene = importer.ReadFile(path.string(), aiProcess_FlipUVs | aiProcess_FlipWindingOrder | aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_CalcTangentSpace);
+
+		if (ImGui::CollapsingHeader("Meshes"))
+		{
+			for (size_t i = 0; i < scene->mNumMeshes; ++i)
+			{
+				const aiMesh* mesh = scene->mMeshes[i];
+				ImGui::Text(mesh->mName.C_Str());
+			}
+		}
+		if (ImGui::CollapsingHeader("Scene Tree"))
+		{
+			std::vector<const aiNode*> stack;
+			stack.push_back(scene->mRootNode);
+			while (!stack.empty())
+			{
+				const aiNode* node = stack.back();
+				stack.pop_back();
+
+				if (node == nullptr)
+				{
+					ImGui::TreePop();
+					continue;
+				}
+
+				const bool nodeOpen = ImGui::TreeNodeEx(node->mName.C_Str());
+				if (nodeOpen)
+				{
+					stack.push_back(nullptr);
+					stack.insert(stack.end(), node->mChildren, node->mChildren + node->mNumChildren);
+				}
+				
+				if (nodeOpen && node->mNumMeshes > 0)
+				{
+					ImGui::Text("Meshes:");
+					for (size_t i = 0; i < node->mNumMeshes; ++i)
+					{
+						const aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+						ImGui::Text(mesh->mName.C_Str());
+					}
+				}
+			}
+		}
+	}
+	ImGui::End();
+}

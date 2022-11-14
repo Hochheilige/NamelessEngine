@@ -1,7 +1,7 @@
 #include "DirectoryTree.h"
 #include <cassert>
 
-auto DirectoryTree::AddPath(const Path& path) -> void {
+auto DirectoryTree::AddDirectoryByPath(const Path& path) -> DirectoryTreeNode* {
 
 	DirectoryTreeNode* node = root;
 
@@ -13,59 +13,85 @@ auto DirectoryTree::AddPath(const Path& path) -> void {
 		if (current->empty()) continue;
 		bool isFound(false);
 		for (auto dir : node->children) {
-			if (dir->path == *current) {
+			if (dir->name == *current) {
 				node = dir;
 				isFound = true;
 				break;
 			}		
 		}
 		if (!isFound) {
-			node = node->AddChild(new DirectoryTreeNode(*current));
+			node = node->AddChildDirectory(new DirectoryTreeNode(*current));
 		}
 		++current;
 	}
+
+	return node;
 }
 
-auto DirectoryTree::GetNode(const Path& path) -> DirectoryTreeNode*
+auto DirectoryTree::AddFileByPath(const Path& path)->DirectoryTreeLeaf*
+{
+	Path dirPath = path;
+	dirPath._Remove_filename_and_separator();
+	DirectoryTreeNode* node = AddDirectoryByPath(dirPath);
+	return node->AddFile(new DirectoryTreeLeaf(path));
+}
+
+auto DirectoryTree::GetDirectoryByPath(const Path& path) -> DirectoryTreeNode*
 {
 	DirectoryTreeNode* node = root;
 
-	if (node && node->path == path)
+	if (node && node->name == path)
 	{
 		return node;
 	}
 
 	auto current = path.begin();
 	auto end = path.end();
-	while (node != nullptr && current != end) {
-		node = node->GetChildWithName(*current);
+	while (node != nullptr && ++current != end) {
+		node = node->GetDirectChildByName(*(current));
 	}
     return node;
 }
 
-auto DirectoryTree::GetPathFromRoot(DirectoryTreeNode* node) const -> Path
+auto DirectoryTreeLeaf::GetPathFromTreeRoot() const->Path
 {
-	Path path = node->path;
-	assert(node != nullptr);
-	node = node->parent;
+	Path path = name;
+	DirectoryTreeLeaf* node = parent;
 
 	while (node != nullptr)
 	{
-		path = node->path / path;
+		path = node->name / path;
 		node = node->parent;
 	}
 
 	return path;
 }
 
-auto DirectoryTreeNode::GetChildWithName(const Path& name) const -> DirectoryTreeNode*
+DirectoryTreeNode::DirectoryTreeNode(Path p)
+	: DirectoryTreeLeaf(p)
+{
+	// TODO: pass type as a parameter to constructor?
+	directoryType = name.has_extension() ? DirectoryType::AssetCollection : DirectoryType::Directory;
+}
+
+auto DirectoryTreeNode::AddFile(DirectoryTreeLeaf* leaf)->DirectoryTreeLeaf*
+{
+	// todo: add unique by name?
+	files.push_back(leaf);
+	leaf->parent = this;
+
+	return leaf;
+}
+
+auto DirectoryTreeNode::GetDirectChildByName(const Path& name) const -> DirectoryTreeNode*
 {
 	DirectoryTreeNode* node = nullptr;
 	for (DirectoryTreeNode* dir : children) {
-		if (dir->path == name) {
+		if (dir->name == name) {
 			node = dir;
 			break;
 		}
 	}
 	return node;
 }
+
