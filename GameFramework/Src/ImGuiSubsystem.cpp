@@ -727,11 +727,12 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 			ImGui::TableNextRow();
 			ImGui::TableNextColumn();
 
+			DirectoryTree* dt = game->GetDirectoryTree();
+
 			ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 
 			if (ImGui::BeginChild("File browser", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), false, window_flags)) {
 
-				DirectoryTree* dt = game->GetDirectoryTree();
 				DirectoryTreeNode* dt_node = dt->GetRootNode();
 
 				std::vector<DirectoryTreeNode*> stack;
@@ -751,6 +752,7 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 						nodeFlags |= ImGuiTreeNodeFlags_Leaf;
 					}
 					const Path currentPathFromRoot = dt->GetPathFromRoot(dt_node);
+					Path currentSelectedDirectory = GetEditorContext().GetSelectedDirectory();
 					const bool isSelected = GetEditorContext().GetSelectedDirectory() == currentPathFromRoot;
 					if (isSelected)
 					{
@@ -780,19 +782,29 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 
 				ImVec2 itemSize(80, 110);
 
-			ImGuiStyle& style = ImGui::GetStyle();
-			float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-			for (auto entry : std::filesystem::directory_iterator(path)) 
-			{
+				ImGuiStyle& style = ImGui::GetStyle();
+				float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+				for (auto entry : std::filesystem::directory_iterator(path)) 
+				{
 				
-				ImGui::BeginGroup();
-				const ImVec2 selectableCursorPos = ImGui::GetCursorPos() + style.ItemSpacing;
-				ImGui::SetCursorPos(selectableCursorPos);
-				std::string pathAsString = entry.path().filename().string();
-				ImGui::Selectable(("##" + pathAsString).c_str(), false, 0, itemSize);
-				if (ImGui::IsItemHovered())
-					ImGui::SetTooltip(pathAsString.c_str());
-				ImGui::SetItemAllowOverlap();
+					ImGui::BeginGroup();
+					const ImVec2 selectableCursorPos = ImGui::GetCursorPos() + style.ItemSpacing;
+					ImGui::SetCursorPos(selectableCursorPos);
+					std::string pathAsString = entry.path().filename().string();
+					ImGuiSelectableFlags flags =  0;
+					if (entry.is_directory())
+						flags = ImGuiSelectableFlags_AllowDoubleClick;
+					ImGui::Selectable(("##" + pathAsString).c_str(), false, flags, itemSize);
+					// double-clicking to choose directories
+					if (ImGui::IsMouseDoubleClicked(0) && entry.is_directory()) {
+						GetEditorContext().SetSelectedDirectory(entry.path().lexically_relative(".."));
+						ImGui::EndGroup();
+						break;
+					}
+					
+					if (ImGui::IsItemHovered())
+						ImGui::SetTooltip(pathAsString.c_str());
+					ImGui::SetItemAllowOverlap();
 
 					const ImVec2 imageCursorPosition = selectableCursorPos + ImVec2{ 0.0f, style.ItemSpacing.y };
 					ImGui::SetCursorPos(imageCursorPosition);
