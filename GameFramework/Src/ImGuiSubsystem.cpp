@@ -74,6 +74,8 @@ auto ImGuiSubsystem::Initialize(Game* const InGame) -> void
 	mainFont = io.Fonts->AddFontFromFileTTF("../Assets/EngineContent/Fonts/Ubuntu-Light.ttf", 13.0f);
 	IM_ASSERT(mainFont != NULL);
 
+	io.ConfigWindowsMoveFromTitleBarOnly = true;
+
 	InitStyle();
 
 	GetEditorContext().SetSelectedDirectory("Assets");
@@ -85,6 +87,8 @@ auto ImGuiSubsystem::Initialize(Game* const InGame) -> void
 
 	levelEditorClass.ClassId = 2;
 	levelEditorClass.DockingAllowUnclassed = true;
+	// do i want this?
+	//levelEditorClass.DockingAlwaysTabBar = true;
 }
 
 auto ImGuiSubsystem::NewFrame() -> void
