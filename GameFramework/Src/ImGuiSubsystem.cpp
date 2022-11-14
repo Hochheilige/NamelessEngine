@@ -23,7 +23,14 @@
 
 ImGuiSubsystem* ImGuiSubsystem::Instance = nullptr;
 
+
+// Drag And Drop source classes 
+
 static const char* ActorDragDropSourceType = "ActorDragDropSourceType";
+static const char* FileDragDropSourceType = "FileDragDropSourceType";
+static const char* MeshDragDropSourceType = "MeshDragDropSourceType";
+
+
 
 auto GetComponentTypeName(ComponentType type) -> std::string {
 	std::string name = "";
@@ -267,6 +274,16 @@ auto ImGuiSubsystem::DrawViewport() -> void
 				t.Position = MyGame->MyRenderingSystem->GetWorldPositionUnerScreenPosition(ViewportMousePos);
 				Actor* newActor = EngineContentRegistry::GetInstance()->CreateBasicActor(actorName, t);
 				GetEditorContext().SetSelectedActor(newActor);
+			}
+
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(MeshDragDropSourceType)) {
+				const std::string meshName = static_cast<const char*>(payload->Data);
+
+				Transform t;
+				t.Position = MyGame->MyRenderingSystem->GetWorldPositionUnerScreenPosition(ViewportMousePos);
+				//Actor* newActor = EngineContentRegistry::GetInstance()->CreateBasicActor(meshName, t);
+				//GetEditorContext().SetSelectedActor(newActor);
+
 			}
 
 			ImGui::EndDragDropTarget();
@@ -830,7 +847,7 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 				float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 				DirectoryTreeNode* selectedDirectory = dt->GetDirectoryByPath(GetEditorContext().GetSelectedDirectory());
 				if (selectedDirectory != nullptr)
-				{
+				{			
 					for (const DirectoryTreeNode* file : selectedDirectory->GetChildDirectories())
 					{
 						DrawAsset(file, itemSize);
@@ -874,6 +891,31 @@ auto ImGuiSubsystem::DrawAsset(const DirectoryTreeLeaf* file, const Vector2& ite
 		flags = ImGuiSelectableFlags_AllowDoubleClick;
 	ImGui::Selectable(("##" + nameAsString).c_str(), false, flags, itemSize);
 	const bool bItemDoubleClicked = ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered();
+
+	// Setting up drag and drop as source
+	if (ImGui::BeginDragDropSource())
+	{
+		ImGui::SetDragDropPayload(FileDragDropSourceType, nameAsString.c_str(), nameAsString.size() + 1);
+
+		ImGui::Text(nameAsString.c_str());
+
+		ImGui::EndDragDropSource();
+	}
+
+	//Setting up drag and drop as target for directories
+	if (ImGui::BeginDragDropTarget() && isDirectory)
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(FileDragDropSourceType)) {
+			const std::string fileName = static_cast<const char*>(payload->Data);
+
+			// TODO move item into directory here
+
+			//ImGui::OpenPopup(("File kinda dropped lol — " + fileName).c_str());
+
+		}
+		ImGui::EndDragDropTarget();
+	}
+
 	// double-clicking to choose directories
 	if (bItemDoubleClicked && isDirectory) {
 		GetEditorContext().SetSelectedDirectory(file->GetPathFromTreeRoot());
