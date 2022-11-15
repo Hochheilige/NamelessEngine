@@ -321,7 +321,7 @@ void Sandbox::PrepareResources()
 	platform->UsePhysicsSimulation();
 
 	//CreateSphereObject(3.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1, 1, 1);
-	tr.Position = Vector3(3.0f, 0.8f, 0.0f);
+	tr.Position = Vector3(10.0f, 0.8f, 0.0f);
 	tr.Rotation.SetEulerAngles(0, 0, 0);
 	tr.Scale = Vector3(1, 1, 1);
 	sphere = CreateKinematicSphere(tr);
@@ -419,10 +419,23 @@ void Sandbox::Update(float DeltaTime)
 	{ 
 		if (prevPlayState == PlayState::Editor || prevPlayState == PlayState::Paused)
 		{
+			int count = 0;
 			for (auto actor : Actors)
 			{
 				actor->SyncPhysicsTransform();
+				if (count > 1)
+				{
+					if (auto rb_comp = actor->GetComponentOfClass<RigidBodyComponent>())
+					{
+						rb_comp->SetMass(50);
+					}
+				}
+
+				++count;
+				
 			}
+
+			
 		}
 
 		// Physics Simulation

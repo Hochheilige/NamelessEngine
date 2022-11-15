@@ -13,7 +13,7 @@ PhysicsModuleData::PhysicsModuleData()
         Dispatcher, Broadphase, Solver, CollisionConfiguration
     );
 
-    World->setGravity(btVector3(0.0f, -9.8f, 0.0f));
+    World->setGravity(btVector3(0.0f, -1.0f, 0.0f));
 }
 
 PhysicsModuleData::~PhysicsModuleData()
