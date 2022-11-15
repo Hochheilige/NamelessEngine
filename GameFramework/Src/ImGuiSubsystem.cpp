@@ -72,6 +72,12 @@ auto ImGuiSubsystem::Initialize(Game* const InGame) -> void
 	// TODO: get this from current camera and update it
 	ImGuizmo::SetOrthographic(false);
 
+	io.Fonts->AddFontDefault();
+	mainFont = io.Fonts->AddFontFromFileTTF("../Assets/EngineContent/Fonts/Ubuntu-Light.ttf", 13.0f);
+	IM_ASSERT(mainFont != NULL);
+
+	io.ConfigWindowsMoveFromTitleBarOnly = true;
+
 	InitStyle();
 
 	GetEditorContext().SetSelectedDirectory("Assets");
@@ -83,6 +89,8 @@ auto ImGuiSubsystem::Initialize(Game* const InGame) -> void
 
 	levelEditorClass.ClassId = 2;
 	levelEditorClass.DockingAllowUnclassed = true;
+	// do i want this?
+	//levelEditorClass.DockingAlwaysTabBar = true;
 }
 
 auto ImGuiSubsystem::NewFrame() -> void
@@ -114,6 +122,9 @@ auto ImGuiSubsystem::EndFrame() -> void
 
 auto ImGuiSubsystem::DoLayout() -> void
 {
+
+	ImGui::PushFont(mainFont);
+
 	LayOutMainMenuBar();
 
 	// Add top-level dockspace
@@ -147,6 +158,8 @@ auto ImGuiSubsystem::DoLayout() -> void
 	// common(unclassed) windows
 	DrawAssetBrowser();
 	DrawMessagesWindow();
+
+	ImGui::PopFont();
 }
 
 auto ImGuiSubsystem::Shutdown() -> void
@@ -749,11 +762,21 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 			ImGui::TableNextRow();
 			ImGui::TableNextColumn();
 
+			// DirectoryTree control buttons
+
+			ImGui::Button("Add +");
+
+			ImGui::Separator();
+
+
+			// Directory tree
+
+			DirectoryTree* dt = game->GetDirectoryTree();
+
 			ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 
 			if (ImGui::BeginChild("File browser", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), false, window_flags)) {
 
-				DirectoryTree* dt = game->GetDirectoryTree();
 				DirectoryTreeNode* dt_node = dt->GetRootNode();
 
 				std::vector<DirectoryTreeNode*> stack;
@@ -773,6 +796,7 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 						nodeFlags |= ImGuiTreeNodeFlags_Leaf;
 					}
 					const Path currentPathFromRoot = dt->GetPathFromRoot(dt_node);
+					Path currentSelectedDirectory = GetEditorContext().GetSelectedDirectory();
 					const bool isSelected = GetEditorContext().GetSelectedDirectory() == currentPathFromRoot;
 					if (isSelected)
 					{
@@ -794,6 +818,26 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 
 			ImGui::TableNextColumn();
 
+			//control buttons
+
+			ImGui::ArrowButton("DirectoryUP", ImGuiDir_Up);
+			Path currentSelectedDirectory = GetEditorContext().GetSelectedDirectory();
+
+			// TODO disabble the button properly
+			if (currentSelectedDirectory != "Assets") {
+				
+			}
+
+			if (ImGui::IsItemClicked() && currentSelectedDirectory != "Assets") {
+				currentSelectedDirectory._Remove_filename_and_separator();
+				GetEditorContext().SetSelectedDirectory(currentSelectedDirectory);
+			}
+			ImGui::SameLine();
+			ImGui::Text(GetEditorContext().GetSelectedDirectory().string().c_str());
+			ImGui::Separator();
+
+			// Assets
+
 			if (ImGui::BeginChild("Asset browser", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), false, window_flags)) {
 
 				Path path = game->assetsPath;
@@ -804,14 +848,26 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 
 				ImGuiStyle& style = ImGui::GetStyle();
 				float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-				for (auto entry : std::filesystem::directory_iterator(path))
+				for (auto entry : std::filesystem::directory_iterator(path)) 
 				{
-
+				
 					ImGui::BeginGroup();
 					const ImVec2 selectableCursorPos = ImGui::GetCursorPos() + style.ItemSpacing;
 					ImGui::SetCursorPos(selectableCursorPos);
 					std::string pathAsString = entry.path().filename().string();
-					ImGui::Selectable(("##" + pathAsString).c_str(), false, 0, itemSize);
+					ImGuiSelectableFlags flags =  0;
+					if (entry.is_directory())
+						flags = ImGuiSelectableFlags_AllowDoubleClick;
+					ImGui::Selectable(("##" + pathAsString).c_str(), false, flags, itemSize);
+					// double-clicking to choose directories
+					if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered() && entry.is_directory()) {
+						GetEditorContext().SetSelectedDirectory(entry.path().lexically_relative(".."));
+						ImGui::EndGroup();
+						break;
+					}
+					
+					if (ImGui::IsItemHovered())
+						ImGui::SetTooltip(pathAsString.c_str());
 					ImGui::SetItemAllowOverlap();
 
 					const ImVec2 imageCursorPosition = selectableCursorPos + ImVec2{ 0.0f, style.ItemSpacing.y };
@@ -829,8 +885,8 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 					ImGui::Image(imageId, ImVec2(itemSize.x, itemSize.x));
 					std::string str = entry.path().filename().string();
 					// todo properly habdle text not fully fitting
-					if (str.length() > 11)
-						str = str.substr(0, 8) + "...";
+					if (str.length() > 15)
+						str = str.substr(0, 12) + "...";
 					ImGui::SetCursorPos(ImGui::GetCursorPos() + style.ItemSpacing);
 					ImGui::Text(str.c_str());
 					ImGui::EndGroup();
