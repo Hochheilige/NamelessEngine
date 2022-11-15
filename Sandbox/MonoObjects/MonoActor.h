@@ -15,6 +15,7 @@ public:
     
     const char* GetInheritors();
 private:
+    uint32_t Handle;
     MonoObject* CsInstance = nullptr;
     const char* ClassName = "CustomActor";
     const char* BaseClassName = "Actor";

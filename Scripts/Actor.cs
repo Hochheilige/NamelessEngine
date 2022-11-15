@@ -10,7 +10,7 @@ namespace Scripts
 
         public Actor()
         {
-            Console.WriteLine("YA RODILSYA");
+            //Console.WriteLine("YA RODILSYA");
         }
 
         public virtual void OnBeginPlay()

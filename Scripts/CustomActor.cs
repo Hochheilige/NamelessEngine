@@ -6,7 +6,7 @@ namespace Scripts
     {
         public CustomActor()
         {
-            Console.WriteLine("Custom actor been born");
+            //Console.WriteLine("Custom actor been born");
         }
         
         public override void Update(float deltaTime)
