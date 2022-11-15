@@ -221,6 +221,8 @@
     <ClInclude Include="..\imgui\backends\imgui_impl_dx11.h" />
     <ClInclude Include="..\imgui\backends\imgui_impl_win32.h" />
     <ClInclude Include="Include\AABB2DCollider.h" />
+    <ClInclude Include="Include\Asset.h" />
+    <ClInclude Include="Include\AssetManager.h" />
     <ClInclude Include="Include\CreateCommon.h" />
     <ClInclude Include="Include\Delegates.h" />
     <ClInclude Include="Include\DirectoryTree.h" />
@@ -263,6 +265,8 @@
     <ClCompile Include="EditorContext.cpp" />
     <ClCompile Include="Include\Renderer.cpp" />
     <ClCompile Include="Src\AABB2DCollider.cpp" />
+    <ClCompile Include="Src\Asset.cpp" />
+    <ClCompile Include="Src\AssetManager.cpp" />
     <ClCompile Include="Src\Delegates.cpp" />
     <ClCompile Include="Src\DirectoryTree.cpp" />
     <ClCompile Include="Src\EngineContentRegistry.cpp" />

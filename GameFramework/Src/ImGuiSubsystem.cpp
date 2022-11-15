@@ -8,6 +8,7 @@
 #include "imguizmo.h"
 
 #include "Actor.h"
+#include "AssetManager.h"
 #include "Game.h"
 #include "RenderingSystem.h"
 #include "DisplayWin32.h"
@@ -662,6 +663,11 @@ auto ImGuiSubsystem::GetSelectedSceneComponent() const -> SceneComponent*
 	return selectedSceneComponent;
 }
 
+auto ImGuiSubsystem::GetAssetManager() const->AssetManager*
+{
+	return MyGame->GetAssetManager();
+}
+
 auto ImGuiSubsystem::InitStyle() -> void
 {
 	ImGuiStyle& imguiStyle = ImGui::GetStyle();
@@ -772,7 +778,7 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 
 			// Directory tree
 
-			DirectoryTree* dt = game->GetDirectoryTree();
+			DirectoryTree* dt = GetAssetManager()->GetAssetDirectoryTree();
 
 			ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 
@@ -791,7 +797,7 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 						continue;
 					}
 					ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_OpenOnDoubleClick;
-					const bool isLeaf = dt_node->GetChildDirectories().size() == 0;
+					const bool isLeaf = dt_node->IsLeafNode();
 					if (isLeaf)
 					{
 						nodeFlags |= ImGuiTreeNodeFlags_Leaf;
@@ -810,7 +816,12 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 					}
 					if (isOpen) {
 						stack.push_back(nullptr);
-						stack.insert(stack.end(), dt_node->GetChildDirectories().begin(), dt_node->GetChildDirectories().end());
+						// insert in the reverse order
+						for (long i = dt_node->GetNumDirectories() - 1; i >= 0; --i)
+						{
+							stack.push_back(dt_node->GetChildren()[i]);
+						}
+						//stack.insert(stack.end(), dt_node->GetChildren().data(), dt_node->GetChildren().data() + dt_node->GetNumDirectories());
 					}
 				}
 
@@ -848,19 +859,9 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 				DirectoryTreeNode* selectedDirectory = dt->GetDirectoryByPath(GetEditorContext().GetSelectedDirectory());
 				if (selectedDirectory != nullptr)
 				{			
-					for (const DirectoryTreeNode* file : selectedDirectory->GetChildDirectories())
+					for (const DirectoryTreeNode* file : selectedDirectory->GetChildren())
 					{
 						DrawAsset(file, itemSize);
-						float last_button_x2 = ImGui::GetItemRectMax().x;
-						float next_button_x2 = last_button_x2 + style.ItemSpacing.x + itemSize.x; // Expected position if next button was on same line
-						if (next_button_x2 < window_visible_x2)
-							ImGui::SameLine(0.0f, 0.0f);
-					}
-
-					for (const DirectoryTreeLeaf* file : selectedDirectory->GetChildFiles())
-					{
-						DrawAsset(file, itemSize);
-
 						float last_button_x2 = ImGui::GetItemRectMax().x;
 						float next_button_x2 = last_button_x2 + style.ItemSpacing.x + itemSize.x; // Expected position if next button was on same line
 						if (next_button_x2 < window_visible_x2)
@@ -877,7 +878,7 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 	ImGui::End();
 }
 
-auto ImGuiSubsystem::DrawAsset(const DirectoryTreeLeaf* file, const Vector2& itemSize/* = Vector2(80, 110)*/) -> void
+auto ImGuiSubsystem::DrawAsset(const DirectoryTreeNode* file, const Vector2& itemSize/* = Vector2(80, 110)*/) -> void
 {
 	ImGuiStyle& style = ImGui::GetStyle();
 	

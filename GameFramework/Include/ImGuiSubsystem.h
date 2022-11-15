@@ -12,7 +12,8 @@ using Path = std::filesystem::path;
 class Game;
 class EditorContext;
 class SceneComponent;
-class DirectoryTreeLeaf;
+class DirectoryTreeNode;
+class AssetManager;
 
 namespace ImGuizmo
 {
@@ -58,11 +59,12 @@ private:
 	auto DrawBasicActorsWindow() -> void;
 	// asset browser
 	auto DrawAssetBrowser() -> void;
-	auto DrawAsset(const DirectoryTreeLeaf* file, const Vector2& itemSize = Vector2(80, 110)) -> void;
+	auto DrawAsset(const DirectoryTreeNode* file, const Vector2& itemSize = Vector2(80, 110)) -> void;
 
 private:
 	auto GetEditorContext() const -> EditorContext&;
 	auto GetSelectedSceneComponent() const->SceneComponent*;
+	auto GetAssetManager() const->AssetManager*;
 
 	auto InitStyle() -> void;
 private:

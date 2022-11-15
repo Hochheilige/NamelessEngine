@@ -123,6 +123,15 @@
     <ClInclude Include="Include\StringId.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\AssetManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Asset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\StringId.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Include\DirectoryTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -225,6 +234,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Delegates.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\AssetManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Asset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\DirectoryTree.cpp">

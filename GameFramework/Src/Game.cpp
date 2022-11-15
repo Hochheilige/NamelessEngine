@@ -1,5 +1,6 @@
 #include "Game.h"
 
+#include "AssetManager.h"
 #include "DisplayWin32.h"
 #include "InputDevice.h"
 #include "MeshRenderer.h"
@@ -40,9 +41,8 @@ void Game::InitializeInternal()
 	mImGuiSubsystem = new ImGuiSubsystem();
 	mImGuiSubsystem->Initialize(this);
 
-	directoryTree.reset(new DirectoryTree(Path("Assets")));
-
-	FillDirectoryTree();
+	assetManager.reset(new AssetManager());
+	assetManager->Initialize();
 
 	Initialize();
 }
@@ -493,20 +493,4 @@ auto Game::StopPlay() -> void
 Game::Game()
 {
 	Instance = this;
-}
-
-
-auto Game::FillDirectoryTree() -> void 
-{
-	for (auto dir_entry : std::filesystem::recursive_directory_iterator(assetsPath)) {
-		const Path path = dir_entry.path().lexically_relative(assetsPath);
-		const bool isDirectory = dir_entry.is_directory() || dir_entry.is_regular_file() && dir_entry.path().extension() == Path(".fbx");
-		if (isDirectory) {
-			directoryTree->AddDirectoryByPath(path);
-		}
-		else if (dir_entry.is_regular_file())
-		{
-			directoryTree->AddFileByPath(path);
-		}
-	}
 }
