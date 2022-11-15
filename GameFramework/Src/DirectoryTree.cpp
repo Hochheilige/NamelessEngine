@@ -1,4 +1,5 @@
 #include "DirectoryTree.h"
+#include <cassert>
 
 auto DirectoryTree::AddPath(const Path& path) -> void {
 
@@ -44,7 +45,9 @@ auto DirectoryTree::GetNode(const Path& path) -> DirectoryTreeNode*
 
 auto DirectoryTree::GetPathFromRoot(DirectoryTreeNode* node) const -> Path
 {
-	Path path;
+	Path path = node->path;
+	assert(node != nullptr);
+	node = node->parent;
 
 	while (node != nullptr)
 	{
