@@ -46,6 +46,8 @@ auto GetComponentTypeName(ComponentType type) -> std::string {
 		name = "Point Light"; break;
 	case SceneComponentType:
 		name = "Scene Component"; break;
+	case StaticMeshRendererType:
+		name = "Static Mesh Renderer"; break;
 	}
 	return name;
 };
@@ -919,7 +921,7 @@ auto ImGuiSubsystem::DrawAsset(const DirectoryTreeNode* file, const Vector2& ite
 	ImGui::SetCursorPos(selectableCursorPos);
 	const std::string nameAsString = file->GetName().string();
 	ImGuiSelectableFlags flags = 0;
-	const bool isDirectory = file->IsDirectory();
+	const bool isDirectory = file->IsDirectoryOrAssetCollection();
 	if (isDirectory)
 		flags = ImGuiSelectableFlags_AllowDoubleClick;
 	ImGui::Selectable(("##" + nameAsString).c_str(), false, flags, itemSize);
@@ -976,9 +978,13 @@ auto ImGuiSubsystem::DrawAsset(const DirectoryTreeNode* file, const Vector2& ite
 	ImGui::SetCursorPos(imageCursorPosition);
 	// todo: replace with a proper image
 	ImTextureID imageId = nullptr;
-	if (isDirectory)
+	if (file->IsDirectory())
 	{
 		imageId = EngineContentRegistry::GetInstance()->GetFolderTexSRV().Get();
+	}
+	else if (file->IsAssetCollection())
+	{
+		imageId = EngineContentRegistry::GetInstance()->GetAssetColTexSRV().Get();
 	}
 	if (imageId == nullptr)
 	{

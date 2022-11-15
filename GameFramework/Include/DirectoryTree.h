@@ -43,7 +43,8 @@ public:
 
 	auto GetDirectChildByName(const Path& name) const -> DirectoryTreeNode*;
 
-	auto IsDirectory() const -> bool { return nodeType == DirectoryTreeNodeType::Directory || nodeType == DirectoryTreeNodeType::AssetCollection; }
+	auto IsDirectory() const -> bool { return nodeType == DirectoryTreeNodeType::Directory; }
+	auto IsDirectoryOrAssetCollection() const -> bool { return nodeType == DirectoryTreeNodeType::Directory || nodeType == DirectoryTreeNodeType::AssetCollection; }
 	auto IsAssetCollection() const -> bool { return nodeType == DirectoryTreeNodeType::AssetCollection; }
 	auto IsAssetFromCollection() const -> bool { return nodeType == DirectoryTreeNodeType::CollectionAsset; }
 
