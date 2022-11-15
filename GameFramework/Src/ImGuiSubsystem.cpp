@@ -792,6 +792,10 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 				while (!stack.empty()) {
 					dt_node = stack.back();
 					stack.pop_back();
+					bool isAssetCollection = dt_node?dt_node->IsAssetCollection():false;
+					if (isAssetCollection) {
+						ImGui::PushStyleColor(ImGuiCol_Text, ImU32(0xfff0f000));
+					}
 					if (dt_node == nullptr) {
 						ImGui::TreePop();
 						continue;
@@ -810,6 +814,20 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 						nodeFlags |= ImGuiTreeNodeFlags_Selected;
 					}
 					const bool isOpen = ImGui::TreeNodeEx(dt_node->GetName().string().c_str(), nodeFlags);
+					// Drag and drop target
+					if (!dt_node->IsAssetCollection() && ImGui::BeginDragDropTarget())
+					{
+						// compute paths
+
+						//TODO: Make handling moving a fucnction
+						if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(FileDragDropSourceType)) {
+							const std::string fileName = static_cast<const char*>(payload->Data);
+							// TODO move item into directory here
+							//ImGui::OpenPopup(("File kinda dropped lol — " + fileName).c_str());
+						}
+						ImGui::EndDragDropTarget();
+					}
+
 					if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
 					{
 						GetEditorContext().SetSelectedDirectory(currentPathFromRoot);
@@ -822,6 +840,9 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 							stack.push_back(dt_node->GetChildren()[i]);
 						}
 						//stack.insert(stack.end(), dt_node->GetChildren().data(), dt_node->GetChildren().data() + dt_node->GetNumDirectories());
+					}
+					if (isAssetCollection) {
+						ImGui::PopStyleColor();
 					}
 				}
 
@@ -850,6 +871,12 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 
 			// Assets
 
+			bool isAssetCollectionStyle = dt->GetDirectoryByPath(GetEditorContext().GetSelectedDirectory())->IsAssetCollection();
+			if (isAssetCollectionStyle) {
+				ImGui::PushStyleColor(ImGuiCol_ChildBg, ImU32(0x0ff0f000));
+				ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+			}
+
 			if (ImGui::BeginChild("Asset browser", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), false, window_flags)) 
 			{
 				ImVec2 itemSize(80, 110);
@@ -870,6 +897,11 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 				}
 
 				ImGui::EndChild();
+			}
+
+			if (isAssetCollectionStyle) {
+				ImGui::PopStyleColor();
+				ImGui::PopStyleVar();
 			}
 
 			ImGui::EndTable();
@@ -894,7 +926,7 @@ auto ImGuiSubsystem::DrawAsset(const DirectoryTreeNode* file, const Vector2& ite
 	const bool bItemDoubleClicked = ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered();
 
 	// Setting up drag and drop as source
-	if (ImGui::BeginDragDropSource())
+	if (!file->IsAssetFromCollection() && ImGui::BeginDragDropSource())
 	{
 		ImGui::SetDragDropPayload(FileDragDropSourceType, nameAsString.c_str(), nameAsString.size() + 1);
 
@@ -904,8 +936,10 @@ auto ImGuiSubsystem::DrawAsset(const DirectoryTreeNode* file, const Vector2& ite
 	}
 
 	//Setting up drag and drop as target for directories
-	if (ImGui::BeginDragDropTarget() && isDirectory)
+	if (isDirectory && !file->IsAssetCollection()  && ImGui::BeginDragDropTarget())
 	{
+		//compute paths here
+
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(FileDragDropSourceType)) {
 			const std::string fileName = static_cast<const char*>(payload->Data);
 

@@ -45,6 +45,7 @@ public:
 
 	auto IsDirectory() const -> bool { return nodeType == DirectoryTreeNodeType::Directory || nodeType == DirectoryTreeNodeType::AssetCollection; }
 	auto IsAssetCollection() const -> bool { return nodeType == DirectoryTreeNodeType::AssetCollection; }
+	auto IsAssetFromCollection() const -> bool { return nodeType == DirectoryTreeNodeType::CollectionAsset; }
 
 	auto GetPathFromTreeRoot() const->Path;
 
