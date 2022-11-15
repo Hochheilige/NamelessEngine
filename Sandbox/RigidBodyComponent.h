@@ -42,6 +42,8 @@ public:
 
 	void MakeDynamic();
 
+	void MakeStatic();
+
 protected:
 	btCollisionShape* Shape;
 	btRigidBody* Body;

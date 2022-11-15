@@ -568,27 +568,31 @@ auto ImGuiSubsystem::DrawGizmos() -> void
 		Transform t = selectedSceneComponent->GetTransform();
 		Matrix tMatrix = t.GetTransformMatrix();
 
-		if (auto rb_comp = selectedSceneComponent->GetOwner()->GetComponentOfClass<RigidBodyComponent>())
-		{
-			switch (rb_comp->GetType())
-			{
-			case RigidBodyType::STATIC: // Not sure about it
-			{
-				rb_comp->MakeKinematic();
-				break;
-			}
-			case RigidBodyType::DYNAMIC:
-			{
-				rb_comp->MakeKinematic();
-				break;
-			}
-			default:
-				break;
-			}
-		}
+
 
 		if (ImGuizmo::Manipulate(&mView._11, &(mProj._11), mCurrentGizmoOperation, mCurrentGizmoMode, &tMatrix._11, NULL, useSnap ? &snap.x : NULL))
 		{
+
+			if (auto rb_comp = selectedSceneComponent->GetOwner()->GetComponentOfClass<RigidBodyComponent>())
+			{
+				switch (rb_comp->GetType())
+				{
+				case RigidBodyType::STATIC: // Not sure about it
+				{
+					rb_comp->MakeKinematic();
+					break;
+				}
+				case RigidBodyType::DYNAMIC:
+				{
+					rb_comp->MakeKinematic();
+					break;
+				}
+				default:
+					break;
+				}
+			}
+
+
 			t.SetFromMatrix(tMatrix);
 			selectedSceneComponent->SetTransform(t);
 		}

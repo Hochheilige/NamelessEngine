@@ -342,9 +342,9 @@ void Sandbox::PrepareResources()
 	FPSCC->SetCameraToControl(PerspCamera);
 	FPSCC->SetPitchYaw(-45.0f, -45.0f);
 
-	OrbitCC = CreateGameComponent<OrbitCameraController>();
-	OrbitCC->SCToOrbit = sphere->GetRoot();
-	OrbitCC->OrbitRadius = 10.0f;
+	//OrbitCC = CreateGameComponent<OrbitCameraController>();
+	//OrbitCC->SCToOrbit = sphere->GetRoot();
+	//OrbitCC->OrbitRadius = 10.0f;
 
 
 	//PlaneComponent* pc = CreateGameComponent<PlaneComponent>();
@@ -423,15 +423,15 @@ void Sandbox::Update(float DeltaTime)
 			for (auto actor : Actors)
 			{
 				actor->SyncPhysicsTransform();
-				if (count > 1)
-				{
-					if (auto rb_comp = actor->GetComponentOfClass<RigidBodyComponent>())
-					{
-						rb_comp->SetMass(50);
-					}
-				}
+				//if (count > 1)
+				//{
+				//	if (auto rb_comp = actor->GetComponentOfClass<RigidBodyComponent>())
+				//	{
+				//		rb_comp->SetMass(50);
+				//	}
+				//}
 
-				++count;
+				//++count;
 				
 			}
 
@@ -505,15 +505,15 @@ void Sandbox::Update(float DeltaTime)
 }
 
 auto Sandbox::OnBeginPlay() -> void {
-	CurrentCC = OrbitCC;
-	FPSCC->SetCameraToControl(nullptr);
-	OrbitCC->SetCameraToControl(PerspCamera);
-	FPSCC->bShouldUpdate = false;
-	OrbitCC->bShouldUpdate = true;
+	//CurrentCC = OrbitCC;
+	//FPSCC->SetCameraToControl(nullptr);
+	//OrbitCC->SetCameraToControl(PerspCamera);
+	//FPSCC->bShouldUpdate = false;
+	//OrbitCC->bShouldUpdate = true;
 
-	for (auto actor : Actors)
-	{
-		actor->OnBeginPlay();
-	}
+	//for (auto actor : Actors)
+	//{
+	//	actor->OnBeginPlay();
+	//}
 }
 
