@@ -1,24 +1,23 @@
 #pragma once
 
-class Asset
+#include "FileSystem.h"
+
+class Asset // : public Object?
 {
+	friend class AssetManager;
 public:
 
+	auto GetFullPath() const -> const Path& { return fullPath; }
+
+	virtual auto Load() -> bool { return false; }
+
+	virtual ~Asset() = default;
+
 private:
-
-};
-
-class AssetCollectionAsset : public Asset
-{
-
+	Path fullPath;
 };
 
 class TextureAsset : public Asset
-{
-
-};
-
-class MeshAsset : public Asset
 {
 
 };

@@ -72,7 +72,7 @@
     <ClInclude Include="Include\MeshLoader.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\MeshProxy.h">
+    <ClInclude Include="Include\RenderPrimitiveProxy.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\GBuffer.h">
@@ -138,6 +138,15 @@
     <ClInclude Include="Include\ImGuiInclude.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\StaticMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\StaticMeshRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\FileSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\AABB2DCollider.cpp">
@@ -191,7 +200,7 @@
     <ClCompile Include="Src\MeshLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\MeshProxy.cpp">
+    <ClCompile Include="Src\RenderPrimitiveProxy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\GBuffer.cpp">
@@ -243,6 +252,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\DirectoryTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\StaticMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\StaticMeshRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

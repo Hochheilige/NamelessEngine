@@ -10,6 +10,8 @@
 #include "RigidBodyCube.h"
 #include "RigidBodySphere.h"
 #include "ShaderCompiler.h"
+#include "StaticMeshRenderer.h"
+#include "AssetManager.h"
 
 #include <WICTextureLoader.h>
 
@@ -27,10 +29,10 @@ EngineContentRegistry::EngineContentRegistry(Game* InGame)
 #pragma region Create Meshes
 	MeshLoader ml = MeshLoader("../Assets/box.fbx");
 	TexturedMesh mesh = ml.GetMesh(0);
-	TexturedBoxMeshProxy = mesh.CreateMeshProxy();
+	TexturedBoxMeshProxy = mesh.CreateRenderingPrimitiveProxy();
 
 	SphereMesh sphereMesh;
-	SphereMeshProxy = sphereMesh.CreateMeshProxy();
+	SphereMeshProxy = sphereMesh.CreateRenderingPrimitiveProxy();
 #pragma endregion Create Meshes
 
 
@@ -88,8 +90,8 @@ auto EngineContentRegistry::CreateBox(const Transform& transform) -> Actor*
 	box->SetTransform(transform);
 	box_rb->SetMass(1);
 	box_rb->Init();
-	MeshRenderer* mesh_component = box->AddComponent<MeshRenderer>();
-	mesh_component->SetMeshProxy(TexturedBoxMeshProxy);
+	StaticMeshRenderer* mesh_component = box->AddComponent<StaticMeshRenderer>();
+	mesh_component->SetStaticMesh(MyGame->GetAssetManager()->LoadStaticMesh(Path("../Assets/box.fbx/Cube")));
 	mesh_component->SetPixelShader(DefaultPixelShader);
 	mesh_component->SetVertexShader(DefaultVertexShader);
 	mesh_component->SetAlbedoSRV(WhiteTexSRV);

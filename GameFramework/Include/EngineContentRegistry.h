@@ -8,7 +8,7 @@
 
 class Actor;
 class Game;
-class MeshProxy;
+class RenderPrimitiveProxy;
 class VertexShader;
 class PixelShader;
 
@@ -81,8 +81,8 @@ private:
 	ComPtr<ID3D11Resource> GenericFileTex;
 	ComPtr<ID3D11ShaderResourceView>GenericFileTexSRV;
 
-	MeshProxy* TexturedBoxMeshProxy;
-	MeshProxy* SphereMeshProxy;
+	RenderPrimitiveProxy* TexturedBoxMeshProxy;
+	RenderPrimitiveProxy* SphereMeshProxy;
 
 	VertexShader* DefaultVertexShader;
 	PixelShader* DefaultPixelShader;

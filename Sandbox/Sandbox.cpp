@@ -195,11 +195,11 @@ void Sandbox::PrepareResources()
 	mono = MonoSystem::GetInstance();
 	// create meshes
 	boxMesh = new BoxMesh();
-	boxMeshProxy = boxMesh->CreateMeshProxy();
+	boxMeshProxy = boxMesh->CreateRenderingPrimitiveProxy();
 	circleMesh = new CircleMesh();
-	circleMeshProxy = circleMesh->CreateMeshProxy();
+	circleMeshProxy = circleMesh->CreateRenderingPrimitiveProxy();
 	sphereMesh = new SphereMesh();
-	sphereMeshProxy = sphereMesh->CreateMeshProxy();
+	sphereMeshProxy = sphereMesh->CreateRenderingPrimitiveProxy();
 
 	LoadGameFacade();
 
@@ -239,17 +239,17 @@ void Sandbox::PrepareResources()
 	{
 		MeshLoader ml = MeshLoader("../Assets/stanford-bunny.fbx");
 		TexturedMesh mesh = ml.GetMesh(0);
-		bunnyMeshProxy = mesh.CreateMeshProxy();
+		bunnyMeshProxy = mesh.CreateRenderingPrimitiveProxy();
 	}
 
 	{
 		MeshLoader ml = MeshLoader("../Assets/box.fbx");
 		TexturedMesh mesh = ml.GetMesh(0);
-		texturedBoxMeshProxy = mesh.CreateMeshProxy();
+		texturedBoxMeshProxy = mesh.CreateRenderingPrimitiveProxy();
 
 		ml.OpenFile("../Assets/tjciddjqx_LOD0.fbx");
 		TexturedMesh burgerMesh = ml.GetMesh(0);
-		burgerMeshProxy = burgerMesh.CreateMeshProxy();
+		burgerMeshProxy = burgerMesh.CreateRenderingPrimitiveProxy();
 	}
 
 	CreateWICTextureFromFile(GetD3DDevice().Get(), L"../Assets/tjciddjqx_2K_Albedo.jpg", burgerTexResource.GetAddressOf(), burgerTexSRV.GetAddressOf());

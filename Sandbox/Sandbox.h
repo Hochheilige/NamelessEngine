@@ -45,11 +45,11 @@ private:
 	class PixelShader* ps;
 	class PixelShader* psPlain;
 
-	class MeshProxy* boxMeshProxy;
-	class MeshProxy* circleMeshProxy;
-	class MeshProxy* sphereMeshProxy;
-	MeshProxy* bunnyMeshProxy;
-	MeshProxy* texturedBoxMeshProxy;
+	class RenderPrimitiveProxy* boxMeshProxy;
+	class RenderPrimitiveProxy* circleMeshProxy;
+	class RenderPrimitiveProxy* sphereMeshProxy;
+	RenderPrimitiveProxy* bunnyMeshProxy;
+	RenderPrimitiveProxy* texturedBoxMeshProxy;
 
 	class Camera* PerspCamera;
 	class Camera* OrthoCamera;
@@ -70,7 +70,7 @@ private:
 
 
 	// burger bun
-	MeshProxy* burgerMeshProxy;
+	RenderPrimitiveProxy* burgerMeshProxy;
 
 	ComPtr<ID3D11Resource> burgerTexResource;
 	ComPtr<ID3D11ShaderResourceView> burgerTexSRV;

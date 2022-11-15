@@ -1,38 +1,20 @@
-#include "MeshRenderer.h"
+#include "StaticMeshRenderer.h"
 
 #include "Game.h"
+#include "RenderingSystemTypes.h"
 #include "Shader.h"
-#include "RenderPrimitiveProxy.h"
+#include "StaticMesh.h"
 #include "RenderingSystem.h"
 
-#include "Mesh.h"
-
-#include <d3d11.h>
-
-MeshRenderer::MeshRenderer(bool ShouldRegister/* = true*/)
+StaticMeshRenderer::StaticMeshRenderer()
 {
-	if (ShouldRegister)
-		Game::GetInstance()->MyRenderingSystem->RegisterRenderer(this);
+	// todo: move this out of constructor
+	Game::GetInstance()->MyRenderingSystem->RegisterRenderer(this);
 }
 
-void MeshRenderer::Update(float DeltaTime)
+auto StaticMeshRenderer::Render(const RenderingSystemContext& RSContext) -> void
 {
-	// get transform from physics if needed
-}
-
-void MeshRenderer::SetMeshProxy(RenderPrimitiveProxy* InMeshProxy)
-{
-	mMeshProxy = InMeshProxy;
-}
-
-void MeshRenderer::SetAlbedoSRV(ComPtr<ID3D11ShaderResourceView> InAlbedoSRV)
-{
-	mAlbedoSRV = InAlbedoSRV;
-}
-
-void MeshRenderer::Render(const RenderingSystemContext& RSContext)
-{
-	if (mVertexShader == nullptr || mPixelShader == nullptr || mMeshProxy == nullptr)
+	if (mVertexShader == nullptr || mPixelShader == nullptr || staticMesh == nullptr || staticMesh->GetRenderData() == nullptr)
 	{
 		return;
 	}
@@ -44,9 +26,6 @@ void MeshRenderer::Render(const RenderingSystemContext& RSContext)
 
 	context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	// todo: optimize rendering by 
-	// checking which shader is set now
-	// and/or sorting meshes by used shaders
 	mVertexShader->UseShader(static_cast<ShaderFlag>(RSContext.ShaderFlags));
 
 	PixelShader* psToUse = RSContext.OverridePixelShader.value_or(mPixelShader);
@@ -68,13 +47,16 @@ void MeshRenderer::Render(const RenderingSystemContext& RSContext)
 
 	D3D11_MAPPED_SUBRESOURCE resource = {};
 	auto res = context->Map(game->GetPerObjectConstantBuffer().Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
-	
+
 	memcpy(resource.pData, &cbData, sizeof(cbData));
 
 	context->Unmap(game->GetPerObjectConstantBuffer().Get(), 0);
 
-	context->IASetIndexBuffer(mMeshProxy->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
-	context->IASetVertexBuffers(0, 1, mMeshProxy->GetVertexBuffer().GetAddressOf(), mMeshProxy->GetStrides(), mMeshProxy->GetOffsets());
+	const StaticMeshRenderData* renderData = staticMesh->GetRenderData();
+
+	context->IASetIndexBuffer(renderData->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+	UINT offsets[] = {0};
+	context->IASetVertexBuffers(0, 1, renderData->vertexBuffer.GetAddressOf(), &renderData->vertexSize, offsets);
 
 	context->PSSetConstantBuffers(2, 1, game->GetPerObjectConstantBuffer().GetAddressOf());
 	context->VSSetConstantBuffers(2, 1, game->GetPerObjectConstantBuffer().GetAddressOf());
@@ -97,5 +79,8 @@ void MeshRenderer::Render(const RenderingSystemContext& RSContext)
 		context->PSSetSamplers(1, 1, game->GetShadowmapSamplerState().GetAddressOf());
 	}
 
-	context->DrawIndexed(mMeshProxy->GetNumIndices(), 0, 0);
+	for (const StaticMeshSection& section : renderData->sections)
+	{
+		context->DrawIndexed(section.numIndices, section.indicesStart, 0);
+	}
 }

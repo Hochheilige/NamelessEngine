@@ -2,14 +2,13 @@
 
 #include "MeshLoader.h"
 
-#include <filesystem>
+#include "FileSystem.h"
 #include <memory>
 #include <unordered_map>
 
 class Asset;
 class DirectoryTree;
-
-using Path = std::filesystem::path;
+class StaticMesh;
 
 class AssetManager
 {
@@ -20,13 +19,15 @@ public:
 	template<class K, class V>
 	using AssetMapType = std::unordered_map<K, V>;
 
-	Asset* LoadAsset(Path AssetPath) {}
+	auto LoadStaticMesh(const Path& path)->StaticMesh*;
+
+	/*Asset* LoadAsset(const Path& AssetPath) {}
 
 	template<class T>
 	T* LoadAsset(Path AssetPath)
 	{
 		return dynamic_cast<T*>(LoadAsset(AssetPath));
-	}
+	}*/
 
 	auto GetAssetDirectoryTree() -> DirectoryTree* { return directoryTree.get(); };
 

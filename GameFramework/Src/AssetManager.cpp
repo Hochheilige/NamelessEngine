@@ -5,6 +5,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include "StaticMesh.h"
+
 
 auto AssetManager::Initialize() -> void
 {
@@ -62,4 +64,26 @@ auto AssetManager::FillDirectoryTree() -> void
 auto AssetManager::IsAssetCollectionExtension(const Path& extension) const -> bool
 {
 	return extension == Path(".fbx") || extension == Path(".obj");
+}
+
+auto AssetManager::LoadStaticMesh(const Path& path)->StaticMesh*
+{
+	auto res = LoadedAssetsMap.find(path);
+	if (res != LoadedAssetsMap.end())
+	{
+		return dynamic_cast<StaticMesh*>(res->second);
+	}
+
+	StaticMesh* sm = new StaticMesh();
+
+	sm->fullPath = path;
+
+	if (!sm->Load())
+	{
+		return nullptr;
+	}
+
+	LoadedAssetsMap.insert({ path, sm });
+
+	return sm;
 }

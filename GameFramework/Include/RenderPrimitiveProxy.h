@@ -5,7 +5,7 @@
 #include <wrl/client.h>
 using namespace Microsoft::WRL;
 
-class MeshProxy
+class RenderPrimitiveProxy
 {
 public:
 
