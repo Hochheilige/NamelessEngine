@@ -66,6 +66,7 @@ auto ImGuiSubsystem::Initialize(Game* const InGame) -> void
 
 	io.Fonts->AddFontDefault();
 	mainFont = io.Fonts->AddFontFromFileTTF("../Assets/EngineContent/Fonts/LibreFranklin-Light.ttf", 13.0f);
+	headerFont = io.Fonts->AddFontFromFileTTF("../Assets/EngineContent/Fonts/LibreFranklin-Bold.ttf", 16.0f);
 	IM_ASSERT(mainFont != NULL);
 
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
@@ -424,7 +425,11 @@ auto ImGuiSubsystem::LayOutTransform() -> void
 		return;
 	}
 
-	if (!ImGui::CollapsingHeader("Transform")) {
+	ImGui::PushFont(headerFont);
+	bool isHeader = !ImGui::CollapsingHeader("Transform");
+	ImGui::PopFont();
+
+	if (isHeader) {
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
 		ImGui::BeginChild("ChildR", ImVec2(0, 130), true, window_flags);

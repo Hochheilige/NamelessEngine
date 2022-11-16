@@ -77,6 +77,7 @@ private:
 	Vector2 ViewportSize;
 
 	ImFont* mainFont;
+	ImFont* headerFont;
 
 	// Gizmo state
 private:
