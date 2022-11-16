@@ -897,8 +897,8 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 
 			bool isAssetCollectionStyle = dt->GetDirectoryByPath(GetEditorContext().GetSelectedDirectory())->IsAssetCollection();
 			if (isAssetCollectionStyle) {
-				ImGui::PushStyleColor(ImGuiCol_ChildBg, ImU32(0x0ff0f000));
-				ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+				ImGui::PushStyleColor(ImGuiCol_ChildBg, ImU32(0x50f0f000));
+				ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10.0f);
 			}
 
 			if (ImGui::BeginChild("Asset browser", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), false, window_flags)) 

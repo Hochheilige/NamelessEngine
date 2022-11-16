@@ -20,8 +20,8 @@ EngineContentRegistry::EngineContentRegistry(Game* InGame)
 {
 #pragma region Create Textures
 	DirectX::CreateWICTextureFromFile(MyGame->GetD3DDevice().Get(), L"../Assets/white.png", WhiteTex.GetAddressOf(), WhiteTexSRV.GetAddressOf());
-	DirectX::CreateWICTextureFromFile(MyGame->GetD3DDevice().Get(), L"../Assets/folder_thumb.png", &FolderTex, &FolderTexSRV, 256);
-	DirectX::CreateWICTextureFromFile(MyGame->GetD3DDevice().Get(), L"../Assets/generic_file_thumb.png", &GenericFileTex, &GenericFileTexSRV, 256);
+	DirectX::CreateWICTextureFromFile(MyGame->GetD3DDevice().Get(), L"../Assets/EngineContent/Textures/folder_thumb_v2.png", &FolderTex, &FolderTexSRV, 256);
+	DirectX::CreateWICTextureFromFile(MyGame->GetD3DDevice().Get(), L"../Assets/EngineContent/Textures/generic_file_thumb_v2.png", &GenericFileTex, &GenericFileTexSRV, 256);
 	DirectX::CreateWICTextureFromFile(MyGame->GetD3DDevice().Get(), L"../Assets/EngineContent/Textures/collection_folder_thumb.png", &AssetColTex, &AssetColTexSRV, 256);
 	CreateNormalMapTextureFromFile(L"../Assets/basicNormal.png", BasicNormalTex.GetAddressOf(), BasicNormalTexSRV.GetAddressOf());
 #pragma endregion Create Textures
