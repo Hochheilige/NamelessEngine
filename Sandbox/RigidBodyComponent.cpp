@@ -45,28 +45,21 @@ void RigidBodyComponent::SetMass(float mass)
         Body->setAngularFactor(btVector3(1, 1, 1));
         Body->updateInertiaTensor();
         Body->clearForces();
-        Body->setGravity(btVector3(0, -10, 0));
-        Body->setFlags(Body->getFlags() | BT_DISABLE_WORLD_GRAVITY);
         world->addRigidBody(Body);
     }
     //mMonoComponent->SetMass(mass);
 }
 
-void RigidBodyComponent::UpdateMass(float mass)
+void RigidBodyComponent::SetGravity(float gravity)
 {
-    Mass = mass;
-    auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorls();
-    world->removeRigidBody(Body);
-    btVector3 inertia;
-    Body->getCollisionShape()->calculateLocalInertia(mass, inertia);
-    Body->setActivationState(DISABLE_DEACTIVATION);
-    Body->setMassProps(mass, inertia);
-    Body->setLinearFactor(btVector3(1, 1, 1));
-    Body->setAngularFactor(btVector3(1, 1, 1));
-    Body->updateInertiaTensor();
-    Body->clearForces();
-    world->addRigidBody(Body);
-
+    if (Body)
+    {
+        auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorls();
+        world->removeRigidBody(Body);
+        Body->setGravity(btVector3(0, gravity, 0));
+        Body->setFlags(Body->getFlags() | BT_DISABLE_WORLD_GRAVITY);
+        world->addRigidBody(Body);
+    }
 }
 
 void RigidBodyComponent::SetRigidBodyType(RigidBodyType type)

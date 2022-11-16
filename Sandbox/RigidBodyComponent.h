@@ -28,7 +28,7 @@ public:
 
 	void SetMass(float mass);
 
-	void UpdateMass(float mass);
+	void SetGravity(float gravity);
 
 	void SetRigidBodyType(RigidBodyType type);
 
