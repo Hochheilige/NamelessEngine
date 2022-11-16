@@ -8,6 +8,7 @@
 #include "imguizmo.h"
 
 #include "Actor.h"
+#include "AssetManager.h"
 #include "Game.h"
 #include "RenderingSystem.h"
 #include "DisplayWin32.h"
@@ -17,13 +18,24 @@
 #include "EngineContentRegistry.h"
 
 #include "DirectoryTree.h"
+#include "StaticMeshRenderer.h"
+#include "StaticMesh.h"
+
+#include "RigidBodyComponent.h"
 
 //temporary include
 //#include "../External/bullet3/src/"
 
 ImGuiSubsystem* ImGuiSubsystem::Instance = nullptr;
 
+
+// Drag And Drop source classes 
+
 static const char* ActorDragDropSourceType = "ActorDragDropSourceType";
+static const char* FileDragDropSourceType = "FileDragDropSourceType";
+static const char* MeshDragDropSourceType = "MeshDragDropSourceType";
+
+
 
 auto GetComponentTypeName(ComponentType type) -> std::string {
 	std::string name = "";
@@ -38,6 +50,8 @@ auto GetComponentTypeName(ComponentType type) -> std::string {
 		name = "Point Light"; break;
 	case SceneComponentType:
 		name = "Scene Component"; break;
+	case StaticMeshRendererType:
+		name = "Static Mesh Renderer"; break;
 	}
 	return name;
 };
@@ -157,6 +171,12 @@ auto ImGuiSubsystem::DoLayout() -> void
 	DrawAssetBrowser();
 	DrawMessagesWindow();
 
+	// todo: remove this
+	/*for (const Path& path : OpenedFbxInspectorWindows)
+	{
+		DrawFBXInspector(path);
+	}*/
+
 	ImGui::PopFont();
 }
 
@@ -261,6 +281,16 @@ auto ImGuiSubsystem::DrawViewport() -> void
 				t.Position = MyGame->MyRenderingSystem->GetWorldPositionUnerScreenPosition(ViewportMousePos);
 				Actor* newActor = EngineContentRegistry::GetInstance()->CreateBasicActor(actorName, t);
 				GetEditorContext().SetSelectedActor(newActor);
+			}
+
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(MeshDragDropSourceType)) {
+				const std::string meshName = static_cast<const char*>(payload->Data);
+
+				//Transform t;
+				//t.Position = MyGame->MyRenderingSystem->GetWorldPositionUnerScreenPosition(ViewportMousePos);
+				//Actor* newActor = EngineContentRegistry::GetInstance()->CreateBasicActor(meshName, t);
+				//GetEditorContext().SetSelectedActor(newActor);
+
 			}
 
 			ImGui::EndDragDropTarget();
@@ -509,8 +539,28 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 			DrawComponentSelector(actor);
 			LayOutTransform();
 
+			SceneComponent* selectedComp = GetSelectedSceneComponent();
 			switch (GetSelectedSceneComponent()->GetComponentType()) {
-			case MeshRendererType:
+			case StaticMeshRendererType:
+			{
+				
+				// todo: move this to a function and use something other than a button
+				StaticMeshRenderer* smr = static_cast<StaticMeshRenderer*>(selectedComp);
+				ImGui::Button((smr->GetStaticMesh()->GetFullPath().filename().string() + "##StaticMesh").c_str(), ImVec2(100, 30));
+				if (ImGui::BeginDragDropTarget())
+				{
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(MeshDragDropSourceType))
+					{
+						Path::value_type* first = static_cast<Path::value_type*>(payload->Data);
+						// it seems that last is really last and not one past last
+						Path::value_type* last = first + payload->DataSize/sizeof(Path::value_type);
+						Path p = Path(first, last);
+
+						smr->SetStaticMesh(MyGame->GetAssetManager()->LoadStaticMesh(p));
+					}
+					ImGui::EndDragDropTarget();
+				}
+			}
 				break;
 			case RigidBodyCubeType:
 			case RigidBodySphereType:
@@ -565,6 +615,12 @@ auto ImGuiSubsystem::DrawGizmos() -> void
 
 		Transform t = selectedSceneComponent->GetTransform();
 		Matrix tMatrix = t.GetTransformMatrix();
+
+		if (auto rb_comp = dynamic_cast<RigidBodyComponent*>(selectedSceneComponent))
+		{
+			GetEditorContext().SetSelectedComponent(rb_comp);
+		}
+
 		if (ImGuizmo::Manipulate(&mView._11, &(mProj._11), mCurrentGizmoOperation, mCurrentGizmoMode, &tMatrix._11, NULL, useSnap ? &snap.x : NULL))
 		{
 			t.SetFromMatrix(tMatrix);
@@ -637,6 +693,11 @@ auto ImGuiSubsystem::GetSelectedSceneComponent() const -> SceneComponent*
 	}
 
 	return selectedSceneComponent;
+}
+
+auto ImGuiSubsystem::GetAssetManager() const->AssetManager*
+{
+	return MyGame->GetAssetManager();
 }
 
 auto ImGuiSubsystem::InitStyle() -> void
@@ -749,7 +810,7 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 
 			// Directory tree
 
-			DirectoryTree* dt = game->GetDirectoryTree();
+			DirectoryTree* dt = GetAssetManager()->GetAssetDirectoryTree();
 
 			ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 
@@ -763,31 +824,57 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 				while (!stack.empty()) {
 					dt_node = stack.back();
 					stack.pop_back();
+					bool isAssetCollection = dt_node?dt_node->IsAssetCollection():false;
+					if (isAssetCollection) {
+						ImGui::PushStyleColor(ImGuiCol_Text, ImU32(0xfff0f000));
+					}
 					if (dt_node == nullptr) {
 						ImGui::TreePop();
 						continue;
 					}
-					ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth;
-					const bool isLeaf = dt_node->GetChildren().size() == 0;
+					ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+					const bool isLeaf = dt_node->IsLeafNode();
 					if (isLeaf)
 					{
 						nodeFlags |= ImGuiTreeNodeFlags_Leaf;
 					}
-					const Path currentPathFromRoot = dt->GetPathFromRoot(dt_node);
+					const Path currentPathFromRoot = dt_node->GetPathFromTreeRoot();
 					Path currentSelectedDirectory = GetEditorContext().GetSelectedDirectory();
 					const bool isSelected = GetEditorContext().GetSelectedDirectory() == currentPathFromRoot;
 					if (isSelected)
 					{
 						nodeFlags |= ImGuiTreeNodeFlags_Selected;
 					}
-					const bool isOpen = ImGui::TreeNodeEx(dt_node->GetPath().string().c_str(), nodeFlags);
+					const bool isOpen = ImGui::TreeNodeEx(dt_node->GetName().string().c_str(), nodeFlags);
+					// Drag and drop target
+					if (!dt_node->IsAssetCollection() && ImGui::BeginDragDropTarget())
+					{
+						// compute paths
+
+						//TODO: Make handling moving a fucnction
+						if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(FileDragDropSourceType)) {
+							const std::string fileName = static_cast<const char*>(payload->Data);
+							// TODO move item into directory here
+							//ImGui::OpenPopup(("File kinda dropped lol — " + fileName).c_str());
+						}
+						ImGui::EndDragDropTarget();
+					}
+
 					if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
 					{
 						GetEditorContext().SetSelectedDirectory(currentPathFromRoot);
 					}
 					if (isOpen) {
 						stack.push_back(nullptr);
-						stack.insert(stack.end(), dt_node->GetChildren().begin(), dt_node->GetChildren().end());
+						// insert in the reverse order
+						for (long i = dt_node->GetNumDirectories() - 1; i >= 0; --i)
+						{
+							stack.push_back(dt_node->GetChildren()[i]);
+						}
+						//stack.insert(stack.end(), dt_node->GetChildren().data(), dt_node->GetChildren().data() + dt_node->GetNumDirectories());
+					}
+					if (isAssetCollection) {
+						ImGui::PopStyleColor();
 					}
 				}
 
@@ -816,66 +903,37 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 
 			// Assets
 
-			if (ImGui::BeginChild("Asset browser", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), false, window_flags)) {
+			bool isAssetCollectionStyle = dt->GetDirectoryByPath(GetEditorContext().GetSelectedDirectory())->IsAssetCollection();
+			if (isAssetCollectionStyle) {
+				ImGui::PushStyleColor(ImGuiCol_ChildBg, ImU32(0x0ff0f000));
+				ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+			}
 
-				Path path = game->assetsPath;
-				path._Remove_filename_and_separator();
-				path = path / GetEditorContext().GetSelectedDirectory();
-
+			if (ImGui::BeginChild("Asset browser", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), false, window_flags)) 
+			{
 				ImVec2 itemSize(80, 110);
-
 				ImGuiStyle& style = ImGui::GetStyle();
+
 				float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-				for (auto entry : std::filesystem::directory_iterator(path)) 
-				{
-				
-					ImGui::BeginGroup();
-					const ImVec2 selectableCursorPos = ImGui::GetCursorPos() + style.ItemSpacing;
-					ImGui::SetCursorPos(selectableCursorPos);
-					std::string pathAsString = entry.path().filename().string();
-					ImGuiSelectableFlags flags =  0;
-					if (entry.is_directory())
-						flags = ImGuiSelectableFlags_AllowDoubleClick;
-					ImGui::Selectable(("##" + pathAsString).c_str(), false, flags, itemSize);
-					// double-clicking to choose directories
-					if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered() && entry.is_directory()) {
-						GetEditorContext().SetSelectedDirectory(entry.path().lexically_relative(".."));
-						ImGui::EndGroup();
-						break;
-					}
-					
-					if (ImGui::IsItemHovered())
-						ImGui::SetTooltip(pathAsString.c_str());
-					ImGui::SetItemAllowOverlap();
-
-					const ImVec2 imageCursorPosition = selectableCursorPos + ImVec2{ 0.0f, style.ItemSpacing.y };
-					ImGui::SetCursorPos(imageCursorPosition);
-					// todo: replace with a proper image
-					ImTextureID imageId = nullptr;
-					if (entry.is_directory())
+				DirectoryTreeNode* selectedDirectory = dt->GetDirectoryByPath(GetEditorContext().GetSelectedDirectory());
+				if (selectedDirectory != nullptr)
+				{			
+					for (const DirectoryTreeNode* file : selectedDirectory->GetChildren())
 					{
-						imageId = EngineContentRegistry::GetInstance()->GetFolderTexSRV().Get();
+						DrawAsset(file, itemSize);
+						float last_button_x2 = ImGui::GetItemRectMax().x;
+						float next_button_x2 = last_button_x2 + style.ItemSpacing.x + itemSize.x; // Expected position if next button was on same line
+						if (next_button_x2 < window_visible_x2)
+							ImGui::SameLine(0.0f, 0.0f);
 					}
-					if (imageId == nullptr)
-					{
-						imageId = EngineContentRegistry::GetInstance()->GetGenericFileTexSRV().Get();
-					}
-					ImGui::Image(imageId, ImVec2(itemSize.x, itemSize.x));
-					std::string str = entry.path().filename().string();
-					// todo properly habdle text not fully fitting
-					if (str.length() > 15)
-						str = str.substr(0, 12) + "...";
-					ImGui::SetCursorPos(ImGui::GetCursorPos() + style.ItemSpacing);
-					ImGui::Text(str.c_str());
-					ImGui::EndGroup();
-
-					float last_button_x2 = ImGui::GetItemRectMax().x;
-					float next_button_x2 = last_button_x2 + style.ItemSpacing.x + itemSize.x; // Expected position if next button was on same line
-					if (next_button_x2 < window_visible_x2)
-						ImGui::SameLine(0.0f, 0.0f);
 				}
 
 				ImGui::EndChild();
+			}
+
+			if (isAssetCollectionStyle) {
+				ImGui::PopStyleColor();
+				ImGui::PopStyleVar();
 			}
 
 			ImGui::EndTable();
@@ -884,3 +942,150 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 	ImGui::End();
 }
 
+auto ImGuiSubsystem::DrawAsset(const DirectoryTreeNode* file, const Vector2& itemSize/* = Vector2(80, 110)*/) -> void
+{
+	ImGuiStyle& style = ImGui::GetStyle();
+	
+	ImGui::BeginGroup();
+	const ImVec2 selectableCursorPos = ImGui::GetCursorPos() + style.ItemSpacing;
+	ImGui::SetCursorPos(selectableCursorPos);
+	const std::string nameAsString = file->GetName().string();
+	ImGuiSelectableFlags flags = 0;
+	const bool isDirectory = file->IsDirectoryOrAssetCollection();
+	if (isDirectory)
+		flags = ImGuiSelectableFlags_AllowDoubleClick;
+	ImGui::Selectable(("##" + nameAsString).c_str(), false, flags, itemSize);
+	const bool bItemDoubleClicked = ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered();
+
+	// Setting up drag and drop as source
+	if (!file->IsAssetFromCollection() && ImGui::BeginDragDropSource())
+	{
+		ImGui::SetDragDropPayload(FileDragDropSourceType, nameAsString.c_str(), nameAsString.size() + 1);
+
+		ImGui::Text(nameAsString.c_str());
+
+		ImGui::EndDragDropSource();
+	}
+
+	if (file->IsAssetFromCollection() && ImGui::BeginDragDropSource())
+	{
+		Path p = Path("..") / file->GetPathFromTreeRoot();
+		ImGui::SetDragDropPayload(MeshDragDropSourceType, p.c_str(), p.native().size() * sizeof(Path::value_type));
+
+		ImGui::Text(nameAsString.c_str());
+
+		ImGui::EndDragDropSource();
+	}
+
+	//Setting up drag and drop as target for directories
+	if (isDirectory && !file->IsAssetCollection()  && ImGui::BeginDragDropTarget())
+	{
+		//compute paths here
+
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(FileDragDropSourceType)) {
+			const std::string fileName = static_cast<const char*>(payload->Data);
+
+			// TODO move item into directory here
+
+			//ImGui::OpenPopup(("File kinda dropped lol — " + fileName).c_str());
+
+		}
+		ImGui::EndDragDropTarget();
+	}
+
+	// double-clicking to choose directories
+	if (bItemDoubleClicked && isDirectory) {
+		GetEditorContext().SetSelectedDirectory(file->GetPathFromTreeRoot());
+		// todo: return false to signify that we can stop rendering other items
+		// or pass a callback to this function?
+		//ImGui::EndGroup();
+		//break;
+	}
+
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip(nameAsString.c_str());
+	ImGui::SetItemAllowOverlap();
+
+	const ImVec2 imageCursorPosition = selectableCursorPos + ImVec2{ 0.0f, style.ItemSpacing.y };
+	ImGui::SetCursorPos(imageCursorPosition);
+	// todo: replace with a proper image
+	ImTextureID imageId = nullptr;
+	if (file->IsDirectory())
+	{
+		imageId = EngineContentRegistry::GetInstance()->GetFolderTexSRV().Get();
+	}
+	else if (file->IsAssetCollection())
+	{
+		imageId = EngineContentRegistry::GetInstance()->GetAssetColTexSRV().Get();
+	}
+	if (imageId == nullptr)
+	{
+		imageId = EngineContentRegistry::GetInstance()->GetGenericFileTexSRV().Get();
+	}
+	ImGui::Image(imageId, ImVec2(itemSize.x, itemSize.x));
+	std::string str = nameAsString;
+	// todo properly habdle text not fully fitting
+	if (str.length() > 15)
+		str = str.substr(0, 12) + "...";
+	ImGui::SetCursorPos(ImGui::GetCursorPos() + style.ItemSpacing);
+	ImGui::Text(str.c_str());
+	ImGui::EndGroup();
+}
+
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
+auto ImGuiSubsystem::DrawFBXInspector(const Path& path) -> void
+{
+	ImGui::SetNextWindowClass(&topLevelClass);
+	if (ImGui::Begin((path.filename().string() + "##FbxInspector").c_str()))
+	{
+		Assimp::Importer importer;
+		const aiScene* scene = importer.ReadFile(path.string(), aiProcess_FlipUVs | aiProcess_FlipWindingOrder | aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_CalcTangentSpace);
+
+		if (ImGui::CollapsingHeader("Meshes"))
+		{
+			for (size_t i = 0; i < scene->mNumMeshes; ++i)
+			{
+				const aiMesh* mesh = scene->mMeshes[i];
+				ImGui::Text(mesh->mName.C_Str());
+			}
+		}
+		if (ImGui::CollapsingHeader("Scene Tree"))
+		{
+			std::vector<const aiNode*> stack;
+			stack.push_back(scene->mRootNode);
+			while (!stack.empty())
+			{
+				const aiNode* node = stack.back();
+				stack.pop_back();
+
+				if (node == nullptr)
+				{
+					ImGui::TreePop();
+					continue;
+				}
+
+				const bool nodeOpen = ImGui::TreeNodeEx(node->mName.C_Str());
+				if (nodeOpen)
+				{
+					stack.push_back(nullptr);
+					stack.insert(stack.end(), node->mChildren, node->mChildren + node->mNumChildren);
+				}
+				
+				if (nodeOpen && node->mNumMeshes > 0)
+				{
+					ImGui::Text("Meshes:");
+					for (size_t i = 0; i < node->mNumMeshes; ++i)
+					{
+						const aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+						ImGui::Text(mesh->mName.C_Str());
+					}
+				}
+			}
+		}
+	}
+	ImGui::End();
+}

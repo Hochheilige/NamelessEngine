@@ -23,8 +23,10 @@ public:
 	Actor* CreateNonPhysicsBox(Transform transform);
 	Actor* CreateStaticBox(Transform transform);
 	Actor* CreateDynamicBox(Transform transform);
+	Actor* CreateKinematicBox(Transform transform);
 	Actor* CreateStaticSphere(Transform transform);
 	Actor* CreateDynamicSphere(Transform transform);
+	Actor* CreateKinematicSphere(Transform transform);
 
 	Actor* CreateBunny(Transform transform);
 
@@ -45,11 +47,11 @@ private:
 	class PixelShader* ps;
 	class PixelShader* psPlain;
 
-	class MeshProxy* boxMeshProxy;
-	class MeshProxy* circleMeshProxy;
-	class MeshProxy* sphereMeshProxy;
-	MeshProxy* bunnyMeshProxy;
-	MeshProxy* texturedBoxMeshProxy;
+	class RenderPrimitiveProxy* boxMeshProxy;
+	class RenderPrimitiveProxy* circleMeshProxy;
+	class RenderPrimitiveProxy* sphereMeshProxy;
+	RenderPrimitiveProxy* bunnyMeshProxy;
+	RenderPrimitiveProxy* texturedBoxMeshProxy;
 
 	class Camera* PerspCamera;
 	class Camera* OrthoCamera;
@@ -70,7 +72,7 @@ private:
 
 
 	// burger bun
-	MeshProxy* burgerMeshProxy;
+	RenderPrimitiveProxy* burgerMeshProxy;
 
 	ComPtr<ID3D11Resource> burgerTexResource;
 	ComPtr<ID3D11ShaderResourceView> burgerTexSRV;
@@ -80,6 +82,8 @@ private:
 
 	ComPtr<ID3D11Resource> burgerSpecular;
 	ComPtr<ID3D11ShaderResourceView> burgerSpecSRV;
+
+	PlayState prevPlayState = PlayState::Editor;
 
 
 	virtual auto OnBeginPlay() -> void override;

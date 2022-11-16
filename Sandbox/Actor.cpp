@@ -129,3 +129,11 @@ void Actor::UnUsePhysicsSimulation()
 	}
 }
 
+void Actor::SyncPhysicsTransform()
+{
+	Transform t = GetTransform();
+	auto rb_comp = GetComponentOfClass<RigidBodyComponent>();
+	if (rb_comp)
+		rb_comp->SetPhysicsTransform(t);
+}
+

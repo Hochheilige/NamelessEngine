@@ -5,12 +5,6 @@ RigidBodySphere::RigidBodySphere()
 
 }
 
-void RigidBodySphere::SetMass(float mass)
-{
-	Mass = mass;
-	//mMonoComponent->SetMass(mass);
-}
-
 void RigidBodySphere::Init()
 {
 	auto physics = PhysicsModuleData::GetInstance();
@@ -32,6 +26,8 @@ void RigidBodySphere::Init()
 	btDefaultMotionState* myMotionState = new btDefaultMotionState(PhysicsTransform);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(Mass, myMotionState, Shape, localInertia);
 	Body = new btRigidBody(rbInfo);
+
+	RegisterRigidBodyType();
 
 	//physics->GetDynamicsWorls()->addRigidBody(Body);
 }

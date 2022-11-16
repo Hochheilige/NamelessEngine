@@ -14,11 +14,11 @@ void TestScene::Initialize()
 {
 	// create meshes
 	boxMesh = new BoxMesh();
-	boxMeshProxy = boxMesh->CreateMeshProxy();
+	boxMeshProxy = boxMesh->CreateRenderingPrimitiveProxy();
 	circleMesh = new CircleMesh();
-	circleMeshProxy = circleMesh->CreateMeshProxy();
+	circleMeshProxy = circleMesh->CreateRenderingPrimitiveProxy();
 	sphereMesh = new SphereMesh();
-	sphereMeshProxy = sphereMesh->CreateMeshProxy();
+	sphereMeshProxy = sphereMesh->CreateRenderingPrimitiveProxy();
 
 
 	// create shaders

@@ -79,9 +79,13 @@ public:
 	template<typename T>
 	T* GetComponentOfClass()
 	{
-		T* comp = dynamic_cast<T*>(*std::find_if(Components.begin(), Components.end(),
-			[](Component* comp) {return dynamic_cast<T*>(comp); }));
-		return comp;
+		auto comp = std::find_if(Components.begin(), Components.end(),
+			[](Component* comp) {return dynamic_cast<T*>(comp); });
+
+		if (comp != Components.end())
+			return dynamic_cast<T*>(*comp);
+
+		return nullptr;
 	}
 
 	auto RemoveComponent(Component* InComponent) -> void;
@@ -101,6 +105,7 @@ public:
 	// TODO change naming
 	void UsePhysicsSimulation();
 	void UnUsePhysicsSimulation();
+	void SyncPhysicsTransform();
 
 	virtual void Update(float DeltaTime) override;
 

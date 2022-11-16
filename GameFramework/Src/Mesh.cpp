@@ -1,29 +1,29 @@
 #include "Mesh.h"
 
 #include "Game.h"
-#include "MeshProxy.h"
+#include "RenderPrimitiveProxy.h"
 
-MeshProxy* ColoredMesh::CreateMeshProxy()
+RenderPrimitiveProxy* ColoredMesh::CreateRenderingPrimitiveProxy()
 {
-	MeshProxy* meshProxy = new MeshProxy();
+	RenderPrimitiveProxy* meshProxy = new RenderPrimitiveProxy();
 
 	meshProxy->Initialize(&Vertices[0], Vertices.size(),  static_cast<UINT>(sizeof(ColoredVertex)),  &Indices[0], Indices.size());
 
 	return meshProxy;
 }
 
-MeshProxy* TexturedMesh::CreateMeshProxy()
+RenderPrimitiveProxy* TexturedMesh::CreateRenderingPrimitiveProxy()
 {
-	MeshProxy* meshProxy = new MeshProxy();
+	RenderPrimitiveProxy* meshProxy = new RenderPrimitiveProxy();
 
 	meshProxy->Initialize(&Vertices[0], Vertices.size(), static_cast<UINT>(sizeof(TexturedVertex)), &Indices[0], Indices.size());
 
 	return meshProxy;
 }
 
-MeshProxy* BasicMesh::CreateMeshProxy()
+RenderPrimitiveProxy* BasicMesh::CreateRenderingPrimitiveProxy()
 {
-	MeshProxy* meshProxy = new MeshProxy();
+	RenderPrimitiveProxy* meshProxy = new RenderPrimitiveProxy();
 
 	meshProxy->Initialize(&Vertices[0], Vertices.size(), static_cast<UINT>(sizeof(BasicVertex)), &Indices[0], Indices.size());
 
