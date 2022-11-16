@@ -3,8 +3,7 @@
 
 RigidBodyComponent::RigidBodyComponent()
 {
-    auto game = Game::GetInstance();
-    game->MyEditorContext.OnSelectedComponentChanged.AddRaw(this, &RigidBodyComponent::HandleSelectedComponentChanded);
+    
 }
 
 RigidBodyComponent::~RigidBodyComponent()
@@ -87,31 +86,6 @@ void RigidBodyComponent::SetRigidBodyType(RigidBodyType type)
     OriginType = type;
 }
 
-void RigidBodyComponent::SetPhysicsTransform(Transform transform)
-{
-    if (OriginType != RigidBodyType::KINEMATIC)
-        MakeKinematic();
-
-    PhysicsTransform.setOrigin(btVector3(transform.Position.x, transform.Position.y, transform.Position.z));
-    btQuaternion quat = btQuaternion(transform.Rotation.GetQuaterion().x, transform.Rotation.GetQuaterion().y, 
-        transform.Rotation.GetQuaterion().z, transform.Rotation.GetQuaterion().w);
-    PhysicsTransform.setRotation(quat);
-    Body->setWorldTransform(PhysicsTransform);
-
-    switch (OriginType)
-    {
-    case RigidBodyType::STATIC:
-        MakeStatic();
-        break;
-    case RigidBodyType::DYNAMIC:
-        MakeDynamic();
-        break;
-    default:
-        break;
-    }
-
-}
-
 void RigidBodyComponent::MakeKinematic()
 {
     Body->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
@@ -153,54 +127,69 @@ void RigidBodyComponent::RegisterRigidBodyType()
 void RigidBodyComponent::Update(float DeltaTime)
 {
     Transform t = GetTransform();
-    switch (rbType)
-    {
-    case RigidBodyType::STATIC:
+	switch (rbType)
+	{
+	// static object should not be moved, especially on update
+	/* case RigidBodyType::STATIC:
     {
         PhysicsTransform.setOrigin(btVector3(t.Position.x, t.Position.y, t.Position.z));
         btQuaternion quat = btQuaternion(t.Rotation.GetQuaterion().x, t.Rotation.GetQuaterion().y, t.Rotation.GetQuaterion().z, t.Rotation.GetQuaterion().w);
         PhysicsTransform.setRotation(quat);
         Body->setWorldTransform(PhysicsTransform);
         break;
-    }
-    case RigidBodyType::DYNAMIC:
-    {
-        if (Body && Body->getMotionState())
+    }*/
+	case RigidBodyType::DYNAMIC:
+	{
+	if (Body && Body->getMotionState())
         {
             Body->getMotionState()->getWorldTransform(PhysicsTransform);
         }
         t.Position = Vector3(PhysicsTransform.getOrigin().x(), PhysicsTransform.getOrigin().y(), PhysicsTransform.getOrigin().z());
         t.Rotation = Quaternion(PhysicsTransform.getRotation());
         break;
-    }
-    case RigidBodyType::KINEMATIC:
+	}
+	// there's probalbly no need to update this every frame
+    /*case RigidBodyType::KINEMATIC:
     {
         PhysicsTransform.setOrigin(btVector3(t.Position.x, t.Position.y, t.Position.z));
         btQuaternion quat = btQuaternion(t.Rotation.GetQuaterion().x, t.Rotation.GetQuaterion().y, t.Rotation.GetQuaterion().z, t.Rotation.GetQuaterion().w);
         PhysicsTransform.setRotation(quat);
         Body->getMotionState()->setWorldTransform(PhysicsTransform);
         break;
-    }
-    default:
-        break;
-    }
+    }*/
+	default:
+		break;
+	}
 
-    SetTransform(t);
-
+   SceneComponent::SetTransform(t);
 }
 
-void RigidBodyComponent::HandleSelectedComponentChanded(Component* newSelectedComponent)
+auto RigidBodyComponent::SetTransform(const Transform& InTransform, TeleportType InTeleportType) -> void
 {
-    if (OriginType == RigidBodyType::DYNAMIC)
-    {
-        if (this == dynamic_cast<RigidBodyComponent*>(newSelectedComponent))
-        {
+	SceneComponent::SetTransform(InTransform, InTeleportType);
 
-            MakeKinematic();
-        }
-        else
-        {
-            MakeDynamic();
-        }
-    }
+	PhysicsTransform.setOrigin(btVector3(InTransform.Position.x, InTransform.Position.y, InTransform.Position.z));
+	btQuaternion quat = btQuaternion(InTransform.Rotation.GetQuaterion().x, InTransform.Rotation.GetQuaterion().y,
+		InTransform.Rotation.GetQuaterion().z, InTransform.Rotation.GetQuaterion().w);
+	PhysicsTransform.setRotation(quat);
+	// Kinimatic bodies take their transform from motion state, so we need to update it too
+	if (Body->isKinematicObject() && Body->getMotionState())
+	{
+		Body->getMotionState()->setWorldTransform(PhysicsTransform);
+	}
+	else
+	{
+		// this funcion seems to be too strong when using with kinematic bodies, resulting in visible overlap
+		// probably beacause right now physics is not updated every frame
+		Body->setCenterOfMassTransform(PhysicsTransform);
+	}
+	
+	if (InTeleportType == TeleportType::ResetPhysics)
+	{
+		Body->clearForces();
+		Body->clearGravity();
+		Body->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
+		Body->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
+		// todo: make sure everything is cleared
+	}
 }

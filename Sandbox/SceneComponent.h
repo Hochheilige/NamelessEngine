@@ -7,6 +7,13 @@
 
 #include "MonoObjects/MonoSceneComponent.h"
 
+enum class TeleportType
+{
+	// todo: add a flag to move a physics body with a sweep
+	TeleportPhysics,
+	ResetPhysics
+};
+
 class SceneComponent : public Component
 {
 public:
@@ -15,7 +22,7 @@ public:
 	
 	// todo: add funcions to set world transform of scene components
 	// Transform get/update funcions
-	auto SetTransform(const Transform& InTransform) -> void;
+	virtual auto SetTransform(const Transform& InTransform, TeleportType InTeleportType = TeleportType::TeleportPhysics) -> void;
 	auto GetTransform() const -> const Transform&;
 
 	//auto SetPosition(const Vector3& InPosition) -> void;

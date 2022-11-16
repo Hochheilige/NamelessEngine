@@ -468,7 +468,7 @@ auto ImGuiSubsystem::LayOutTransform() -> void
 
 		if (transformUpdated)
 		{
-			mCurrentGizmoMode == ImGuizmo::MODE::LOCAL ? ssc->SetRelativeTransform(t) : ssc->SetTransform(t);
+			mCurrentGizmoMode == ImGuizmo::MODE::LOCAL ? ssc->SetRelativeTransform(t) : ssc->SetTransform(t, TeleportType::ResetPhysics);
 		}
 
 		ImGui::EndChild();
@@ -622,15 +622,10 @@ auto ImGuiSubsystem::DrawGizmos() -> void
 		Transform t = selectedSceneComponent->GetTransform();
 		Matrix tMatrix = t.GetTransformMatrix();
 
-		if (auto rb_comp = dynamic_cast<RigidBodyComponent*>(selectedSceneComponent))
-		{
-			GetEditorContext().SetSelectedComponent(rb_comp);
-		}
-
 		if (ImGuizmo::Manipulate(&mView._11, &(mProj._11), mCurrentGizmoOperation, mCurrentGizmoMode, &tMatrix._11, NULL, useSnap ? &snap.x : NULL))
 		{
 			t.SetFromMatrix(tMatrix);
-			selectedSceneComponent->SetTransform(t);
+			selectedSceneComponent->SetTransform(t, TeleportType::ResetPhysics);
 		}
 	}
 }

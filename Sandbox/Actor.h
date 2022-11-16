@@ -105,7 +105,6 @@ public:
 	// TODO change naming
 	void UsePhysicsSimulation();
 	void UnUsePhysicsSimulation();
-	void SyncPhysicsTransform();
 
 	virtual void Update(float DeltaTime) override;
 

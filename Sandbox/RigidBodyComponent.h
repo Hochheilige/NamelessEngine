@@ -34,8 +34,6 @@ public:
 
 	void SetRigidBodyType(RigidBodyType type);
 
-	void SetPhysicsTransform(Transform transform);
-
 	void SetLinearVelocity(btVector3 velocity);
 
 	void RegisterRigidBodyType();
@@ -48,7 +46,7 @@ public:
 
 	void MakeStatic();
 
-	auto HandleSelectedComponentChanded(Component* newSelectedComponent) -> void;
+	virtual auto SetTransform(const Transform& InTransform, TeleportType InTeleportType) -> void;
 
 protected:
 	btCollisionShape* Shape;
@@ -56,10 +54,12 @@ protected:
 	btScalar Mass;
 	btTransform PhysicsTransform;
 
+	// todo: do we need this? - we can query type using Body->isKinematicObject(), Body->isStaticObject()
 	RigidBodyType rbType;
 	RigidBodyType OriginType;
 
 public:
+	// todo: do we need this?
 	bool is_kinematic = false;
 };
 

@@ -417,16 +417,6 @@ void Sandbox::Update(float DeltaTime)
 	// TODO: base game class should do this
 	if (GetPlayState() == PlayState::Playing)
 	{ 
-		if (prevPlayState == PlayState::Editor || prevPlayState == PlayState::Paused)
-		{
-			for (auto actor : Actors)
-			{
-				actor->SyncPhysicsTransform();				
-			}
-
-			
-		}
-
 		// Physics Simulation
 		auto physics = PhysicsModuleData::GetInstance();
 		physics->OnUpdate(DeltaTime);

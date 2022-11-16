@@ -1,6 +1,6 @@
 #include "SceneComponent.h"
 
-auto SceneComponent::SetTransform(const Transform& InTransform) -> void
+auto SceneComponent::SetTransform(const Transform& InTransform, TeleportType InTeleportType/* = ETeleportType::TeleportPhysics*/) -> void
 {
 	// Calculate relative transform
 	if (SceneComponent* sceneComp = GetAttachmentParent())
