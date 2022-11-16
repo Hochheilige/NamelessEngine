@@ -225,6 +225,7 @@ xcopy "$(SolutionDir)External\mono\lib\4.5\*" "$(TargetDir)mono\lib\4.5\" /y /i 
     <ClInclude Include="MonoObjects\MonoComponent.h" />
     <ClInclude Include="MonoObjects\MonoPhysicsComponent.h" />
     <ClInclude Include="MonoObjects\MonoSceneComponent.h" />
+    <ClInclude Include="MonoObjects\StaticMeshRendererComponent.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="PhysicsModule.h" />
     <ClInclude Include="RigidBodyComponent.h" />

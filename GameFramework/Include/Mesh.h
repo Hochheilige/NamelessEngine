@@ -37,10 +37,10 @@ class Mesh
 {
 public:
 	/*
-	* Allocates MeshProxy on the heap and expects the calling code to take ownership of it
+	* Allocates RenderPrimitiveProxy on the heap and expects the calling code to take ownership of it
 	* todo: use some smart pointer ?
 	*/
-	virtual class MeshProxy* CreateMeshProxy() = 0;
+	virtual class RenderPrimitiveProxy* CreateRenderingPrimitiveProxy() = 0;
 
 	virtual ~Mesh() = default;
 
@@ -81,7 +81,7 @@ protected:
 class ColoredMesh : public Mesh<ColoredVertex>
 {
 public:
-	virtual class MeshProxy* CreateMeshProxy() override;
+	virtual class RenderPrimitiveProxy* CreateRenderingPrimitiveProxy() override;
 };
 
 
@@ -92,7 +92,7 @@ class TexturedMesh : public Mesh<TexturedVertex>
 {
 public:
 
-	virtual class MeshProxy* CreateMeshProxy() override;
+	virtual class RenderPrimitiveProxy* CreateRenderingPrimitiveProxy() override;
 };
 
 // todo: move to PongMeshes.h and PongMeshes.cpp files
@@ -302,7 +302,7 @@ class BasicMesh : public Mesh<BasicVertex>
 {
 public:
 
-	virtual class MeshProxy* CreateMeshProxy() override;
+	virtual class RenderPrimitiveProxy* CreateRenderingPrimitiveProxy() override;
 };
 
 class BasicSphereMesh : public BasicMesh

@@ -1,8 +1,8 @@
-#include "MeshProxy.h"
+#include "RenderPrimitiveProxy.h"
 
 #include "Game.h"
 
-void MeshProxy::Initialize(void* InVertexData, UINT InNumVertices, UINT InVertexSize, UINT* InIndexData, UINT InNumIndices)
+void RenderPrimitiveProxy::Initialize(void* InVertexData, UINT InNumVertices, UINT InVertexSize, UINT* InIndexData, UINT InNumIndices)
 {
 	NumIndices = InNumIndices;
 	VertexSize = InVertexSize;
@@ -39,28 +39,28 @@ void MeshProxy::Initialize(void* InVertexData, UINT InNumVertices, UINT InVertex
 	device->CreateBuffer(&indexBufDesc, &indexData, IndexBuffer.GetAddressOf());
 }
 
-ComPtr<ID3D11Buffer> MeshProxy::GetVertexBuffer()
+ComPtr<ID3D11Buffer> RenderPrimitiveProxy::GetVertexBuffer()
 {
 	return VertexBuffer;
 }
 
-ComPtr<ID3D11Buffer> MeshProxy::GetIndexBuffer()
+ComPtr<ID3D11Buffer> RenderPrimitiveProxy::GetIndexBuffer()
 {
 	return IndexBuffer;
 }
 
-UINT* MeshProxy::GetStrides()
+UINT* RenderPrimitiveProxy::GetStrides()
 {
 	return &VertexSize;
 }
 
-UINT* MeshProxy::GetOffsets()
+UINT* RenderPrimitiveProxy::GetOffsets()
 {
 	static UINT offset = 0;
 	return &offset;
 }
 
-UINT MeshProxy::GetNumIndices()
+UINT RenderPrimitiveProxy::GetNumIndices()
 {
 	return NumIndices;
 }

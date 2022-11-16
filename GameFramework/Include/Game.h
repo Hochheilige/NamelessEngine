@@ -16,6 +16,7 @@
 using Path = std::filesystem::path;
 
 class Actor;
+class AssetManager;
 class RenderingSystem;
 class ImGuiSubsystem;
 class EngineContentRegistry;
@@ -165,6 +166,8 @@ public:
 
 	virtual auto OnBeginPlay() -> void;
 
+
+	auto GetImGuiSubsystem() const -> ImGuiSubsystem* { return mImGuiSubsystem; }
 protected:
 
 	Game();
@@ -228,18 +231,9 @@ private:
 
 	PlayState mPlayState = PlayState::Editor;
 
-	std::unique_ptr<class DirectoryTree> directoryTree;
-
+	std::unique_ptr<AssetManager> assetManager;
 
 public:
-
-	Path assetsPath = "../Assets";
-
-	auto FillDirectoryTree() -> void;
-
-	auto GetDirectoryTree() -> DirectoryTree* {
-		return directoryTree.get();
-	};
-
+	auto GetAssetManager() const -> AssetManager* { return assetManager.get(); }
 };
 
