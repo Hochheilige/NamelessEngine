@@ -1,4 +1,11 @@
 #include "RigidBodyComponent.h"
+#include "Game.h"
+
+RigidBodyComponent::RigidBodyComponent()
+{
+    auto game = Game::GetInstance();
+    game->MyEditorContext.OnSelectedComponentChanged.AddRaw(this, &RigidBodyComponent::HandleSelectedComponentChanded);
+}
 
 RigidBodyComponent::~RigidBodyComponent()
 {
@@ -7,6 +14,9 @@ RigidBodyComponent::~RigidBodyComponent()
     delete Body->getCollisionShape();
     delete Body->getMotionState();
     delete Body;
+
+    auto game = Game::GetInstance();
+    //game->MyEditorContext.OnSelectedComponentChanged.RemoveObject(this);
     //delete Shape;
 }
 
@@ -27,7 +37,7 @@ btScalar RigidBodyComponent::GetMass()
 
 RigidBodyType RigidBodyComponent::GetType()
 {
-    return rbType;
+    return OriginType;
 }
 
 void RigidBodyComponent::SetMass(float mass)
@@ -65,12 +75,12 @@ void RigidBodyComponent::SetGravity(float gravity)
 void RigidBodyComponent::SetRigidBodyType(RigidBodyType type)
 {
     rbType = type;
+    OriginType = type;
 }
 
 void RigidBodyComponent::SetPhysicsTransform(Transform transform)
 {
-    auto originType = rbType;
-    if (originType != RigidBodyType::KINEMATIC)
+    if (OriginType != RigidBodyType::KINEMATIC)
         MakeKinematic();
 
     PhysicsTransform.setOrigin(btVector3(transform.Position.x, transform.Position.y, transform.Position.z));
@@ -79,7 +89,7 @@ void RigidBodyComponent::SetPhysicsTransform(Transform transform)
     PhysicsTransform.setRotation(quat);
     Body->setWorldTransform(PhysicsTransform);
 
-    switch (originType)
+    switch (OriginType)
     {
     case RigidBodyType::STATIC:
         MakeStatic();
@@ -113,7 +123,7 @@ void RigidBodyComponent::MakeStatic()
 
 void RigidBodyComponent::RegisterRigidBodyType()
 {
-    switch (rbType)
+    switch (OriginType)
     {
     case RigidBodyType::STATIC:
         Body->setCollisionFlags(this->Body->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT);
@@ -141,7 +151,7 @@ void RigidBodyComponent::Update(float DeltaTime)
         PhysicsTransform.setOrigin(btVector3(t.Position.x, t.Position.y, t.Position.z));
         btQuaternion quat = btQuaternion(t.Rotation.GetQuaterion().x, t.Rotation.GetQuaterion().y, t.Rotation.GetQuaterion().z, t.Rotation.GetQuaterion().w);
         PhysicsTransform.setRotation(quat);
-        Body->getMotionState()->setWorldTransform(PhysicsTransform);
+        Body->setWorldTransform(PhysicsTransform);
         break;
     }
     case RigidBodyType::DYNAMIC:
@@ -168,4 +178,20 @@ void RigidBodyComponent::Update(float DeltaTime)
 
     SetTransform(t);
 
+}
+
+void RigidBodyComponent::HandleSelectedComponentChanded(Component* newSelectedComponent)
+{
+    if (OriginType == RigidBodyType::DYNAMIC)
+    {
+        if (this == dynamic_cast<RigidBodyComponent*>(newSelectedComponent))
+        {
+
+            MakeKinematic();
+        }
+        else
+        {
+            MakeDynamic();
+        }
+    }
 }

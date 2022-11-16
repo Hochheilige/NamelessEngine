@@ -16,6 +16,8 @@ class RigidBodyComponent : public SceneComponent
 {
 public:
 
+	RigidBodyComponent();
+
 	virtual ~RigidBodyComponent();
 
 	btRigidBody* GetRigidBody();
@@ -44,6 +46,8 @@ public:
 
 	void MakeStatic();
 
+	auto HandleSelectedComponentChanded(Component* newSelectedComponent) -> void;
+
 protected:
 	btCollisionShape* Shape;
 	btRigidBody* Body;
@@ -51,6 +55,7 @@ protected:
 	btTransform PhysicsTransform;
 
 	RigidBodyType rbType;
+	RigidBodyType OriginType;
 
 public:
 	bool is_kinematic = false;
