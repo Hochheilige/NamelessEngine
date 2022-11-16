@@ -221,11 +221,14 @@
     <ClInclude Include="..\imgui\backends\imgui_impl_dx11.h" />
     <ClInclude Include="..\imgui\backends\imgui_impl_win32.h" />
     <ClInclude Include="Include\AABB2DCollider.h" />
+    <ClInclude Include="Include\Asset.h" />
+    <ClInclude Include="Include\AssetManager.h" />
     <ClInclude Include="Include\CreateCommon.h" />
     <ClInclude Include="Include\Delegates.h" />
     <ClInclude Include="Include\DirectoryTree.h" />
     <ClInclude Include="Include\EditorContext.h" />
     <ClInclude Include="Include\EngineContentRegistry.h" />
+    <ClInclude Include="Include\FileSystem.h" />
     <ClInclude Include="Include\Game.h" />
     <ClInclude Include="Include\GameComponent.h" />
     <ClInclude Include="Include\Camera.h" />
@@ -241,7 +244,7 @@
     <ClInclude Include="Include\MathInclude.h" />
     <ClInclude Include="Include\Mesh.h" />
     <ClInclude Include="Include\MeshLoader.h" />
-    <ClInclude Include="Include\MeshProxy.h" />
+    <ClInclude Include="Include\RenderPrimitiveProxy.h" />
     <ClInclude Include="Include\MeshRenderer.h" />
     <ClInclude Include="Include\ObjectLookupHelper.h" />
     <ClInclude Include="Include\OrbitCameraController.h" />
@@ -252,6 +255,8 @@
     <ClInclude Include="Include\Shader.h" />
     <ClInclude Include="Include\ShaderCompiler.h" />
     <ClInclude Include="Include\SphereCollider.h" />
+    <ClInclude Include="Include\StaticMesh.h" />
+    <ClInclude Include="Include\StaticMeshRenderer.h" />
     <ClInclude Include="Include\StringId.h" />
     <ClInclude Include="Include\Transform.h" />
     <ClInclude Include="Include\Mouse.h" />
@@ -263,6 +268,8 @@
     <ClCompile Include="EditorContext.cpp" />
     <ClCompile Include="Include\Renderer.cpp" />
     <ClCompile Include="Src\AABB2DCollider.cpp" />
+    <ClCompile Include="Src\Asset.cpp" />
+    <ClCompile Include="Src\AssetManager.cpp" />
     <ClCompile Include="Src\Delegates.cpp" />
     <ClCompile Include="Src\DirectoryTree.cpp" />
     <ClCompile Include="Src\EngineContentRegistry.cpp" />
@@ -280,7 +287,7 @@
     <ClCompile Include="Src\LineRenderer.cpp" />
     <ClCompile Include="Src\Mesh.cpp" />
     <ClCompile Include="Src\MeshLoader.cpp" />
-    <ClCompile Include="Src\MeshProxy.cpp" />
+    <ClCompile Include="Src\RenderPrimitiveProxy.cpp" />
     <ClCompile Include="Src\MeshRenderer.cpp" />
     <ClCompile Include="Src\Mouse.cpp" />
     <ClCompile Include="Src\ObjectLookupHelper.cpp" />
@@ -290,6 +297,8 @@
     <ClCompile Include="Src\Shader.cpp" />
     <ClCompile Include="Src\ShaderCompiler.cpp" />
     <ClCompile Include="Src\SphereCollider.cpp" />
+    <ClCompile Include="Src\StaticMesh.cpp" />
+    <ClCompile Include="Src\StaticMeshRenderer.cpp" />
     <ClCompile Include="Src\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>

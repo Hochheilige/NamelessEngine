@@ -18,9 +18,9 @@ private:
 	class PixelShader* ps;
 	class PixelShader* psPlain;
 
-	class MeshProxy* boxMeshProxy;
-	class MeshProxy* circleMeshProxy;
-	class MeshProxy* sphereMeshProxy;
+	class RenderPrimitiveProxy* boxMeshProxy;
+	class RenderPrimitiveProxy* circleMeshProxy;
+	class RenderPrimitiveProxy* sphereMeshProxy;
 
 	class Camera* PerspCamera;
 	class Camera* OrthoCamera;
