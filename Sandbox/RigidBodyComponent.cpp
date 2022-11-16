@@ -66,7 +66,7 @@ void RigidBodyComponent::SetGravity(float gravity)
     {
         auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorls();
         world->removeRigidBody(Body);
-        Body->setGravity(btVector3(0, gravity, 0));
+        Body->setGravity(btVector3(0, -gravity, 0));
         Body->setFlags(Body->getFlags() | BT_DISABLE_WORLD_GRAVITY);
         world->addRigidBody(Body);
     }
