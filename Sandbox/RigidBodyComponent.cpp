@@ -72,6 +72,15 @@ void RigidBodyComponent::SetGravity(float gravity)
     }
 }
 
+void RigidBodyComponent::SetLinearVelocity(btVector3 velocity)
+{
+    if (Body)
+    {
+        Body->activate(true);
+        Body->setLinearVelocity(velocity);
+    }
+}
+
 void RigidBodyComponent::SetRigidBodyType(RigidBodyType type)
 {
     rbType = type;
