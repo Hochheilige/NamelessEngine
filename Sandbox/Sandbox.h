@@ -31,6 +31,10 @@ public:
 	Actor* CreateBun(Transform transform);
 
 	auto CreateHierarcyTestActor() ->Actor*;
+	void ReloadDLL();
+	void InitDLLDependents();
+
+	static Sandbox* GetInstance();
 
 private:
 	void LoadGameFacade();

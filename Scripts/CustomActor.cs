@@ -11,8 +11,6 @@ namespace Scripts
         
         public override void Update(float deltaTime)
         {
-            //Console.WriteLine(Components.Count + " Custom Update");
-            
             /*var phys = Components.GetComponent<PhysicsComponent>();
             if (!(phys is null))
             {

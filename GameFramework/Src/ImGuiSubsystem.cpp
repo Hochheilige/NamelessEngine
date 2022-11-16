@@ -1,5 +1,7 @@
 #include "ImGuiSubsystem.h"
 
+#include <iostream>
+
 #include "ImGuiInclude.h"
 
 #include "backends/imgui_impl_dx11.h"
@@ -17,6 +19,7 @@
 #include "EngineContentRegistry.h"
 
 #include "DirectoryTree.h"
+#include "Sandbox.h"
 
 //temporary include
 //#include "../External/bullet3/src/"
@@ -229,6 +232,13 @@ auto ImGuiSubsystem::DrawToolbar() -> void
 				MyGame->StopPlay();
 			}*/
 			break;
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Reload DLL"))
+		{
+			Sandbox::GetInstance()->ReloadDLL();
 		}
 	}
 	ImGui::End();

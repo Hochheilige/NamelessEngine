@@ -28,6 +28,7 @@ public:
 	static void PrintAssemblyTypes(MonoAssembly* assembly);
 	static char* ReadFile(const std::filesystem::path& assemblyPath, uintmax_t& fileSize);
 	static MonoAssembly* LoadMonoAssembly(const std::filesystem::path& assemblyPath);
+	void Reload();
 
 	static MonoSystem* GetInstance();
 

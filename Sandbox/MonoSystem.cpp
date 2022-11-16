@@ -31,19 +31,34 @@ MonoSystem::MonoSystem()
 		appDomain = mono_domain_create_appdomain(const_cast<char*>("EngineAppDomain"), nullptr);
 		mono_domain_set(appDomain, true);
 
-		LoadMonoAssembly(pathStr);
+		scriptAssembly = LoadMonoAssembly(pathStr);
+		image = mono_assembly_get_image(scriptAssembly);
+		PrintAssemblyTypes(scriptAssembly);
 
-		scriptAssembly = mono_domain_assembly_open(appDomain, pathStr.c_str());
-		if (scriptAssembly) {
-			image = mono_assembly_get_image(scriptAssembly);
-			PrintAssemblyTypes(scriptAssembly);
-			if (image) {
-				mono_add_internal_call("Scripts.PhysicsComponent::PhysicsSetMass", &Mappings::CubeSetMass);
-				/*mono_add_internal_call("Scripts.Script::CreateCubeObject", &Mappings::CS_CreateObj);
-				mono_add_internal_call("Scripts.AudioComponent::InternalOnRegister", &Mappings::CS_AudioOnCreate);*/
-			}
+		if (image) {
+			mono_add_internal_call("Scripts.PhysicsComponent::PhysicsSetMass", &Mappings::CubeSetMass);
+			/*mono_add_internal_call("Scripts.Script::CreateCubeObject", &Mappings::CS_CreateObj);
+			mono_add_internal_call("Scripts.AudioComponent::InternalOnRegister", &Mappings::CS_AudioOnCreate);*/
 		}
 	}
+}
+
+
+void MonoSystem::Reload()
+{
+	mono_domain_set(rootDomain, false);
+	mono_domain_unload(appDomain);
+
+	appDomain = mono_domain_create_appdomain(const_cast<char*>("EngineAppDomain"), nullptr);
+	mono_domain_set(appDomain, true);
+
+	auto exePath = __argv[0];
+	std::filesystem::path path(exePath);
+	auto parentPath = path.parent_path().string();
+	auto pathStr = parentPath + "\\Scripts.dll";
+
+	scriptAssembly = LoadMonoAssembly(pathStr);
+	image = mono_assembly_get_image(scriptAssembly);
 }
 
 
@@ -200,4 +215,3 @@ MonoAssembly* MonoSystem::LoadMonoAssembly(const std::filesystem::path& assembly
 
 	return assembly;
 }
-
