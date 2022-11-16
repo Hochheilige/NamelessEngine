@@ -510,7 +510,7 @@ auto ImGuiSubsystem::DrawStaticMeshProperties() -> void {
 
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-		ImGui::BeginChild("RB", ImVec2(0, 50), true, window_flags);
+		ImGui::BeginChild("RB", ImVec2(0, 47), true, window_flags);
 
 		ImGui::Button((smr->GetStaticMesh()->GetFullPath().filename().string() + "##StaticMesh").c_str(), ImVec2(100, 30));
 
@@ -527,6 +527,14 @@ auto ImGuiSubsystem::DrawStaticMeshProperties() -> void {
 			}
 			ImGui::EndDragDropTarget();
 		}
+
+		ImGui::SameLine();
+
+		ImGui::Button("Pick");
+		if (ImGui::IsItemHovered()) {
+			ImGui::SetTooltip("NOT READY:Places selected static mesh asset into renderer");
+		}
+
 
 		ImGui::EndChild();
 		ImGui::PopStyleVar();
