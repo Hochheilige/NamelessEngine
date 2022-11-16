@@ -53,6 +53,7 @@ private:
 	auto DrawActorInspector() -> void;
 	auto DrawGeneralProperties(class Actor* actor) -> void;
 	auto DrawRigidBodyProperties(Actor* actor) -> void;
+	auto DrawStaticMeshProperties() -> void;
 	// end instpector
 	auto DrawGizmos() -> void;
 	auto DrawMessagesWindow() -> void;

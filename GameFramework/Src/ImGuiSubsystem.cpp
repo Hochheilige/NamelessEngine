@@ -83,7 +83,7 @@ auto ImGuiSubsystem::Initialize(Game* const InGame) -> void
 	ImGuizmo::SetOrthographic(false);
 
 	io.Fonts->AddFontDefault();
-	mainFont = io.Fonts->AddFontFromFileTTF("../Assets/EngineContent/Fonts/Ubuntu-Light.ttf", 13.0f);
+	mainFont = io.Fonts->AddFontFromFileTTF("../Assets/EngineContent/Fonts/LibreFranklin-Light.ttf", 13.0f);
 	IM_ASSERT(mainFont != NULL);
 
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
@@ -498,30 +498,41 @@ auto ImGuiSubsystem::DrawRigidBodyProperties(Actor* actor) -> void
 
 		ImGui::EndChild();
 		ImGui::PopStyleVar();
+	}
+}
 
-		/*ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
+auto ImGuiSubsystem::DrawStaticMeshProperties() -> void {
+	
+	SceneComponent* selectedComp = GetSelectedSceneComponent();
+	StaticMeshRenderer* smr = static_cast<StaticMeshRenderer*>(selectedComp);
+
+	if (ImGui::CollapsingHeader("Static Mesh", ImGuiTreeNodeFlags_DefaultOpen)) {
+
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-		ImGui::BeginChild("Kinematic", ImVec2(0, 130), true, window_flags);
+		ImGui::BeginChild("RB", ImVec2(0, 50), true, window_flags);
 
-		auto rb_comp = actor->GetComponentOfClass<RigidBodyComponent>();
-		bool is_kinematic = rb_comp->is_kinematic;
-		bool is_kinematic_old = rb_comp->is_kinematic;
-		ImGui::Checkbox("Simulate Physics", &is_kinematic);
+		ImGui::Button((smr->GetStaticMesh()->GetFullPath().filename().string() + "##StaticMesh").c_str(), ImVec2(100, 30));
 
-		if (is_kinematic != is_kinematic_old)
+		if (ImGui::BeginDragDropTarget())
 		{
-			is_kinematic_old = is_kinematic;
-			if (rb_comp->is_kinematic) {
-				rb_comp->MakeNonKinematic();
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(MeshDragDropSourceType))
+			{
+				Path::value_type* first = static_cast<Path::value_type*>(payload->Data);
+				// it seems that last is really last and not one past last
+				Path::value_type* last = first + payload->DataSize / sizeof(Path::value_type);
+				Path p = Path(first, last);
+
+				smr->SetStaticMesh(MyGame->GetAssetManager()->LoadStaticMesh(p));
 			}
-			else {
-				rb_comp->MakeKinematic();
-			}
+			ImGui::EndDragDropTarget();
 		}
 
 		ImGui::EndChild();
-		ImGui::PopStyleVar();*/
+		ImGui::PopStyleVar();
+
 	}
+
 }
 
 auto ImGuiSubsystem::DrawActorInspector() -> void
@@ -537,32 +548,19 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 			DrawComponentSelector(actor);
 			LayOutTransform();
 
-			SceneComponent* selectedComp = GetSelectedSceneComponent();
+			
 			switch (GetSelectedSceneComponent()->GetComponentType()) {
 			case StaticMeshRendererType:
 			{
-				
-				// todo: move this to a function and use something other than a button
-				StaticMeshRenderer* smr = static_cast<StaticMeshRenderer*>(selectedComp);
-				ImGui::Button((smr->GetStaticMesh()->GetFullPath().filename().string() + "##StaticMesh").c_str(), ImVec2(100, 30));
-				if (ImGui::BeginDragDropTarget())
-				{
-					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(MeshDragDropSourceType))
-					{
-						Path::value_type* first = static_cast<Path::value_type*>(payload->Data);
-						// it seems that last is really last and not one past last
-						Path::value_type* last = first + payload->DataSize/sizeof(Path::value_type);
-						Path p = Path(first, last);
-
-						smr->SetStaticMesh(MyGame->GetAssetManager()->LoadStaticMesh(p));
-					}
-					ImGui::EndDragDropTarget();
-				}
+				DrawStaticMeshProperties();	
 			}
 				break;
 			case RigidBodyCubeType:
 			case RigidBodySphereType:
 				DrawRigidBodyProperties(actor);
+				break;
+			case LightPointType:
+				//TODO add point light properties
 				break;
 			}
 
