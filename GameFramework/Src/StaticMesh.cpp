@@ -30,7 +30,8 @@ auto StaticMesh::CreateRenderData() -> void
 
 		stack.insert(stack.end(), node->mChildren, node->mChildren + node->mNumChildren);
 
-		if (node->mNumMeshes > 0 && name.string()._Equal(node->mName.C_Str()))
+		// node: make sure to use mesh name here, not node name just like in asset manager
+		if (node->mNumMeshes > 0 && name.string()._Equal(scene->mMeshes[node->mMeshes[0]]->mName.C_Str()))
 		{
 			std::vector<TexturedVertex> vertices;
 			std::vector<UINT> indices;
@@ -41,6 +42,12 @@ auto StaticMesh::CreateRenderData() -> void
 			for (size_t meshIndex = 0; meshIndex < node->mNumMeshes; ++meshIndex)
 			{
 				const aiMesh* mesh = scene->mMeshes[node->mMeshes[meshIndex]];
+
+				StaticMeshSection& section = renderData->sections.emplace_back();
+				section.materialIndex = mesh->mMaterialIndex;
+				section.indicesStart = indices.size();
+				section.numIndices = mesh->mNumFaces * 3;
+				section.vertexStart = vertices.size();
 
 				for (size_t i = 0; i < mesh->mNumVertices; ++i) {
 					TexturedVertex v;
@@ -53,28 +60,32 @@ auto StaticMesh::CreateRenderData() -> void
 					v.Normal.y = mesh->mNormals[i].y;
 					v.Normal.z = mesh->mNormals[i].z;
 
-					v.Binormal.x = mesh->mBitangents[i].x;
-					v.Binormal.y = mesh->mBitangents[i].y;
-					v.Binormal.z = mesh->mBitangents[i].z;
+					// it seems that sometime bitanagents and tangents cannot be calculated - possibly when there're no UV's
+					if (mesh->mBitangents)
+					{
+						v.Binormal.x = mesh->mBitangents[i].x;
+						v.Binormal.y = mesh->mBitangents[i].y;
+						v.Binormal.z = mesh->mBitangents[i].z;
+					}
 
-					v.Tangent.x = mesh->mTangents[i].x;
-					v.Tangent.y = mesh->mTangents[i].y;
-					v.Tangent.z = mesh->mTangents[i].z;
+					if (mesh->mTangents)
+					{
+						v.Tangent.x = mesh->mTangents[i].x;
+						v.Tangent.y = mesh->mTangents[i].y;
+						v.Tangent.z = mesh->mTangents[i].z;
+					}
 
 					vertices.push_back(v);
 				}
 
-				if (mesh->mTextureCoords != nullptr) {
+				if (mesh->mTextureCoords != nullptr && mesh->mTextureCoords[0] != nullptr) {
 					for (size_t i = 0; i < mesh->mNumVertices; ++i) {
 						vertices[i].TexCoord.x = mesh->mTextureCoords[0][i].x;
 						vertices[i].TexCoord.y = mesh->mTextureCoords[0][i].y;
 					}
 				}
 
-				StaticMeshSection& section = renderData->sections.emplace_back();
-				section.materialIndex = mesh->mMaterialIndex;
-				section.indicesStart = indices.size();
-				section.numIndices = mesh->mNumFaces * 3;
+				
 
 				for (size_t i = 0; i < mesh->mNumFaces; ++i) {
 					indices.push_back(mesh->mFaces[i].mIndices[0]);

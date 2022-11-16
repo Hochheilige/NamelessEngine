@@ -18,6 +18,8 @@
 #include "EngineContentRegistry.h"
 
 #include "DirectoryTree.h"
+#include "StaticMeshRenderer.h"
+#include "StaticMesh.h"
 
 //temporary include
 //#include "../External/bullet3/src/"
@@ -282,8 +284,8 @@ auto ImGuiSubsystem::DrawViewport() -> void
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(MeshDragDropSourceType)) {
 				const std::string meshName = static_cast<const char*>(payload->Data);
 
-				Transform t;
-				t.Position = MyGame->MyRenderingSystem->GetWorldPositionUnerScreenPosition(ViewportMousePos);
+				//Transform t;
+				//t.Position = MyGame->MyRenderingSystem->GetWorldPositionUnerScreenPosition(ViewportMousePos);
 				//Actor* newActor = EngineContentRegistry::GetInstance()->CreateBasicActor(meshName, t);
 				//GetEditorContext().SetSelectedActor(newActor);
 
@@ -535,8 +537,28 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 			DrawComponentSelector(actor);
 			LayOutTransform();
 
+			SceneComponent* selectedComp = GetSelectedSceneComponent();
 			switch (GetSelectedSceneComponent()->GetComponentType()) {
-			case MeshRendererType:
+			case StaticMeshRendererType:
+			{
+				
+				// todo: move this to a function and use something other than a button
+				StaticMeshRenderer* smr = static_cast<StaticMeshRenderer*>(selectedComp);
+				ImGui::Button((smr->GetStaticMesh()->GetFullPath().filename().string() + "##StaticMesh").c_str(), ImVec2(100, 30));
+				if (ImGui::BeginDragDropTarget())
+				{
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(MeshDragDropSourceType))
+					{
+						Path::value_type* first = static_cast<Path::value_type*>(payload->Data);
+						// it seems that last is really last and not one past last
+						Path::value_type* last = first + payload->DataSize/sizeof(Path::value_type);
+						Path p = Path(first, last);
+
+						smr->SetStaticMesh(MyGame->GetAssetManager()->LoadStaticMesh(p));
+					}
+					ImGui::EndDragDropTarget();
+				}
+			}
 				break;
 			case RigidBodyCubeType:
 			case RigidBodySphereType:
@@ -937,6 +959,16 @@ auto ImGuiSubsystem::DrawAsset(const DirectoryTreeNode* file, const Vector2& ite
 		ImGui::EndDragDropSource();
 	}
 
+	if (file->IsAssetFromCollection() && ImGui::BeginDragDropSource())
+	{
+		Path p = Path("..") / file->GetPathFromTreeRoot();
+		ImGui::SetDragDropPayload(MeshDragDropSourceType, p.c_str(), p.native().size() * sizeof(Path::value_type));
+
+		ImGui::Text(nameAsString.c_str());
+
+		ImGui::EndDragDropSource();
+	}
+
 	//Setting up drag and drop as target for directories
 	if (isDirectory && !file->IsAssetCollection()  && ImGui::BeginDragDropTarget())
 	{
@@ -961,14 +993,6 @@ auto ImGuiSubsystem::DrawAsset(const DirectoryTreeNode* file, const Vector2& ite
 		//ImGui::EndGroup();
 		//break;
 	}
-
-	// todo: remove this
-	//if (bItemDoubleClicked && file->GetName().extension() == Path(".fbx"))
-	//{
-	//	// todo add unique
-	//	// todo: fix apth generation
-	//	OpenedFbxInspectorWindows.push_back(Path("..")/ file->GetPathFromTreeRoot());
-	//}
 
 	if (ImGui::IsItemHovered())
 		ImGui::SetTooltip(nameAsString.c_str());

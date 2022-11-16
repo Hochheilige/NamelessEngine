@@ -16,6 +16,7 @@ public:
 
 	StaticMeshRenderer();
 
+	auto GetStaticMesh() const -> StaticMesh* { return staticMesh; }
 	auto SetStaticMesh(StaticMesh* inStaticMesh) -> void { staticMesh = inStaticMesh; }
 
 	virtual auto Render(const RenderingSystemContext& RSContext) -> void override;

@@ -81,6 +81,6 @@ auto StaticMeshRenderer::Render(const RenderingSystemContext& RSContext) -> void
 
 	for (const StaticMeshSection& section : renderData->sections)
 	{
-		context->DrawIndexed(section.numIndices, section.indicesStart, 0);
+		context->DrawIndexed(section.numIndices, section.indicesStart, section.vertexStart);
 	}
 }
