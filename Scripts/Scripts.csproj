@@ -42,12 +42,14 @@
   <ItemGroup>
     <Compile Include="Actor.cs" />
     <Compile Include="AudioComponent.cs" />
+    <Compile Include="Bullet.cs" />
     <Compile Include="ComponentsEnum.cs" />
     <Compile Include="CustomActor.cs" />
     <Compile Include="EngineSettings.cs" />
     <Compile Include="EntryPoint.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="InputHandler.cs" />
+    <Compile Include="Instantiator.cs" />
     <Compile Include="Internal\Loader.cs" />
     <Compile Include="ListExtensions.cs" />
     <Compile Include="Component.cs" />

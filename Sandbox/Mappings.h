@@ -2,6 +2,8 @@
 #include "Transform.h"
 #include <iostream>
 
+#include "Actor.h"
+#include "CreateCommon.h"
 #include "RigidBodyCube.h"
 #include "RigidBodySphere.h"
 
@@ -16,5 +18,15 @@ public:
 
     static void CubeSetMass(RigidBodyCube* component, float mass){component->SetMass(mass);}
     static void SphereSetGravity(RigidBodySphere* component, float mass){component->SetMass(mass);}
+    /*static void AddComponent(Actor* actor, ComponentType type)
+    {
+        actor->AddComponent<RigidBodyComponent>();
+    };*/
+    
+    /*static Actor* CreateActor()
+    {
+        Actor* act = CreateActor<Actor>();
+        return act;
+    }*/
 };
 

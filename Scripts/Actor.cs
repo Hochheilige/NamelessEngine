@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Scripts
 {
@@ -26,8 +25,8 @@ namespace Scripts
         public virtual Component AddComponent(int componentType)
         {
             ComponentsEnum type = (ComponentsEnum) componentType;
-            Console.WriteLine("Component type to add " + type.ToString());
-           
+            //Console.WriteLine("Component type to add " + type);
+            
             Component component = default;
             switch (type)
             {
@@ -63,7 +62,6 @@ namespace Scripts
         public void Dispose()
         {
             Components.ForEach(x => x.Dispose());
-            Console.WriteLine("YA UMER");
         }
     }
 }
