@@ -36,6 +36,8 @@ public:
 
 	void SetPhysicsTransform(Transform transform);
 
+	void SetLinearVelocity(btVector3 velocity);
+
 	void RegisterRigidBodyType();
 
 	void Update(float DeltaTime);
