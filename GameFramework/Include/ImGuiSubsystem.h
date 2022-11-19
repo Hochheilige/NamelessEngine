@@ -68,6 +68,13 @@ private:
 	auto GetAssetManager() const->AssetManager*;
 
 	auto InitStyle() -> void;
+
+	auto ActorBrowserContextMenu() const -> void;
+
+	// Helper style functions
+	auto BoldHeader(const char* label, ImGuiTreeNodeFlags flags) const -> bool;
+
+
 private:
 	Game* MyGame;
 

@@ -65,7 +65,7 @@ auto ImGuiSubsystem::Initialize(Game* const InGame) -> void
 	ImGuizmo::SetOrthographic(false);
 
 	io.Fonts->AddFontDefault();
-	mainFont = io.Fonts->AddFontFromFileTTF("../Assets/EngineContent/Fonts/LibreFranklin-Light.ttf", 13.0f);
+	mainFont = io.Fonts->AddFontFromFileTTF("../Assets/EngineContent/Fonts/LibreFranklin-Medium.ttf", 14.0f);
 	headerFont = io.Fonts->AddFontFromFileTTF("../Assets/EngineContent/Fonts/LibreFranklin-Bold.ttf", 16.0f);
 	IM_ASSERT(mainFont != NULL);
 
@@ -325,6 +325,8 @@ auto ImGuiSubsystem::DrawActorExplorer() -> void
 				ImGui::Selectable(actor->GetName().c_str(), isSelectedActor);
 			}
 
+			ActorBrowserContextMenu();
+
 			if (ImGui::IsItemClicked())
 			{
 				GetEditorContext().SetSelectedActor(actor);
@@ -339,7 +341,7 @@ auto ImGuiSubsystem::DrawActorExplorer() -> void
 
 auto ImGuiSubsystem::DrawComponentSelector(class Actor* actor) -> void {
 
-	if (ImGui::CollapsingHeader("Components", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed)) {
+	if (BoldHeader("Components", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed)) {
 		const bool isActorSelected = GetEditorContext().GetSelectedComponent() == nullptr;
 		ImGui::AlignTextToFramePadding();
 		if (ImGui::Selectable("Actor", isActorSelected))
@@ -425,14 +427,10 @@ auto ImGuiSubsystem::LayOutTransform() -> void
 		return;
 	}
 
-	ImGui::PushFont(headerFont);
-	bool isHeader = !ImGui::CollapsingHeader("Transform");
-	ImGui::PopFont();
-
-	if (isHeader) {
+	if (BoldHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-		ImGui::BeginChild("ChildR", ImVec2(0, 130), true, window_flags);
+		ImGui::BeginChild("ChildR", ImVec2(0, 132), true, window_flags);
 
 		if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
 			mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
@@ -477,10 +475,10 @@ auto ImGuiSubsystem::LayOutTransform() -> void
 
 auto ImGuiSubsystem::DrawRigidBodyProperties(Actor* actor) -> void 
 {
-	if (!ImGui::CollapsingHeader("RigidBody Component")) {
+	if (!BoldHeader("RigidBody Component", 0)) {
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-		ImGui::BeginChild("RB", ImVec2(0, 35), true, window_flags);
+		ImGui::BeginChild("RB", ImVec2(0, 36), true, window_flags);
 
 		bool is_p_enabled = actor->is_physics_enabled;
 		bool is_p_enabled_old = actor->is_physics_enabled;
@@ -507,7 +505,7 @@ auto ImGuiSubsystem::DrawStaticMeshProperties() -> void {
 	SceneComponent* selectedComp = GetSelectedSceneComponent();
 	StaticMeshRenderer* smr = static_cast<StaticMeshRenderer*>(selectedComp);
 
-	if (ImGui::CollapsingHeader("Static Mesh", ImGuiTreeNodeFlags_DefaultOpen)) {
+	if (BoldHeader("Static Mesh", ImGuiTreeNodeFlags_DefaultOpen)) {
 
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
@@ -590,11 +588,11 @@ auto ImGuiSubsystem::DrawGeneralProperties(Actor* actor) -> void
 	static char tempName[128];
 	memcpy(tempName, actor->GetName().c_str(), actor->GetName().length() + 1);
 
-	if (ImGui::CollapsingHeader("General", ImGuiTreeNodeFlags_DefaultOpen)) {
+	if (BoldHeader("General", ImGuiTreeNodeFlags_DefaultOpen)) {
 
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-		ImGui::BeginChild("ChildGeneral", ImVec2(0, 35), true, window_flags);
+		ImGui::BeginChild("ChildGeneral", ImVec2(0, 36), true, window_flags);
 
 		ImGui::InputText("\tName", tempName, 20);
 
@@ -784,6 +782,35 @@ auto ImGuiSubsystem::InitStyle() -> void
 
 	//imguizmoStyle.TranslationLineArrowSize = 10.0f;
 	//imguizmoStyle.TranslationLineThickness = 6.0f;
+}
+
+auto ImGuiSubsystem::ActorBrowserContextMenu() const -> void
+{
+	if (ImGui::BeginPopupContextItem())
+	{
+		if (ImGui::Selectable("Rename")) {
+
+		}
+		
+		if (ImGui::Selectable("Duplicate")){
+			
+		}
+
+		if (ImGui::Selectable("Delete")) {
+
+		}
+
+		ImGui::EndPopup();
+	}
+}
+
+auto ImGuiSubsystem::BoldHeader(const char* label, ImGuiTreeNodeFlags flags) const -> bool
+{
+	ImGui::PushFont(headerFont);
+	bool isHeader = ImGui::CollapsingHeader(label, flags);
+	ImGui::PopFont();
+
+	return isHeader;
 }
 
 auto ImGuiSubsystem::DrawAssetBrowser() -> void 
