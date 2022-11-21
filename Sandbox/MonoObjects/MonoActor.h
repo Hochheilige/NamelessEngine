@@ -7,7 +7,7 @@ class MonoActor
 {
 public:
     MonoActor();
-    MonoActor(const char* className);
+    MonoActor(const char* className, Actor* actor);
     void AddComponent(Component* component);
     void RemoveComponent(Component* component);
     void Update(float deltaTime);
@@ -15,8 +15,10 @@ public:
     
     const char* GetInheritors();
 private:
+    Actor* owner;
     uint32_t Handle;
     MonoObject* CsInstance = nullptr;
     const char* ClassName = "CustomActor";
     const char* BaseClassName = "Actor";
+    bool isWorked = false;
 };

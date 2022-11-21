@@ -30,7 +30,7 @@
 
 Actor* Sandbox::CreateNonPhysicsBox(Transform transform) {
 	Actor* box = CreateActor<Actor>();
-	
+	box->InitializeMonoActor("CustomActor");
 	auto mesh_component = box->AddComponent<MeshRenderer>();
 	mesh_component->SetMeshProxy(texturedBoxMeshProxy);
 	mesh_component->SetPixelShader(ps);
@@ -63,7 +63,7 @@ Actor* Sandbox::CreateStaticBox(Transform transform)
 Actor* Sandbox::CreateDynamicBox(Transform transform)
 {
 	Actor* box = CreateActor<Actor>();
-	box->InitializeMonoActor("CustomActor");
+	//box->InitializeMonoActor("CustomActor");
 	auto box_rb = box->AddComponent<RigidBodyCube>();
 	box->SetTransform(transform);
 	box_rb->SetRigidBodyType(RigidBodyType::DYNAMIC);

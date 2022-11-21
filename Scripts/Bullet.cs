@@ -13,6 +13,9 @@ namespace Scripts
         {
             var root = Components.First();
             var newTransform = root.Transform;
+            newTransform.Position.X += 0.01f;
+            newTransform.Position.X += 0.01f;
+            newTransform.Position.X += 0.01f;
             root.SetTransform(newTransform);
         }
     }

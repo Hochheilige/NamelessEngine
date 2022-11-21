@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Scripts
 {
     public class Actor : IDisposable
     {
+        public IntPtr CppInstance;
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void InternalAddComponent(int componentType);
+        
         public List<Component> Components = new List<Component>();
 
         public Actor()
@@ -12,6 +18,14 @@ namespace Scripts
             //Console.WriteLine("YA RODILSYA");
         }
 
+        public void SetCppInstance(IntPtr obj)
+        {
+            Console.WriteLine("Actor Instance was set");
+            Console.WriteLine("SMOTRI" + obj);
+            CppInstance = obj;
+            //Transform = InternalGetTransform(CppInstance);
+        }
+        
         public virtual void OnBeginPlay()
         {
             

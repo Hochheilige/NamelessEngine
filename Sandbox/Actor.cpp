@@ -56,7 +56,7 @@ auto Actor::RemoveComponent(Component* InComponent) -> void
 
 void Actor::InitializeMonoActor(const char* name)
 {
-	mMonoActor = new MonoActor(name);
+	mMonoActor = new MonoActor(name, this);
 }
 
 void Actor::OnBeginPlay()

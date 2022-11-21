@@ -6,6 +6,8 @@ namespace Scripts
     {
         public CustomActor()
         {
+            //AddComponent((int)ComponentsEnum.RigidBodyCubeType);
+            //Components.Add(new PhysicsComponent());
             //Console.WriteLine("Custom actor been born");
         }
         
@@ -22,14 +24,9 @@ namespace Scripts
 
         public override void OnBeginPlay()
         {
-            //Console.WriteLine("BeginPlay CustomActor");
-            var phys = Components.GetComponent<PhysicsComponent>();
-            if (!(phys is null))
-            {
-                phys.SetMass(5.2f);
-            }
-            
-            //Console.WriteLine(ToString() + " Begin Play");
+            //Components.Add(new PhysicsComponent(this));
+            AddComponent((int)ComponentsEnum.RigidBodyCubeType);
+            //AddComponent((int)ComponentsEnum.MeshRendererType);
         }
     }
 }

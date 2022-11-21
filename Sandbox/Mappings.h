@@ -18,6 +18,9 @@ public:
 
     static void CubeSetMass(RigidBodyCube* component, float mass){component->SetMass(mass);}
     static void SphereSetGravity(RigidBodySphere* component, float mass){component->SetMass(mass);}
+    static Transform ComponentGetTransform(SceneComponent* component){return component->GetTransform();}
+    static void ComponentSetTransform(SceneComponent* component, Transform transform){return component->SetTransform(transform);}
+    static Component* CreateComponent(Actor* actor, int compType){return actor->AddComponent<RigidBodyComponent>();}
     /*static void AddComponent(Actor* actor, ComponentType type)
     {
         actor->AddComponent<RigidBodyComponent>();
