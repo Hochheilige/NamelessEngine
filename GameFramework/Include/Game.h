@@ -13,12 +13,14 @@
 #include "EditorContext.h"
 
 #include <filesystem>
+#include "JsonInclude.h"
 using Path = std::filesystem::path;
 
 class Actor;
 class RenderingSystem;
 class ImGuiSubsystem;
 class EngineContentRegistry;
+class Serializator;
 
 using namespace Microsoft::WRL;
 
@@ -165,6 +167,7 @@ public:
 
 	virtual auto OnBeginPlay() -> void;
 
+	json Serialize() const;
 protected:
 
 	Game();
@@ -192,8 +195,6 @@ protected:
 private:
 
 	void InitializeInternal();
-
-
 private:
 	
 	class InputDevice* Input = nullptr;

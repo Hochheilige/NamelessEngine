@@ -129,3 +129,11 @@ void Actor::UnUsePhysicsSimulation()
 	}
 }
 
+json Actor::Serialize()
+{
+	json out{};
+
+	//TODO
+
+	return out;
+}

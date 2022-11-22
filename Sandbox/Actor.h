@@ -8,6 +8,7 @@
 #include "Component.h"
 #include "SceneComponent.h"
 #include "MonoObjects/MonoActor.h"
+#include "JsonInclude.h"
 
 class LineRenderer;
 class MeshRenderer;
@@ -108,6 +109,7 @@ public:
 		return RootComponent;
 	}
 
+	json Serialize();
 private:
 	Actor* Parent = nullptr;
 

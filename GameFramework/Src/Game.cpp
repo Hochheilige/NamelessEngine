@@ -16,6 +16,8 @@
 
 #include <iostream>
 
+#include "Actor.h"
+
 
 Game* Game::Instance = nullptr;
 
@@ -45,6 +47,18 @@ void Game::InitializeInternal()
 	FillDirectoryTree();
 
 	Initialize();
+}
+
+json Game::Serialize() const
+{
+	json out{};
+
+	json actorsArr = json::array();
+	for (auto actor : Actors) {
+		actorsArr.push_back(actor->Serialize());
+	}
+	out["actors"] = actorsArr;
+	return out;
 }
 
 void Game::Initialize()
