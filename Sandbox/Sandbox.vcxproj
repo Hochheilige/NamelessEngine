@@ -215,11 +215,11 @@ xcopy "$(SolutionDir)External\mono\lib\4.5\*" "$(TargetDir)mono\lib\4.5\" /y /i 
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AudioComponent.h" />
     <ClInclude Include="ComponentsEnum.h" />
     <ClInclude Include="Mappings.h" />
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="MonoModules\MonoActorModule.h" />
     <ClInclude Include="MonoObjects\MeshRendererComponent.h" />
     <ClInclude Include="MonoObjects\MonoActor.h" />
     <ClInclude Include="MonoObjects\MonoComponent.h" />
@@ -237,7 +237,6 @@ xcopy "$(SolutionDir)External\mono\lib\4.5\*" "$(TargetDir)mono\lib\4.5\" /y /i 
     <ClInclude Include="ScriptObject.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AudioComponent.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Mappings.cpp" />
     <ClCompile Include="Actor.cpp" />
@@ -263,6 +262,9 @@ xcopy "$(SolutionDir)External\mono\lib\4.5\*" "$(TargetDir)mono\lib\4.5\" /y /i 
     <ProjectReference Include="..\ImGuiStaticLib\ImGuiStaticLib.vcxproj">
       <Project>{6ae03f7d-a19d-4700-a59d-3ba8c56f5bf2}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MonoModules\MonoComponentModule.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

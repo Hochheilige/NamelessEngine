@@ -1,13 +1,18 @@
 #include "Mappings.h"
 #include "Sandbox.h"
 
-void Mappings::CS_CreateObj(float trans_x, float trans_y, float trans_z, float rot_x, float rot_y, float rot_z, float scale_x, float scale_y, float scale_z)
+Component* Mappings::CreateComponent(Actor* actor, int compType)
 {
-	auto instance = (Sandbox*)Sandbox::GetInstance();
-	//instance->CreateCubeObject( trans_x,  trans_y,  trans_z,  rot_x,  rot_y,  rot_z,  scale_x,  scale_y,  scale_z);
-}
+	//return actor->AddComponent<RigidBodyComponent>();
+	auto box_rb = actor->AddComponent<RigidBodyCube>();
+	Transform tr;
+	tr.Position = Vector3(16, 3, 0);
+	tr.Rotation.SetEulerAngles(0, 0, 0);
+	tr.Scale = Vector3(4.0, 4.0, 20.0);
+	actor->SetTransform(tr);
+	box_rb->SetRigidBodyType(RigidBodyType::STATIC);
+	box_rb->SetMass(0);
+	box_rb->Init();
 
-void Mappings::CS_AudioOnCreate()
-{
-	std::cout << "AudioComponent Registered" << std::endl;
+	return box_rb;
 }

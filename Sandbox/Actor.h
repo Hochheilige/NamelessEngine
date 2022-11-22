@@ -96,6 +96,8 @@ public:
 
 	void InitializeMonoActor(const char* name);
 
+	MonoActor* GetMonoActor() { return mMonoActor;}
+
 	void OnBeginPlay();
 
 	void UseDebugRendererOnly();

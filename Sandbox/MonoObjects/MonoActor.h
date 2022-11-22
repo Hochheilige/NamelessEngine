@@ -6,10 +6,9 @@
 class MonoActor
 {
 public:
-    MonoActor();
-    MonoActor(const char* className);
-
     ~MonoActor();
+    
+    MonoActor(Actor* actor, const char* className = "Actor");
     
     void AddComponent(Component* component);
     void RemoveComponent(Component* component);
@@ -17,9 +16,12 @@ public:
     void OnBeginPlay();
     
     const char* GetInheritors();
+    MonoObject* GetCsInstance();
 private:
+    Actor* Owner;
     uint32_t Handle;
-    MonoObject* CsInstance = nullptr;
+    //MonoObject* CsInstance = nullptr;
     const char* ClassName = "CustomActor";
     const char* BaseClassName = "Actor";
+    bool isWorked = false;
 };

@@ -16,7 +16,6 @@
 #include "RigidBodyCube.h"
 #include "RigidBodySphere.h"
 #include "Mappings.h"
-#include "AudioComponent.h"
 #include "ScriptObject.h"
 #include "windows.h"
 #include "mono/metadata/debug-helpers.h"
@@ -30,14 +29,14 @@
 
 Actor* Sandbox::CreateNonPhysicsBox(Transform transform) {
 	Actor* box = CreateActor<Actor>();
-	
+	box->InitializeMonoActor("CustomActor");
 	auto mesh_component = box->AddComponent<MeshRenderer>();
 	mesh_component->SetMeshProxy(texturedBoxMeshProxy);
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
 	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
 	mesh_component->SetNormalSRV(EngineContentRegistry::GetInstance()->GetBasicNormalTexSRV());
-	mesh_component->SetRelativeTransform(transform);
+	mesh_component->SetTransform(transform);
 
 	return box;
 }
@@ -63,7 +62,7 @@ Actor* Sandbox::CreateStaticBox(Transform transform)
 Actor* Sandbox::CreateDynamicBox(Transform transform)
 {
 	Actor* box = CreateActor<Actor>();
-	box->InitializeMonoActor("CustomActor");
+	//box->InitializeMonoActor("CustomActor");
 	auto box_rb = box->AddComponent<RigidBodyCube>();
 	box->SetTransform(transform);
 	box_rb->SetRigidBodyType(RigidBodyType::DYNAMIC);
@@ -373,7 +372,7 @@ void Sandbox::PrepareResources()
 	tr.Rotation.SetEulerAngles(0, 0, 0);
 	tr.Scale = Vector3(4.0, 4.0, 20.0);
 	staticBox = CreateNonPhysicsBox(tr);
-	staticBox->SetTransform(tr);
+	//staticBox->SetTransform(tr);
 	
 	tr.Scale = Vector3::One * 0.015f;
 	tr.Position = { 11.638, 3.463, -7.674 };

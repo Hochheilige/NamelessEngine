@@ -1,28 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Scripts
 {
     public class Actor : IDisposable
     {
+        public IntPtr CppInstance;
         public List<Component> Components = new List<Component>();
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void InternalAddComponent(int componentType);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern Transform InternalGetTransform(IntPtr cppInstance);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void InternalSetTransform(IntPtr cppInstance, Transform transform);
 
         public Actor()
         {
-            //Console.WriteLine("YA RODILSYA");
+            Console.WriteLine("Base CTOR");
         }
 
-        public virtual void OnBeginPlay()
+        public void SetCppInstance(IntPtr obj)
         {
-            
+            Console.WriteLine("setted");
+            CppInstance = obj;
         }
         
-        public virtual void Update(float deltaTime)
-        {
-            Console.WriteLine("Base Update");
-        }
+        public virtual void OnBeginPlay() { }
         
-        public virtual Component AddComponent(int componentType)
+        public virtual void Update(float deltaTime) { }
+        
+        public Component AddComponent(int componentType)
         {
             ComponentsEnum type = (ComponentsEnum) componentType;
             //Console.WriteLine("Component type to add " + type);
@@ -41,23 +52,25 @@ namespace Scripts
                     break;
                 default: component = new Component(this); break;
             }
-            
-            Components.Add(component);
+
+            AddComponent(component);
             return component;
         }
 
-        /*public virtual string GetInheritors()
+        public void AddComponent(Component component)
         {
-            var listOfBs = (
-                    from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
-                    from type in domainAssembly.GetTypes()
-                    where typeof(Actor).IsAssignableFrom(type)
-                    select type.ToString()).ToArray();
-            
-            var result = string.Join("\n", listOfBs);
-            //Console.WriteLine(result);
-            return result;
-        }*/
+            Components.Add(component);
+        }
+
+        public Transform GetTransform()
+        {
+            return InternalGetTransform(CppInstance);
+        }
+
+        public void SetTransform(Transform transform)
+        {
+            InternalSetTransform(CppInstance, transform);
+        }
 
         public void Dispose()
         {

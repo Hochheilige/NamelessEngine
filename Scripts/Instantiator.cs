@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace Scripts
@@ -6,14 +7,16 @@ namespace Scripts
     public static class Instantiator
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern IntPtr InstantiateActorInternal();
+        private static extern Actor InstantiateActorInternal(string name);
         
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private static extern void PhysicsSetGravity(IntPtr handle, float gravity);
         
-        static IntPtr InstantiateActor()
+        public static Actor InstantiateActor<T>() where T : Actor
         {
-            return InstantiateActorInternal();
+            var result = typeof(T).ToString().Split('.').Last();
+            Console.WriteLine("Actor " + result + "Was Called to Instantiate");
+            return InstantiateActorInternal(result);
         }
     }
 }

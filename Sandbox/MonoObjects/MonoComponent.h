@@ -9,5 +9,5 @@ public:
     ~MonoComponent();
 protected:
     uint32_t Handle;
-    MonoObject* CsInstance = nullptr;
+    //MonoObject* CsInstance = nullptr;
 };

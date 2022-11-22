@@ -24,7 +24,7 @@ public:
 	MonoMethod* GetVirtualMethod(const char* earliestAncestorNamespace, const char* earliestAncestorClassName,
 	                             const char* methodDesc, MonoObject* obj);
 	MonoObject* InvokeMethod(MonoMethod* method, void* obj, void** params, MonoObject** exc);
-	MonoObject* CreateClassInstance(MonoClass* klass);
+	MonoObject* CreateClassInstance(MonoClass* klass, bool initialize = true);
 	static void PrintAssemblyTypes(MonoAssembly* assembly);
 	static char* ReadFile(const std::filesystem::path& assemblyPath, uintmax_t& fileSize);
 	static MonoAssembly* LoadMonoAssembly(const std::filesystem::path& assemblyPath);

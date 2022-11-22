@@ -1,35 +1,32 @@
 ﻿using System;
+using Scripts.Components;
+using SharpDX;
 
 namespace Scripts
 {
     public class CustomActor : Actor
     {
+        private Transform _transform;
+        private float _angle = 0.01f;
+
         public CustomActor()
         {
-            //Console.WriteLine("Custom actor been born");
+            AddComponent(new RigidBodyCubeComponent(this));
         }
         
         public override void Update(float deltaTime)
         {
-            //Console.WriteLine(Components.Count + " Custom Update");
+            _angle += 0.01f;
+            _transform.Rotation = Quaternion.RotationYawPitchRoll(0, 0, _angle);
+            _transform.Rotation.Normalize();
             
-            /*var phys = Components.GetComponent<PhysicsComponent>();
-            if (!(phys is null))
-            {
-                phys.SetMass(5.2f);
-            }*/
+            SetTransform(_transform);
         }
 
         public override void OnBeginPlay()
         {
-            //Console.WriteLine("BeginPlay CustomActor");
-            var phys = Components.GetComponent<PhysicsComponent>();
-            if (!(phys is null))
-            {
-                phys.SetMass(5.2f);
-            }
-            
-            //Console.WriteLine(ToString() + " Begin Play");
+            _transform = GetTransform();
+            Instantiator.InstantiateActor<Bullet>();
         }
     }
 }

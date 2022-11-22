@@ -2,6 +2,10 @@
 #include "Mappings.h"
 #include <fstream>
 #include "mono/metadata/mono-debug.h"
+#include "MonoModules/MonoActorModule.h"
+#include "MonoModules/MonoComponentModule.h"
+
+//#define MONO_DEBUG
 
 MonoSystem* MonoSystem::Instance = nullptr;
 
@@ -38,10 +42,9 @@ MonoSystem::MonoSystem()
 			image = mono_assembly_get_image(scriptAssembly);
 			PrintAssemblyTypes(scriptAssembly);
 			if (image) {
-				mono_add_internal_call("Scripts.PhysicsComponent::PhysicsSetMass", &Mappings::CubeSetMass);
-				//mono_add_internal_call("Scripts.Insantiator.InstantiateActorInternal", &Mappings::)
-				/*mono_add_internal_call("Scripts.Script::CreateCubeObject", &Mappings::CS_CreateObj);
-				mono_add_internal_call("Scripts.AudioComponent::InternalOnRegister", &Mappings::CS_AudioOnCreate);*/
+				//mono_add_internal_call("Scripts.Component::GetTransform", &Mappings::CubeSetMass);
+				new MonoComponentModule;
+				new MonoActorModule;
 			}
 		}
 	}
@@ -94,10 +97,13 @@ MonoMethod* MonoSystem::GetMethod(const char* nameSpace, const char* className, 
 	return GetMethod(clazz, desciptor);
 }
 
-MonoObject* MonoSystem::CreateClassInstance(MonoClass* klass)
+MonoObject* MonoSystem::CreateClassInstance(MonoClass* klass, bool initialize)
 {
 	MonoObject* classInstance = mono_object_new(appDomain, klass);
-	mono_runtime_object_init(classInstance);
+	if(initialize)
+	{
+		mono_runtime_object_init(classInstance);
+	}
 	return classInstance;
 }
 
