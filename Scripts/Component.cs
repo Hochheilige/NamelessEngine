@@ -27,6 +27,7 @@ namespace Scripts
         public void Dispose()
         {
             CppInstance = IntPtr.Zero;
+            Owner.Components.Remove(this);
         }
     }
 }

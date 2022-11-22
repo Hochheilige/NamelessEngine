@@ -8,6 +8,9 @@ class MonoActor
 public:
     MonoActor();
     MonoActor(const char* className);
+
+    ~MonoActor();
+    
     void AddComponent(Component* component);
     void RemoveComponent(Component* component);
     void Update(float deltaTime);

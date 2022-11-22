@@ -61,7 +61,7 @@ namespace Scripts
 
         public void Dispose()
         {
-            Components.ForEach(x => x.Dispose());
+            //Components.ForEach(x => x.Dispose());
         }
     }
 }

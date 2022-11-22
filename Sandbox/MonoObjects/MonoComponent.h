@@ -4,7 +4,10 @@
 class MonoComponent
 {
 public:
-    void SetCsInstance(MonoObject* instance);
+    void ConstructFromCsInstance(MonoObject* instance);
+
+    ~MonoComponent();
 protected:
+    uint32_t Handle;
     MonoObject* CsInstance = nullptr;
 };

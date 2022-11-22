@@ -1,6 +1,8 @@
 ﻿#include "MonoActor.h"
 #include "MonoComponent.h"
 
+MonoActor::MonoActor() : MonoActor("Actor") {}
+
 MonoActor::MonoActor(const char* className) : ClassName(className)
 {
     auto mono = MonoSystem::GetInstance();
@@ -10,7 +12,12 @@ MonoActor::MonoActor(const char* className) : ClassName(className)
     Handle =  mono_gchandle_new(CsInstance, true);
 }
 
-MonoActor::MonoActor() : MonoActor("Actor") {}
+MonoActor::~MonoActor()
+{
+    auto mono = MonoSystem::GetInstance();
+    MonoMethod* method = mono->GetVirtualMethod("Scripts", BaseClassName, "Dispose", mono_gchandle_get_target (Handle));
+    mono->InvokeMethod(method, mono_gchandle_get_target (Handle), nullptr, nullptr);
+}
 
 void MonoActor::AddComponent(Component* component)
 {
@@ -27,7 +34,7 @@ void MonoActor::AddComponent(Component* component)
     MonoMethod* vmethod = mono_object_get_virtual_method(Handle, method);*/
     MonoObject* result = mono->InvokeMethod(method, mono_gchandle_get_target (Handle), args, nullptr);
 
-    monoComp->SetCsInstance(result);
+    monoComp->ConstructFromCsInstance(result);
 }
 
 void MonoActor::RemoveComponent(Component* component)
