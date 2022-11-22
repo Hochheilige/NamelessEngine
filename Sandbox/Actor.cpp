@@ -129,9 +129,9 @@ void Actor::UnUsePhysicsSimulation()
 	}
 }
 
-json Actor::Serialize()
+json Actor::Serialize() const
 {
-	json out{};
+	json out = json::object();
 
 	//TODO
 

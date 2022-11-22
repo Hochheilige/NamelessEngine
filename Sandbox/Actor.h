@@ -109,7 +109,7 @@ public:
 		return RootComponent;
 	}
 
-	json Serialize();
+	json Serialize() const;
 private:
 	Actor* Parent = nullptr;
 

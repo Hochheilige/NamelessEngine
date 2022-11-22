@@ -51,7 +51,7 @@ void Game::InitializeInternal()
 
 json Game::Serialize() const
 {
-	json out{};
+	json out = json::object();
 
 	json actorsArr = json::array();
 	for (auto actor : Actors) {
