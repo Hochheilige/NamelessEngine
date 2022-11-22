@@ -238,6 +238,13 @@ auto ImGuiSubsystem::DrawToolbar() -> void
 		{
 			Serializator::SaveToFile("../Saves/game.json", Game::GetInstance());
 		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Load"))
+		{
+			Serializator::ReadFromFile("../Saves/game.json", Game::GetInstance());
+		}
 	}
 	ImGui::End();
 }

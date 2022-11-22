@@ -61,6 +61,19 @@ json Game::Serialize() const
 	return out;
 }
 
+void Game::Deserialize(const json* in)
+{
+	assert(in->is_object());
+
+	auto actorsArr = in->at("actors");
+	assert(actorsArr.is_array());
+
+	for (auto actorObj : actorsArr) {
+			//TODO
+		;
+	}
+}
+
 void Game::Initialize()
 {
 	

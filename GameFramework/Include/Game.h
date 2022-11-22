@@ -14,6 +14,7 @@
 
 #include <filesystem>
 #include "JsonInclude.h"
+
 using Path = std::filesystem::path;
 
 class Actor;
@@ -168,6 +169,7 @@ public:
 	virtual auto OnBeginPlay() -> void;
 
 	json Serialize() const;
+	void Deserialize(const json* in);
 protected:
 
 	Game();
