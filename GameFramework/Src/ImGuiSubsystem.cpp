@@ -17,6 +17,7 @@
 #include "EngineContentRegistry.h"
 
 #include "DirectoryTree.h"
+#include "Serializator.h"
 
 //temporary include
 //#include "../External/bullet3/src/"
@@ -229,6 +230,13 @@ auto ImGuiSubsystem::DrawToolbar() -> void
 				MyGame->StopPlay();
 			}*/
 			break;
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Save"))
+		{
+			Serializator::SaveToFile("../Saves/game.json", Game::GetInstance());
 		}
 	}
 	ImGui::End();

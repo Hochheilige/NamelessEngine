@@ -10,6 +10,6 @@ class Game;
 class Serializator
 {
 public:
-   static json Serialize(Game* game);
-   static void SaveToFile(Path path, Game* game);
+   static json Serialize(const Game* game);
+   static void SaveToFile(Path path, const Game* game);
 };
