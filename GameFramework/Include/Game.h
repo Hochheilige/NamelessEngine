@@ -22,6 +22,7 @@ class RenderingSystem;
 class ImGuiSubsystem;
 class EngineContentRegistry;
 class Serializator;
+class UUIDGenerator;
 
 using namespace Microsoft::WRL;
 
@@ -170,6 +171,7 @@ public:
 
 	json Serialize() const;
 	void Deserialize(const json* in);
+	UUIDGenerator* GetUuidGenerator() const;
 protected:
 
 	Game();
@@ -233,7 +235,7 @@ private:
 
 	std::unique_ptr<class DirectoryTree> directoryTree;
 
-
+	UUIDGenerator* uuidGenerator = nullptr;
 public:
 
 	Path assetsPath = "../Assets";

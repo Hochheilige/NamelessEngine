@@ -4,6 +4,8 @@
 #include "LineRenderer.h"
 #include "RigidBodyComponent.h"
 #include "RenderingSystem.h"
+#include "uuid.h"
+#include "UUIDGenerator.h"
 
 void Actor::Update(float DeltaTime)
 {
@@ -41,7 +43,9 @@ void Actor::Update(float DeltaTime)
 }
 
 Actor::Actor()
+: id(Game::GetInstance()->GetUuidGenerator()->generate())
 {
+	
 }
 
 auto Actor::RemoveComponent(Component* InComponent) -> void
@@ -133,7 +137,17 @@ json Actor::Serialize() const
 {
 	json out = json::object();
 
-	//TODO
+	out["id"] = id;
 
 	return out;
+}
+
+void Actor::Deserialize(const json* in)
+{
+	//TODO
+}
+
+uuid Actor::GetId() const
+{
+	return id;
 }

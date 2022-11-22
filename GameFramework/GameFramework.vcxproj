@@ -258,6 +258,7 @@
     <ClInclude Include="Include\Transform.h" />
     <ClInclude Include="Include\Mouse.h" />
     <ClInclude Include="Include\Keyboard.h" />
+    <ClInclude Include="Include\UUIDGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\imgui\backends\imgui_impl_dx11.cpp" />
@@ -294,6 +295,7 @@
     <ClCompile Include="Src\ShaderCompiler.cpp" />
     <ClCompile Include="Src\SphereCollider.cpp" />
     <ClCompile Include="Src\Transform.cpp" />
+    <ClCompile Include="Src\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

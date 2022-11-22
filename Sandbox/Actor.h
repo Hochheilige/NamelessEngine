@@ -9,6 +9,7 @@
 #include "SceneComponent.h"
 #include "MonoObjects/MonoActor.h"
 #include "JsonInclude.h"
+#include "uuid.h"
 
 class LineRenderer;
 class MeshRenderer;
@@ -110,6 +111,8 @@ public:
 	}
 
 	json Serialize() const;
+	void Deserialize(const json* in);
+	uuid GetId() const;
 private:
 	Actor* Parent = nullptr;
 
@@ -125,7 +128,7 @@ public:
 	bool is_mesh_renderer_enabled = false;
 
 private:
-	
+	uuids::uuid id;
 	friend class Game;
 	friend class Component;
 };
