@@ -220,6 +220,7 @@ xcopy "$(SolutionDir)External\mono\lib\4.5\*" "$(TargetDir)mono\lib\4.5\" /y /i 
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="MonoModules\MonoActorModule.h" />
+    <ClInclude Include="MonoModules\MonoRigidBodyComponentModule.h" />
     <ClInclude Include="MonoObjects\MeshRendererComponent.h" />
     <ClInclude Include="MonoObjects\MonoActor.h" />
     <ClInclude Include="MonoObjects\MonoComponent.h" />
@@ -234,7 +235,6 @@ xcopy "$(SolutionDir)External\mono\lib\4.5\*" "$(TargetDir)mono\lib\4.5\" /y /i 
     <ClInclude Include="RigidBodySphere.h" />
     <ClInclude Include="Sandbox.h" />
     <ClInclude Include="SceneComponent.h" />
-    <ClInclude Include="ScriptObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Component.cpp" />
@@ -252,7 +252,6 @@ xcopy "$(SolutionDir)External\mono\lib\4.5\*" "$(TargetDir)mono\lib\4.5\" /y /i 
     <ClCompile Include="RigidBodySphere.cpp" />
     <ClCompile Include="Sandbox.cpp" />
     <ClCompile Include="SceneComponent.cpp" />
-    <ClCompile Include="ScriptObject.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>

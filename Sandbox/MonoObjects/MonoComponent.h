@@ -1,10 +1,11 @@
 ﻿#pragma once
 #include "..\MonoSystem.h"
+#include "..\Component.h"
 
 class MonoComponent
 {
 public:
-    void ConstructFromCsInstance(MonoObject* instance);
+    void ConstructFromCsInstance(MonoObject* instance, Component* component);
 
     ~MonoComponent();
 protected:

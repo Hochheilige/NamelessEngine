@@ -13,6 +13,8 @@ namespace Scripts
     {
         private static Game _instance;
 
+        public static InputHandler Input;
+
         public readonly EngineSettings EngineSettings;
 
 

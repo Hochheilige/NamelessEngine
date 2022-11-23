@@ -15,6 +15,7 @@ namespace Scripts
         private static extern void InternalSetTransform(IntPtr handle, Transform transform);
 
         public Actor Owner { get; set; }
+        
         public Transform Transform;
         public IntPtr CppInstance;
 

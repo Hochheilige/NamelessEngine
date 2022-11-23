@@ -30,7 +30,7 @@ public:
 	virtual ComponentType GetComponentType()
 	{
 		assert(false, "Not Defined");
-		return ComponentType::Unddefined;
+		return ComponentType::Undefined;
 		//throw std::exception("Not Defined");
 	}
 	

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Scripts.Components;
 
 namespace Scripts
 {
@@ -18,14 +19,10 @@ namespace Scripts
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void InternalSetTransform(IntPtr cppInstance, Transform transform);
 
-        public Actor()
-        {
-            Console.WriteLine("Base CTOR");
-        }
+        public Actor() { }
 
         public void SetCppInstance(IntPtr obj)
         {
-            Console.WriteLine("setted");
             CppInstance = obj;
         }
         
@@ -34,6 +31,16 @@ namespace Scripts
         public virtual void Update(float deltaTime) { }
         
         public Component AddComponent(int componentType)
+        {
+            return CreateComponent(componentType, true);
+        }
+
+        private Component AddExternalComponent(int componentType)
+        {
+            return CreateComponent(componentType, false);
+        }
+
+        private Component CreateComponent(int componentType, bool internalCreate)
         {
             ComponentsEnum type = (ComponentsEnum) componentType;
             //Console.WriteLine("Component type to add " + type);
@@ -45,12 +52,14 @@ namespace Scripts
                     component = new AudioComponent(this);
                     break;
                 case ComponentsEnum.RigidBodyCubeType:
-                    component = new PhysicsComponent(this);
+                    component = new RigidBodyCubeComponent(this, internalCreate);
                     break;
                 case ComponentsEnum.RigidBodySphereType:
-                    component = new PhysicsComponent(this);
+                    component = new RigidBodySphereComponent(this, internalCreate);
                     break;
-                default: component = new Component(this); break;
+                default: 
+                    Console.WriteLine("Default");
+                    component = new Component(this); break;
             }
 
             AddComponent(component);
