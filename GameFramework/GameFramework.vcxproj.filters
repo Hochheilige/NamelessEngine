@@ -129,7 +129,7 @@
     <ClInclude Include="Include\ImGuiInclude.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Serializator.h">
+    <ClInclude Include="Include\Serializer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\JsonInclude.h">
@@ -239,10 +239,7 @@
     <ClCompile Include="Src\DirectoryTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Serializator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Utils.cpp">
+    <ClCompile Include="Src\Serializer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

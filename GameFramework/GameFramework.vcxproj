@@ -167,7 +167,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Sandbox\;$(ProjectDir)Include\;$(SolutionDir)DirectXTK\Include\;$(SolutionDir)External\assimp\include\;$(SolutionDir)External\mono\include\;$(SolutionDir)imgui;$(SolutionDir)External\bullet3\src\;$(SolutionDir)External\json\include\;$(SolutionDir)External\stduuid\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Sandbox\;$(ProjectDir)Include\;$(SolutionDir)DirectXTK\Include\;$(SolutionDir)External\assimp\include\;$(SolutionDir)External\mono\include\;$(SolutionDir)imgui;$(SolutionDir)External\bullet3\src\;$(SolutionDir)External\json\include\;$(SolutionDir)External\stduuid\include\;$(SolutionDir)External\GSL\include\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -250,7 +250,7 @@
     <ClInclude Include="Include\Renderer.h" />
     <ClInclude Include="Include\RenderingSystem.h" />
     <ClInclude Include="Include\RenderingSystemTypes.h" />
-    <ClInclude Include="Include\Serializator.h" />
+    <ClInclude Include="Include\Serializer.h" />
     <ClInclude Include="Include\Shader.h" />
     <ClInclude Include="Include\ShaderCompiler.h" />
     <ClInclude Include="Include\SphereCollider.h" />
@@ -265,7 +265,7 @@
     <ClCompile Include="..\imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="EditorContext.cpp" />
     <ClCompile Include="Include\Renderer.cpp" />
-    <ClCompile Include="Src\Serializator.cpp" />
+    <ClCompile Include="Src\Serializer.cpp" />
     <ClCompile Include="Src\AABB2DCollider.cpp" />
     <ClCompile Include="Src\Delegates.cpp" />
     <ClCompile Include="Src\DirectoryTree.cpp" />
@@ -295,7 +295,6 @@
     <ClCompile Include="Src\ShaderCompiler.cpp" />
     <ClCompile Include="Src\SphereCollider.cpp" />
     <ClCompile Include="Src\Transform.cpp" />
-    <ClCompile Include="Src\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

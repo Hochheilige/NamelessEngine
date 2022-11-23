@@ -7,7 +7,7 @@ using Path = std::filesystem::path;
 
 class Game;
 
-class Serializator
+class Serializer
 {
 public:
    static json Serialize(const Game* game);

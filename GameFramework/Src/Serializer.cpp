@@ -1,18 +1,18 @@
-﻿#include <Serializator.h>
+﻿#include <Serializer.h>
 
 #include "Game.h"
 
-json Serializator::Serialize(const Game* game)
+json Serializer::Serialize(const Game* game)
 {
 	return game->Serialize();
 }
 
-void Serializator::Deserialize(const json* in, Game& game)
+void Serializer::Deserialize(const json* in, Game& game)
 {
 	game.Deserialize(in);
 }
 
-void Serializator::SaveToFile(Path path, const Game* game)
+void Serializer::SaveToFile(Path path, const Game* game)
 {
 	create_directories(path.parent_path());
 
@@ -21,7 +21,7 @@ void Serializator::SaveToFile(Path path, const Game* game)
 	out.close();
 }
 
-void Serializator::ReadFromFile(Path path, Game* game)
+void Serializer::ReadFromFile(Path path, Game* game)
 {
 	assert(exists(path) && "Provided file doesn't exist");
 

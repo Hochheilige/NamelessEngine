@@ -10,3 +10,6 @@
 [submodule "External/stduuid"]
 	path = External/stduuid
 	url = git@github.com:mariusbancila/stduuid.git
+[submodule "External/GSL"]
+	path = External/GSL
+	url = git@github.com:microsoft/GSL.git

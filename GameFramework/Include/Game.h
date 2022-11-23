@@ -21,7 +21,7 @@ class Actor;
 class RenderingSystem;
 class ImGuiSubsystem;
 class EngineContentRegistry;
-class Serializator;
+class Serializer;
 class UUIDGenerator;
 
 using namespace Microsoft::WRL;
