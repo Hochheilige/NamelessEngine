@@ -6,7 +6,6 @@
     <ClCompile Include="RigidBodyComponent.cpp" />
     <ClCompile Include="MonoSystem.cpp" />
     <ClCompile Include="Sandbox.cpp" />
-    <ClCompile Include="ScriptObject.cpp" />
     <ClCompile Include="Source.cpp" />
     <Filter Include="Source Files">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
@@ -109,6 +108,9 @@
     <ClInclude Include="AudioModule.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MonoModules\MonoRigidBodyComponentModule.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mappings.h" />
@@ -116,7 +118,6 @@
     <ClInclude Include="RigidBodyComponent.h" />
     <ClInclude Include="MonoSystem.h" />
     <ClInclude Include="Sandbox.h" />
-    <ClInclude Include="ScriptObject.h" />
     <ClCompile Include="Sandbox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

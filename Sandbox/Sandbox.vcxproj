@@ -153,11 +153,12 @@
       <AdditionalIncludeDirectories>$(SolutionDir)External\mono\include\;$(SolutionDir)External\bullet3\src\;$(SolutionDir)External\assimp\include\;$(SolutionDir)DirectXTK\Include\;$(SolutionDir)GameFramework\Include\;$(SolutionDir)imgui;$(SolutionDir)External\fmod\studio\inc;$(SolutionDir)External\fmod\core\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)External\bullet3\lib\Debug;$(SolutionDir)External\mono\lib\$(Configuration)\;$(SolutionDir)External\assimp\lib\Debug;$(SolutionDir)External\fmod\core\lib\$(Platform)\;$(SolutionDir)External\fmod\studio\lib\$(Platform)\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\bullet3\lib\Debug;$(SolutionDir)External\mono\lib\$(Configuration)\;$(SolutionDir)External\assimp\lib\Debug;$(SolutionDir)External\fmod\core\lib\;$(SolutionDir)External\fmod\studio\lib\</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(CoreLibraryDependencies);mono-2.0-sgen.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;assimp-vc143-mtd.lib;fmodL_vc.lib;fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>

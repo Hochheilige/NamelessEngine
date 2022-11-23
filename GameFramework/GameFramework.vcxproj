@@ -168,6 +168,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)Sandbox\;$(ProjectDir)Include\;$(SolutionDir)DirectXTK\Include\;$(SolutionDir)External\assimp\include\;$(SolutionDir)External\mono\include\;$(SolutionDir)imgui;$(SolutionDir)External\bullet3\src\;</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
