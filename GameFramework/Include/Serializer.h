@@ -6,6 +6,7 @@
 using Path = std::filesystem::path;
 
 class Game;
+class Component;
 
 class Serializer
 {

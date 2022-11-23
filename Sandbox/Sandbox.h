@@ -5,9 +5,9 @@
 #include "MonoSystem.h"
 
 #include "btBulletDynamicsCommon.h"
-#include "RigidBodyComponent.h"
 
 class Actor;
+class RigidBodyComponent;
 
 class Sandbox : public Game
 {
@@ -31,7 +31,8 @@ public:
 	Actor* CreateBun(Transform transform);
 
 	auto CreateHierarcyTestActor() ->Actor*;
-
+protected:
+	void RegisterComponents(ComponentRegistry* registry) override;
 private:
 	void LoadGameFacade();
 

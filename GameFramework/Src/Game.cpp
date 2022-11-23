@@ -17,6 +17,8 @@
 #include <iostream>
 
 #include "Actor.h"
+#include "Component.h"
+#include "RigidBodyComponent.h"
 #include "UUIDGenerator.h"
 
 
@@ -30,6 +32,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 void Game::InitializeInternal()
 {
 	uuidGenerator = new UUIDGenerator();
+	RegisterComponents(GetComponentRegistry());
 	StartTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count() / 1000.0f;
 
 	Display = new DisplayWin32(800, 1200, &WndProc, L"NamelessEngine");
@@ -542,7 +545,6 @@ Game::Game()
 {
 	Instance = this;
 }
-
 
 auto Game::FillDirectoryTree() -> void {
 	

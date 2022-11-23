@@ -1,5 +1,6 @@
 ﻿#include <Serializer.h>
 
+#include "Component.h"
 #include "Game.h"
 
 json Serializer::Serialize(const Game* game)

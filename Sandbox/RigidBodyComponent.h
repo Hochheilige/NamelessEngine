@@ -17,6 +17,7 @@ public:
 	void Update(float DeltaTime);
 
 	void MakeKinematic();
+
 	//void MakeNonKinematic();
 
 protected:

@@ -1,15 +1,15 @@
 #pragma once
 
+#include "JsonSerializers.h"
+#include "JsonInclude.h"
 #include "MathInclude.h"
-
-#include <DirectXMath.h>
 #include <string>
 
 struct Rotator
 {
 protected:
 	Quaternion Quat;
-
+	friend void to_json(json& out, const Rotator& rotator);
 public:
 
 	Rotator();
@@ -40,6 +40,14 @@ public:
 
 	friend struct Transform;
 };
+
+static void to_json(json& out, const Rotator& rotator) {
+	out = rotator.Quat;
+}
+
+static void from_json(const json& in, Rotator& rotator) {
+	rotator = Rotator(in.get<Quaternion>());
+}
 
 struct Transform
 {
@@ -79,3 +87,14 @@ struct Transform
 	static Transform Identity;
 };
 
+static void to_json(json& out, const Transform& transform) {
+	out = json::object();
+	out["pos"] = transform.Position;
+	out["rot"] = transform.Rotation;
+	out["scale"] = transform.Scale;
+}
+
+static void from_json(const json& in, Transform& transform) {
+	assert(in.is_object());
+	transform = Transform(in.at("pos"), in.at("rot"), in.at("scale"));
+}

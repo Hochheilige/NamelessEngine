@@ -1,5 +1,7 @@
 #include "SceneComponent.h"
 
+#include "Serializer.h"
+
 auto SceneComponent::SetTransform(const Transform& InTransform) -> void
 {
 	// Calculate relative transform
@@ -44,6 +46,20 @@ auto SceneComponent::SetAttachmentParent(SceneComponent* InAttachmentParent, std
 	{
 		mAttachmentParent->AttachedChildren.push_back(this);
 	}
+}
+
+json SceneComponent::Serialize() const
+{
+	json out = json::object();
+	out["transform"] = mTransform;
+	return out;
+}
+
+void SceneComponent::Deserialize(const json* in)
+{
+	assert(in->is_object());
+
+	mTransform = in->at("transform");
 }
 
 auto SceneComponent::GetAttahcmentRoot() -> SceneComponent*

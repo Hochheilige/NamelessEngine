@@ -29,7 +29,7 @@ public:
 	template<typename T>
 	auto AddComponent() -> T*
 	{
-		static_assert(std::is_base_of_v<Component, T>, "Only componentns can be added to an actor");
+		static_assert(std::is_base_of_v<Component, T>, "Only components can be added to an actor");
 
 		T* component = nullptr;
 

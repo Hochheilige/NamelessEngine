@@ -2,6 +2,7 @@
 
 #include "Component.h"
 #include "Transform.h"
+#include "JsonInclude.h"
 
 #include <string>
 
@@ -52,6 +53,9 @@ public: // Attachment related fucntions
 
 	ComponentType GetComponentType() override { return mType; }
 	MonoComponent* GetMonoComponent() override { return mMonoComponent; }
+
+	json Serialize() const override;
+	void Deserialize(const json* in) override;
 private:
 
 	ComponentType mType = ComponentType::SceneComponentType;

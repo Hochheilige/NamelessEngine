@@ -139,12 +139,90 @@ json Actor::Serialize() const
 
 	out["id"] = id;
 
+	json componentArr = json::array();
+	for (auto component : Components) {
+		json wrapper = json::object();
+		wrapper["name"] = component->GetName();
+		wrapper["id"] = component->GetId();
+		wrapper["data"] = component->Serialize();
+
+		if(SceneComponent* sc = dynamic_cast<SceneComponent*>(component)) {
+			if(sc->GetAttachmentParent() != nullptr) {
+				wrapper["parent"] = sc->GetAttachmentParent()->GetId();
+			}
+		}
+
+		componentArr.push_back(wrapper);
+	}
+
+	out["components"] = componentArr;
+
 	return out;
 }
 
 void Actor::Deserialize(const json* in)
 {
-	//TODO
+	assert(in->is_object());
+
+	auto componentArr = in->at("components");
+	assert(componentArr.is_array());
+
+	auto componentRegistry = Game::GetInstance()->GetComponentRegistry();
+
+ 	std::vector<std::pair<SceneComponent*, uuid>> shouldBeBound;
+
+	for (auto wrapper : componentArr) {
+		auto id = wrapper.at("id").get<uuid>();
+
+		bool exists = false;
+		for (auto component : Components) {
+			if(component->GetId() == id) {
+				exists = true;
+
+				auto data = wrapper.at("data");
+				component->Deserialize(&data);
+			} 
+		}
+
+		if(!exists) {
+			auto name = wrapper.at("id").get<std::string>();
+			Component* component = componentRegistry->CreateInstance(name);
+
+			assert(component != nullptr && "Component was not registered");
+
+			auto data = wrapper.at("data");
+			component->Deserialize(&data);
+
+			if (SceneComponent* sc = dynamic_cast<SceneComponent*>(component)) {
+				auto parentProp = wrapper.at("parent");
+				if(!parentProp.is_null()) {
+					auto parentId = parentProp.get<uuid>();
+					shouldBeBound.push_back( std::make_pair(sc, parentId));
+				}
+			}
+
+			Components.push_back(component);
+		}
+	}
+
+	//Done with extra loop because some of parent tree may not be initialized too
+	for (auto child : shouldBeBound) {
+		for (auto component : Components) {
+			if(component->GetId() == child.second) {
+				if(SceneComponent* parent = dynamic_cast<SceneComponent*>(component)) {
+					child.first->SetAttachmentParent(parent);
+				} else {
+					assert(false && "Provided parent id belongs to an object which is not a SceneComponent");
+				}
+
+				goto nextChild;
+			}
+		}
+
+		assert(false && "No parent found with provided id");
+
+		nextChild:;
+	}
 }
 
 uuid Actor::GetId() const

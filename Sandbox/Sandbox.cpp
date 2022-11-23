@@ -23,8 +23,10 @@
 #include "RenderingSystem.h"
 #include "LightBase.h"
 #include "EngineContentRegistry.h"
-
+#include "RigidBodyComponent.h"
+#include "Component.h"
 #include "ImGuiInclude.h"
+
 
 #include "CreateCommon.h"
 
@@ -139,6 +141,11 @@ auto Sandbox::CreateHierarcyTestActor() -> Actor*
 	actor->AddComponent<Component>();*/
 
 	return nullptr;
+}
+
+void Sandbox::RegisterComponents(ComponentRegistry* registry)
+{
+	//registry->Register("RigidBodyComponent", RigidBodyComponent::create);
 }
 
 void Sandbox::LoadGameFacade() {
