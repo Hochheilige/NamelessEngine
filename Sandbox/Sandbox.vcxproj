@@ -165,6 +165,10 @@
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)External\mono\bin\$(Configuration)\mono-2.0-sgen.dll" "$(TargetDir)" /y
 xcopy "$(SolutionDir)External\assimp\bin\$(Configuration)\assimp-vc143-mtd.dll" "$(TargetDir)" /y
+xcopy "$(SolutionDir)External\fmod\studio\lib\fmodstudio.dll" "$(TargetDir)" /y
+xcopy "$(SolutionDir)External\fmod\studio\lib\fmodstudioL.dll" "$(TargetDir)" /y
+xcopy "$(SolutionDir)External\fmod\core\lib\fmod.dll" "$(TargetDir)" /y
+xcopy "$(SolutionDir)External\fmod\core\lib\fmodL.dll" "$(TargetDir)" /y
 xcopy "$(SolutionDir)External\mono\lib\4.5\*" "$(TargetDir)mono\lib\4.5\" /y /i /s</Command>
     </PostBuildEvent>
     <PreLinkEvent>
