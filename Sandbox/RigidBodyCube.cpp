@@ -31,8 +31,6 @@ void RigidBodyCube::Init()
 	Body = new btRigidBody(rbInfo);
 
 	RegisterRigidBodyType();
-
-	//physics->GetDynamicsWorls()->addRigidBody(Body);
 }
 
 void RigidBodyCube::OnRegister()

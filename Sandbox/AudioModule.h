@@ -6,6 +6,9 @@
 #include <unordered_map>
 #include <vector>
 
+using SoundMap = std::unordered_map<std::string, FMOD::Sound*>;
+using ChannelMap = std::unordered_map<int, FMOD::Channel*>;
+
 class AudioModule
 {
 public:
@@ -16,6 +19,16 @@ public:
 
 	void Update();
 
+	FMOD::Studio::System* GetStudioSystem() { return StudioSystem; }
+
+	FMOD::System* GetSystem() { return System; }
+
+	int GetNextChannelID() { return nextChannelID; }
+
+	SoundMap& GetSounds() { return Sounds; }
+
+	ChannelMap& GetChannels() { return Channels; }
+
 private:
 	AudioModule();
 
@@ -24,8 +37,9 @@ private:
 	FMOD::Studio::System* StudioSystem;
 	FMOD::System*         System;
 
-	int nextChannelID;
+	SoundMap   Sounds;
+	ChannelMap Channels;
 
-	std::unordered_map<std::string, FMOD::Sound*> Sounds;
-	std::unordered_map<int, FMOD::Channel*>       Channels;
+public:
+	int nextChannelID;
 };

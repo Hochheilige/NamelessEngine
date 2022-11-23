@@ -239,6 +239,7 @@ xcopy "$(SolutionDir)External\mono\lib\4.5\*" "$(TargetDir)mono\lib\4.5\" /y /i 
     <ClInclude Include="ScriptObject.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AudioComponent.cpp" />
     <ClCompile Include="AudioModule.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Mappings.cpp" />

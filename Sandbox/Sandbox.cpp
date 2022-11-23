@@ -22,6 +22,7 @@
 #include "RenderingSystem.h"
 #include "LightBase.h"
 #include "EngineContentRegistry.h"
+#include "AudioComponent.h"
 
 #include "ImGuiInclude.h"
 
@@ -55,6 +56,11 @@ Actor* Sandbox::CreateStaticBox(Transform transform)
 	mesh_component->SetVertexShader(vs);
 	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
 	mesh_component->SetNormalSRV(EngineContentRegistry::GetInstance()->GetBasicNormalTexSRV());
+
+	auto audio = box->AddComponent<AudioComponent>();
+	audio->Init();
+	audio->LoadSound("../Assets/test.wav", true, true);
+	//audio->Play("../Assets/test.wav");
 
 	return box;
 }
@@ -146,6 +152,9 @@ Actor* Sandbox::CreateKinematicSphere(Transform transform)
 	mesh_component->SetVertexShader(vs);
 	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
 	mesh_component->SetNormalSRV(EngineContentRegistry::GetInstance()->GetBasicNormalTexSRV());
+
+	auto audio = sphere->AddComponent<AudioComponent>();
+	audio->LoadSound("../Assets/fall.ogg");
 
 	return sphere;
 }
@@ -416,6 +425,13 @@ void Sandbox::Update(float DeltaTime)
 	// TODO: base game class should do this
 	if (GetPlayState() == PlayState::Playing)
 	{ 
+		// Temporary block just to check how sound works
+		if (prevPlayState == PlayState::Editor || prevPlayState == PlayState::Paused)
+		{
+			platform->GetComponentOfClass<AudioComponent>()->Play();
+			sphere->GetComponentOfClass<AudioComponent>()->Play();
+		}
+
 		// Physics Simulation
 		auto physics = PhysicsModuleData::GetInstance();
 		physics->OnUpdate(DeltaTime);
@@ -423,7 +439,12 @@ void Sandbox::Update(float DeltaTime)
 		{
 			actor->Update(DeltaTime);
 		}
-		
+	}
+	else
+	{
+		// Temporary block just to check how sound works
+		platform->GetComponentOfClass<AudioComponent>()->StopChannel();
+		sphere->GetComponentOfClass<AudioComponent>()->StopChannel();
 	}
 
 	prevPlayState = GetPlayState();
@@ -464,11 +485,11 @@ void Sandbox::Update(float DeltaTime)
 		}
 		if (keyboard->IsDown(KEY_ONE))
 		{
-			sphere->UnUsePhysicsSimulation();
+			//sphere->GetComponentOfClass<AudioComponent>()->Play();
 		}		
 		if (input.GetKeyboard()->IsDown(KEY_TWO))
 		{
-			sphere->UsePhysicsSimulation();
+			//sphere->GetComponentOfClass<AudioComponent>()->StopChannel();
 		}
 	}
 

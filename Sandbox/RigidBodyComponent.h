@@ -38,7 +38,7 @@ public:
 
 	void RegisterRigidBodyType();
 
-	void Update(float DeltaTime);
+	virtual void Update(float DeltaTime) override;
 
 	void MakeKinematic();
 

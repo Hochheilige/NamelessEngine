@@ -27,7 +27,6 @@ AudioModule* AudioModule::GetInstance()
 
 void AudioModule::Update()
 {
-	using ChannelMap = std::unordered_map<int, FMOD::Channel*>;
 	std::vector<ChannelMap::iterator> stoppedChannels;
 	for (auto it = Channels.begin(), itEnd = Channels.end(); it != itEnd; ++it)
 	{
