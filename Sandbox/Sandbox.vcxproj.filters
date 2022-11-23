@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="AudioComponent.cpp" />
     <ClCompile Include="Mappings.cpp" />
     <ClCompile Include="PhysicsModule.cpp" />
     <ClCompile Include="RigidBodyComponent.cpp" />
@@ -40,6 +39,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MonoObjects\MonoSceneComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioModule.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -92,9 +94,20 @@
     <ClInclude Include="MonoObjects\StaticMeshRendererComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MonoModules\MonoActorModule.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MonoModules\MonoComponentModule.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioModule.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AudioComponent.h" />
     <ClInclude Include="Mappings.h" />
     <ClInclude Include="PhysicsModule.h" />
     <ClInclude Include="RigidBodyComponent.h" />
