@@ -1,29 +1,13 @@
-﻿using System;
-using System.Runtime.CompilerServices;
-
-namespace Scripts.Components
+﻿namespace Scripts.Components
 {
-    public class RigidBodySphereComponent : Component
+    public class RigidBodySphereComponent : RigidBodyComponent
     {
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void RigidBodySphereSetMass(IntPtr handle, float mass);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void RigidBodySphereSetGravity(IntPtr handle, float gravity);
-
-        public RigidBodySphereComponent(Actor owner) : base(owner)
+        public RigidBodySphereComponent(Actor owner, bool internalCreate) : base(owner)
         {
-            this.CppInstance = InternalCreateComponent(owner.CppInstance, (int) ComponentsEnum.RigidBodySphereType);
-        }
-
-        public void SetMass(float mass)
-        {
-            RigidBodySphereSetMass(CppInstance, mass);
-        }
-
-        public void SetGravity(float gravity)
-        {
-            RigidBodySphereSetGravity(CppInstance, gravity);
+            if (internalCreate)
+            {
+                this.CppInstance = InternalCreateComponent(owner.CppInstance, (int)ComponentsEnum.RigidBodySphereType);
+            }
         }
     }
 }

@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Scripts
 {
-    class InputHandler
+    public class InputHandler
     {
-        public delegate void OnKeyInput(int button);
+        public HashSet<Keys> keys;
+
+        public delegate void OnKeyInput(Keys key);
         public static event OnKeyInput onKeyInput;
 
         public delegate void OnMouseInput();
@@ -16,5 +18,28 @@ namespace Scripts
 
         public delegate void OnMouseScroll();
         public static event OnMouseScroll onMouseScroll;
+
+        private void AddPressedKey(int key)
+        {
+            //onKeyInput?.Invoke((Keys)key);
+            keys.Add((Keys)key);
+        }
+        
+        private void RemovePressedKey(int key)
+        {
+            //onKeyInput?.Invoke((Keys)key);
+            keys.Remove((Keys)key);
+        }
+
+        public bool IsKeyPressed(Keys key)
+        {
+            return keys.Contains(key);
+        }
+        
+        public void FireKeyboardEvent(int key)
+        {
+            //Console.WriteLine("event with " + key);
+            onKeyInput?.Invoke((Keys)key);
+        }
     }
 }

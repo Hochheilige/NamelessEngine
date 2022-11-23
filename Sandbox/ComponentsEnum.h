@@ -2,7 +2,7 @@
 
 enum ComponentType
 {
-    Unddefined = -1,
+    Undefined = -1,
     MeshRendererType = 1,
     StaticMeshRendererType,
     RigidBodyCubeType, 

@@ -10,12 +10,10 @@ class MonoComponentModule
 public:
     MonoComponentModule()
     {
-        mono_add_internal_call("Scripts.PhysicsComponent::PhysicsSetMass", CubeSetMass);
         mono_add_internal_call("Scripts.Component::InternalCreateComponent", &CreateComponent);
     }
 
 private:
-    static void CubeSetMass(RigidBodyComponent* component, float mass){component->SetMass(mass);}
     static Component* CreateComponent(Actor* actor, int compType)
     {
         //return actor->AddComponent<RigidBodyComponent>();

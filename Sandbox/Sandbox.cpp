@@ -15,10 +15,7 @@
 #include "WICTextureLoader.h"
 #include "RigidBodyCube.h"
 #include "RigidBodySphere.h"
-#include "Mappings.h"
-#include "ScriptObject.h"
 #include "windows.h"
-#include "mono/metadata/debug-helpers.h"
 #include "RenderingSystem.h"
 #include "LightBase.h"
 #include "EngineContentRegistry.h"
@@ -74,6 +71,11 @@ Actor* Sandbox::CreateDynamicBox(Transform transform)
 	box_rb->SetRigidBodyType(RigidBodyType::DYNAMIC);
 	box_rb->SetMass(1);
 	box_rb->Init();
+	auto box_rb2 = box->AddComponent<RigidBodyCube>();
+	//box->SetTransform(transform);
+	box_rb2->SetRigidBodyType(RigidBodyType::DYNAMIC);
+	box_rb2->SetMass(1);
+	box_rb2->Init();
 	auto mesh_component = box->AddComponent<MeshRenderer>();
 	mesh_component->SetMeshProxy(texturedBoxMeshProxy);
 	mesh_component->SetPixelShader(ps);

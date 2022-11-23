@@ -11,9 +11,12 @@ namespace Scripts
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private static extern void PhysicsSetGravity(IntPtr handle, float gravity);
 
-        public PhysicsComponent(Actor owner) : base(owner)
+        public PhysicsComponent(Actor owner, bool internalCreate) : base(owner)
         {
-            this.CppInstance = InternalCreateComponent(owner.CppInstance, (int)ComponentsEnum.RigidBodyCubeType);
+            if (internalCreate)
+            {
+                this.CppInstance = InternalCreateComponent(owner.CppInstance, (int)ComponentsEnum.RigidBodySphereType);
+            }
         }
 
         public void SetMass(float mass)

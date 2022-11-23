@@ -55,6 +55,7 @@
     <Compile Include="InputHandler.cs" />
     <Compile Include="Instantiator.cs" />
     <Compile Include="Internal\Loader.cs" />
+    <Compile Include="Keys.cs" />
     <Compile Include="ListExtensions.cs" />
     <Compile Include="Component.cs" />
     <Compile Include="PhysicsComponent.cs" />

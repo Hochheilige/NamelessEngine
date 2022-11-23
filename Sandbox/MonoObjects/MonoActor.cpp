@@ -37,10 +37,11 @@ void MonoActor::AddComponent(Component* component)
     void *args [1];
     args [0] = &type;
 
-    MonoMethod* method = mono->GetVirtualMethod("Scripts", BaseClassName, "AddComponent", mono_gchandle_get_target (Handle));
+    //MonoMethod* method = mono->GetVirtualMethod("Scripts", BaseClassName, "AddComponent", mono_gchandle_get_target (Handle));
+    MonoMethod* method = mono->GetVirtualMethod("Scripts", BaseClassName, "AddExternalComponent", mono_gchandle_get_target (Handle));
     MonoObject* result = mono->InvokeMethod(method, mono_gchandle_get_target (Handle), args, nullptr);
 
-    monoComp->ConstructFromCsInstance(result);
+    monoComp->ConstructFromCsInstance(result, component);
 }
 
 void MonoActor::RemoveComponent(Component* component)

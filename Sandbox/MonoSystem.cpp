@@ -4,6 +4,7 @@
 #include "mono/metadata/mono-debug.h"
 #include "MonoModules/MonoActorModule.h"
 #include "MonoModules/MonoComponentModule.h"
+#include "MonoModules/MonoRigidBodyComponentModule.h"
 
 //#define MONO_DEBUG
 
@@ -45,6 +46,7 @@ MonoSystem::MonoSystem()
 				//mono_add_internal_call("Scripts.Component::GetTransform", &Mappings::CubeSetMass);
 				new MonoComponentModule;
 				new MonoActorModule;
+				new MonoRigidBodyComponentModule;
 			}
 		}
 	}
