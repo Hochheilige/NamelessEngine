@@ -6,11 +6,13 @@ template <typename Key, typename T>
 {
 public:
 	typedef T* (*FactoryFunction)();
-	typedef std::unordered_map<Key, FactoryFunction*> FactoryMap;
+	typedef std::unordered_map<Key, FactoryFunction> FactoryMap;
 
 	Key Register(Key key, FactoryFunction factory)
 	{
-		mapFactory.emplace(key, factory);
+		mapFactory.insert(FactoryMap::value_type(key, factory));
+		// mapFactory.insert(std::pair<Key,
+		// 	FactoryFunction>(key, factory));
 		return key;
 	}
 

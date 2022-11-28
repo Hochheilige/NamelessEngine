@@ -54,8 +54,15 @@ public: // Attachment related fucntions
 	ComponentType GetComponentType() override { return mType; }
 	MonoComponent* GetMonoComponent() override { return mMonoComponent; }
 
+	//Serialization Part
 	json Serialize() const override;
 	void Deserialize(const json* in) override;
+	std::string GetName() const override;
+
+	static Component* Create()
+	{
+		return new SceneComponent();
+	}
 private:
 
 	ComponentType mType = ComponentType::SceneComponentType;

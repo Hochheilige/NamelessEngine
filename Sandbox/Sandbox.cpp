@@ -145,7 +145,7 @@ auto Sandbox::CreateHierarcyTestActor() -> Actor*
 
 void Sandbox::RegisterComponents(ComponentRegistry* registry)
 {
-	//registry->Register("RigidBodyComponent", RigidBodyComponent::create);
+	registry->Register("SceneComponent", &SceneComponent::Create);
 }
 
 void Sandbox::LoadGameFacade() {

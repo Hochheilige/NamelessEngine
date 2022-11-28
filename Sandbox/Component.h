@@ -36,26 +36,37 @@ public:
 
 	virtual MonoComponent* GetMonoComponent()
 	{
-		assert(false, "Not Defined");
+		assert(false && "Not Implemented");
 		return nullptr;
 		//throw std::exception("Not Defined");
 	}
 
 	virtual ComponentType GetComponentType()
 	{
-		assert(false, "Not Defined");
+		assert(false && "Not Implemented");
 		return ComponentType::Unddefined;
 		//throw std::exception("Not Defined");
 	}
 
 	Actor* GetOwner() const { return mOwner; }
 	uuid GetId() const { return id; }
-	std::string GetName() const { return name; }
 
-	virtual json Serialize() const = 0;
-	virtual void Deserialize(const json* in) = 0;
+	virtual std::string GetName() const
+	{
+		assert(false && "Not Implemented");
+		throw std::exception();
+	}
+
+	virtual json Serialize() const
+	{
+		assert(false && "Not Implemented");
+		throw std::exception();
+	}
+	virtual void Deserialize(const json* in)
+	{
+		assert(false && "Not Implemented");
+	}
 private:
 	Actor* mOwner;
 	uuid id;
-	std::string name;
 };
