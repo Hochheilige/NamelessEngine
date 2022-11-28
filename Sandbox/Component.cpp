@@ -1,4 +1,7 @@
 #include "Component.h"
+#include "Game.h"
 
-#include "Actor.h"
-
+Component::Component(): id(Game::GetInstance()->GetUuidGenerator()->generate())
+{
+	
+}

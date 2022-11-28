@@ -13,6 +13,12 @@
 #include "EditorContext.h"
 
 #include <filesystem>
+
+#include "FactoryRegistry.h"
+#include "JsonInclude.h"
+#include "UUIDGenerator.h"
+#include "JsonSerializers.h"
+
 using Path = std::filesystem::path;
 
 class Actor;
@@ -20,6 +26,9 @@ class AssetManager;
 class RenderingSystem;
 class ImGuiSubsystem;
 class EngineContentRegistry;
+class Serializer;
+
+typedef FactoryRegistry<std::string, Component> ComponentRegistry;
 
 using namespace Microsoft::WRL;
 
@@ -166,11 +175,15 @@ public:
 
 	virtual auto OnBeginPlay() -> void;
 
+	json Serialize() const;
+	void Deserialize(const json* in);
+	UUIDGenerator* GetUuidGenerator() const;
 
 	auto GetImGuiSubsystem() const -> ImGuiSubsystem* { return mImGuiSubsystem; }
 protected:
 
 	Game();
+	virtual void RegisterComponents(ComponentRegistry* registry) = 0;
 
 	std::vector<class Renderer*> Renderers;
 	std::vector<class Collider*> Colliders;
@@ -195,7 +208,6 @@ protected:
 private:
 
 	void InitializeInternal();
-
 
 private:
 	
@@ -228,9 +240,11 @@ private:
 	ImGuiSubsystem* mImGuiSubsystem = nullptr;
 
 	EngineContentRegistry* mEngineContentRegistry = nullptr;
+	ComponentRegistry* componentRegistry = nullptr;
 
 	PlayState mPlayState = PlayState::Editor;
 
+	UUIDGenerator* uuidGenerator = nullptr;
 	std::unique_ptr<AssetManager> assetManager;
 
 public:

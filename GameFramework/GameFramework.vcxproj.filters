@@ -138,6 +138,21 @@
     <ClInclude Include="Include\ImGuiInclude.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Serializer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\JsonInclude.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\UUIDGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\FactoryRegistry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\JsonSerializers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Include\StaticMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -252,6 +267,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\DirectoryTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Serializer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\JsonSerializers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\StaticMesh.cpp">

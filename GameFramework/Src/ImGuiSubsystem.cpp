@@ -22,6 +22,7 @@
 #include "StaticMesh.h"
 
 #include "RigidBodyComponent.h"
+#include "Serializer.h"
 
 //temporary include
 //#include "../External/bullet3/src/"
@@ -29,7 +30,7 @@
 ImGuiSubsystem* ImGuiSubsystem::Instance = nullptr;
 
 
-// Drag And Drop source classes 
+// Drag And Drop source classes
 
 static const char* ActorDragDropSourceType = "ActorDragDropSourceType";
 static const char* FileDragDropSourceType = "FileDragDropSourceType";
@@ -249,6 +250,20 @@ auto ImGuiSubsystem::DrawToolbar() -> void
 				MyGame->StopPlay();
 			}*/
 			break;
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Save"))
+		{
+			Serializer::SaveToFile("../Saves/game.json", Game::GetInstance());
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Load"))
+		{
+			Serializer::ReadFromFile("../Saves/game.json", Game::GetInstance());
 		}
 	}
 	ImGui::End();
@@ -504,7 +519,7 @@ auto ImGuiSubsystem::DrawRigidBodyProperties(Actor* actor) -> void
 }
 
 auto ImGuiSubsystem::DrawStaticMeshProperties() -> void {
-	
+
 	SceneComponent* selectedComp = GetSelectedSceneComponent();
 	StaticMeshRenderer* smr = static_cast<StaticMeshRenderer*>(selectedComp);
 
@@ -558,11 +573,11 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 			DrawComponentSelector(actor);
 			LayOutTransform();
 
-			
+
 			switch (GetSelectedSceneComponent()->GetComponentType()) {
 			case StaticMeshRendererType:
 			{
-				DrawStaticMeshProperties();	
+				DrawStaticMeshProperties();
 			}
 				break;
 			case RigidBodyCubeType:
@@ -856,7 +871,7 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 						if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(FileDragDropSourceType)) {
 							const std::string fileName = static_cast<const char*>(payload->Data);
 							// TODO move item into directory here
-							//ImGui::OpenPopup(("File kinda dropped lol — " + fileName).c_str());
+							//ImGui::OpenPopup(("File kinda dropped lol ï¿½ " + fileName).c_str());
 						}
 						ImGui::EndDragDropTarget();
 					}
@@ -910,7 +925,7 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 				ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10.0f);
 			}
 
-			if (ImGui::BeginChild("Asset browser", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), false, window_flags)) 
+			if (ImGui::BeginChild("Asset browser", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), false, window_flags))
 			{
 				ImVec2 itemSize(80, 110);
 				ImGuiStyle& style = ImGui::GetStyle();
@@ -918,7 +933,7 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 				float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 				DirectoryTreeNode* selectedDirectory = dt->GetDirectoryByPath(GetEditorContext().GetSelectedDirectory());
 				if (selectedDirectory != nullptr)
-				{			
+				{
 					for (const DirectoryTreeNode* file : selectedDirectory->GetChildren())
 					{
 						DrawAsset(file, itemSize);
@@ -946,7 +961,7 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 auto ImGuiSubsystem::DrawAsset(const DirectoryTreeNode* file, const Vector2& itemSize/* = Vector2(80, 110)*/) -> void
 {
 	ImGuiStyle& style = ImGui::GetStyle();
-	
+
 	ImGui::BeginGroup();
 	const ImVec2 selectableCursorPos = ImGui::GetCursorPos() + style.ItemSpacing;
 	ImGui::SetCursorPos(selectableCursorPos);
@@ -988,7 +1003,7 @@ auto ImGuiSubsystem::DrawAsset(const DirectoryTreeNode* file, const Vector2& ite
 
 			// TODO move item into directory here
 
-			//ImGui::OpenPopup(("File kinda dropped lol — " + fileName).c_str());
+			//ImGui::OpenPopup(("File kinda dropped lol ï¿½ " + fileName).c_str());
 
 		}
 		ImGui::EndDragDropTarget();
@@ -1075,7 +1090,7 @@ auto ImGuiSubsystem::DrawFBXInspector(const Path& path) -> void
 					stack.push_back(nullptr);
 					stack.insert(stack.end(), node->mChildren, node->mChildren + node->mNumChildren);
 				}
-				
+
 				if (nodeOpen && node->mNumMeshes > 0)
 				{
 					ImGui::Text("Meshes:");

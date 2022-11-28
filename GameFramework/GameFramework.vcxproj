@@ -167,7 +167,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Sandbox\;$(ProjectDir)Include\;$(SolutionDir)DirectXTK\Include\;$(SolutionDir)External\assimp\include\;$(SolutionDir)External\mono\include\;$(SolutionDir)imgui;$(SolutionDir)External\bullet3\src\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Sandbox\;$(ProjectDir)Include\;$(SolutionDir)DirectXTK\Include\;$(SolutionDir)External\assimp\include\;$(SolutionDir)External\mono\include\;$(SolutionDir)imgui;$(SolutionDir)External\bullet3\src\;$(SolutionDir)External\json\include\;$(SolutionDir)External\stduuid\include\;$(SolutionDir)External\GSL\include\</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -229,6 +229,7 @@
     <ClInclude Include="Include\DirectoryTree.h" />
     <ClInclude Include="Include\EditorContext.h" />
     <ClInclude Include="Include\EngineContentRegistry.h" />
+    <ClInclude Include="Include\FactoryRegistry.h" />
     <ClInclude Include="Include\FileSystem.h" />
     <ClInclude Include="Include\Game.h" />
     <ClInclude Include="Include\GameComponent.h" />
@@ -240,6 +241,7 @@
     <ClInclude Include="Include\ImGuiInclude.h" />
     <ClInclude Include="Include\ImGuiSubsystem.h" />
     <ClInclude Include="Include\InputDevice.h" />
+    <ClInclude Include="Include\JsonInclude.h" />
     <ClInclude Include="Include\LightBase.h" />
     <ClInclude Include="Include\LineRenderer.h" />
     <ClInclude Include="Include\MathInclude.h" />
@@ -253,6 +255,7 @@
     <ClInclude Include="Include\Renderer.h" />
     <ClInclude Include="Include\RenderingSystem.h" />
     <ClInclude Include="Include\RenderingSystemTypes.h" />
+    <ClInclude Include="Include\Serializer.h" />
     <ClInclude Include="Include\Shader.h" />
     <ClInclude Include="Include\ShaderCompiler.h" />
     <ClInclude Include="Include\SphereCollider.h" />
@@ -262,12 +265,16 @@
     <ClInclude Include="Include\Transform.h" />
     <ClInclude Include="Include\Mouse.h" />
     <ClInclude Include="Include\Keyboard.h" />
+    <ClInclude Include="Include\UUIDGenerator.h" />
+    <ClInclude Include="Include\JsonSerializers.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\imgui\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="..\imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="EditorContext.cpp" />
     <ClCompile Include="Include\Renderer.cpp" />
+    <ClCompile Include="Src\JsonSerializers.cpp" />
+    <ClCompile Include="Src\Serializer.cpp" />
     <ClCompile Include="Src\AABB2DCollider.cpp" />
     <ClCompile Include="Src\Asset.cpp" />
     <ClCompile Include="Src\AssetManager.cpp" />

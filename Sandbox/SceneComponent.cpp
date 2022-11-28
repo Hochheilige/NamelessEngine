@@ -1,4 +1,5 @@
 #include "SceneComponent.h"
+#include "Serializer.h"
 
 auto SceneComponent::SetTransform(const Transform& InTransform, TeleportType InTeleportType/* = ETeleportType::TeleportPhysics*/) -> void
 {
@@ -44,6 +45,25 @@ auto SceneComponent::SetAttachmentParent(SceneComponent* InAttachmentParent, std
 	{
 		mAttachmentParent->AttachedChildren.push_back(this);
 	}
+}
+
+json SceneComponent::Serialize() const
+{
+	json out = json::object();
+	out["transform"] = mTransform;
+	return out;
+}
+
+void SceneComponent::Deserialize(const json* in)
+{
+	assert(in->is_object());
+
+	mTransform = in->at("transform");
+}
+
+std::string SceneComponent::GetName() const
+{
+	return "SceneComponent";
 }
 
 auto SceneComponent::GetAttahcmentRoot() -> SceneComponent*

@@ -8,6 +8,8 @@
 #include "Component.h"
 #include "SceneComponent.h"
 #include "MonoObjects/MonoActor.h"
+#include "JsonInclude.h"
+#include "uuid.h"
 
 class LineRenderer;
 class MeshRenderer;
@@ -27,7 +29,7 @@ public:
 	template<typename T>
 	auto AddComponent() -> T*
 	{
-		static_assert(std::is_base_of_v<Component, T>, "Only componentns can be added to an actor");
+		static_assert(std::is_base_of_v<Component, T>, "Only components can be added to an actor");
 
 		T* component = nullptr;
 
@@ -114,6 +116,9 @@ public:
 		return RootComponent;
 	}
 
+	json Serialize() const;
+	void Deserialize(const json* in);
+	uuid GetId() const;
 private:
 	Actor* Parent = nullptr;
 
@@ -129,7 +134,7 @@ public:
 	bool is_mesh_renderer_enabled = false;
 
 private:
-	
+	uuids::uuid id;
 	friend class Game;
 	friend class Component;
 };
