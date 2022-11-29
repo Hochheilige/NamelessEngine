@@ -53,6 +53,6 @@ void ComponentRegistry::Validate()
 	{
 		auto cType = static_cast<ComponentType>(type);
 		auto s = GetNameByType(cType);
-		assert(s.empty() && "Component Data is not registered for provided ComponentType");
+		assert(!s.empty() && "Component Data is not registered for provided ComponentType");
 	}
 }

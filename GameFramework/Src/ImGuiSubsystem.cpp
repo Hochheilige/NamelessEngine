@@ -36,27 +36,6 @@ static const char* ActorDragDropSourceType = "ActorDragDropSourceType";
 static const char* FileDragDropSourceType = "FileDragDropSourceType";
 static const char* MeshDragDropSourceType = "MeshDragDropSourceType";
 
-
-
-auto GetComponentTypeName(ComponentType type) -> std::string {
-	std::string name = "";
-	switch (type) {
-	case MeshRendererType:
-		name = "Mesh Renderer"; break;
-	case RigidBodyCubeType:
-		name = "Rigid Body Cube"; break;
-	case RigidBodySphereType:
-		name = "Rigid Body Sphere"; break;
-	case LightPointType:
-		name = "Point Light"; break;
-	case SceneComponentType:
-		name = "Scene Component"; break;
-	case StaticMeshRendererType:
-		name = "Static Mesh Renderer"; break;
-	}
-	return name;
-};
-
 ImGuiSubsystem::ImGuiSubsystem()
 	: mCurrentGizmoOperation(ImGuizmo::OPERATION::TRANSLATE)
 	, mCurrentGizmoMode(ImGuizmo::MODE::WORLD)

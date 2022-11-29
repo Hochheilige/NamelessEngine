@@ -33,7 +33,7 @@ public:
 	LitMaterial Mat;
 
 protected:
-	ComponentType mType = ComponentType::MeshRendererType;
+	ComponentType mType = MeshRendererType;
 	MonoComponent* mMonoComponent = new MeshRendererComponent;
 	
 	class RenderPrimitiveProxy* mMeshProxy = nullptr;

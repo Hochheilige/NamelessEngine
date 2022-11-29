@@ -4,6 +4,11 @@
 #include "RenderingSystemTypes.h"
 #include "Shader.h"
 
+ComponentType Renderer::GetComponentType()
+{
+	return Undefined;
+}
+
 void QuadRenderer::Render(const RenderingSystemContext& RSContext)
 {
 	ID3D11DeviceContext* context = Game::GetInstance()->GetD3DDeviceContext().Get();

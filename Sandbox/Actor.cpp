@@ -142,7 +142,10 @@ json Actor::Serialize() const
 	json componentArr = json::array();
 	for (auto component : Components) {
 		json wrapper = json::object();
-		wrapper["name"] = ComponentRegistry::GetNameByType(component->GetComponentType());;
+		const auto type = component->GetComponentType();
+		assert(type != Undefined && "Abstract components can't be serialized.");
+
+		wrapper["name"] = ComponentRegistry::GetNameByType(type);
 		wrapper["id"] = component->GetId();
 		wrapper["data"] = component->Serialize();
 

@@ -18,6 +18,8 @@ public:
 
 	bool bCastShadow = true;
 
+	ComponentType GetComponentType() override;
+
 protected:
 
 	// todo: move to a material
