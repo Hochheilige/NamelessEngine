@@ -33,8 +33,6 @@ public:
 	Actor* CreateBun(Transform transform);
 
 	auto CreateHierarcyTestActor() ->Actor*;
-protected:
-	void RegisterComponents(ComponentRegistry* registry) override;
 private:
 	void LoadGameFacade();
 

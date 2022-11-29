@@ -61,11 +61,6 @@ void SceneComponent::Deserialize(const json* in)
 	mTransform = in->at("transform");
 }
 
-std::string SceneComponent::GetName() const
-{
-	return "SceneComponent";
-}
-
 auto SceneComponent::GetAttahcmentRoot() -> SceneComponent*
 {
 	SceneComponent* sceneComp;

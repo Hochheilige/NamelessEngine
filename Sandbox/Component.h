@@ -51,12 +51,6 @@ public:
 	Actor* GetOwner() const { return mOwner; }
 	uuid GetId() const { return id; }
 
-	virtual std::string GetName() const
-	{
-		assert(false && "Not Implemented");
-		throw std::exception();
-	}
-
 	virtual json Serialize() const
 	{
 		assert(false && "Not Implemented");
@@ -67,6 +61,9 @@ public:
 		assert(false && "Not Implemented");
 	}
 private:
+	static std::unordered_map<std::string, ComponentType> TYPE_BY_NAME;
+	static std::unordered_map<ComponentType, std::string> NAME_BY_TYPE;
+
 	Actor* mOwner;
 	uuid id;
 };

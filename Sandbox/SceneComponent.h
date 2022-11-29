@@ -64,7 +64,6 @@ public: // Attachment related fucntions
 	//Serialization Part
 	json Serialize() const override;
 	void Deserialize(const json* in) override;
-	std::string GetName() const override;
 
 	static Component* Create()
 	{

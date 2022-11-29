@@ -226,11 +226,6 @@ auto Sandbox::CreateHierarcyTestActor() -> Actor*
 	return nullptr;
 }
 
-void Sandbox::RegisterComponents(ComponentRegistry* registry)
-{
-	registry->Register("SceneComponent", &SceneComponent::Create);
-}
-
 void Sandbox::LoadGameFacade() {
 	const auto mLoader_Boot = mono->GetMethod("Scripts.Internal", "Loader", "Boot()");
 	csGameInstance = mono->InvokeMethod(mLoader_Boot, nullptr, nullptr, nullptr);

@@ -221,6 +221,7 @@
   <ItemGroup>
     <ClInclude Include="..\imgui\backends\imgui_impl_dx11.h" />
     <ClInclude Include="..\imgui\backends\imgui_impl_win32.h" />
+    <ClInclude Include="Include\ComponentRegistry.h" />
     <ClInclude Include="Include\AABB2DCollider.h" />
     <ClInclude Include="Include\Asset.h" />
     <ClInclude Include="Include\AssetManager.h" />
@@ -274,6 +275,7 @@
     <ClCompile Include="EditorContext.cpp" />
     <ClCompile Include="Include\Renderer.cpp" />
     <ClCompile Include="Src\JsonSerializers.cpp" />
+    <ClCompile Include="Src\ComponentRegistry.cpp" />
     <ClCompile Include="Src\Serializer.cpp" />
     <ClCompile Include="Src\AABB2DCollider.cpp" />
     <ClCompile Include="Src\Asset.cpp" />

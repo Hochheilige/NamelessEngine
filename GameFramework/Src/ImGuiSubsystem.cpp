@@ -405,7 +405,7 @@ auto ImGuiSubsystem::DrawComponentSelector(class Actor* actor) -> void {
 				nodeFlags |= ImGuiTreeNodeFlags_Selected;
 			}
 
-			const bool isNodeOpen = ImGui::TreeNodeEx(GetComponentTypeName(comp->GetComponentType()).c_str(), nodeFlags);
+			const bool isNodeOpen = ImGui::TreeNodeEx(ComponentRegistry::GetNameByType(comp->GetComponentType()).c_str(), nodeFlags);
 			if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
 			{
 				GetEditorContext().SetSelectedComponent(comp);

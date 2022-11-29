@@ -8,7 +8,7 @@ public:
 	typedef T* (*FactoryFunction)();
 	typedef std::unordered_map<Key, FactoryFunction> FactoryMap;
 
-	Key Register(Key key, FactoryFunction factory)
+	Key RegisterFactory(Key key, FactoryFunction factory)
 	{
 		mapFactory.insert(FactoryMap::value_type(key, factory));
 		// mapFactory.insert(std::pair<Key,

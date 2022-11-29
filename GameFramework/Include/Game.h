@@ -14,7 +14,7 @@
 
 #include <filesystem>
 
-#include "FactoryRegistry.h"
+#include "ComponentRegistry.h"
 #include "JsonInclude.h"
 #include "UUIDGenerator.h"
 #include "JsonSerializers.h"
@@ -27,8 +27,6 @@ class RenderingSystem;
 class ImGuiSubsystem;
 class EngineContentRegistry;
 class Serializer;
-
-typedef FactoryRegistry<std::string, Component> ComponentRegistry;
 
 using namespace Microsoft::WRL;
 
@@ -183,7 +181,6 @@ public:
 protected:
 
 	Game();
-	virtual void RegisterComponents(ComponentRegistry* registry) = 0;
 
 	std::vector<class Renderer*> Renderers;
 	std::vector<class Collider*> Colliders;
@@ -195,8 +192,6 @@ protected:
 	class DisplayWin32* Display = nullptr;
 
 	ComPtr<ID3D11DepthStencilState> pDSState = nullptr;
-
-
 
 	ComPtr<ID3D11SamplerState> DefaultSamplerState = nullptr;
 	ComPtr<ID3D11SamplerState> ShadowmapSamplerState = nullptr;
@@ -240,7 +235,6 @@ private:
 	ImGuiSubsystem* mImGuiSubsystem = nullptr;
 
 	EngineContentRegistry* mEngineContentRegistry = nullptr;
-	ComponentRegistry* componentRegistry = nullptr;
 
 	PlayState mPlayState = PlayState::Editor;
 

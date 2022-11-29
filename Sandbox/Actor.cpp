@@ -3,8 +3,8 @@
 #include "MeshRenderer.h"
 #include "LineRenderer.h"
 #include "RigidBodyComponent.h"
+#include "ComponentRegistry.h"
 #include "RenderingSystem.h"
-#include "uuid.h"
 #include "UUIDGenerator.h"
 
 void Actor::Update(float DeltaTime)
@@ -142,7 +142,7 @@ json Actor::Serialize() const
 	json componentArr = json::array();
 	for (auto component : Components) {
 		json wrapper = json::object();
-		wrapper["name"] = component->GetName();
+		wrapper["name"] = ComponentRegistry::GetNameByType(component->GetComponentType());;
 		wrapper["id"] = component->GetId();
 		wrapper["data"] = component->Serialize();
 
@@ -167,8 +167,6 @@ void Actor::Deserialize(const json* in)
 	auto componentArr = in->at("components");
 	assert(componentArr.is_array());
 
-	auto componentRegistry = Game::GetInstance()->GetComponentRegistry();
-
  	std::vector<std::pair<SceneComponent*, uuid>> shouldBeBound;
 
 	for (auto wrapper : componentArr) {
@@ -186,7 +184,7 @@ void Actor::Deserialize(const json* in)
 
 		if(!exists) {
 			auto name = wrapper.at("id").get<std::string>();
-			Component* component = componentRegistry->CreateInstance(name);
+			Component* component = ComponentRegistry::CreateByName(name);
 
 			assert(component != nullptr && "Component was not registered");
 
