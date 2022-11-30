@@ -15,6 +15,13 @@ class SceneComponent;
 class DirectoryTreeNode;
 class AssetManager;
 
+enum CONTEXT_MENU_VALUES {
+	NOTHING = -1,
+	RENAME = 0,
+	DUPLICATE_,
+	DELETE_
+};
+
 namespace ImGuizmo
 {
 	enum OPERATION;
@@ -69,7 +76,7 @@ private:
 
 	auto InitStyle() -> void;
 
-	auto ActorBrowserContextMenu() const -> void;
+	auto ActorBrowserContextMenu(Actor* actor) const -> CONTEXT_MENU_VALUES;
 
 	// Helper style functions
 	auto BoldHeader(const char* label, ImGuiTreeNodeFlags flags) const -> bool;

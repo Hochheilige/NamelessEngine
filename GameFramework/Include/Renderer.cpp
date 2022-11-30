@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "RenderingSystemTypes.h"
 #include "Shader.h"
+#include "RenderingSystem.h"
 
 ComponentType Renderer::GetComponentType()
 {
@@ -26,4 +27,9 @@ void QuadRenderer::Render(const RenderingSystemContext& RSContext)
 	mPixelShader->UseShader(static_cast<ShaderFlag>(RSContext.ShaderFlags));
 
 	context->Draw(4, 0);
+}
+
+Renderer::~Renderer()
+{
+	Game::GetInstance()->MyRenderingSystem->UnregisterRenderer(this);
 }

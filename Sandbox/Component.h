@@ -51,6 +51,8 @@ public:
 	Actor* GetOwner() const { return mOwner; }
 	uuid GetId() const { return id; }
 
+	virtual ~Component() = default;
+
 	virtual json Serialize() const
 	{
 		assert(false && "Not Implemented");

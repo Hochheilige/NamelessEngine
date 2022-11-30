@@ -15,6 +15,7 @@ MeshRenderer::MeshRenderer(bool ShouldRegister/* = true*/)
 		Game::GetInstance()->MyRenderingSystem->RegisterRenderer(this);
 }
 
+
 void MeshRenderer::Update(float DeltaTime)
 {
 	// get transform from physics if needed

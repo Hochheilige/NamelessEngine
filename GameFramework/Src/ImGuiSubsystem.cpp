@@ -313,9 +313,11 @@ auto ImGuiSubsystem::DrawActorExplorer() -> void
 	ImGui::SetNextWindowClass(&levelEditorClass);
 	if (ImGui::Begin("Actor Explorer"))
 	{
-		int i = 0;
-		for (Actor* actor : MyGame->Actors)
+		auto actors = MyGame->Actors;
+		auto size = actors.size();
+		for (int i = 0; i < size; ++i)
 		{
+			Actor* actor = actors[i];
 			const bool isSelectedActor = GetEditorContext().GetSelectedActor() == actor;
 
 			if (actor->GetName() == "") {
@@ -325,14 +327,14 @@ auto ImGuiSubsystem::DrawActorExplorer() -> void
 				ImGui::Selectable(actor->GetName().c_str(), isSelectedActor);
 			}
 
-			ActorBrowserContextMenu();
-
 			if (ImGui::IsItemClicked())
 			{
 				GetEditorContext().SetSelectedActor(actor);
 			}
 
-			++i;
+			if (ActorBrowserContextMenu(actor) == DELETE_) {
+				--size;
+			}
 		}
 	}
 
@@ -784,23 +786,31 @@ auto ImGuiSubsystem::InitStyle() -> void
 	//imguizmoStyle.TranslationLineThickness = 6.0f;
 }
 
-auto ImGuiSubsystem::ActorBrowserContextMenu() const -> void
+auto ImGuiSubsystem::ActorBrowserContextMenu(Actor* actor) const -> CONTEXT_MENU_VALUES
 {
+	std::vector<Actor*>& actors = Game::GetInstance()->Actors;
+	CONTEXT_MENU_VALUES action = NOTHING;
 	if (ImGui::BeginPopupContextItem())
 	{
-		if (ImGui::Selectable("Rename")) {
+		GetEditorContext().SetSelectedActor(actor);
 
+		if (ImGui::Selectable("Rename")) {
+			action = RENAME;
 		}
 		
 		if (ImGui::Selectable("Duplicate")){
-			
+			action = DUPLICATE_;
 		}
 
 		if (ImGui::Selectable("Delete")) {
-
+			GetEditorContext().SetSelectedActor(nullptr);
+			actors.erase(std::remove(actors.begin(), actors.end(), actor), actors.end());
+			delete(actor);
+			action = DELETE_;
 		}
 
 		ImGui::EndPopup();
+		return action;
 	}
 }
 
