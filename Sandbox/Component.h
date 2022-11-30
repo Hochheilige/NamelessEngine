@@ -44,7 +44,7 @@ public:
 	virtual ComponentType GetComponentType()
 	{
 		assert(false && "Not Implemented");
-		return ComponentType::Undefined;
+		return Undefined;
 		//throw std::exception("Not Defined");
 	}
 
@@ -60,6 +60,7 @@ public:
 	{
 		assert(false && "Not Implemented");
 	}
+	virtual void OnDeserializationCompleted() {}
 private:
 	static std::unordered_map<std::string, ComponentType> TYPE_BY_NAME;
 	static std::unordered_map<ComponentType, std::string> NAME_BY_TYPE;

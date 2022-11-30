@@ -13,11 +13,16 @@ public:
 
 	virtual void OnRegister() override;
 
-	ComponentType GetComponentType() override { return mType; }
+	ComponentType GetComponentType() override { return RigidBodyCubeType; }
 
 	MonoComponent* GetMonoComponent() override { return mMonoComponent; }
-private:
 
-	ComponentType mType = ComponentType::RigidBodyCubeType;
+	void OnDeserializationCompleted() override;
+
+	static Component* Create()
+	{
+		return new RigidBodyCube();
+	}
+private:
 	MonoPhysicsComponent* mMonoComponent = new MonoPhysicsComponent;
 };

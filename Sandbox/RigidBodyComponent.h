@@ -48,6 +48,11 @@ public:
 
 	virtual auto SetTransform(const Transform& InTransform, TeleportType InTeleportType) -> void;
 
+	ComponentType GetComponentType() override;
+
+	json Serialize() const override;
+	void Deserialize(const json* in) override;
+
 protected:
 	btCollisionShape* Shape;
 	btRigidBody* Body;

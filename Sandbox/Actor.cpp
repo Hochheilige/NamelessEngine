@@ -182,6 +182,7 @@ void Actor::Deserialize(const json* in)
 
 				auto data = wrapper.at("data");
 				component->Deserialize(&data);
+				component->OnDeserializationCompleted();
 			}
 		}
 
@@ -199,6 +200,8 @@ void Actor::Deserialize(const json* in)
 				if(!parentProp.is_null()) {
 					auto parentId = parentProp.get<uuid>();
 					shouldBeBound.push_back( std::make_pair(sc, parentId));
+				} else {
+					component->OnDeserializationCompleted();
 				}
 			}
 
@@ -212,6 +215,7 @@ void Actor::Deserialize(const json* in)
 			if(component->GetId() == child.second) {
 				if(SceneComponent* parent = dynamic_cast<SceneComponent*>(component)) {
 					child.first->SetAttachmentParent(parent);
+					component->OnDeserializationCompleted();
 				} else {
 					assert(false && "Provided parent id belongs to an object which is not a SceneComponent");
 				}

@@ -193,3 +193,27 @@ auto RigidBodyComponent::SetTransform(const Transform& InTransform, TeleportType
 		// todo: make sure everything is cleared
 	}
 }
+
+ComponentType RigidBodyComponent::GetComponentType()
+{
+	return Undefined;
+}
+
+json RigidBodyComponent::Serialize() const
+{
+    auto json = SceneComponent::Serialize();
+    assert(json.is_object());
+
+    json["mass"] = Mass;
+
+    return json;
+}
+
+void RigidBodyComponent::Deserialize(const json* in)
+{
+    Mass = in->at("mass").get<float>();
+
+	SceneComponent::Deserialize(in);
+
+    Init();
+}

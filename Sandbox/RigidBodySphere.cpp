@@ -36,6 +36,12 @@ void RigidBodySphere::OnRegister()
 {
 }
 
+void RigidBodySphere::OnDeserializationCompleted()
+{
+	RigidBodyComponent::OnDeserializationCompleted();
+	Init();
+}
+
 //void RigidBodySphere::Update(float DeltaTime)
 //{
 //

@@ -71,7 +71,7 @@ public: // Attachment related fucntions
 	}
 private:
 
-	ComponentType mType = ComponentType::SceneComponentType;
+	ComponentType mType = SceneComponentType;
 	MonoSceneComponent* mMonoComponent = new MonoSceneComponent;
 private:
 	auto GetAttahcmentRoot() -> SceneComponent*;

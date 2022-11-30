@@ -3,6 +3,8 @@
 #include <utility>
 
 #include "ComponentsEnum.h"
+#include "RigidBodyCube.h"
+#include "RigidBodySphere.h"
 #include "SceneComponent.h"
 
 ComponentRegistry* ComponentRegistry::Instance = nullptr;
@@ -45,6 +47,8 @@ void ComponentRegistry::Register(ComponentType type, const std::string& name, Fa
 void ComponentRegistry::Init()
 {
 	Register(SceneComponentType, "SceneComponent", &SceneComponent::Create);
+	Register(RigidBodySphereType, "RigidBodySphereComponent", &RigidBodySphere::Create);
+	Register(RigidBodyCubeType, "RigidBodyCubeComponent", &RigidBodyCube::Create);
 }
 
 void ComponentRegistry::Validate()
