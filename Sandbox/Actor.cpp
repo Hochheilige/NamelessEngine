@@ -50,6 +50,7 @@ Actor::Actor()
 
 Actor::~Actor()
 {
+	delete(mMonoActor);
 	for (auto comp : Components) {
 		delete(comp);
 	}
