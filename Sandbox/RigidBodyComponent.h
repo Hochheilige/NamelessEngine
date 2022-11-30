@@ -1,6 +1,7 @@
 #pragma once
 
 #include "btBulletDynamicsCommon.h"
+#include "BulletCollision/CollisionDispatch/btGhostObject.h"
 #include "PhysicsModule.h"
 #include "SceneComponent.h"
 
@@ -12,11 +13,27 @@ enum class RigidBodyType
 	KINEMATIC
 };
 
+enum class RigidBodyUsage
+{
+	PHYSICS,
+	COLLISIONS,
+	COLLISIONS_AND_PHYSICS
+};
+
+enum class CollisionShapeType
+{
+	BOX,
+	SPHERE,
+	CAPSULE
+};
+
 class RigidBodyComponent : public SceneComponent
 {
 public:
 
 	RigidBodyComponent();
+
+	virtual void Init() override;
 
 	virtual ~RigidBodyComponent();
 
@@ -34,6 +51,12 @@ public:
 
 	void SetRigidBodyType(RigidBodyType type);
 
+	void SetRigidBodyUsage(RigidBodyUsage usage);
+
+	void SetCollisionShapeType(CollisionShapeType type);
+
+	void SetCollisionShape(CollisionShapeType type, Vector3 scale);
+
 	void SetLinearVelocity(btVector3 velocity);
 
 	void RegisterRigidBodyType();
@@ -46,13 +69,25 @@ public:
 
 	void MakeStatic();
 
+	void CreateShape(Vector3 scale);
+
 	virtual auto SetTransform(const Transform& InTransform, TeleportType InTeleportType) -> void;
 
 protected:
 	btCollisionShape* Shape;
-	btRigidBody* Body;
+	//btRigidBody* Body;
 	btScalar Mass;
 	btTransform PhysicsTransform;
+	//btGhostObject* Ghost;
+
+	struct RigidBody
+	{
+		btRigidBody* Body;
+		btGhostObject* Collision;
+	} rigidBody;
+	
+	RigidBodyUsage Usage;
+	CollisionShapeType ShapeType;
 
 	// todo: do we need this? - we can query type using Body->isKinematicObject(), Body->isStaticObject()
 	RigidBodyType rbType;

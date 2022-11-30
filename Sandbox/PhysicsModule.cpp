@@ -44,7 +44,9 @@ PhysicsModuleData* PhysicsModuleData::GetInstance()
 void PhysicsModuleData::OnUpdate(float deltaTime)
 {
     if (collisionShapes.size() != 0)
+    {
         World->stepSimulation(deltaTime);
+    }
 }
 
 void PhysicsModuleData::AddCollisionShape(btCollisionShape* shape)

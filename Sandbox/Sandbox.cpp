@@ -13,8 +13,7 @@
 #include "MeshLoader.h"
 #include "LightBase.h"
 #include "WICTextureLoader.h"
-#include "RigidBodyCube.h"
-#include "RigidBodySphere.h"
+#include "RigidBodyComponent.h"
 #include "windows.h"
 #include "RenderingSystem.h"
 #include "LightBase.h"
@@ -42,9 +41,11 @@ Actor* Sandbox::CreateNonPhysicsBox(Transform transform) {
 Actor* Sandbox::CreateStaticBox(Transform transform)
 {
 	Actor* box = CreateActor<Actor>();
-	auto box_rb = box->AddComponent<RigidBodyCube>();
+	auto box_rb = box->AddComponent<RigidBodyComponent>();
 	box->SetTransform(transform);
 	box_rb->SetRigidBodyType(RigidBodyType::STATIC);
+	box_rb->SetRigidBodyUsage(RigidBodyUsage::COLLISIONS_AND_PHYSICS);
+	box_rb->SetCollisionShapeType(CollisionShapeType::BOX);
 	box_rb->SetMass(0);
 	box_rb->Init();
 	auto mesh_component = box->AddComponent<MeshRenderer>();
@@ -66,16 +67,13 @@ Actor* Sandbox::CreateDynamicBox(Transform transform)
 {
 	Actor* box = CreateActor<Actor>();
 	//box->InitializeMonoActor("CustomActor");
-	auto box_rb = box->AddComponent<RigidBodyCube>();
+	auto box_rb = box->AddComponent<RigidBodyComponent>();
 	box->SetTransform(transform);
 	box_rb->SetRigidBodyType(RigidBodyType::DYNAMIC);
+	box_rb->SetRigidBodyUsage(RigidBodyUsage::COLLISIONS_AND_PHYSICS);
+	box_rb->SetCollisionShapeType(CollisionShapeType::BOX);
 	box_rb->SetMass(1);
 	box_rb->Init();
-	auto box_rb2 = box->AddComponent<RigidBodyCube>();
-	//box->SetTransform(transform);
-	box_rb2->SetRigidBodyType(RigidBodyType::DYNAMIC);
-	box_rb2->SetMass(1);
-	box_rb2->Init();
 	auto mesh_component = box->AddComponent<MeshRenderer>();
 	mesh_component->SetMeshProxy(texturedBoxMeshProxy);
 	mesh_component->SetPixelShader(ps);
@@ -89,7 +87,7 @@ Actor* Sandbox::CreateDynamicBox(Transform transform)
 Actor* Sandbox::CreateKinematicBox(Transform transform)
 {
 	Actor* box = CreateActor<Actor>();
-	auto box_rb = box->AddComponent<RigidBodyCube>();
+	auto box_rb = box->AddComponent<RigidBodyComponent>();
 	box->SetTransform(transform);
 	box_rb->SetRigidBodyType(RigidBodyType::KINEMATIC);
 	box_rb->SetMass(1);
@@ -107,7 +105,7 @@ Actor* Sandbox::CreateKinematicBox(Transform transform)
 Actor* Sandbox::CreateStaticSphere(Transform transform)
 {
 	Actor* sphere = CreateActor<Actor>();
-	auto sphere_rb = sphere->AddComponent<RigidBodySphere>();
+	auto sphere_rb = sphere->AddComponent<RigidBodyComponent>();
 	sphere->SetTransform(transform);
 	sphere_rb->SetRigidBodyType(RigidBodyType::STATIC);
 	sphere_rb->SetMass(0);
@@ -125,7 +123,7 @@ Actor* Sandbox::CreateStaticSphere(Transform transform)
 Actor* Sandbox::CreateDynamicSphere(Transform transform)
 {
 	Actor* sphere = CreateActor<Actor>();
-	auto sphere_rb = sphere->AddComponent<RigidBodySphere>();
+	auto sphere_rb = sphere->AddComponent<RigidBodyComponent>();
 	sphere->SetTransform(transform);
 	sphere_rb->SetRigidBodyType(RigidBodyType::DYNAMIC);
 	sphere_rb->SetMass(1);
@@ -143,9 +141,11 @@ Actor* Sandbox::CreateDynamicSphere(Transform transform)
 Actor* Sandbox::CreateKinematicSphere(Transform transform)
 {
 	Actor* sphere = CreateActor<Actor>();
-	auto sphere_rb = sphere->AddComponent<RigidBodySphere>();
+	auto sphere_rb = sphere->AddComponent<RigidBodyComponent>();
 	sphere->SetTransform(transform);
 	sphere_rb->SetRigidBodyType(RigidBodyType::KINEMATIC);
+	sphere_rb->SetRigidBodyUsage(RigidBodyUsage::COLLISIONS_AND_PHYSICS);
+	sphere_rb->SetCollisionShapeType(CollisionShapeType::SPHERE);
 	sphere_rb->SetMass(1);
 	sphere_rb->Init();
 	auto mesh_component = sphere->AddComponent<MeshRenderer>();
@@ -346,7 +346,17 @@ void Sandbox::PrepareResources()
 				tr.Scale = Vector3(1.0f, 1.0f, 1.0f);
 				auto box = CreateDynamicBox(tr);
 				box->UsePhysicsSimulation();
+				//box->GetComponentOfClass<RigidBodyComponent>()->SetCollisionShape(CollisionShapeType::CAPSULE, Vector3(2, 5, 0));
 			}
+
+	tr.Position = Vector3(0, 0, 10);
+	tr.Rotation.SetEulerAngles(0, 0, 0);
+	tr.Scale = Vector3(10, 1, 10);
+	auto box = CreateDynamicBox(tr);
+	auto rb = box->GetComponentOfClass<RigidBodyComponent>();
+	//rb->SetMass(0);
+	box->UsePhysicsSimulation();
+
 
 	FPSCC = CreateGameComponent<CameraController>();
 	FPSCC->SetCameraToControl(PerspCamera);
