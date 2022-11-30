@@ -1,5 +1,6 @@
 #include "StaticMeshRenderer.h"
 
+#include "AssetManager.h"
 #include "Game.h"
 #include "RenderingSystemTypes.h"
 #include "Shader.h"
@@ -87,10 +88,14 @@ auto StaticMeshRenderer::Render(const RenderingSystemContext& RSContext) -> void
 
 json StaticMeshRenderer::Serialize() const
 {
-	return Renderer::Serialize();
+	auto out = Renderer::Serialize();
+	out["mesh_path"] = GetStaticMesh()->GetFullPath();
+	return out;
 }
 
 void StaticMeshRenderer::Deserialize(const json* in)
 {
+	auto path = in->at("mesh_path").get<Path>();
+	SetStaticMesh(Game::GetInstance()->GetAssetManager()->LoadStaticMesh(path));
 	Renderer::Deserialize(in);
 }

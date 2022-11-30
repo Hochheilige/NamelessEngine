@@ -32,6 +32,10 @@ public:
 
 	json Serialize() const override;
 	void Deserialize(const json* in) override;
+	static Component* Create()
+	{
+		return new StaticMeshRenderer();
+	}
 
 protected:
 	MonoComponent* mMonoComponent = new StaticMeshRendererComponent();
