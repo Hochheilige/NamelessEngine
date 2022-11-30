@@ -84,3 +84,13 @@ auto StaticMeshRenderer::Render(const RenderingSystemContext& RSContext) -> void
 		context->DrawIndexed(section.numIndices, section.indicesStart, section.vertexStart);
 	}
 }
+
+json StaticMeshRenderer::Serialize() const
+{
+	return Renderer::Serialize();
+}
+
+void StaticMeshRenderer::Deserialize(const json* in)
+{
+	Renderer::Deserialize(in);
+}

@@ -21,7 +21,7 @@ public:
 
 	virtual auto Render(const RenderingSystemContext& RSContext) -> void override;
 
-	ComponentType GetComponentType() override { return ComponentType::StaticMeshRendererType; }
+	ComponentType GetComponentType() override { return StaticMeshRendererType; }
 	MonoComponent* GetMonoComponent() override { return mMonoComponent; }
 
 	// todo: remove this
@@ -29,6 +29,9 @@ public:
 	void SetAlbedoSRV(ComPtr<ID3D11ShaderResourceView> InAlbedoSRV) { mAlbedoSRV = InAlbedoSRV; }
 	void SetNormalSRV(ComPtr<ID3D11ShaderResourceView> InSRV) { mNormalSRV = InSRV; }
 	void SetSpecularSRV(ComPtr<ID3D11ShaderResourceView> InSRV) { mSpecularSRV = InSRV; }
+
+	json Serialize() const override;
+	void Deserialize(const json* in) override;
 
 protected:
 	MonoComponent* mMonoComponent = new StaticMeshRendererComponent();

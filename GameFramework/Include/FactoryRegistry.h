@@ -11,8 +11,6 @@ public:
 	Key RegisterFactory(Key key, FactoryFunction factory)
 	{
 		mapFactory.insert(FactoryMap::value_type(key, factory));
-		// mapFactory.insert(std::pair<Key,
-		// 	FactoryFunction>(key, factory));
 		return key;
 	}
 

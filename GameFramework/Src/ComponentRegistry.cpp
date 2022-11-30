@@ -53,10 +53,10 @@ void ComponentRegistry::Init()
 
 void ComponentRegistry::Validate()
 {
-	for (int type = 1; type != Last; type++)
+	/*for (int type = 1; type != Last; type++)
 	{
 		auto cType = static_cast<ComponentType>(type);
 		auto s = GetNameByType(cType);
 		assert(!s.empty() && "Component Data is not registered for provided ComponentType");
-	}
+	}*/
 }
