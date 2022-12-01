@@ -22,6 +22,8 @@ class LightBase : public SceneComponent
 {
 public:
 
+	~LightBase();
+
 	// @TODO: should this be virtual? Should I return a reference?
 	virtual LightData GetLightData() { return LightData(); };
 
