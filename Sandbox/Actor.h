@@ -96,7 +96,8 @@ public:
 
 	void RemoveChild(Actor* Child);
 
-	void InitializeMonoActor(const char* name);
+	void InitializeMonoActor(const char* className = "Actor");
+	void InitializeMonoActor(const char* nameSpace, const char* className);
 
 	MonoActor* GetMonoActor() { return mMonoActor;}
 

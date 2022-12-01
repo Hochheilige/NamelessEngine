@@ -6,8 +6,6 @@
 #include "MonoModules/MonoComponentModule.h"
 #include "MonoModules/MonoRigidBodyComponentModule.h"
 
-//#define MONO_DEBUG
-
 MonoSystem* MonoSystem::Instance = nullptr;
 
 //TODO move to GameFramework
@@ -104,21 +102,43 @@ MonoObject* MonoSystem::CreateClassInstance(MonoClass* klass, bool initialize)
 	MonoObject* classInstance = mono_object_new(appDomain, klass);
 	if(initialize)
 	{
+		//Calls default constructor
 		mono_runtime_object_init(classInstance);
 	}
 	return classInstance;
 }
 
-MonoMethod* MonoSystem::GetVirtualMethod(const char* earliestAncestorNamespace, const char* earliestAncestorClassName, const char* methodDesc, MonoObject* obj)
+MonoMethod* MonoSystem::GetVirtualMethod(const char* earliestAncestorNamespace, const char* earliestAncestorClassName, const char* methodDesc, uint32_t objHandle)
 {
 	auto baseMethod = GetMethod(earliestAncestorNamespace, earliestAncestorClassName, methodDesc);
-	return mono_object_get_virtual_method(obj, baseMethod);
+	return mono_object_get_virtual_method(GetHandledObject(objHandle), baseMethod);
 }
 
-MonoObject* MonoSystem::InvokeMethod(MonoMethod* method, void* obj, void** params,
+MonoObject* MonoSystem::InvokeInstanceMethod(MonoMethod* method, uint32_t objHandle, void** params,
 	MonoObject** exception)
 {
-	return mono_runtime_invoke(method, obj, params, exception);
+	return mono_runtime_invoke(method, GetHandledObject(objHandle), params, exception);
+}
+
+MonoObject* MonoSystem::InvokeStaticMethod(MonoMethod* method, void** params,
+	MonoObject** exception)
+{
+	return mono_runtime_invoke(method, nullptr, params, exception);
+}
+
+uint32_t MonoSystem::GCHandle(MonoObject* obj)
+{
+	return mono_gchandle_new(obj, TRUE);
+}
+
+MonoObject* MonoSystem::GetHandledObject(uint32_t objHandle)
+{
+	return mono_gchandle_get_target(objHandle);
+}
+
+void MonoSystem::FreeHandledObject(uint32_t objHandle)
+{
+	mono_gchandle_free(objHandle);
 }
 
 void MonoSystem::PrintAssemblyTypes(MonoAssembly* assembly) {

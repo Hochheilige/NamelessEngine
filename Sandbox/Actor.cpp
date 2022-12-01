@@ -58,9 +58,14 @@ auto Actor::RemoveComponent(Component* InComponent) -> void
 	Components.erase(remove(Components.begin(), Components.end(), InComponent), Components.end());
 }
 
-void Actor::InitializeMonoActor(const char* name)
+void Actor::InitializeMonoActor(const char* className)
 {
-	mMonoActor = new MonoActor(this, name);
+	mMonoActor = new MonoActor(this, "Scripts", className);
+}
+
+void Actor::InitializeMonoActor(const char* nameSpace, const char* className)
+{
+	mMonoActor = new MonoActor(this, nameSpace, className);
 }
 
 void Actor::OnBeginPlay()

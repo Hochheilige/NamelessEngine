@@ -6,7 +6,6 @@ class InputDevice;
 
 class Keyboard
 {
-	Keyboard();
 	friend InputDevice;
 public:
 	bool IsDown(uint64_t key);
@@ -14,7 +13,6 @@ private:
 	void ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam);
 
 	std::unordered_set<uint64_t> pressedKeys;
-	uint32_t Handle;
 };
 
 enum Keys

@@ -7,5 +7,5 @@ void MonoPhysicsComponent::SetMass(float mass)
     args [0] = &mass;
 
     MonoMethod* method = mono->GetMethod("Scripts", "PhysicsComponent", "SetMass");
-    mono->InvokeMethod(method, mono_gchandle_get_target (Handle), args, nullptr);
+    mono->InvokeInstanceMethod(method, Handle, args, nullptr);
 }

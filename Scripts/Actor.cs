@@ -19,7 +19,9 @@ namespace Scripts
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void InternalSetTransform(IntPtr cppInstance, Transform transform);
 
-        public Actor() { }
+        public Actor()
+        {
+        }
 
         public void SetCppInstance(IntPtr obj)
         {

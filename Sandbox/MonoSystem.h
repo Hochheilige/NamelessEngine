@@ -22,9 +22,13 @@ public:
 	MonoMethod* GetMethod(MonoClass* clazz, const char* methodName, int paramCount);
 	MonoMethod* GetMethod(const char* nameSpace, const char* className, const char* desc);
 	MonoMethod* GetVirtualMethod(const char* earliestAncestorNamespace, const char* earliestAncestorClassName,
-	                             const char* methodDesc, MonoObject* obj);
-	MonoObject* InvokeMethod(MonoMethod* method, void* obj, void** params, MonoObject** exc);
+	                             const char* methodDesc, uint32_t objHandle);
+	MonoObject* InvokeInstanceMethod(MonoMethod* method, uint32_t objHandle, void** params, MonoObject** exc);
+	MonoObject* InvokeStaticMethod(MonoMethod* method, void** params, MonoObject** exception);
+	uint32_t GCHandle(MonoObject* obj);
 	MonoObject* CreateClassInstance(MonoClass* klass, bool initialize = true);
+	MonoObject* GetHandledObject(uint32_t objHandle);
+	void FreeHandledObject(uint32_t objHandle);
 	static void PrintAssemblyTypes(MonoAssembly* assembly);
 	static char* ReadFile(const std::filesystem::path& assemblyPath, uintmax_t& fileSize);
 	static MonoAssembly* LoadMonoAssembly(const std::filesystem::path& assemblyPath);

@@ -28,7 +28,7 @@
 
 Actor* Sandbox::CreateNonPhysicsBox(Transform transform) {
 	Actor* box = CreateActor<Actor>();
-	box->InitializeMonoActor("CustomActor");
+	box->InitializeMonoActor("Scripts.Tests", "CustomActor");
 	auto mesh_component = box->AddComponent<MeshRenderer>();
 	mesh_component->SetMeshProxy(texturedBoxMeshProxy);
 	mesh_component->SetPixelShader(ps);
@@ -227,23 +227,22 @@ auto Sandbox::CreateHierarcyTestActor() -> Actor*
 }
 
 void Sandbox::LoadGameFacade() {
+	auto mono = MonoSystem::GetInstance();
 	const auto mLoader_Boot = mono->GetMethod("Scripts.Internal", "Loader", "Boot()");
-	csGameInstance = mono->InvokeMethod(mLoader_Boot, nullptr, nullptr, nullptr);
+	csGameInstance = mono_gchandle_new(mono->InvokeStaticMethod(mLoader_Boot, nullptr, nullptr), TRUE);
 	
 	//TODO
 	/*const auto mGame_OnSpecifyEngineSettings = mono->GetVirtualMethod("Scripts", "Game", "OnSpecifyEngineSettings(Scripts.EngineSettings.Builder)", csGameInstance);
 	mono->InvokeMethod(mGame_OnSpecifyEngineSettings, csGameInstance, nullptr, nullptr);*/
 
 	const auto mGame_Load = mono->GetVirtualMethod("Scripts", "Game", "OnLoad()", csGameInstance);
-	mono->InvokeMethod(mGame_Load, csGameInstance, nullptr, nullptr);
+	mono->InvokeInstanceMethod(mGame_Load, csGameInstance, nullptr, nullptr);
 }
 
 void Sandbox::PrepareResources()
 {
 	Game::PrepareResources();
 
-
-	mono = MonoSystem::GetInstance();
 	// create meshes
 	boxMesh = new BoxMesh();
 	boxMeshProxy = boxMesh->CreateRenderingPrimitiveProxy();
@@ -401,6 +400,7 @@ void Sandbox::PrepareResources()
 
 auto Sandbox::Initialize() -> void
 {
+	auto mono = MonoSystem::GetInstance();
 	// copy imgui context and allocator functions to imgui in c#
 	const auto mGame_InitImGui = mono->GetMethod("Scripts", "Game", "InitImGui");
 	ImGuiContext* ctx = ImGui::GetCurrentContext();
@@ -410,20 +410,22 @@ auto Sandbox::Initialize() -> void
 	ImGui::GetAllocatorFunctions(&allocFunc, &freeFunc, &userData);
 	void* params[] = { &ctx, &allocFunc, &freeFunc, &userData };
 	MonoObject* exception;
-	mono->InvokeMethod(mGame_InitImGui, csGameInstance, params, nullptr);
+	mono->InvokeInstanceMethod(mGame_InitImGui, csGameInstance, params, nullptr);
 }
 
 void Sandbox::Update(float DeltaTime)
 {
+	auto mono = MonoSystem::GetInstance();
+
 	const auto mGame_OnGUI = mono->GetVirtualMethod("Scripts", "Game", "OnGUI", csGameInstance);
-	mono->InvokeMethod(mGame_OnGUI, csGameInstance, nullptr, nullptr);
+	mono->InvokeInstanceMethod(mGame_OnGUI, csGameInstance, nullptr, nullptr);
 
 	/*const auto mGame_GetInheritors = mono->GetVirtualMethod("Scripts", "Game", "GetActorInheritors()", csGameInstance);
 	auto res = mono->InvokeMethod(mGame_GetInheritors, csGameInstance, nullptr, nullptr);
 	auto str = mono_string_to_utf8(mono_object_to_string(res, nullptr));*/
 	
 	const auto mGame_Update = mono->GetVirtualMethod("Scripts", "Game", "OnUpdate()", csGameInstance);
-	mono->InvokeMethod(mGame_Update, csGameInstance, nullptr, nullptr);
+	mono->InvokeInstanceMethod(mGame_Update, csGameInstance, nullptr, nullptr);
 
 	// TODO: base game class should do this
 	if (GetPlayState() == PlayState::Playing)

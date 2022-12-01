@@ -8,7 +8,7 @@ class MonoActor
 public:
     ~MonoActor();
     
-    MonoActor(Actor* actor, const char* className = "Actor");
+    MonoActor(Actor* actor, const char* nameSpace, const char* className);
     
     void AddComponent(Component* component);
     void RemoveComponent(Component* component);
@@ -21,7 +21,8 @@ private:
     Actor* Owner;
     uint32_t Handle;
     //MonoObject* CsInstance = nullptr;
-    const char* ClassName = "CustomActor";
+    const char* NameSpace;
+    const char* ClassName;
     const char* BaseClassName = "Actor";
     bool isWorked = false;
 };

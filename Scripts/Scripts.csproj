@@ -48,12 +48,13 @@
     <Compile Include="Components\RigidBodyComponent.cs" />
     <Compile Include="Components\RigidBodyCubeComponent.cs" />
     <Compile Include="Components\RigidBodySphereComponent.cs" />
-    <Compile Include="CustomActor.cs" />
+    <Compile Include="Tests\CustomActor.cs" />
     <Compile Include="EngineSettings.cs" />
     <Compile Include="EntryPoint.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="InputHandler.cs" />
     <Compile Include="Instantiator.cs" />
+    <Compile Include="Internal\InternalApi.cs" />
     <Compile Include="Internal\Loader.cs" />
     <Compile Include="Keys.cs" />
     <Compile Include="ListExtensions.cs" />

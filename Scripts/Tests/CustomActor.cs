@@ -2,7 +2,7 @@
 using Scripts.Components;
 using SharpDX;
 
-namespace Scripts
+namespace Scripts.Tests
 {
     public class CustomActor : Actor
     {
@@ -21,24 +21,18 @@ namespace Scripts
             _angle += 0.01f;
             _transform.Rotation = Quaternion.RotationYawPitchRoll(0, 0, _angle);
             _transform.Rotation.Normalize();
-            
-            SetTransform(_transform);
-        }
 
-        private void ReadInput(Keys key)
-        {
-            //Console.WriteLine("Pressed " + key);
-            _transform = GetTransform();
-            if (key == Keys.W)
+            var inputHandler = Game.GetInstance().InputHandler;
+            if (inputHandler.IsKeyDown(Keys.W))
             {
                 _transform.Position.Z += 1f;
             }
-            
-            if (key == Keys.S)
+
+            if (inputHandler.IsKeyDown(Keys.S))
             {
                 _transform.Position.Z -= 1f;
             }
-            
+
             SetTransform(_transform);
         }
 
@@ -53,8 +47,6 @@ namespace Scripts
                 //physics.SetLinearVelocity(new Vector3(2f, 2f, 2f));
                 physics.SetGravity(5f);
             }
-            
-            InputHandler.onKeyInput += ReadInput;
         }
     }
 }

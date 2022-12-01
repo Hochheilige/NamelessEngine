@@ -36,8 +36,7 @@ public:
 private:
 	void LoadGameFacade();
 
-	class MonoSystem* mono;
-	MonoObject* csGameInstance;
+	uint32_t csGameInstance;
 
 	class BoxMesh* boxMesh;
 	class CircleMesh* circleMesh;
