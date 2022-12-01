@@ -48,6 +48,14 @@ Actor::Actor()
 
 }
 
+Actor::~Actor()
+{
+	delete(mMonoActor);
+	for (auto comp : Components) {
+		delete(comp);
+	}
+}
+
 auto Actor::RemoveComponent(Component* InComponent) -> void
 {
 	if (InComponent == nullptr)

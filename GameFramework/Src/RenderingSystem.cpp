@@ -130,7 +130,7 @@ void RenderingSystem::RegisterRenderer(Renderer* InRenderer)
 
 void RenderingSystem::UnregisterRenderer(Renderer* InRenderer)
 {
-	Renderers.erase(std::remove(Renderers.begin(), Renderers.end(), InRenderer));
+	Renderers.erase(std::remove(Renderers.begin(), Renderers.end(), InRenderer), Renderers.end());
 }
 
 void RenderingSystem::RegisterLight(LightBase* Light)

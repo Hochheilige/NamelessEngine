@@ -15,6 +15,13 @@ class SceneComponent;
 class DirectoryTreeNode;
 class AssetManager;
 
+enum CONTEXT_MENU_VALUES {
+	NOTHING = -1,
+	RENAME = 0,
+	DUPLICATE_,
+	DELETE_
+};
+
 namespace ImGuizmo
 {
 	enum OPERATION;
@@ -68,6 +75,13 @@ private:
 	auto GetAssetManager() const->AssetManager*;
 
 	auto InitStyle() -> void;
+
+	auto ActorBrowserContextMenu(Actor* actor) const -> CONTEXT_MENU_VALUES;
+
+	// Helper style functions
+	auto BoldHeader(const char* label, ImGuiTreeNodeFlags flags) const -> bool;
+
+
 private:
 	Game* MyGame;
 
@@ -77,6 +91,7 @@ private:
 	Vector2 ViewportSize;
 
 	ImFont* mainFont;
+	ImFont* headerFont;
 
 	// Gizmo state
 private:

@@ -32,6 +32,10 @@ public:
 	
 	LitMaterial Mat;
 
+	static auto Create() -> Component* {
+		return new MeshRenderer();
+	}
+
 protected:
 	ComponentType mType = MeshRendererType;
 	MonoComponent* mMonoComponent = new MeshRendererComponent;

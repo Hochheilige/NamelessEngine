@@ -8,7 +8,7 @@ class AudioComponent : public SceneComponent
 public:
 	AudioComponent() {}
 
-	~AudioComponent();
+	~AudioComponent() {}
 
 	virtual void Init() override {};
 

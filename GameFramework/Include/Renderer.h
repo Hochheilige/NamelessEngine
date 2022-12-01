@@ -18,6 +18,8 @@ public:
 
 	bool bCastShadow = true;
 
+	virtual ~Renderer();
+
 	ComponentType GetComponentType() override;
 
 protected:
