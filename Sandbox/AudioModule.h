@@ -1,7 +1,7 @@
 #pragma once
 
-#include <fmod_studio.hpp>
-#include <fmod.hpp>
+#include "fmod_studio.hpp"
+#include "fmod.hpp"
 #include <string>
 #include <unordered_map>
 #include <vector>

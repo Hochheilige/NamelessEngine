@@ -7,6 +7,7 @@
 #include "RigidBodySphere.h"
 #include "SceneComponent.h"
 #include "StaticMeshRenderer.h"
+#include "MeshRenderer.h"
 
 ComponentRegistry* ComponentRegistry::Instance = nullptr;
 std::unordered_map<ComponentType, std::string> ComponentRegistry::TypeToName;
@@ -51,6 +52,7 @@ void ComponentRegistry::Init()
 	Register(RigidBodySphereType, "RigidBodySphereComponent", &RigidBodySphere::Create);
 	Register(RigidBodyCubeType, "RigidBodyCubeComponent", &RigidBodyCube::Create);
 	Register(StaticMeshRendererType, "StaticMeshRenderer", &StaticMeshRenderer::Create);
+	Register(MeshRendererType, "MeshRenderer", &MeshRenderer::Create);
 }
 
 void ComponentRegistry::Validate()
