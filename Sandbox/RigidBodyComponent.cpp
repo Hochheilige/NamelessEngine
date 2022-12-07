@@ -8,33 +8,47 @@ RigidBodyComponent::RigidBodyComponent()
 
 RigidBodyComponent::~RigidBodyComponent()
 {
-    auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorls();
+    auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
     world->removeRigidBody(rigidBody.Body);
     delete rigidBody.Body->getCollisionShape();
     delete rigidBody.Body->getMotionState();
     delete rigidBody.Body;
-
-    auto game = Game::GetInstance();
-    //game->MyEditorContext.OnSelectedComponentChanged.RemoveObject(this);
-    //delete Shape;
 }
+
+void RigidBodyComponent::Callback(btDynamicsWorld* world, btScalar timeSleep)
+{
+    for (int i = 0; i < rigidBody.Collision->getNumOverlappingObjects(); ++i)
+    {
+        btRigidBody* rb = dynamic_cast<btRigidBody*>(rigidBody.Collision->getOverlappingObject(i));
+
+    }
+}
+
+
+static btGhostObject* ghost;
+
+void callback(btDynamicsWorld* world, btScalar timeSleep)
+{
+    RigidBodyComponent::Callback(world, timeSleep);
+}
+
 
 void RigidBodyComponent::Init()
 {
-    auto physics = PhysicsModuleData::GetInstance();
+    auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
     const Transform& transform = GetTransform();
+
+    PhysicsTransform.setIdentity();
+    PhysicsTransform.setOrigin(btVector3(transform.Position.x, transform.Position.y, transform.Position.z));
+    Quaternion quaternion = transform.Rotation.GetQuaterion();
+    PhysicsTransform.setRotation(btQuaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w));
 
     switch (Usage)
     {
     case RigidBodyUsage::PHYSICS:
     {
         Shape = new btEmptyShape();
-        physics->AddCollisionShape(Shape);
-
-        PhysicsTransform.setIdentity();
-        PhysicsTransform.setOrigin(btVector3(transform.Position.x, transform.Position.y, transform.Position.z));
-        Quaternion quaternion = transform.Rotation.GetQuaterion();
-        PhysicsTransform.setRotation(btQuaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w));
+        //physics->AddCollisionShape(Shape);
 
         btVector3 localInertia = btVector3(0, 0, 0);
 
@@ -47,16 +61,25 @@ void RigidBodyComponent::Init()
         break;
     }
     case RigidBodyUsage::COLLISIONS:
+    {
+        rigidBody.Collision = new btGhostObject();
+        CreateShape(transform.Scale);
+
+        rigidBody.Collision->setCollisionShape(Shape);
+        rigidBody.Collision->setWorldTransform(PhysicsTransform);
+        world->addCollisionObject(rigidBody.Collision);
+        world->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback);
+
+        world->setInternalTickCallback(callback, this, true);
+
+        ghost = rigidBody.Collision;
+
         break;
+    }
     case RigidBodyUsage::COLLISIONS_AND_PHYSICS:
     {
         CreateShape(transform.Scale);
-        physics->AddCollisionShape(Shape);
-
-        PhysicsTransform.setIdentity();
-        PhysicsTransform.setOrigin(btVector3(transform.Position.x, transform.Position.y, transform.Position.z));
-        Quaternion quaternion = transform.Rotation.GetQuaterion();
-        PhysicsTransform.setRotation(btQuaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w));
+        //physics->AddCollisionShape(Shape);
 
         btVector3 localInertia = btVector3(0, 0, 0);
         if (Mass != 0.0f)
@@ -99,7 +122,7 @@ void RigidBodyComponent::SetMass(float mass)
     Mass = mass;
     if (rigidBody.Body)
     {
-        auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorls();
+        auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
         world->removeRigidBody(rigidBody.Body);
         btVector3 inertia;
         rigidBody.Body->getCollisionShape()->calculateLocalInertia(mass, inertia);
@@ -118,7 +141,7 @@ void RigidBodyComponent::SetGravity(float gravity)
 {
     if (rigidBody.Body)
     {
-        auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorls();
+        auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
         world->removeRigidBody(rigidBody.Body);
         rigidBody.Body->setGravity(btVector3(0, -gravity, 0));
         rigidBody.Body->setFlags(rigidBody.Body->getFlags() | BT_DISABLE_WORLD_GRAVITY);
@@ -186,7 +209,7 @@ void RigidBodyComponent::SetCollisionShape(CollisionShapeType type, Vector3 scal
         ShapeType = type;
         CreateShape(scale);
 
-        auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorls();
+        auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
         world->removeRigidBody(rigidBody.Body);
         btVector3 inertia;
         rigidBody.Body->setCollisionShape(Shape);
@@ -287,26 +310,32 @@ auto RigidBodyComponent::SetTransform(const Transform& InTransform, TeleportType
 	btQuaternion quat = btQuaternion(InTransform.Rotation.GetQuaterion().x, InTransform.Rotation.GetQuaterion().y,
 		InTransform.Rotation.GetQuaterion().z, InTransform.Rotation.GetQuaterion().w);
 	PhysicsTransform.setRotation(quat);
-	// Kinimatic bodies take their transform from motion state, so we need to update it too
-	if (rigidBody.Body->isKinematicObject() && rigidBody.Body->getMotionState())
-	{
-		rigidBody.Body->getMotionState()->setWorldTransform(PhysicsTransform);
-	}
-	else
-	{
-		// this funcion seems to be too strong when using with kinematic bodies, resulting in visible overlap
-		// probably beacause right now physics is not updated every frame
-		rigidBody.Body->setCenterOfMassTransform(PhysicsTransform);
-	}
 
-    //Coll->setWorldTransform(PhysicsTransform);
-	
-	if (InTeleportType == TeleportType::ResetPhysics)
-	{
-		rigidBody.Body->clearForces();
-		rigidBody.Body->clearGravity();
-		rigidBody.Body->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
-		rigidBody.Body->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
-		// todo: make sure everything is cleared
-	}
+    if (rigidBody.Body) {
+        // Kinimatic bodies take their transform from motion state, so we need to update it too
+        if (rigidBody.Body->isKinematicObject() && rigidBody.Body->getMotionState())
+        {
+            rigidBody.Body->getMotionState()->setWorldTransform(PhysicsTransform);
+        }
+        else
+        {
+            // this funcion seems to be too strong when using with kinematic bodies, resulting in visible overlap
+            // probably beacause right now physics is not updated every frame
+            rigidBody.Body->setCenterOfMassTransform(PhysicsTransform);
+        }
+
+
+        if (InTeleportType == TeleportType::ResetPhysics)
+        {
+            rigidBody.Body->clearForces();
+            rigidBody.Body->clearGravity();
+            rigidBody.Body->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
+            rigidBody.Body->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
+            // todo: make sure everything is cleared
+        }
+    }
+    else
+    {
+        rigidBody.Collision->setWorldTransform(PhysicsTransform);
+    }
 }

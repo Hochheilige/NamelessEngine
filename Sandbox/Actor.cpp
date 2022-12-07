@@ -111,7 +111,7 @@ void Actor::UsePhysicsSimulation()
 		));
 
 		auto physics = PhysicsModuleData::GetInstance();
-		physics->GetDynamicsWorls()->addRigidBody(rigid_body->GetRigidBody());
+		physics->GetDynamicsWorld()->addRigidBody(rigid_body->GetRigidBody());
 	}
 }
 
@@ -125,6 +125,6 @@ void Actor::UnUsePhysicsSimulation()
 		));
 
 		auto physics = PhysicsModuleData::GetInstance();
-		physics->GetDynamicsWorls()->removeRigidBody(rigid_body->GetRigidBody());
+		physics->GetDynamicsWorld()->removeRigidBody(rigid_body->GetRigidBody());
 	}
 }

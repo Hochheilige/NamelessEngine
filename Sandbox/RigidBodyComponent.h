@@ -71,6 +71,8 @@ public:
 
 	void CreateShape(Vector3 scale);
 
+	void Callback(btDynamicsWorld* world, btScalar timeSleep);
+
 	virtual auto SetTransform(const Transform& InTransform, TeleportType InTeleportType) -> void;
 
 protected:

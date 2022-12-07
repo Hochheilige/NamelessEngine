@@ -43,10 +43,9 @@ PhysicsModuleData* PhysicsModuleData::GetInstance()
 
 void PhysicsModuleData::OnUpdate(float deltaTime)
 {
-    if (collisionShapes.size() != 0)
-    {
-        World->stepSimulation(deltaTime);
-    }
+
+    World->stepSimulation(deltaTime);
+
 }
 
 void PhysicsModuleData::AddCollisionShape(btCollisionShape* shape)
@@ -54,7 +53,7 @@ void PhysicsModuleData::AddCollisionShape(btCollisionShape* shape)
     collisionShapes.push_back(shape);
 }
 
-btDiscreteDynamicsWorld* PhysicsModuleData::GetDynamicsWorls()
+btDiscreteDynamicsWorld* PhysicsModuleData::GetDynamicsWorld()
 {
     return World;
 }

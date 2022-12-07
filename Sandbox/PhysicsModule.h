@@ -13,7 +13,7 @@ public:
     void OnUpdate(float deltaTime);
 
     void AddCollisionShape(btCollisionShape* shape);
-    btDiscreteDynamicsWorld* GetDynamicsWorls();
+    btDiscreteDynamicsWorld* GetDynamicsWorld();
 
 private:
     PhysicsModuleData();

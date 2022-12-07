@@ -144,7 +144,7 @@ Actor* Sandbox::CreateKinematicSphere(Transform transform)
 	auto sphere_rb = sphere->AddComponent<RigidBodyComponent>();
 	sphere->SetTransform(transform);
 	sphere_rb->SetRigidBodyType(RigidBodyType::KINEMATIC);
-	sphere_rb->SetRigidBodyUsage(RigidBodyUsage::COLLISIONS_AND_PHYSICS);
+	sphere_rb->SetRigidBodyUsage(RigidBodyUsage::COLLISIONS);
 	sphere_rb->SetCollisionShapeType(CollisionShapeType::SPHERE);
 	sphere_rb->SetMass(1);
 	sphere_rb->Init();
@@ -335,7 +335,7 @@ void Sandbox::PrepareResources()
 	tr.Rotation.SetEulerAngles(0, 0, 0);
 	tr.Scale = Vector3(1, 1, 1);
 	sphere = CreateKinematicSphere(tr);
-	sphere->UsePhysicsSimulation();
+	//sphere->UsePhysicsSimulation();
 
 	for (int i = 0; i < 5; ++i)
 		for (int j = 0; j < 5; ++j)
