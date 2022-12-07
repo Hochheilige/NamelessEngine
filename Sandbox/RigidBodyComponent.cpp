@@ -25,14 +25,6 @@ void RigidBodyComponent::Callback(btDynamicsWorld* world, btScalar timeSleep)
 }
 
 
-static btGhostObject* ghost;
-
-void callback(btDynamicsWorld* world, btScalar timeSleep)
-{
-    RigidBodyComponent::Callback(world, timeSleep);
-}
-
-
 void RigidBodyComponent::Init()
 {
     auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
@@ -70,9 +62,7 @@ void RigidBodyComponent::Init()
         world->addCollisionObject(rigidBody.Collision);
         world->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback);
 
-        world->setInternalTickCallback(callback, this, true);
-
-        ghost = rigidBody.Collision;
+        PhysicsModuleData::GetInstance()->AddGhostObject(rigidBody.Collision);
 
         break;
     }
