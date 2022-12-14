@@ -7,6 +7,8 @@
 #include "RigidBodySphere.h"
 #include "SceneComponent.h"
 #include "StaticMeshRenderer.h"
+#include "LightBase.h"
+
 #include "MeshRenderer.h"
 
 ComponentRegistry* ComponentRegistry::Instance = nullptr;
@@ -52,6 +54,7 @@ void ComponentRegistry::Init()
 	Register(RigidBodySphereType, "RigidBodySphereComponent", &RigidBodySphere::Create);
 	Register(RigidBodyCubeType, "RigidBodyCubeComponent", &RigidBodyCube::Create);
 	Register(StaticMeshRendererType, "StaticMeshRenderer", &StaticMeshRenderer::Create);
+	Register(LightPointType, "PointLight", &PointLight::Create);
 	//TODO: remove mesh renderer once it's useless
 	Register(MeshRendererType, "MeshRenderer", &MeshRenderer::Create);
 }

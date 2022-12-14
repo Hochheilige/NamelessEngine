@@ -91,4 +91,6 @@ public:
 	};
 
 	Color color = Color(1.0f, 1.0f, 1.0f, 1.0f);
+
+	static auto Create() -> Component* { return new PointLight(); }
 };

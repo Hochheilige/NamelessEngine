@@ -77,6 +77,8 @@ private:
 	auto InitStyle() -> void;
 
 	auto ActorBrowserContextMenu(Actor* actor) const -> CONTEXT_MENU_VALUES;
+	auto ActorBrowserContextMenu(Actor* actor, const char* str_id) const -> CONTEXT_MENU_VALUES;
+	auto ActorBrowserContextMenuPopUp(Actor* actor) const -> CONTEXT_MENU_VALUES;
 
 	// Helper style functions
 	auto BoldHeader(const char* label, ImGuiTreeNodeFlags flags) const -> bool;

@@ -291,11 +291,13 @@ auto ImGuiSubsystem::DrawViewport() -> void
 			ImGui::EndDragDropTarget();
 		}
 
-		// Actor context menu for deletion, duplicating, renaming(?) — can't get it to work properly
-		//if (!ImGui::IsMouseDragging(ImGuiPopupFlags_MouseButtonRight,0.001f) && ImGui::IsItemClicked(ImGuiPopupFlags_MouseButtonRight)) {
-		//	GetEditorContext().SetSelectedActor(MyGame->MyRenderingSystem->GetActorUnderPosition(ViewportMousePos));
-		//}
-		//if (ActorBrowserContextMenu(GetEditorContext().GetSelectedActor(), "ActorContextMenu")) {}
+		// Actor context menu for deletion, duplicating, renaming(?)
+
+		if (!ImGui::IsMouseDragging(ImGuiPopupFlags_MouseButtonRight,0.001f) && ImGui::IsItemClicked(ImGuiPopupFlags_MouseButtonRight)) {
+			GetEditorContext().SetSelectedActor(MyGame->MyRenderingSystem->GetActorUnderPosition(ViewportMousePos));
+		}
+
+		if (ActorBrowserContextMenu(GetEditorContext().GetSelectedActor(), "ActorContextMenu")) {}
 
 		
 
