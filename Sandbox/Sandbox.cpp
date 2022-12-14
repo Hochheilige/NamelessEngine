@@ -58,6 +58,7 @@ Actor* Sandbox::CreateStaticBox(Transform transform)
 	auto audio = box->AddComponent<AudioComponent>();
 	audio->Init();
 	audio->LoadSound("../Assets/test.wav", true, true);
+	audio->SetVolume(0.1);
 	//audio->Play("../Assets/test.wav");
 
 	return box;
@@ -158,6 +159,7 @@ Actor* Sandbox::CreateKinematicSphere(Transform transform)
 
 	auto audio = sphere->AddComponent<AudioComponent>();
 	audio->LoadSound("../Assets/fall.ogg");
+	audio->SetVolume(0.5);
 
 	return sphere;
 }

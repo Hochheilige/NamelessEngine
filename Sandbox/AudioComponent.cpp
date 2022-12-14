@@ -65,7 +65,7 @@ void AudioComponent::Play()
 			FMOD_VECTOR position(trans.Position.x, trans.Position.y, trans.Position.z);
 			channel->set3DAttributes(&position, nullptr);
 		}
-		channel->setVolume(20 * log10f(10));
+		channel->setVolume(volume ? volume : kDefaultVolume);
 		channel->setPaused(false);
 		channels[channelID] = channel;
 	}
@@ -95,4 +95,9 @@ void AudioComponent::Update(float DeltaTime)
 	//}
 
 	AudioModule::GetInstance()->Update();
+}
+
+void AudioComponent::SetVolume(float volume)
+{
+	this->volume = volume;
 }
