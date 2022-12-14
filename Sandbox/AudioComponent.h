@@ -26,13 +26,14 @@ public:
 
 	bool IsPlaying(int channelID);
 
-	float dbToVolume(float db);
-
-	float VolumeTodb(float volume);
+	void SetVolume(float volume);
 
 private:
 	FMOD::Channel* channel = nullptr;
 	FMOD::Sound* sound = nullptr;
 	int channelID = -1;
 	std::string name;
+	
+	const float kDefaultVolume = 0.3f;
+	float volume = .0f;
 };
