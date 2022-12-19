@@ -40,6 +40,20 @@ Actor* Sandbox::CreateNonPhysicsBox(Transform transform) {
 	return box;
 }
 
+Actor* Sandbox::CreatePlayahActor(Transform transform) {
+	Actor* box = CreateActor<Actor>();
+	box->InitializeMonoActor("Scripts.Tests", "PlayahActor");
+	auto mesh_component = box->AddComponent<MeshRenderer>();
+	mesh_component->SetMeshProxy(texturedBoxMeshProxy);
+	mesh_component->SetPixelShader(ps);
+	mesh_component->SetVertexShader(vs);
+	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
+	mesh_component->SetNormalSRV(EngineContentRegistry::GetInstance()->GetBasicNormalTexSRV());
+	box->GetRoot()->SetTransform(transform);
+
+	return box;
+}
+
 Actor* Sandbox::CreateStaticBox(Transform transform)
 {
 	Actor* box = CreateActor<Actor>();
@@ -394,6 +408,12 @@ void Sandbox::PrepareResources()
 	tr.Scale = Vector3::One * 0.4f;
 	tr.Position = { 11.436f, 0.843f, -2.502f };
 	CreateBun(tr);
+
+	//Playah actor
+	tr.Position = Vector3(0, 3, 0);
+	tr.Scale = { 1.0f, 1.0f, 1.0f};
+	tr.Rotation.SetEulerAngles(0, 0, 0);
+	Actor* playah = CreatePlayahActor(tr);
 
 	CreateHierarcyTestActor();
 }

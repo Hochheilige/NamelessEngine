@@ -45,9 +45,11 @@
     <Compile Include="Bullet.cs" />
     <Compile Include="ComponentsEnum.cs" />
     <Compile Include="Components\MeshRendererComponent.cs" />
+    <Compile Include="Components\MovementComponent.cs" />
     <Compile Include="Components\RigidBodyComponent.cs" />
     <Compile Include="Components\RigidBodyCubeComponent.cs" />
     <Compile Include="Components\RigidBodySphereComponent.cs" />
+    <Compile Include="Tests\PlayahActor.cs" />
     <Compile Include="Tests\CustomActor.cs" />
     <Compile Include="EngineSettings.cs" />
     <Compile Include="EntryPoint.cs" />

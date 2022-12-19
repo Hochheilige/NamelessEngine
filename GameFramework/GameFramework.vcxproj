@@ -248,6 +248,8 @@
     <ClInclude Include="Include\MathInclude.h" />
     <ClInclude Include="Include\Mesh.h" />
     <ClInclude Include="Include\MeshLoader.h" />
+    <ClInclude Include="Include\MonoMovementComponentModule.h" />
+    <ClInclude Include="Include\MovementComponent.h" />
     <ClInclude Include="Include\RenderPrimitiveProxy.h" />
     <ClInclude Include="Include\MeshRenderer.h" />
     <ClInclude Include="Include\ObjectLookupHelper.h" />
@@ -268,6 +270,7 @@
     <ClInclude Include="Include\Keyboard.h" />
     <ClInclude Include="Include\UUIDGenerator.h" />
     <ClInclude Include="Include\JsonSerializers.h" />
+    <ClInclude Include="MonoMovementComponentModule.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\imgui\backends\imgui_impl_dx11.cpp" />
@@ -276,6 +279,8 @@
     <ClCompile Include="Include\Renderer.cpp" />
     <ClCompile Include="Src\JsonSerializers.cpp" />
     <ClCompile Include="Src\ComponentRegistry.cpp" />
+    <ClCompile Include="Src\MonoMovementComponent.cpp" />
+    <ClCompile Include="Src\MovementComponent.cpp" />
     <ClCompile Include="Src\Serializer.cpp" />
     <ClCompile Include="Src\AABB2DCollider.cpp" />
     <ClCompile Include="Src\Asset.cpp" />

@@ -1,8 +1,5 @@
 #include "RigidBodyCube.h"
 
-// TODO: Right now our relationship with physics is one-directional:
-// physics updates our transform, but we cannot change transform in the physics world
-
 RigidBodyCube::RigidBodyCube()
 {
 

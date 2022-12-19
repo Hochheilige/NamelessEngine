@@ -56,6 +56,33 @@ Actor::~Actor()
 	}
 }
 
+auto Actor::AddComponent(Component* component) -> Component*
+{
+
+	Components.push_back(component);
+	component->mOwner = this;
+
+	if (auto sceneComponent = dynamic_cast<SceneComponent*>(component))
+	{
+		if (RootComponent == nullptr)
+		{
+			RootComponent = sceneComponent;
+		}
+		else
+		{
+			// Attach to RootComponent by default
+			sceneComponent->SetAttachmentParent(RootComponent);
+		}
+	}
+
+	if (mMonoActor != nullptr)
+	{
+		mMonoActor->AddComponent(component);
+	}
+
+	return component;
+}
+
 auto Actor::RemoveComponent(Component* InComponent) -> void
 {
 	if (InComponent == nullptr)

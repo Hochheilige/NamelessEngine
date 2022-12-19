@@ -8,6 +8,7 @@
         RigidBodyCubeType, 
         RigidBodySphereType, 
         LightPointType,
-        SceneComponentType
+        SceneComponentType,
+        MovementComponentType
     }
 }
