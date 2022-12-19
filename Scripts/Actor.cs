@@ -59,6 +59,9 @@ namespace Scripts
                 case ComponentsEnum.RigidBodySphereType:
                     component = new RigidBodySphereComponent(this, internalCreate);
                     break;
+                case ComponentsEnum.MovementComponentType:
+                    component = new MovementComponent(this);
+                    break;
                 default: 
                     Console.WriteLine("Default");
                     component = new Component(this); break;

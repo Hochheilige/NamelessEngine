@@ -1,4 +1,5 @@
 #include "PhysicsModule.h"
+#include "BulletCollision/CollisionDispatch/btGhostObject.h"
 
 PhysicsModuleData* PhysicsModuleData::instance = nullptr;
 
@@ -7,6 +8,10 @@ PhysicsModuleData::PhysicsModuleData()
     CollisionConfiguration = new btDefaultCollisionConfiguration();
     Dispatcher = new btCollisionDispatcher(CollisionConfiguration);
     Broadphase = new btDbvtBroadphase();
+    Broadphase->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
+    /*btVector3 worldMin(-1000, -1000, -1000);
+    btVector3 worldMax(1000, 1000, 1000);
+    btAxisSweep3* sweepBP = new btAxisSweep3(worldMin, worldMax);*/
     Solver = new btSequentialImpulseConstraintSolver();
     Solver->reset(); // reset solver seed
     World = new btDiscreteDynamicsWorld(

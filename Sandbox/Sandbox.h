@@ -21,6 +21,7 @@ public:
 
 	// Base objects with mesh and rigidbody components
 	Actor* CreateNonPhysicsBox(Transform transform);
+	Actor* CreatePlayahActor(Transform transform);
 	Actor* CreateStaticBox(Transform transform);
 	Actor* CreateDynamicBox(Transform transform);
 	Actor* CreateKinematicBox(Transform transform);

@@ -12,6 +12,7 @@ enum ComponentType
     RigidBodySphereType, 
     LightPointType,
     SceneComponentType,
+    MovementComponentType,
 
     Last
 };

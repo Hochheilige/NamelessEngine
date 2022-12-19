@@ -4,7 +4,7 @@
     {
         public MeshRendererComponent(Actor owner) : base(owner)
         {
-            this.CppInstance = InternalCreateComponent(owner.CppInstance, (int)ComponentsEnum.MeshRendererType);
+            this.CppInstance = InternalCreateComponent(owner.CppInstance, (int)ComponentsEnum.MovementComponentType);
         }
     }
 }

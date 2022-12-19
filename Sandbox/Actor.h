@@ -38,8 +38,8 @@ public:
 		if constexpr (std::is_same<T, MeshRenderer>())
 		{
 			is_mesh_renderer_enabled = true;
-		}		
-		
+		}
+
 		if constexpr (std::is_base_of<LineRenderer, T>())
 		{
 			is_debug_renderer_enabled = true;
@@ -62,15 +62,18 @@ public:
 			}
 		}
 
-		if(mMonoActor != nullptr)
+		if (mMonoActor != nullptr)
 		{
 			mMonoActor->AddComponent(component);
 		}
-		
+
 		//auto a = mMonoActor->GetInheritors();
 
 		return component;
 	}
+
+
+	auto AddComponent(Component* component) -> Component*;
 
 	template<typename T>
 	void RemoveComponentsOfClass()

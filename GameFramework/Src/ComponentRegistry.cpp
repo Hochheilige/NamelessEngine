@@ -8,6 +8,7 @@
 #include "SceneComponent.h"
 #include "StaticMeshRenderer.h"
 #include "LightBase.h"
+#include "MovementComponent.h"
 
 #include "MeshRenderer.h"
 
@@ -57,6 +58,7 @@ void ComponentRegistry::Init()
 	Register(LightPointType, "PointLight", &PointLight::Create);
 	//TODO: remove mesh renderer once it's useless
 	Register(MeshRendererType, "MeshRenderer", &MeshRenderer::Create);
+	Register(MovementComponentType, "MovementComponent", &MovementComponent::Create);
 }
 
 void ComponentRegistry::Validate()
