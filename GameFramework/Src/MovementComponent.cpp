@@ -10,9 +10,17 @@ MovementComponent::MovementComponent()
 
 MovementComponent::~MovementComponent()
 {
-	//also delete mono component after it's added
+	
+	btDynamicsWorld* world = PhysicsModuleData::GetInstance()->GetDynamicsWorls();
+	world->removeAction(btController);
+	world->removeCollisionObject(ghostObject);
 
+	delete(ghostObject);
+	delete(characterCapsule);
 	delete(btController);
+
+	//also delete mono component after it's added ?
+	//delete(mMonoComponent);
 }
 
 auto MovementComponent::Init() -> void

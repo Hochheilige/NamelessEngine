@@ -467,7 +467,7 @@ void Sandbox::Update(float DeltaTime)
 		// Temporary block just to check how sound works
 		if (prevPlayState == PlayState::Editor || prevPlayState == PlayState::Paused)
 		{
-			platform->GetComponentOfClass<AudioComponent>()->Play();
+			// platform->GetComponentOfClass<AudioComponent>()->Play();
 		}
 
 		// Physics Simulation
