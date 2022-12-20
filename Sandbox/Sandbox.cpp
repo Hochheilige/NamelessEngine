@@ -350,8 +350,6 @@ void Sandbox::PrepareResources()
 	tr.Position = Vector3(10.0f, 0.8f, 0.0f);
 	tr.Rotation.SetEulerAngles(0, 0, 0);
 	tr.Scale = Vector3(1, 1, 1);
-	sphere = CreateKinematicSphere(tr);
-	sphere->UsePhysicsSimulation();
 
 	for (int i = 0; i < 5; ++i)
 		for (int j = 0; j < 5; ++j)
@@ -368,9 +366,11 @@ void Sandbox::PrepareResources()
 	FPSCC->SetCameraToControl(PerspCamera);
 	FPSCC->SetPitchYaw(-45.0f, -45.0f);
 
-	OrbitCC = CreateGameComponent<OrbitCameraController>();
+
+
+	/*OrbitCC = CreateGameComponent<OrbitCameraController>();
 	OrbitCC->SCToOrbit = sphere->GetRoot();
-	OrbitCC->OrbitRadius = 10.0f;
+	OrbitCC->OrbitRadius = 10.0f;*/
 
 
 	//PlaneComponent* pc = CreateGameComponent<PlaneComponent>();
@@ -413,7 +413,7 @@ void Sandbox::PrepareResources()
 
 	//Playah actor
 	tr.Position = Vector3(0, 3, 0);
-	tr.Scale = { 1.0f, 1.0f, 1.0f};
+	tr.Scale = { 1.5f, 3.0f, 1.5f};
 	tr.Rotation.SetEulerAngles(0, 0, 0);
 	Actor* playah = CreatePlayahActor(tr);
 
@@ -456,7 +456,6 @@ void Sandbox::Update(float DeltaTime)
 		if (prevPlayState == PlayState::Editor || prevPlayState == PlayState::Paused)
 		{
 			platform->GetComponentOfClass<AudioComponent>()->Play();
-			sphere->GetComponentOfClass<AudioComponent>()->Play();
 		}
 
 		// Physics Simulation
@@ -470,8 +469,6 @@ void Sandbox::Update(float DeltaTime)
 	else
 	{
 		// Temporary block just to check how sound works
-		platform->GetComponentOfClass<AudioComponent>()->StopChannel();
-		sphere->GetComponentOfClass<AudioComponent>()->StopChannel();
 	}
 
 	prevPlayState = GetPlayState();
@@ -486,7 +483,7 @@ void Sandbox::Update(float DeltaTime)
 
 	if (GetTotalElapsedTime() - pressTime > cooldown)
 	{
-		if (keyboard->IsDown(KEY_O))
+		if (keyboard->IsDown(KEY_O) && false) // temp prevent from using orbit camera
 		{
 			// switch PerspCamera controller
 			if (CurrentCC == FPSCC)

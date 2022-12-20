@@ -45,6 +45,15 @@ public:
 		return component;
 	}
 
+	auto AddComponent(Component* component) -> Component* {
+		Components.push_back(component);
+
+		OnComponentAdded(component);
+		AddOrphanComponent(component);
+
+		return component;
+	}
+
 	template<typename T>
 	void RemoveComponentsOfClass()
 	{

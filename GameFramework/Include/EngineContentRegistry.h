@@ -60,6 +60,14 @@ public:
 
 	auto GetBasicActorNames() const-> const std::vector<std::string>& { return BasicActorNames; }
 
+	auto GetDefaultPixelShader() const -> PixelShader* {
+		return DefaultPixelShader;
+	}
+
+	auto GetDefaultVertexShader() const -> VertexShader* {
+		return DefaultVertexShader;
+	}
+
 private:
 
 	typedef Actor* (EngineContentRegistry::*CreateFuncType)(const Transform& transform);

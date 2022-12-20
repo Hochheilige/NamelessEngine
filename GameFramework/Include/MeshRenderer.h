@@ -33,7 +33,7 @@ public:
 	LitMaterial Mat;
 
 	static auto Create() -> Component* {
-		return new MeshRenderer();
+		return new MeshRenderer(true);
 	}
 
 protected:

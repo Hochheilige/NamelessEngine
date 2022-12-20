@@ -6,6 +6,7 @@
 #include "Shader.h"
 #include "StaticMesh.h"
 #include "RenderingSystem.h"
+#include "EngineContentRegistry.h"
 
 StaticMeshRenderer::StaticMeshRenderer()
 {
@@ -97,5 +98,10 @@ void StaticMeshRenderer::Deserialize(const json* in)
 {
 	auto path = in->at("mesh_path").get<Path>();
 	SetStaticMesh(Game::GetInstance()->GetAssetManager()->LoadStaticMesh(path));
+	EngineContentRegistry* content = EngineContentRegistry::GetInstance();
+	SetPixelShader(content->GetDefaultPixelShader());
+	SetVertexShader(content->GetDefaultVertexShader());
+	SetAlbedoSRV(content->GetWhiteTexSRV());
+	SetNormalSRV(content->GetBasicNormalTexSRV());
 	Renderer::Deserialize(in);
 }

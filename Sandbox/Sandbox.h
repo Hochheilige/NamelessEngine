@@ -66,7 +66,6 @@ private:
 	class MeshRenderer* bunny;
 
 	Actor* platform;
-	Actor* sphere;
 	Actor* staticBox;
 
 
