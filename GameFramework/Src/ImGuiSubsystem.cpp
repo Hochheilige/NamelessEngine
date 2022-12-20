@@ -245,6 +245,13 @@ auto ImGuiSubsystem::DrawToolbar() -> void
 		{
 			Serializer::ReadFromFile("../Saves/game.json", Game::GetInstance());
 		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Force Load"))
+		{
+			Serializer::ReadFromFile("../Saves/game.json", Game::GetInstance(), true);
+		}
 	}
 	ImGui::End();
 }

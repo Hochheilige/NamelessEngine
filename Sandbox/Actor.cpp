@@ -56,6 +56,43 @@ Actor::~Actor()
 	}
 }
 
+void Actor::OnComponentAdded(Component* component)
+{
+	// todo: do we need this?
+	if (dynamic_cast<MeshRenderer*>(component))
+	{
+		is_mesh_renderer_enabled = true;
+	}
+
+	if (dynamic_cast<LineRenderer*>(component))
+	{
+		is_debug_renderer_enabled = true;
+	}
+
+	if (mMonoActor != nullptr)
+	{
+		mMonoActor->AddComponent(component);
+	}
+
+	component->mOwner = this;
+}
+
+void Actor::AddOrphanComponent(Component* component)
+{
+	if (auto scc = dynamic_cast<SceneComponent*>(component))
+	{
+		if (RootComponent == nullptr)
+		{
+			RootComponent = scc;
+		}
+		else
+		{
+			// Attach to RootComponent by default
+			scc->SetAttachmentParent(RootComponent);
+		}
+	}
+}
+
 auto Actor::RemoveComponent(Component* InComponent) -> void
 {
 	if (InComponent == nullptr)
@@ -64,6 +101,11 @@ auto Actor::RemoveComponent(Component* InComponent) -> void
 	}
 
 	Components.erase(remove(Components.begin(), Components.end(), InComponent), Components.end());
+}
+
+void Actor::SetUuid(uuid idIn)
+{
+	id = idIn;
 }
 
 void Actor::InitializeMonoActor(const char* className)
@@ -200,20 +242,22 @@ void Actor::Deserialize(const json* in)
 		}
 
 		if(!exists) {
-			auto name = wrapper.at("id").get<std::string>();
+			auto name = wrapper.at("name").get<std::string>();
 			Component* component = ComponentRegistry::CreateByName(name);
 
 			assert(component != nullptr && "Component was not registered");
 
 			auto data = wrapper.at("data");
+			component->SetId(id);
 			component->Deserialize(&data);
 
 			if (SceneComponent* sc = dynamic_cast<SceneComponent*>(component)) {
-				auto parentProp = wrapper.at("parent");
-				if(!parentProp.is_null()) {
-					auto parentId = parentProp.get<uuid>();
-					shouldBeBound.push_back( std::make_pair(sc, parentId));
+				if(wrapper.contains("parent")) {
+					auto parentId = wrapper.at("parent").get<uuid>();
+					shouldBeBound.push_back(std::make_pair(sc, parentId));
 				} else {
+					OnComponentAdded(component);
+					AddOrphanComponent(component);
 					component->OnDeserializationCompleted();
 				}
 			}
@@ -228,7 +272,8 @@ void Actor::Deserialize(const json* in)
 			if(component->GetId() == child.second) {
 				if(SceneComponent* parent = dynamic_cast<SceneComponent*>(component)) {
 					child.first->SetAttachmentParent(parent);
-					component->OnDeserializationCompleted();
+					OnComponentAdded(child.first);
+					child.first->OnDeserializationCompleted();
 				} else {
 					assert(false && "Provided parent id belongs to an object which is not a SceneComponent");
 				}

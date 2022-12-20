@@ -50,6 +50,10 @@ public:
 
 	Actor* GetOwner() const { return mOwner; }
 	uuid GetId() const { return id; }
+	void SetId(uuid idIn)
+	{
+		id = idIn;
+	}
 
 	virtual ~Component() = default;
 
@@ -62,7 +66,9 @@ public:
 	{
 		assert(false && "Not Implemented");
 	}
-	virtual void OnDeserializationCompleted() {}
+	virtual void OnDeserializationCompleted()
+	{
+	}
 private:
 	static std::unordered_map<std::string, ComponentType> TYPE_BY_NAME;
 	static std::unordered_map<ComponentType, std::string> NAME_BY_TYPE;

@@ -8,9 +8,9 @@ json Serializer::Serialize(const Game* game)
 	return game->Serialize();
 }
 
-void Serializer::Deserialize(const json* in, Game& game)
+void Serializer::Deserialize(const json* in, Game& game, bool destructive)
 {
-	game.Deserialize(in);
+	game.Deserialize(in, destructive);
 }
 
 void Serializer::SaveToFile(Path path, const Game* game)
@@ -22,7 +22,7 @@ void Serializer::SaveToFile(Path path, const Game* game)
 	out.close();
 }
 
-void Serializer::ReadFromFile(Path path, Game* game)
+void Serializer::ReadFromFile(Path path, Game* game, bool destructive)
 {
 	assert(exists(path) && "Provided file doesn't exist");
 

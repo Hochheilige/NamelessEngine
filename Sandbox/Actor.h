@@ -9,13 +9,15 @@
 #include "SceneComponent.h"
 #include "MonoObjects/MonoActor.h"
 #include "JsonInclude.h"
+#include "LineRenderer.h"
+#include "MeshRenderer.h"
 #include "uuid.h"
 
 class LineRenderer;
 class MeshRenderer;
 class RigidBodyComponent;
 
-class Actor : public Object
+class Actor final : public Object
 {
 public:
 
@@ -34,40 +36,11 @@ public:
 
 		T* component = nullptr;
 
-		// todo: do we need this?
-		if constexpr (std::is_same<T, MeshRenderer>())
-		{
-			is_mesh_renderer_enabled = true;
-		}		
-		
-		if constexpr (std::is_base_of<LineRenderer, T>())
-		{
-			is_debug_renderer_enabled = true;
-		}
-
 		component = new T();
 		Components.push_back(component);
-		component->mOwner = this;
 
-		if constexpr (std::is_base_of<SceneComponent, T>())
-		{
-			if (RootComponent == nullptr)
-			{
-				RootComponent = component;
-			}
-			else
-			{
-				// Attach to RootComponent by default
-				component->SetAttachmentParent(RootComponent);
-			}
-		}
-
-		if(mMonoActor != nullptr)
-		{
-			mMonoActor->AddComponent(component);
-		}
-		
-		//auto a = mMonoActor->GetInheritors();
+		OnComponentAdded(component);
+		AddOrphanComponent(component);
 
 		return component;
 	}
@@ -97,6 +70,8 @@ public:
 
 	void RemoveChild(Actor* Child);
 
+	void SetUuid(uuid in);
+
 	void InitializeMonoActor(const char* className = "Actor");
 	void InitializeMonoActor(const char* nameSpace, const char* className);
 
@@ -122,6 +97,9 @@ public:
 	void Deserialize(const json* in);
 	uuid GetId() const;
 private:
+	void OnComponentAdded(Component* component);
+	void AddOrphanComponent(Component* component);
+
 	Actor* Parent = nullptr;
 
 	// todo: Think about being able to update Root at Runtime

@@ -11,6 +11,7 @@
 #include "WICTextureLoader.h"
 #include "EngineContentRegistry.h"
 #include "DirectoryTree.h"
+#include "CreateCommon.h"
 
 
 #include <chrono>
@@ -68,8 +69,15 @@ json Game::Serialize() const
 	return out;
 }
 
-void Game::Deserialize(const json* in)
+void Game::Deserialize(const json* in, bool destructive)
 {
+	if(destructive) {
+		for (const auto actor : Actors) {
+			delete actor;
+		}
+		Actors.clear();
+	}
+
 	assert(in->is_object());
 
 	auto actorsArr = in->at("actors");
@@ -77,8 +85,7 @@ void Game::Deserialize(const json* in)
 
 	for (const json actorObj : actorsArr) {
 		assert(actorObj.is_object());
-
-
+		
 		uuid id = actorObj.at("id").get<uuid>();
 
 		bool exists = false;
@@ -90,7 +97,9 @@ void Game::Deserialize(const json* in)
 		}
 
 		if(!exists) {
-			//TODO
+			Actor* actor = CreateActor<Actor>();
+			actor->SetUuid(id);
+			actor->Deserialize(&actorObj);
 		}
 	}
 }

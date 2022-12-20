@@ -174,7 +174,7 @@ public:
 	virtual auto OnBeginPlay() -> void;
 
 	json Serialize() const;
-	void Deserialize(const json* in);
+	void Deserialize(const json* in, bool destructive = false);
 	UUIDGenerator* GetUuidGenerator() const;
 
 	auto GetImGuiSubsystem() const -> ImGuiSubsystem* { return mImGuiSubsystem; }
