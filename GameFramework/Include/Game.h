@@ -241,6 +241,9 @@ private:
 	UUIDGenerator* uuidGenerator = nullptr;
 	std::unique_ptr<AssetManager> assetManager;
 
+private:
+	json tempGameSave;
+
 public:
 	auto GetAssetManager() const -> AssetManager* { return assetManager.get(); }
 };

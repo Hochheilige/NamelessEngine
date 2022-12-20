@@ -2,9 +2,11 @@
 
 #include "MathInclude.h"
 #include "ImGuiInclude.h"
+#include "JsonInclude.h"
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include <filesystem>
 using Path = std::filesystem::path;
@@ -84,6 +86,10 @@ private:
 	auto BoldHeader(const char* label, ImGuiTreeNodeFlags flags) const -> bool;
 
 
+	//Toolbar buttons
+	auto ToolBarStopButton(const char stopText[]) -> void;
+
+
 private:
 	Game* MyGame;
 
@@ -113,4 +119,5 @@ private:
 	auto DrawFBXInspector(const Path& path) -> void;
 
 	std::vector<Path> OpenedFbxInspectorWindows;
+
 };
