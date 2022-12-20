@@ -6,6 +6,7 @@
 #include "MonoModules/MonoComponentModule.h"
 #include "MonoModules/MonoRigidBodyComponentModule.h"
 #include "MonoMovementComponentModule.h"
+#include "MonoCameraComponentModule.h"
 
 MonoSystem* MonoSystem::Instance = nullptr;
 
@@ -47,6 +48,7 @@ MonoSystem::MonoSystem()
 				new MonoActorModule;
 				new MonoRigidBodyComponentModule;
 				new MonoMovementComponentModule;
+				new MonoCameraComponentModule();
 			}
 		}
 	}

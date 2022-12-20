@@ -211,7 +211,7 @@ void RenderingSystem::PerformForwardOpaquePass()
 	context->PSSetConstantBuffers(0, 1, PerDrawCB.GetAddressOf());
 
 	CBPerDraw cbData;
-	const Camera& cam = *(MyGame->GetCurrentCamera());
+	const Camera& cam = *(MyGame->GetCurrentPOV());
 	cbData.WorldToClip = cam.GetWorldToClipMatrixTransposed();
 	cbData.CameraWorldPos = cam.Transform.Position;
 	cbData.ViewToClip = cam.GetProjectionMatrixTransposed();
@@ -288,7 +288,7 @@ void RenderingSystem::PerformOpaquePass(float DeltaTime)
 	context->VSSetConstantBuffers(0, 1, PerDrawCB.GetAddressOf());
 
 	CBPerDraw cbData;
-	const Camera& cam = *(MyGame->GetCurrentCamera());
+	const Camera& cam = *(MyGame->GetCurrentPOV());
 	cbData.WorldToClip = cam.GetWorldToClipMatrixTransposed();
 	cbData.CameraWorldPos = cam.Transform.Position;
 
@@ -337,7 +337,7 @@ void RenderingSystem::PerformLightingPass(float DeltaTime)
 	context->VSSetConstantBuffers(0, 1, PerDrawCB.GetAddressOf());
 
 	CBPerDraw cbData;
-	const Camera& cam = *(MyGame->GetCurrentCamera());
+	const Camera& cam = *(MyGame->GetCurrentPOV());
 	cbData.WorldToClip = cam.GetWorldToClipMatrixTransposed();
 	cbData.CameraWorldPos = cam.Transform.Position;
 
@@ -465,7 +465,7 @@ void RenderingSystem::HandleScreenResize(const Vector2& NewSize)
 	GeometryBuffer.Resize(NewSize.x, NewSize.y);
 	ResizeViewport(NewSize.x, NewSize.y);
 	MyObjectLookupHelper->HandleScreenResize(NewSize);
-	MyGame->GetCurrentCamera()->UpdateAspectRatio(NewSize.x / NewSize.y);
+	MyGame->UpdateCamerasAspectRatio(NewSize.x / NewSize.y);
 }
 
 auto RenderingSystem::GetActorUnderPosition(const Vector2& Pos) -> Actor*

@@ -10,6 +10,7 @@
 #include "LightBase.h"
 #include "MovementComponent.h"
 #include "AudioComponent.h"
+#include "CameraComponent.h"
 
 
 #include "MeshRenderer.h"
@@ -62,6 +63,7 @@ void ComponentRegistry::Init()
 	Register(MeshRendererType, "MeshRenderer", &MeshRenderer::Create);
 	Register(MovementComponentType, "MovementComponent", &MovementComponent::Create);
 	Register(AudioComponentType, "AudioComponent", &AudioComponent::Create);
+	Register(CameraComponentType, "CameraComponent", &CameraComponent::Create);
 }
 
 void ComponentRegistry::Validate()

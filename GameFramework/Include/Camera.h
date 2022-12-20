@@ -2,7 +2,7 @@
 
 #include "Transform.h"
 
-// @TODO: make this a game component
+// @TODO: Rename this to PointOfViewData
 class Camera
 {
 public:

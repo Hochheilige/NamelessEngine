@@ -22,7 +22,9 @@ void CameraController::SetCameraToControl(Camera* InCamera)
 
 void CameraController::Update(float DeltaTime)
 {
-	if (Cam == nullptr)
+	if (Cam == nullptr || 
+		// TODO: remove hack: disable editor camera movement when it's not in use
+		!Game::GetInstance()->GetUseEditorCamera())
 	{
 		return;
 	}

@@ -221,6 +221,7 @@
   <ItemGroup>
     <ClInclude Include="..\imgui\backends\imgui_impl_dx11.h" />
     <ClInclude Include="..\imgui\backends\imgui_impl_win32.h" />
+    <ClInclude Include="Include\CameraComponent.h" />
     <ClInclude Include="Include\ComponentRegistry.h" />
     <ClInclude Include="Include\AABB2DCollider.h" />
     <ClInclude Include="Include\Asset.h" />
@@ -248,6 +249,8 @@
     <ClInclude Include="Include\MathInclude.h" />
     <ClInclude Include="Include\Mesh.h" />
     <ClInclude Include="Include\MeshLoader.h" />
+    <ClInclude Include="Include\MonoCameraComponent.h" />
+    <ClInclude Include="Include\MonoCameraComponentModule.h" />
     <ClInclude Include="Include\MonoMovementComponentModule.h" />
     <ClInclude Include="Include\MovementComponent.h" />
     <ClInclude Include="Include\RenderPrimitiveProxy.h" />
@@ -277,6 +280,7 @@
     <ClCompile Include="..\imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="EditorContext.cpp" />
     <ClCompile Include="Include\Renderer.cpp" />
+    <ClCompile Include="Src\CameraComponent.cpp" />
     <ClCompile Include="Src\JsonSerializers.cpp" />
     <ClCompile Include="Src\ComponentRegistry.cpp" />
     <ClCompile Include="Src\MonoMovementComponent.cpp" />

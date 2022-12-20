@@ -9,6 +9,8 @@
         RigidBodySphereType, 
         LightPointType,
         SceneComponentType,
-        MovementComponentType
+        MovementComponentType,
+        AudioComponentType,
+        CameraComponentType
     }
 }

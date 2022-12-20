@@ -25,6 +25,8 @@
 #include "RigidBodyComponent.h"
 #include "UUIDGenerator.h"
 
+#include "CameraComponent.h"
+
 
 Game* Game::Instance = nullptr;
 
@@ -359,7 +361,7 @@ void Game::Update(float DeltaTime)
 
 void Game::Render()
 {
-	MyRenderingSystem->Draw(0.0f, GetCurrentCamera());
+	MyRenderingSystem->Draw(0.0f, GetCurrentPOV());
 
 	ID3D11RenderTargetView* views[8] = { RenderTargetView.Get(), nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 	Context->OMSetRenderTargets(8, views, nullptr);
@@ -434,14 +436,19 @@ Game::~Game()
 	Context->Flush();
 }
 
-Camera* Game::GetCurrentCamera()
+const Camera* Game::GetCurrentPOV() const
 {
-	if (CurrentCamera == nullptr)
+	if (bUseEditorCamera)
 	{
-		return &DefaultCamera;
+		return &EditorPOV;
 	}
 
-	return CurrentCamera;
+	if (PlayerCamera == nullptr)
+	{
+		return &DefaultPOV;
+	}
+
+	return &PlayerCamera->GetPOVData();
 }
 
 //void Game::DestroyComponent(GameComponent* GC)
@@ -522,7 +529,8 @@ auto Game::StartPlay() -> void
 	{
 		tempGameSave = Serializer::Serialize(this);
 		mPlayState = PlayState::Playing;
-		OnBeginPlay();		
+		OnBeginPlay();
+		SetUseEditorCamera(false);
 	}
 }
 
@@ -554,10 +562,28 @@ auto Game::StopPlay() -> void
 		mPlayState = PlayState::Editor;
 		Serializer::Deserialize(&tempGameSave, *this, true);
 		tempGameSave.clear();
+		SetUseEditorCamera(true);
 	}
 }
 
 Game::Game()
 {
 	Instance = this;
+}
+
+
+auto Game::SetUseEditorCamera(const bool InUseEditorCamera) -> void
+{
+	bUseEditorCamera = InUseEditorCamera;
+}
+
+
+auto Game::UpdateCamerasAspectRatio(float NewAspectRatio) -> void
+{
+	DefaultPOV.UpdateAspectRatio(NewAspectRatio);
+	EditorPOV.UpdateAspectRatio(NewAspectRatio);
+	if (PlayerCamera != nullptr)
+	{
+		PlayerCamera->UpadateAspectRatio(NewAspectRatio);
+	}
 }
