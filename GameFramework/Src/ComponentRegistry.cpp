@@ -9,6 +9,8 @@
 #include "StaticMeshRenderer.h"
 #include "LightBase.h"
 #include "MovementComponent.h"
+#include "AudioComponent.h"
+
 
 #include "MeshRenderer.h"
 
@@ -59,6 +61,7 @@ void ComponentRegistry::Init()
 	//TODO: remove mesh renderer once it's useless
 	Register(MeshRendererType, "MeshRenderer", &MeshRenderer::Create);
 	Register(MovementComponentType, "MovementComponent", &MovementComponent::Create);
+	Register(AudioComponentType, "AudioComponent", &AudioComponent::Create);
 }
 
 void ComponentRegistry::Validate()

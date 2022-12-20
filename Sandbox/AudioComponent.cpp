@@ -101,3 +101,17 @@ void AudioComponent::SetVolume(float volume)
 {
 	this->volume = volume;
 }
+
+json AudioComponent::Serialize() const
+{
+	auto out = SceneComponent::Serialize();
+	out["channel_id"] = channelID;
+	//out["audio_path"] = "";
+	out["name"] = name;
+	return out;
+}
+
+void AudioComponent::Deserialize(const json* in)
+{
+	SceneComponent::Deserialize(in);
+}

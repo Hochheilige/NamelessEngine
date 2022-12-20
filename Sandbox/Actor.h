@@ -12,6 +12,8 @@
 #include "LineRenderer.h"
 #include "MeshRenderer.h"
 #include "uuid.h"
+#include "AudioComponent.h"
+
 
 class LineRenderer;
 class MeshRenderer;

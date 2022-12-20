@@ -13,6 +13,7 @@ enum ComponentType
     LightPointType,
     SceneComponentType,
     MovementComponentType,
+    AudioComponentType,
 
     Last
 };

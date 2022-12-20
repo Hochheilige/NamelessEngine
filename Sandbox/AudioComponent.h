@@ -28,6 +28,14 @@ public:
 
 	void SetVolume(float volume);
 
+	json Serialize() const override;
+	void Deserialize(const json* in) override;
+
+	static Component* Create()
+	{
+		return new AudioComponent();
+	}
+
 private:
 	FMOD::Channel* channel = nullptr;
 	FMOD::Sound* sound = nullptr;

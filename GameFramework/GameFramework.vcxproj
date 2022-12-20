@@ -167,7 +167,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Sandbox\;$(ProjectDir)Include\;$(SolutionDir)DirectXTK\Include\;$(SolutionDir)External\assimp\include\;$(SolutionDir)External\mono\include\;$(SolutionDir)imgui;$(SolutionDir)External\bullet3\src\;$(SolutionDir)External\json\include\;$(SolutionDir)External\stduuid\include\;$(SolutionDir)External\GSL\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Sandbox\;$(ProjectDir)Include\;$(SolutionDir)DirectXTK\Include\;$(SolutionDir)External\assimp\include\;$(SolutionDir)External\mono\include\;$(SolutionDir)imgui;$(SolutionDir)External\bullet3\src\;$(SolutionDir)External\json\include\;$(SolutionDir)External\stduuid\include\;$(SolutionDir)External\fmod\studio\inc;$(SolutionDir)External\fmod\core\inc;$(SolutionDir)External\GSL\include\</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>

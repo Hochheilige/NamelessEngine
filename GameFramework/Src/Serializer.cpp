@@ -29,5 +29,5 @@ void Serializer::ReadFromFile(Path path, Game* game, bool destructive)
 	std::ifstream in(path);
 	const json data = json::parse(in);
 
-	game->Deserialize(&data);
+	game->Deserialize(&data, destructive);
 }
