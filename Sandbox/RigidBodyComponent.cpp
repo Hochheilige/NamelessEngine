@@ -205,15 +205,54 @@ json RigidBodyComponent::Serialize() const
     assert(json.is_object());
 
     json["mass"] = Mass;
+    json["type"] = rbType;
+    json["physics_simulation"] = isPhysicsSimulationEnabled;
+    json["need_physics"] = simulationNeedsEnabling;
 
     return json;
 }
 
 void RigidBodyComponent::Deserialize(const json* in)
 {
-    Mass = in->at("mass").get<float>();
+    SetMass(in->at("mass").get<float>());
+    SetRigidBodyType(in->at("type").get<RigidBodyType>());
 
 	SceneComponent::Deserialize(in);
 
     Init();
+
+    simulationNeedsEnabling = in->at("need_physics");
+    isPhysicsSimulationEnabled = in->at("physics_simulation");
+
+    
+     SetPhysicsSimulation();
+    
+    
+}
+
+auto RigidBodyComponent::EnablePhysicsSimulation() -> void
+{   
+
+    {
+        PhysicsModuleData::GetInstance()->GetDynamicsWorls()->addRigidBody(Body);
+        isPhysicsSimulationEnabled = true;
+    }
+}
+
+auto RigidBodyComponent::DisablePhysicsSimulation() -> void
+{   
+    if (isPhysicsSimulationEnabled) {
+        PhysicsModuleData::GetInstance()->GetDynamicsWorls()->removeRigidBody(Body);
+        isPhysicsSimulationEnabled = false;
+    }
+}
+
+auto RigidBodyComponent::SetPhysicsSimulation() -> void
+{
+    if (isPhysicsSimulationEnabled) {
+        EnablePhysicsSimulation();
+    }
+        
+    else
+        DisablePhysicsSimulation();
 }

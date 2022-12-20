@@ -66,6 +66,7 @@ Actor* Sandbox::CreateStaticBox(Transform transform)
 	box_rb->SetRigidBodyType(RigidBodyType::STATIC);
 	box_rb->SetMass(0);
 	box_rb->Init();
+	box_rb->EnablePhysicsSimulation();
 	Path path = "../Assets/box.fbx/Cube";
 	auto mesh_component = box->AddComponent<StaticMeshRenderer>();
 	mesh_component->SetStaticMesh(GetAssetManager()->LoadStaticMesh(path));
@@ -92,6 +93,7 @@ Actor* Sandbox::CreateDynamicBox(Transform transform)
 	box_rb->SetRigidBodyType(RigidBodyType::DYNAMIC);
 	box_rb->SetMass(1);
 	box_rb->Init();
+	box_rb->EnablePhysicsSimulation();
 	auto box_rb2 = box->AddComponent<RigidBodyCube>();
 	//box->SetTransform(transform);
 	box_rb2->SetRigidBodyType(RigidBodyType::DYNAMIC);
@@ -116,6 +118,7 @@ Actor* Sandbox::CreateKinematicBox(Transform transform)
 	box_rb->SetRigidBodyType(RigidBodyType::KINEMATIC);
 	box_rb->SetMass(1);
 	box_rb->Init();
+	box_rb->EnablePhysicsSimulation();
 	Path path = "../Assets/box.fbx/Cube";
 	auto mesh_component = box->AddComponent<StaticMeshRenderer>();
 	mesh_component->SetStaticMesh(GetAssetManager()->LoadStaticMesh(path));
@@ -135,6 +138,7 @@ Actor* Sandbox::CreateStaticSphere(Transform transform)
 	sphere_rb->SetRigidBodyType(RigidBodyType::STATIC);
 	sphere_rb->SetMass(0);
 	sphere_rb->Init();
+	sphere_rb->EnablePhysicsSimulation();
 	auto mesh_component = sphere->AddComponent<MeshRenderer>();
 	mesh_component->SetMeshProxy(sphereMeshProxy);
 	mesh_component->SetPixelShader(ps);
@@ -153,6 +157,7 @@ Actor* Sandbox::CreateDynamicSphere(Transform transform)
 	sphere_rb->SetRigidBodyType(RigidBodyType::DYNAMIC);
 	sphere_rb->SetMass(1);
 	sphere_rb->Init();
+	sphere_rb->EnablePhysicsSimulation();
 	auto mesh_component = sphere->AddComponent<MeshRenderer>();
 	mesh_component->SetMeshProxy(sphereMeshProxy);
 	mesh_component->SetPixelShader(ps);
@@ -171,6 +176,7 @@ Actor* Sandbox::CreateKinematicSphere(Transform transform)
 	sphere_rb->SetRigidBodyType(RigidBodyType::KINEMATIC);
 	sphere_rb->SetMass(1);
 	sphere_rb->Init();
+	sphere_rb->EnablePhysicsSimulation();
 	auto mesh_component = sphere->AddComponent<MeshRenderer>();
 	mesh_component->SetMeshProxy(sphereMeshProxy);
 	mesh_component->SetPixelShader(ps);
@@ -356,7 +362,6 @@ void Sandbox::PrepareResources()
 	tr.Rotation.SetEulerAngles(0, 0, 0);
 	tr.Scale = Vector3(20, 0.5, 20);
 	platform = CreateStaticBox(tr);
-	platform->UsePhysicsSimulation();
 
 	//CreateSphereObject(3.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1, 1, 1);
 	tr.Position = Vector3(10.0f, 0.8f, 0.0f);
@@ -371,7 +376,6 @@ void Sandbox::PrepareResources()
 				tr.Rotation.SetEulerAngles(45.0f, 45.0f, 0.0f);
 				tr.Scale = Vector3(1.0f, 1.0f, 1.0f);
 				auto box = CreateDynamicBox(tr);
-				box->UsePhysicsSimulation();
 			}
 
 	FPSCC = CreateGameComponent<CameraController>();

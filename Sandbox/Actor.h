@@ -94,10 +94,6 @@ public:
 	void UseMeshRendererOnly();
 	void UseDebugAndMeshRenderer();
 
-	// TODO change naming
-	void UsePhysicsSimulation();
-	void UnUsePhysicsSimulation();
-
 	virtual void Update(float DeltaTime) override;
 
 	auto GetRoot() const -> SceneComponent* {

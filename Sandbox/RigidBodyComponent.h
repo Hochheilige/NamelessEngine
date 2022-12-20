@@ -16,6 +16,8 @@ class RigidBodyComponent : public SceneComponent
 {
 public:
 
+	friend class ImGuiSubsystem;
+
 	RigidBodyComponent();
 
 	virtual ~RigidBodyComponent();
@@ -53,6 +55,9 @@ public:
 	json Serialize() const override;
 	void Deserialize(const json* in) override;
 
+	auto EnablePhysicsSimulation() -> void;
+	auto DisablePhysicsSimulation() -> void;
+
 protected:
 	btCollisionShape* Shape;
 	btRigidBody* Body;
@@ -63,9 +68,15 @@ protected:
 	RigidBodyType rbType;
 	RigidBodyType OriginType;
 
+	bool isPhysicsSimulationEnabled = false;
+	bool simulationNeedsEnabling = false;
+
 public:
 	// todo: do we need this?
 	bool is_kinematic = false;
+
+
+	auto SetPhysicsSimulation() -> void;
 };
 
 

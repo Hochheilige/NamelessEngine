@@ -97,7 +97,7 @@ auto EngineContentRegistry::CreateBox(const Transform& transform) -> Actor*
 	mesh_component->SetVertexShader(DefaultVertexShader);
 	mesh_component->SetAlbedoSRV(WhiteTexSRV);
 	mesh_component->SetNormalSRV(BasicNormalTexSRV);
-	box->UsePhysicsSimulation();
+	box_rb->EnablePhysicsSimulation();
 	return box;
 }
 

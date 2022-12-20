@@ -37,7 +37,7 @@ void RigidBodyCube::OnRegister()
 void RigidBodyCube::OnDeserializationCompleted()
 {
 	RigidBodyComponent::OnDeserializationCompleted();
-	Init();
+	//Init();
 }
 
 

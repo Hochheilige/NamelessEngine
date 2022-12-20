@@ -160,33 +160,6 @@ void Actor::UseDebugAndMeshRenderer()
 {
 }
 
-void Actor::UsePhysicsSimulation()
-{
-	if (!is_physics_enabled)
-	{
-		is_physics_enabled = true;
-		auto rigid_body = dynamic_cast<RigidBodyComponent*>(*std::find_if(Components.begin(), Components.end(),
-			[](Component* comp) {return dynamic_cast<RigidBodyComponent*>(comp); }
-		));
-
-		auto physics = PhysicsModuleData::GetInstance();
-		physics->GetDynamicsWorls()->addRigidBody(rigid_body->GetRigidBody());
-	}
-}
-
-void Actor::UnUsePhysicsSimulation()
-{
-	if (is_physics_enabled)
-	{
-		is_physics_enabled = false;
-		auto rigid_body = dynamic_cast<RigidBodyComponent*>(*std::find_if(Components.begin(), Components.end(),
-			[](Component* comp) {return dynamic_cast<RigidBodyComponent*>(comp); }
-		));
-
-		auto physics = PhysicsModuleData::GetInstance();
-		physics->GetDynamicsWorls()->removeRigidBody(rigid_body->GetRigidBody());
-	}
-}
 
 json Actor::Serialize() const
 {

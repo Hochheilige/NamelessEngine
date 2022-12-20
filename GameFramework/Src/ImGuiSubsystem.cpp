@@ -484,29 +484,32 @@ auto ImGuiSubsystem::LayOutTransform() -> void
 }
 
 auto ImGuiSubsystem::DrawRigidBodyProperties(Actor* actor) -> void 
-{
-	if (!BoldHeader("RigidBody Component", 0)) {
-		ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
-		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-		ImGui::BeginChild("RB", ImVec2(0, 36), true, window_flags);
+{	
+	if (auto* cmp = dynamic_cast<RigidBodyComponent*>(GetEditorContext().GetSelectedComponent())) {
 
-		bool is_p_enabled = actor->is_physics_enabled;
-		bool is_p_enabled_old = actor->is_physics_enabled;
-		ImGui::Checkbox("Simulate Physics", &is_p_enabled);
+		if (!BoldHeader("RigidBody Component", 0)) {
+			ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
+			ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+			ImGui::BeginChild("RB", ImVec2(0, 36), true, window_flags);
 
-		if (is_p_enabled != is_p_enabled_old)
-		{
-			is_p_enabled_old = is_p_enabled;
-			if (actor->is_physics_enabled) {
-				actor->UnUsePhysicsSimulation();
+			bool is_p_enabled = cmp->isPhysicsSimulationEnabled;
+			bool is_p_enabled_old = cmp->isPhysicsSimulationEnabled;
+			ImGui::Checkbox("Simulate Physics", &is_p_enabled);
+
+			if (is_p_enabled != is_p_enabled_old)
+			{
+				is_p_enabled_old = is_p_enabled;
+				if (cmp->isPhysicsSimulationEnabled) {
+					cmp->DisablePhysicsSimulation();
+				}
+				else {
+					cmp->EnablePhysicsSimulation();
+				}
 			}
-			else {
-				actor->UsePhysicsSimulation();
-			}
+
+			ImGui::EndChild();
+			ImGui::PopStyleVar();
 		}
-
-		ImGui::EndChild();
-		ImGui::PopStyleVar();
 	}
 }
 
