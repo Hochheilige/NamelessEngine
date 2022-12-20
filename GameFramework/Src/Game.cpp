@@ -12,6 +12,7 @@
 #include "EngineContentRegistry.h"
 #include "DirectoryTree.h"
 #include "CreateCommon.h"
+#include "Serializer.h"
 
 
 #include <chrono>
@@ -526,6 +527,7 @@ auto Game::StartPlay() -> void
 {
 	if (mPlayState == PlayState::Editor)
 	{
+		tempGameSave = Serializer::Serialize(this);
 		mPlayState = PlayState::Playing;
 		OnBeginPlay();
 		SetUseEditorCamera(false);
@@ -534,6 +536,7 @@ auto Game::StartPlay() -> void
 
 auto Game::OnBeginPlay() -> void {
 	std::cout << "Play has begun";
+
 }
 
 auto Game::PausePlay() -> void
@@ -557,6 +560,8 @@ auto Game::StopPlay() -> void
 	if (mPlayState == PlayState::Playing || mPlayState == PlayState::Paused)
 	{
 		mPlayState = PlayState::Editor;
+		Serializer::Deserialize(&tempGameSave, *this, true);
+		tempGameSave.clear();
 		SetUseEditorCamera(true);
 	}
 }

@@ -248,6 +248,9 @@ private:
 	UUIDGenerator* uuidGenerator = nullptr;
 	std::unique_ptr<AssetManager> assetManager;
 
+private:
+	json tempGameSave;
+
 
 	bool bUseEditorCamera = true;
 

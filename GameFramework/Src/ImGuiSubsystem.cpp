@@ -204,8 +204,29 @@ auto ImGuiSubsystem::DrawToolbar() -> void
 		{
 		case PlayState::Editor:
 			if (ImGui::Button(playText))
-			{
+			{	
 				MyGame->StartPlay();
+			}
+			ImGui::SameLine();
+
+			if (ImGui::Button("Save"))
+			{
+				Serializer::SaveToFile("../Saves/game.json", Game::GetInstance());
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Load"))
+			{
+				Serializer::ReadFromFile("../Saves/game.json", Game::GetInstance());
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Force Load"))
+			{
+				GetEditorContext().SetSelectedActor(nullptr);
+				Serializer::ReadFromFile("../Saves/game.json", Game::GetInstance(), true);
 			}
 			break;
 		case PlayState::Playing:
@@ -213,45 +234,20 @@ auto ImGuiSubsystem::DrawToolbar() -> void
 			{
 				MyGame->PausePlay();
 			}
-			/*ImGui::SameLine();
-			if (ImGui::Button(stopText))
-			{
-				MyGame->StopPlay();
-			}*/
+			ImGui::SameLine();
+			ToolBarStopButton(stopText);
 			break;
 		case PlayState::Paused:
 			if (ImGui::Button(resumeText))
 			{
 				MyGame->ResumePlay();
 			}
-			/*ImGui::SameLine();
-			if (ImGui::Button(stopText))
-			{
-				MyGame->StopPlay();
-			}*/
+			ImGui::SameLine();
+			ToolBarStopButton(stopText);
 			break;
 		}
 
-		ImGui::SameLine();
-
-		if (ImGui::Button("Save"))
-		{
-			Serializer::SaveToFile("../Saves/game.json", Game::GetInstance());
-		}
-
-		ImGui::SameLine();
-
-		if (ImGui::Button("Load"))
-		{
-			Serializer::ReadFromFile("../Saves/game.json", Game::GetInstance());
-		}
-
-		ImGui::SameLine();
-
-		if (ImGui::Button("Force Load"))
-		{
-			Serializer::ReadFromFile("../Saves/game.json", Game::GetInstance(), true);
-		}
+		
 	}
 	ImGui::End();
 }
@@ -854,6 +850,15 @@ auto ImGuiSubsystem::BoldHeader(const char* label, ImGuiTreeNodeFlags flags) con
 	ImGui::PopFont();
 
 	return isHeader;
+}
+
+auto ImGuiSubsystem::ToolBarStopButton(const char stopText[]) -> void
+{
+	if (ImGui::Button(stopText))
+	{
+		GetEditorContext().SetSelectedActor(nullptr);
+		MyGame->StopPlay();
+	}
 }
 
 auto ImGuiSubsystem::DrawAssetBrowser() -> void 
