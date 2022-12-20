@@ -335,12 +335,9 @@ auto ImGuiSubsystem::DrawActorExplorer() -> void
 			Actor* actor = actors[i];
 			const bool isSelectedActor = GetEditorContext().GetSelectedActor() == actor;
 
-			if (actor->GetName() == "") {
-				ImGui::Selectable((std::string("Actor") + std::to_string(i)).c_str(), isSelectedActor);
-			}
-			else {
-				ImGui::Selectable(actor->GetName().c_str(), isSelectedActor);
-			}
+			if (actor->GetName() == "") { actor->SetName(std::string("Actor") + std::to_string(i)); }
+			ImGui::Selectable(actor->GetName().c_str(), isSelectedActor);
+			
 
 			if (ImGui::IsItemClicked())
 			{
