@@ -32,30 +32,33 @@ void CameraController::Update(float DeltaTime)
 
 	auto keyboard = input.GetKeyboard();
 
-	if (keyboard->IsDown(KEY_W))
-	{
-		movementDelta.x += DeltaTime * Speed;
+	if (Game::GetInstance()->GetPlayState() != PlayState::Playing) {
+		if (keyboard->IsDown(KEY_W))
+		{
+			movementDelta.x += DeltaTime * Speed;
+		}
+		if (keyboard->IsDown(KEY_S))
+		{
+			movementDelta.x -= DeltaTime * Speed;
+		}
+		if (keyboard->IsDown(KEY_D))
+		{
+			movementDelta.y += DeltaTime * Speed;
+		}
+		if (keyboard->IsDown(KEY_A))
+		{
+			movementDelta.y -= DeltaTime * Speed;
+		}
+		if (keyboard->IsDown(KEY_E))
+		{
+			movementDelta.z += DeltaTime * Speed;
+		}
+		if (keyboard->IsDown(KEY_Q))
+		{
+			movementDelta.z -= DeltaTime * Speed;
+		}
 	}
-	if (keyboard->IsDown(KEY_S))
-	{
-		movementDelta.x -= DeltaTime * Speed;
-	}
-	if (keyboard->IsDown(KEY_D))
-	{
-		movementDelta.y += DeltaTime * Speed;
-	}
-	if (keyboard->IsDown(KEY_A))
-	{
-		movementDelta.y -= DeltaTime * Speed;
-	}
-	if (keyboard->IsDown(KEY_E))
-	{
-		movementDelta.z += DeltaTime * Speed;
-	}
-	if (keyboard->IsDown(KEY_Q))
-	{
-		movementDelta.z -= DeltaTime * Speed;
-	}
+	
 
 	if (keyboard->IsDown(KEY_C))
 	{
