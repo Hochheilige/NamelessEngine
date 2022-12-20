@@ -625,7 +625,7 @@ auto ImGuiSubsystem::DrawGizmos() -> void
 	{
 		ImGuizmo::SetRect(ViewportStart.x, ViewportStart.y, ViewportSize.x, ViewportSize.y);
 
-		Camera* camera = Game::GetInstance()->GetCurrentCamera();
+		const Camera* camera = Game::GetInstance()->GetCurrentPOV();
 
 		Matrix mView = camera->GetViewMatrix();
 		Matrix mProj = camera->GetProjectionMatrix();

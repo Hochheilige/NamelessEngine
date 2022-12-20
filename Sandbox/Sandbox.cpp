@@ -335,11 +335,12 @@ void Sandbox::PrepareResources()
 	CreateNormalMapTextureFromFile(L"../Assets/tjciddjqx_2K_Roughness.jpg", burgerSpecular.GetAddressOf(), burgerSpecSRV.GetAddressOf());
 
 
-	// Setup PerspCamera
-	PerspCamera = new Camera();
-	CurrentCamera = PerspCamera;
-	PerspCamera->UpdateProjectionMatrixPerspective(45.0f, Display->GetAspectRatio(), 0.01f, 1000.0f);
-	PerspCamera->Transform.Position = {-3.0f, 12.0f, 9.0f};
+	// Setup editor camera
+	EditorPOV.UpdateProjectionMatrixPerspective(45.0f, Display->GetAspectRatio(), 0.01f, 1000.0f);
+	EditorPOV.Transform.Position = {-3.0f, 12.0f, 9.0f};
+	FPSCC = CreateGameComponent<CameraController>();
+	FPSCC->SetCameraToControl(&EditorPOV);
+	FPSCC->SetPitchYaw(-45.0f, -45.0f);
 	
 
 	OrthoCamera = new Camera();
@@ -374,9 +375,7 @@ void Sandbox::PrepareResources()
 				box->UsePhysicsSimulation();
 			}
 
-	FPSCC = CreateGameComponent<CameraController>();
-	FPSCC->SetCameraToControl(PerspCamera);
-	FPSCC->SetPitchYaw(-45.0f, -45.0f);
+	
 
 
 
@@ -425,7 +424,7 @@ void Sandbox::PrepareResources()
 
 	//Playah actor
 	tr.Position = Vector3(0, 3, 0);
-	tr.Scale = { 1.5f, 3.0f, 1.5f};
+	tr.Scale = { 1.0f, 1.0f, 1.0f};
 	tr.Rotation.SetEulerAngles(0, 0, 0);
 	Actor* playah = CreatePlayahActor(tr);
 
@@ -527,15 +526,6 @@ void Sandbox::Update(float DeltaTime)
 		{
 			//sphere->GetComponentOfClass<AudioComponent>()->StopChannel();
 		}
-	}
-
-	if (keyboard->IsDown(KEY_T))
-	{
-		CurrentCamera = OrthoCamera;
-	}
-	else
-	{
-		CurrentCamera = PerspCamera;
 	}
 }
 

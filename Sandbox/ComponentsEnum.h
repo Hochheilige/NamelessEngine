@@ -14,6 +14,7 @@ enum ComponentType
     SceneComponentType,
     MovementComponentType,
     AudioComponentType,
+	CameraComponentType,
 
     Last
 };

@@ -19,6 +19,8 @@
 #include "UUIDGenerator.h"
 #include "JsonSerializers.h"
 
+
+
 using Path = std::filesystem::path;
 
 class Actor;
@@ -27,6 +29,7 @@ class RenderingSystem;
 class ImGuiSubsystem;
 class EngineContentRegistry;
 class Serializer;
+class CameraComponent;
 
 using namespace Microsoft::WRL;
 
@@ -132,7 +135,11 @@ public:
 
 	virtual ~Game();
 
-	Camera* GetCurrentCamera();
+	const Camera* GetCurrentPOV() const;
+
+	auto GetPlayerCamera() const -> CameraComponent* { return PlayerCamera; }
+	auto SetPlayerCamera(CameraComponent* Cam) -> auto { PlayerCamera = Cam; }
+
 
 	ComPtr<ID3D11SamplerState> GetDefaultSamplerState() { return DefaultSamplerState; }
 
@@ -187,7 +194,8 @@ protected:
 
 	std::vector<class GameComponent*> GameComponents;
 
-	Camera* CurrentCamera = nullptr;
+	CameraComponent* PlayerCamera = nullptr;
+	Camera EditorPOV = Camera();
 
 	class DisplayWin32* Display = nullptr;
 
@@ -229,8 +237,7 @@ private:
 
 	float StartTime = 0.0f;
 
-	Camera DefaultCamera = Camera();
-
+	Camera DefaultPOV = Camera();
 	
 	ImGuiSubsystem* mImGuiSubsystem = nullptr;
 
@@ -241,7 +248,15 @@ private:
 	UUIDGenerator* uuidGenerator = nullptr;
 	std::unique_ptr<AssetManager> assetManager;
 
+
+	bool bUseEditorCamera = true;
+
 public:
 	auto GetAssetManager() const -> AssetManager* { return assetManager.get(); }
+
+	auto SetUseEditorCamera(const bool InUseEditorCamera) -> void;
+	auto GetUseEditorCamera() const -> bool { return bUseEditorCamera; }
+
+	auto UpdateCamerasAspectRatio(float NewAspectRatio) -> void;
 };
 

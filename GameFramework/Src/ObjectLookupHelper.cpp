@@ -201,7 +201,7 @@ auto ObjectLookupHelper::GetWorldPositionUnerScreenPosition(const Vector2& Pos) 
 	//ImGuiSubsystem::GetInstance()->AddMessageToDisplay("depth = " + std::to_string(depth));
 	//ImGuiSubsystem::GetInstance()->AddMessageToDisplay("ndc = " + std::to_string(ndc.x) + ", " + std::to_string(ndc.y) + ", " + std::to_string(ndc.z));
 
-	Camera* cam = MyRenderingSystem->MyGame->GetCurrentCamera();
+	const Camera* cam = MyRenderingSystem->MyGame->GetCurrentPOV();
 	return NdcToWorld(ndc, cam->GetViewMatrix(), cam->GetProjectionMatrix());
 }
 
@@ -212,7 +212,7 @@ auto ObjectLookupHelper::WorldToNdc(const Vector3& WorldPos, const Matrix& ViewM
 	const Vector4 clipPos = DirectX::XMVector4Transform(viewPos, ProjMatrix);
 	const Vector4 ndcPos = clipPos / clipPos.w;
 	
-	const Vector4 clipPos2 = DirectX::XMVector4Transform(worldPos, MyRenderingSystem->MyGame->GetCurrentCamera()->GetWorldToClipMatrixTransposed().Transpose());
+	const Vector4 clipPos2 = DirectX::XMVector4Transform(worldPos, MyRenderingSystem->MyGame->GetCurrentPOV()->GetWorldToClipMatrixTransposed().Transpose());
 	const Vector4 ndcPos2 = clipPos2 / clipPos2.w;
 	return Vector3(ndcPos.x, ndcPos.y, ndcPos.z);
 }

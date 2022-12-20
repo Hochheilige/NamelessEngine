@@ -62,6 +62,9 @@ namespace Scripts
                 case ComponentsEnum.MovementComponentType:
                     component = new MovementComponent(this);
                     break;
+                case ComponentsEnum.CameraComponentType:
+                    component = new CameraComponent(this);
+                    break;
                 default: 
                     Console.WriteLine("Default");
                     component = new Component(this); break;
