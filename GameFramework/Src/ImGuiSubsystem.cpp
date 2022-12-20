@@ -250,6 +250,7 @@ auto ImGuiSubsystem::DrawToolbar() -> void
 
 		if (ImGui::Button("Force Load"))
 		{
+			GetEditorContext().SetSelectedActor(nullptr);
 			Serializer::ReadFromFile("../Saves/game.json", Game::GetInstance(), true);
 		}
 	}
