@@ -46,13 +46,13 @@ void Game::InitializeInternal()
 
 	mEngineContentRegistry = new EngineContentRegistry(this);
 
-	PrepareResources();
-
 	mImGuiSubsystem = new ImGuiSubsystem();
 	mImGuiSubsystem->Initialize(this);
 
 	assetManager.reset(new AssetManager());
 	assetManager->Initialize();
+
+	PrepareResources();
 
 	Initialize();
 }

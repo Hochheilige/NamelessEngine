@@ -23,14 +23,17 @@
 #include "RigidBodyComponent.h"
 #include "Component.h"
 #include "ImGuiInclude.h"
+#include "StaticMeshRenderer.h"
+#include "AssetManager.h"
 
 #include "CreateCommon.h"
 
 Actor* Sandbox::CreateNonPhysicsBox(Transform transform) {
 	Actor* box = CreateActor<Actor>();
+	Path path = "../Assets/box.fbx/Cube";
 	box->InitializeMonoActor("Scripts.Tests", "CustomActor");
-	auto mesh_component = box->AddComponent<MeshRenderer>();
-	mesh_component->SetMeshProxy(texturedBoxMeshProxy);
+	auto mesh_component = box->AddComponent<StaticMeshRenderer>();
+	mesh_component->SetStaticMesh(GetAssetManager()->LoadStaticMesh(path));
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
 	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
@@ -42,9 +45,10 @@ Actor* Sandbox::CreateNonPhysicsBox(Transform transform) {
 
 Actor* Sandbox::CreatePlayahActor(Transform transform) {
 	Actor* box = CreateActor<Actor>();
+	Path path = "../Assets/box.fbx/Cube";
 	box->InitializeMonoActor("Scripts.Tests", "PlayahActor");
-	auto mesh_component = box->AddComponent<MeshRenderer>();
-	mesh_component->SetMeshProxy(texturedBoxMeshProxy);
+	auto mesh_component = box->AddComponent<StaticMeshRenderer>();
+	mesh_component->SetStaticMesh(GetAssetManager()->LoadStaticMesh(path));
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
 	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
@@ -62,8 +66,9 @@ Actor* Sandbox::CreateStaticBox(Transform transform)
 	box_rb->SetRigidBodyType(RigidBodyType::STATIC);
 	box_rb->SetMass(0);
 	box_rb->Init();
-	auto mesh_component = box->AddComponent<MeshRenderer>();
-	mesh_component->SetMeshProxy(texturedBoxMeshProxy);
+	Path path = "../Assets/box.fbx/Cube";
+	auto mesh_component = box->AddComponent<StaticMeshRenderer>();
+	mesh_component->SetStaticMesh(GetAssetManager()->LoadStaticMesh(path));
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
 	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
@@ -92,8 +97,9 @@ Actor* Sandbox::CreateDynamicBox(Transform transform)
 	box_rb2->SetRigidBodyType(RigidBodyType::DYNAMIC);
 	box_rb2->SetMass(1);
 	box_rb2->Init();
-	auto mesh_component = box->AddComponent<MeshRenderer>();
-	mesh_component->SetMeshProxy(texturedBoxMeshProxy);
+	Path path = "../Assets/box.fbx/Cube";
+	auto mesh_component = box->AddComponent<StaticMeshRenderer>();
+	mesh_component->SetStaticMesh(GetAssetManager()->LoadStaticMesh(path));
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
 	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
@@ -110,8 +116,9 @@ Actor* Sandbox::CreateKinematicBox(Transform transform)
 	box_rb->SetRigidBodyType(RigidBodyType::KINEMATIC);
 	box_rb->SetMass(1);
 	box_rb->Init();
-	auto mesh_component = box->AddComponent<MeshRenderer>();
-	mesh_component->SetMeshProxy(texturedBoxMeshProxy);
+	Path path = "../Assets/box.fbx/Cube";
+	auto mesh_component = box->AddComponent<StaticMeshRenderer>();
+	mesh_component->SetStaticMesh(GetAssetManager()->LoadStaticMesh(path));
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
 	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
@@ -181,9 +188,10 @@ Actor* Sandbox::CreateKinematicSphere(Transform transform)
 Actor* Sandbox::CreateBunny(Transform transform)
 {
 	Actor* bunny = CreateActor<Actor>();
-	auto mesh_component = bunny->AddComponent<MeshRenderer>();
-	bunny->SetTransform(transform);
-	mesh_component->SetMeshProxy(bunnyMeshProxy);
+	Path path = "../Assets/stanford-bunny.fbx/Stanford Bunny-mesh";
+	auto mesh_component = bunny->AddComponent<StaticMeshRenderer>();
+	transform.Scale = Vector3::One * 0.015f;
+	mesh_component->SetStaticMesh(GetAssetManager()->LoadStaticMesh(path));
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
 	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
@@ -194,10 +202,11 @@ Actor* Sandbox::CreateBunny(Transform transform)
 
 Actor* Sandbox::CreateBun(Transform transform)
 {
+	Path path = "../Assets/tjciddjqx_LOD0.fbx/Aset_edible_baked_goods_S_tjciddjqx_LOD0";
 	Actor* actor = CreateActor<Actor>();
-	auto mesh_component = actor->AddComponent<MeshRenderer>();
+	auto mesh_component = actor->AddComponent<StaticMeshRenderer>();
+	mesh_component->SetStaticMesh(GetAssetManager()->LoadStaticMesh(path));
 	actor->SetTransform(transform);
-	mesh_component->SetMeshProxy(burgerMeshProxy);
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
 	mesh_component->SetAlbedoSRV(burgerTexSRV);
@@ -211,12 +220,14 @@ auto Sandbox::CreateHierarcyTestActor() -> Actor*
 {
 	Actor* actor = CreateActor<Actor>();
 	actor->AddComponent<SceneComponent>();
-	auto mesh_component = actor->AddComponent<MeshRenderer>();
+	Path path = "../Assets/tjciddjqx_LOD0.fbx/Aset_edible_baked_goods_S_tjciddjqx_LOD0";
+	
 
 	Transform tr;
 	tr.Scale = Vector3::One * 0.4f;
 	actor->SetTransform(tr);
-	mesh_component->SetMeshProxy(burgerMeshProxy);
+	auto mesh_component = actor->AddComponent<StaticMeshRenderer>();
+	mesh_component->SetStaticMesh(GetAssetManager()->LoadStaticMesh(path));
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
 	mesh_component->SetAlbedoSRV(burgerTexSRV);
@@ -225,12 +236,13 @@ auto Sandbox::CreateHierarcyTestActor() -> Actor*
 
 	SceneComponent* sceneComp = actor->AddComponent<SceneComponent>();
 
-	mesh_component = actor->AddComponent<MeshRenderer>();
+	path = "../Assets/stanford-bunny.fbx/Stanford Bunny-mesh";
+	mesh_component = actor->AddComponent<StaticMeshRenderer>();
 	mesh_component->SetAttachmentParent(sceneComp);
 	tr.Scale = Vector3::One * 0.015f;
 	tr.Position = { 0, 3.463, 0 };
 	mesh_component->SetRelativeTransform(tr);
-	mesh_component->SetMeshProxy(bunnyMeshProxy);
+	mesh_component->SetStaticMesh(GetAssetManager()->LoadStaticMesh(path));
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
 	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
@@ -528,11 +540,11 @@ void Sandbox::Update(float DeltaTime)
 }
 
 auto Sandbox::OnBeginPlay() -> void {
-	CurrentCC = OrbitCC;
+	/*CurrentCC = OrbitCC;
 	FPSCC->SetCameraToControl(nullptr);
 	OrbitCC->SetCameraToControl(PerspCamera);
 	FPSCC->bShouldUpdate = false;
-	OrbitCC->bShouldUpdate = true;
+	OrbitCC->bShouldUpdate = true;*/
 
 	for (auto actor : Actors)
 	{
