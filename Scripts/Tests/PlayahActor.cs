@@ -99,6 +99,7 @@ namespace Scripts.Tests
 
             mat.Decompose(out Vector3 scale, out Quaternion rot, out Vector3 pos);
             camComp.SetCameraTransform(pos, rot);
+            Console.WriteLine("Update Playah: " + this.GetHashCode());
 
             Console.WriteLine(rot.Axis.ToString() + " " + rot.Angle / (float)Math.PI * 180.0f);
         }

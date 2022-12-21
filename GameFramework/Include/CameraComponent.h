@@ -25,7 +25,7 @@ public:
 
 	auto GetPOVData() const -> const Camera&;
 
-	auto UpadateAspectRatio(float newAspectRatio) -> void;
+	auto UpdateAspectRatio(float newAspectRatio) -> void;
 
 protected:
 	mutable Camera povData;

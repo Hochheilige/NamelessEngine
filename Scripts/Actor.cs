@@ -50,7 +50,7 @@ namespace Scripts
             Component component = default;
             switch (type)
             {
-                case ComponentsEnum.MeshRendererType:
+                case ComponentsEnum.AudioComponentType:
                     component = new AudioComponent(this);
                     break;
                 case ComponentsEnum.RigidBodyCubeType:
@@ -60,10 +60,10 @@ namespace Scripts
                     component = new RigidBodySphereComponent(this, internalCreate);
                     break;
                 case ComponentsEnum.MovementComponentType:
-                    component = new MovementComponent(this);
+                    component = new MovementComponent(this, internalCreate);
                     break;
                 case ComponentsEnum.CameraComponentType:
-                    component = new CameraComponent(this);
+                    component = new CameraComponent(this, internalCreate);
                     break;
                 default: 
                     Console.WriteLine("Default");

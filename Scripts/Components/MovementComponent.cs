@@ -6,9 +6,13 @@ namespace Scripts.Components
 {
     public class MovementComponent : Component
     {
-        public MovementComponent(Actor owner) : base(owner)
+        public MovementComponent(Actor owner, bool internalCreate) : base(owner)
         {
-            this.CppInstance = InternalCreateComponent(owner.CppInstance, (int)ComponentsEnum.MovementComponentType);
+            if (internalCreate)
+            {
+                this.CppInstance =
+                    InternalCreateComponent(owner.CppInstance, (int) ComponentsEnum.MovementComponentType);
+            }
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
