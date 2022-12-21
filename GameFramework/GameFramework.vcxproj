@@ -252,6 +252,7 @@
     <ClInclude Include="Include\MonoCameraComponent.h" />
     <ClInclude Include="Include\MonoCameraComponentModule.h" />
     <ClInclude Include="Include\MonoMovementComponentModule.h" />
+    <ClInclude Include="Include\MonoStaticMeshRendererModule.h" />
     <ClInclude Include="Include\MovementComponent.h" />
     <ClInclude Include="Include\RenderPrimitiveProxy.h" />
     <ClInclude Include="Include\MeshRenderer.h" />

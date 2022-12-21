@@ -7,6 +7,7 @@
 #include "MonoModules/MonoRigidBodyComponentModule.h"
 #include "MonoMovementComponentModule.h"
 #include "MonoCameraComponentModule.h"
+#include "MonoStaticMeshRendererModule.h"
 
 MonoSystem* MonoSystem::Instance = nullptr;
 
@@ -49,6 +50,7 @@ MonoSystem::MonoSystem()
 				new MonoRigidBodyComponentModule;
 				new MonoMovementComponentModule;
 				new MonoCameraComponentModule();
+				new MonoStaticMeshRendererModule();
 			}
 		}
 	}

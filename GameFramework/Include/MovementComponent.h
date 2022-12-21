@@ -86,7 +86,7 @@ public:
 	void setMaxJumpHeight(btScalar maxJumpHeight) { btController->setMaxJumpHeight(maxJumpHeight); }
 	bool canJump() const { return btController->canJump(); }
 
- 	void jump(const btVector3& v = btVector3(0, 10, 0)) { btController->jump(v); }
+ 	void jump(const Vector3& v = Vector3(0, 10, 0)) { btController->jump(btVector3(v.x, v.y, v.z)); }
 
 	void applyImpulse(const btVector3& v) { btController->applyImpulse(v); }
 

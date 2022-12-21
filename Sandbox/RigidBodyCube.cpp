@@ -37,6 +37,9 @@ void RigidBodyCube::OnRegister()
 void RigidBodyCube::OnDeserializationCompleted()
 {
 	RigidBodyComponent::OnDeserializationCompleted();
+
+	//spent 2 hours trying to figure out what's wrong
+	// turned out Init() was called twice((
 	//Init();
 }
 
