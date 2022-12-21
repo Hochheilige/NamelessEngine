@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using Scripts.Components;
 using SharpDX;
 
@@ -23,9 +24,12 @@ namespace Scripts.Tests
         float Yaw = 0.0f;
 
         float MaxPitch = 80.0f;
-        float RotSpeedYaw = 20.0f;
+        float RotSpeedYaw = 200.0f;
         float RotSpeedPitch = 200.0f;
         float OrbitRadius = 10.0f;
+
+        private float fireDelay = 0.5f;
+        private float currentFireDelay = -0.1f;
 
 
 
@@ -41,6 +45,23 @@ namespace Scripts.Tests
             {
                 isJumpPressed = false;
             }
+
+            // shooting 
+
+            if (currentFireDelay < 0.0f)
+            {
+                currentFireDelay = fireDelay;
+            }
+            else
+            {
+                currentFireDelay -= deltaTime;
+            }
+
+            if (currentFireDelay < 0.0f && inputHandler.IsKeyDown(Keys.F))
+            {
+                fire();
+            }
+            
 
             //Walking
 
@@ -106,9 +127,19 @@ namespace Scripts.Tests
             Console.WriteLine(rot.Axis.ToString() + " " + rot.Angle / (float)Math.PI * 180.0f);
         }
 
+        private void fire()
+        {
+            Actor bullet = Instantiator.InstantiateActor<Bullet>();
+        }
+
         public override void OnBeginPlay()
         {
             
+        }
+
+        public override void SetTransform(Transform transform)
+        {
+
         }
 
     }

@@ -77,6 +77,9 @@ public:
 
 
 	auto SetPhysicsSimulation() -> void;
+	auto applyCentralImpulse(const Vector3& impulse) -> void {
+		Body->applyCentralImpulse(btVector3(impulse.x, impulse.y, impulse.z));
+	}
 };
 
 
