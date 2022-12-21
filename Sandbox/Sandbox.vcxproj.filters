@@ -66,12 +66,6 @@
     <ClInclude Include="Component.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RigidBodyCube.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RigidBodySphere.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SceneComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -131,12 +125,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Actor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RigidBodyCube.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RigidBodySphere.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

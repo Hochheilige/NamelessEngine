@@ -8,20 +8,81 @@ RigidBodyComponent::RigidBodyComponent()
 
 RigidBodyComponent::~RigidBodyComponent()
 {
-    auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorls();
-    world->removeRigidBody(Body);
-    delete Body->getCollisionShape();
-    delete Body->getMotionState();
-    delete Body;
+    auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
+    world->removeRigidBody(rigidBody.Body);
+    delete rigidBody.Body->getCollisionShape();
+    delete rigidBody.Body->getMotionState();
+    delete rigidBody.Body;
+}
 
-    auto game = Game::GetInstance();
-    //game->MyEditorContext.OnSelectedComponentChanged.RemoveObject(this);
-    //delete Shape;
+void RigidBodyComponent::Init()
+{
+    auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
+    const Transform& transform = GetTransform();
+
+    PhysicsTransform.setIdentity();
+    PhysicsTransform.setOrigin(btVector3(transform.Position.x, transform.Position.y, transform.Position.z));
+    Quaternion quaternion = transform.Rotation.GetQuaterion();
+    PhysicsTransform.setRotation(btQuaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w));
+
+    switch (Usage)
+    {
+    case RigidBodyUsage::PHYSICS:
+    {
+        Shape = new btEmptyShape();
+        //physics->AddCollisionShape(Shape);
+
+        btVector3 localInertia = btVector3(0, 0, 0);
+
+        btDefaultMotionState* myMotionState = new btDefaultMotionState(PhysicsTransform);
+        btRigidBody::btRigidBodyConstructionInfo rbInfo(Mass, myMotionState, Shape, localInertia);
+        rigidBody.Body = new btRigidBody(rbInfo);
+        rigidBody.Body->setUserPointer(this);
+
+        RegisterRigidBodyType();
+
+        break;
+    }
+    case RigidBodyUsage::COLLISIONS:
+    {
+        rigidBody.Collision = new btGhostObject();
+        CreateShape(transform.Scale);
+
+        rigidBody.Collision->setCollisionShape(Shape);
+        rigidBody.Collision->setWorldTransform(PhysicsTransform);
+        rigidBody.Collision->setUserPointer(this);
+        world->addCollisionObject(rigidBody.Collision);
+        world->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback);
+
+        PhysicsModuleData::GetInstance()->AddGhostObject(rigidBody.Collision);
+
+        break;
+    }
+    case RigidBodyUsage::COLLISIONS_AND_PHYSICS:
+    {
+        CreateShape(transform.Scale);
+        //physics->AddCollisionShape(Shape);
+
+        btVector3 localInertia = btVector3(0, 0, 0);
+        if (Mass != 0.0f)
+            Shape->calculateLocalInertia(Mass, localInertia);
+
+        btDefaultMotionState* myMotionState = new btDefaultMotionState(PhysicsTransform);
+        btRigidBody::btRigidBodyConstructionInfo rbInfo(Mass, myMotionState, Shape, localInertia);
+        rigidBody.Body = new btRigidBody(rbInfo);
+        rigidBody.Body->setUserPointer(this);
+
+        RegisterRigidBodyType();
+        break;
+    }
+    default:
+        break;
+    }
 }
 
 btRigidBody* RigidBodyComponent::GetRigidBody()
 {
-    return Body;
+    return rigidBody.Body;
 }
 
 btCollisionShape* RigidBodyComponent::GetCollisionShape()
@@ -42,41 +103,41 @@ RigidBodyType RigidBodyComponent::GetType()
 void RigidBodyComponent::SetMass(float mass)
 {
     Mass = mass;
-    if (Body)
+    if (rigidBody.Body)
     {
-        auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorls();
-        world->removeRigidBody(Body);
+        auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
+        world->removeRigidBody(rigidBody.Body);
         btVector3 inertia;
-        Body->getCollisionShape()->calculateLocalInertia(mass, inertia);
-        Body->setActivationState(DISABLE_DEACTIVATION);
-        Body->setMassProps(mass, inertia);
-        Body->setLinearFactor(btVector3(1, 1, 1));
-        Body->setAngularFactor(btVector3(1, 1, 1));
-        Body->updateInertiaTensor();
-        Body->clearForces();
-        world->addRigidBody(Body);
+        rigidBody.Body->getCollisionShape()->calculateLocalInertia(mass, inertia);
+        rigidBody.Body->setActivationState(DISABLE_DEACTIVATION);
+        rigidBody.Body->setMassProps(mass, inertia);
+        rigidBody.Body->setLinearFactor(btVector3(1, 1, 1));
+        rigidBody.Body->setAngularFactor(btVector3(1, 1, 1));
+        rigidBody.Body->updateInertiaTensor();
+        rigidBody.Body->clearForces();
+        world->addRigidBody(rigidBody.Body);
     }
     //mMonoComponent->SetMass(mass);
 }
 
 void RigidBodyComponent::SetGravity(float gravity)
 {
-    if (Body)
+    if (rigidBody.Body)
     {
-        auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorls();
-        world->removeRigidBody(Body);
-        Body->setGravity(btVector3(0, -gravity, 0));
-        Body->setFlags(Body->getFlags() | BT_DISABLE_WORLD_GRAVITY);
-        world->addRigidBody(Body);
+        auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
+        world->removeRigidBody(rigidBody.Body);
+        rigidBody.Body->setGravity(btVector3(0, -gravity, 0));
+        rigidBody.Body->setFlags(rigidBody.Body->getFlags() | BT_DISABLE_WORLD_GRAVITY);
+        world->addRigidBody(rigidBody.Body);
     }
 }
 
 void RigidBodyComponent::SetLinearVelocity(btVector3 velocity)
 {
-    if (Body)
+    if (rigidBody.Body)
     {
-        Body->activate(true);
-        Body->setLinearVelocity(velocity);
+        rigidBody.Body->activate(true);
+        rigidBody.Body->setLinearVelocity(velocity);
     }
 }
 
@@ -86,21 +147,81 @@ void RigidBodyComponent::SetRigidBodyType(RigidBodyType type)
     OriginType = type;
 }
 
+void RigidBodyComponent::SetRigidBodyUsage(RigidBodyUsage usage)
+{
+    Usage = usage;
+}
+
+void RigidBodyComponent::SetCollisionShapeType(CollisionShapeType type)
+{
+    ShapeType = type;
+}
+
+void RigidBodyComponent::CreateShape(Vector3 scale)
+{
+    switch (ShapeType)
+    {
+    case CollisionShapeType::BOX:
+    {
+        Shape = new btBoxShape(btVector3(scale.x / 2, scale.y / 2, scale.z / 2));
+        break;
+    }
+        
+    case CollisionShapeType::SPHERE:
+    {
+        Shape = new btSphereShape(scale.x);
+        break;
+    }
+    case CollisionShapeType::CAPSULE:
+    {
+        Shape = new btCapsuleShape(scale.x, scale.y);
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+void RigidBodyComponent::SetCollisionShape(CollisionShapeType type, Vector3 scale)
+{
+    if (rigidBody.Body && Shape)
+    {
+        if (Usage == RigidBodyUsage::PHYSICS)
+            Usage = RigidBodyUsage::COLLISIONS_AND_PHYSICS;
+
+        ShapeType = type;
+        CreateShape(scale);
+
+        auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
+        world->removeRigidBody(rigidBody.Body);
+        btVector3 inertia;
+        rigidBody.Body->setCollisionShape(Shape);
+        rigidBody.Body->getCollisionShape()->calculateLocalInertia(Mass, inertia);
+        rigidBody.Body->setActivationState(DISABLE_DEACTIVATION);
+        rigidBody.Body->setMassProps(Mass, inertia);
+        rigidBody.Body->setLinearFactor(btVector3(1, 1, 1));
+        rigidBody.Body->setAngularFactor(btVector3(1, 1, 1));
+        rigidBody.Body->updateInertiaTensor();
+        rigidBody.Body->clearForces();
+        world->addRigidBody(rigidBody.Body);
+    }
+}
+
 void RigidBodyComponent::MakeKinematic()
 {
-    Body->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
+    rigidBody.Body->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
     rbType = RigidBodyType::KINEMATIC;
 }
 
 void RigidBodyComponent::MakeDynamic()
 {
-    Body->setCollisionFlags(btCollisionObject::CF_DYNAMIC_OBJECT);
+    rigidBody.Body->setCollisionFlags(btCollisionObject::CF_DYNAMIC_OBJECT);
     rbType = RigidBodyType::DYNAMIC;
 }
 
 void RigidBodyComponent::MakeStatic()
 {
-    Body->setCollisionFlags(btCollisionObject::CF_STATIC_OBJECT);
+    rigidBody.Body->setCollisionFlags(btCollisionObject::CF_STATIC_OBJECT);
     rbType = RigidBodyType::STATIC;
 }
 
@@ -109,19 +230,19 @@ void RigidBodyComponent::RegisterRigidBodyType()
     switch (OriginType)
     {
     case RigidBodyType::STATIC:
-        Body->setCollisionFlags(this->Body->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT);
+        rigidBody.Body->setCollisionFlags(this->rigidBody.Body->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT);
         break;
     case RigidBodyType::DYNAMIC:
-        Body->setCollisionFlags(this->Body->getCollisionFlags() | btCollisionObject::CF_DYNAMIC_OBJECT);
+        rigidBody.Body->setCollisionFlags(this->rigidBody.Body->getCollisionFlags() | btCollisionObject::CF_DYNAMIC_OBJECT);
         break;
     case RigidBodyType::KINEMATIC:
-        Body->setCollisionFlags(this->Body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+        rigidBody.Body->setCollisionFlags(this->rigidBody.Body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
         break;
     default:
         break;
     }
 
-    Body->forceActivationState(DISABLE_DEACTIVATION);
+    rigidBody.Body->forceActivationState(DISABLE_DEACTIVATION);
 }
 
 void RigidBodyComponent::Update(float DeltaTime)
@@ -135,14 +256,14 @@ void RigidBodyComponent::Update(float DeltaTime)
         PhysicsTransform.setOrigin(btVector3(t.Position.x, t.Position.y, t.Position.z));
         btQuaternion quat = btQuaternion(t.Rotation.GetQuaterion().x, t.Rotation.GetQuaterion().y, t.Rotation.GetQuaterion().z, t.Rotation.GetQuaterion().w);
         PhysicsTransform.setRotation(quat);
-        Body->setWorldTransform(PhysicsTransform);
+        rigidBody.Body->setWorldTransform(PhysicsTransform);
         break;
     }*/
 	case RigidBodyType::DYNAMIC:
 	{
-	if (Body && Body->getMotionState())
+	if (rigidBody.Body && rigidBody.Body->getMotionState())
         {
-            Body->getMotionState()->getWorldTransform(PhysicsTransform);
+            rigidBody.Body->getMotionState()->getWorldTransform(PhysicsTransform);
         }
         t.Position = Vector3(PhysicsTransform.getOrigin().x(), PhysicsTransform.getOrigin().y(), PhysicsTransform.getOrigin().z());
         t.Rotation = Quaternion(PhysicsTransform.getRotation());
@@ -154,7 +275,7 @@ void RigidBodyComponent::Update(float DeltaTime)
         PhysicsTransform.setOrigin(btVector3(t.Position.x, t.Position.y, t.Position.z));
         btQuaternion quat = btQuaternion(t.Rotation.GetQuaterion().x, t.Rotation.GetQuaterion().y, t.Rotation.GetQuaterion().z, t.Rotation.GetQuaterion().w);
         PhysicsTransform.setRotation(quat);
-        Body->getMotionState()->setWorldTransform(PhysicsTransform);
+        rigidBody.Body->getMotionState()->setWorldTransform(PhysicsTransform);
         break;
     }*/
 	default:
@@ -172,26 +293,34 @@ auto RigidBodyComponent::SetTransform(const Transform& InTransform, TeleportType
 	btQuaternion quat = btQuaternion(InTransform.Rotation.GetQuaterion().x, InTransform.Rotation.GetQuaterion().y,
 		InTransform.Rotation.GetQuaterion().z, InTransform.Rotation.GetQuaterion().w);
 	PhysicsTransform.setRotation(quat);
-	// Kinimatic bodies take their transform from motion state, so we need to update it too
-	if (Body->isKinematicObject() && Body->getMotionState())
-	{
-		Body->getMotionState()->setWorldTransform(PhysicsTransform);
-	}
-	else
-	{
-		// this funcion seems to be too strong when using with kinematic bodies, resulting in visible overlap
-		// probably beacause right now physics is not updated every frame
-		Body->setCenterOfMassTransform(PhysicsTransform);
-	}
-	
-	if (InTeleportType == TeleportType::ResetPhysics)
-	{
-		Body->clearForces();
-		Body->clearGravity();
-		Body->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
-		Body->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
-		// todo: make sure everything is cleared
-	}
+
+    if (rigidBody.Body) {
+        // Kinimatic bodies take their transform from motion state, so we need to update it too
+        if (rigidBody.Body->isKinematicObject() && rigidBody.Body->getMotionState())
+        {
+            rigidBody.Body->getMotionState()->setWorldTransform(PhysicsTransform);
+        }
+        else
+        {
+            // this funcion seems to be too strong when using with kinematic bodies, resulting in visible overlap
+            // probably beacause right now physics is not updated every frame
+            rigidBody.Body->setCenterOfMassTransform(PhysicsTransform);
+        }
+
+
+        if (InTeleportType == TeleportType::ResetPhysics)
+        {
+            rigidBody.Body->clearForces();
+            rigidBody.Body->clearGravity();
+            rigidBody.Body->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
+            rigidBody.Body->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
+            // todo: make sure everything is cleared
+        }
+    }
+    else
+    {
+        rigidBody.Collision->setWorldTransform(PhysicsTransform);
+    }
 }
 
 ComponentType RigidBodyComponent::GetComponentType()

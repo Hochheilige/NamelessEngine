@@ -7,8 +7,7 @@
 #include "Mesh.h"
 #include "MeshRenderer.h"
 #include "MeshLoader.h"
-#include "RigidBodyCube.h"
-#include "RigidBodySphere.h"
+#include "RigidBodyComponent.h"
 #include "ShaderCompiler.h"
 #include "StaticMeshRenderer.h"
 #include "AssetManager.h"
@@ -87,8 +86,10 @@ auto EngineContentRegistry::CreateBasicActor(const std::string& BaseActorName, c
 auto EngineContentRegistry::CreateBox(const Transform& transform) -> Actor*
 {
 	Actor* box = CreateActor<Actor>();
-	RigidBodyCube* box_rb = box->AddComponent<RigidBodyCube>();
+	auto box_rb = box->AddComponent<RigidBodyComponent>();
 	box->SetTransform(transform);
+	box_rb->SetRigidBodyType(RigidBodyType::DYNAMIC);
+	box_rb->SetRigidBodyUsage(RigidBodyUsage::COLLISIONS_AND_PHYSICS);
 	box_rb->SetMass(1);
 	box_rb->Init();
 	StaticMeshRenderer* mesh_component = box->AddComponent<StaticMeshRenderer>();
@@ -127,8 +128,10 @@ auto EngineContentRegistry::CreatePointLight(const Transform& transform)->Actor*
 auto EngineContentRegistry::CreateSphere(const Transform& transform)->Actor*
 {
 	Actor* sphere = CreateActor<Actor>();
-	auto sphere_rb = sphere->AddComponent<RigidBodySphere>();
+	auto sphere_rb = sphere->AddComponent<RigidBodyComponent>();
 	sphere->SetTransform(transform);
+	sphere_rb->SetRigidBodyType(RigidBodyType::DYNAMIC);
+	sphere_rb->SetRigidBodyUsage(RigidBodyUsage::COLLISIONS_AND_PHYSICS);
 	sphere_rb->SetMass(1);
 	sphere_rb->Init();
 	auto mesh_component = sphere->AddComponent<MeshRenderer>();
