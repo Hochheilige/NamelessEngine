@@ -233,6 +233,8 @@ void RigidBodyComponent::Deserialize(const json* in)
 auto RigidBodyComponent::EnablePhysicsSimulation() -> void
 {   
 
+    if (!Body) Init();
+
     {
         PhysicsModuleData::GetInstance()->GetDynamicsWorls()->addRigidBody(Body);
         isPhysicsSimulationEnabled = true;

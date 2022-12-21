@@ -9,7 +9,7 @@
 
 void Actor::Update(float DeltaTime)
 {
-	if (is_physics_enabled)
+	if (true)
 	{
 		for (auto component : Components)
 		{
