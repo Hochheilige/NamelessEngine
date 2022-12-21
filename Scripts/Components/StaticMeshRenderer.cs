@@ -9,9 +9,10 @@ namespace Scripts.Components
 {
     internal class StaticMeshRenderer : Component
     {
-        public StaticMeshRenderer(Actor owner) : base (owner)
+        public StaticMeshRenderer(Actor owner, bool internalCreate) : base (owner)
         {
-            this.CppInstance = InternalCreateComponent(owner.CppInstance, (int)ComponentsEnum.StaticMeshRendererType);
+            if (internalCreate)
+                this.CppInstance = InternalCreateComponent(owner.CppInstance, (int)ComponentsEnum.StaticMeshRendererType);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
