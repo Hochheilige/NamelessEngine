@@ -9,11 +9,16 @@ namespace Scripts
 
         private StaticMeshRenderer renderer;
         private MovementComponent mv_cmp;
+        private RigidBodyComponent rigidbody;
+
         private float lifespan = 4.0f;
         private Vector3 initialSpeed = new Vector3(10.0f, 10.0f, 10.0f);
+      
         public Bullet()
         {
-            mv_cmp = (MovementComponent)AddComponent((int)ComponentsEnum.MovementComponentType);
+            rigidbody = (RigidBodyComponent)AddComponent((int)ComponentsEnum.RigidBodyCubeType);
+            rigidbody.EnablePhysicsSimulation();
+            //mv_cmp = (MovementComponent)AddComponent((int)ComponentsEnum.MovementComponentType);
             // add a simple rigid body instead and activate physics after a slight offset to avoid collision with playah
             // gotta add the ability to activate/deactivate physics from here
             // and set impulse
@@ -38,7 +43,14 @@ namespace Scripts
         public override void OnBeginPlay()
         {
             Console.WriteLine("Bullet Spawned");
-            mv_cmp.Jump(initialSpeed);
+            //rigidbody.ApplyCentralImpulse(initialSpeed);
+
+            //mv_cmp.Jump(initialSpeed);
+        }
+
+        public void fire()
+        {
+            rigidbody.ApplyCentralImpulse(initialSpeed);
         }
 
         private void Move()

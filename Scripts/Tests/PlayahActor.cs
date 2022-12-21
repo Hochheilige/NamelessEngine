@@ -129,7 +129,9 @@ namespace Scripts.Tests
 
         private void fire()
         {
-            Actor bullet = Instantiator.InstantiateActor<Bullet>();
+            Bullet bullet = (Bullet)Instantiator.InstantiateActor<Bullet>();
+            bullet.SetTransform(this.GetTransform());
+            bullet.fire();
         }
 
         public override void OnBeginPlay()
