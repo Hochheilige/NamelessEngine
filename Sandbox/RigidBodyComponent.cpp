@@ -144,7 +144,6 @@ void RigidBodyComponent::SetLinearVelocity(btVector3 velocity)
 void RigidBodyComponent::SetRigidBodyType(RigidBodyType type)
 {
     rbType = type;
-    OriginType = type;
 }
 
 void RigidBodyComponent::SetRigidBodyUsage(RigidBodyUsage usage)
@@ -228,7 +227,7 @@ void RigidBodyComponent::MakeStatic()
 
 void RigidBodyComponent::RegisterRigidBodyType()
 {
-    switch (OriginType)
+    switch (rbType)
     {
     case RigidBodyType::STATIC:
         rigidBody.Body->setCollisionFlags(this->rigidBody.Body->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT);
@@ -352,6 +351,8 @@ json RigidBodyComponent::Serialize() const
     json["type"] = rbType;
     json["physics_simulation"] = isPhysicsSimulationEnabled;
     json["need_physics"] = simulationNeedsEnabling;
+    json["usage"] = Usage;
+    json["shape_type"] = ShapeType;
 
     return json;
 }
@@ -360,6 +361,8 @@ void RigidBodyComponent::Deserialize(const json* in)
 {
     SetMass(in->at("mass").get<float>());
     SetRigidBodyType(in->at("type").get<RigidBodyType>());
+    SetRigidBodyUsage(in->at("usage").get<RigidBodyUsage>());
+    SetCollisionShapeType(in->at("shape_type").get<CollisionShapeType>());
 
 	SceneComponent::Deserialize(in);
 

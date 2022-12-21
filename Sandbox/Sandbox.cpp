@@ -114,6 +114,8 @@ Actor* Sandbox::CreateKinematicBox(Transform transform)
 	auto box_rb = box->AddComponent<RigidBodyComponent>();
 	box->SetTransform(transform);
 	box_rb->SetRigidBodyType(RigidBodyType::KINEMATIC);
+	box_rb->SetRigidBodyUsage(RigidBodyUsage::COLLISIONS_AND_PHYSICS);
+	box_rb->SetCollisionShapeType(CollisionShapeType::BOX);
 	box_rb->SetMass(1);
 	box_rb->Init();
 	box_rb->EnablePhysicsSimulation();
@@ -133,7 +135,9 @@ Actor* Sandbox::CreateStaticSphere(Transform transform)
 	Actor* sphere = CreateActor<Actor>();
 	auto sphere_rb = sphere->AddComponent<RigidBodyComponent>();
 	sphere->SetTransform(transform);
-	sphere_rb->SetRigidBodyType(RigidBodyType::STATIC);
+	sphere_rb->SetRigidBodyType(RigidBodyType::STATIC);	
+	sphere_rb->SetRigidBodyUsage(RigidBodyUsage::COLLISIONS_AND_PHYSICS);
+	sphere_rb->SetCollisionShapeType(CollisionShapeType::SPHERE);
 	sphere_rb->SetMass(0);
 	sphere_rb->Init();
 	sphere_rb->EnablePhysicsSimulation();
@@ -153,6 +157,8 @@ Actor* Sandbox::CreateDynamicSphere(Transform transform)
 	auto sphere_rb = sphere->AddComponent<RigidBodyComponent>();
 	sphere->SetTransform(transform);
 	sphere_rb->SetRigidBodyType(RigidBodyType::DYNAMIC);
+	sphere_rb->SetRigidBodyUsage(RigidBodyUsage::COLLISIONS_AND_PHYSICS);
+	sphere_rb->SetCollisionShapeType(CollisionShapeType::SPHERE);
 	sphere_rb->SetMass(1);
 	sphere_rb->Init();
 	sphere_rb->EnablePhysicsSimulation();

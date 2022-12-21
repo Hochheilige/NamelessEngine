@@ -110,7 +110,6 @@ protected:
 
 	// todo: do we need this? - we can query type using Body->isKinematicObject(), Body->isStaticObject()
 	RigidBodyType rbType;
-	RigidBodyType OriginType;
 
 	bool isPhysicsSimulationEnabled = false;
 	bool simulationNeedsEnabling = false;
@@ -122,7 +121,7 @@ public:
 
 	auto SetPhysicsSimulation() -> void;
 	auto applyCentralImpulse(const Vector3& impulse) -> void {
-		Body->applyCentralImpulse(btVector3(impulse.x, impulse.y, impulse.z));
+		rigidBody.Body->applyCentralImpulse(btVector3(impulse.x, impulse.y, impulse.z));
 	}
 };
 
