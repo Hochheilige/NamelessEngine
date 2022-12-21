@@ -97,7 +97,7 @@ btScalar RigidBodyComponent::GetMass()
 
 RigidBodyType RigidBodyComponent::GetType()
 {
-    return OriginType;
+    return rbType;
 }
 
 void RigidBodyComponent::SetMass(float mass)
@@ -380,7 +380,7 @@ void RigidBodyComponent::Deserialize(const json* in)
 auto RigidBodyComponent::EnablePhysicsSimulation() -> void
 {   
 
-    if (!Body) Init();
+    if (!rigidBody.Body) Init();
 
     {
         PhysicsModuleData::GetInstance()->GetDynamicsWorld()->addRigidBody(rigidBody.Body);
