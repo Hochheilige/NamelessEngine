@@ -115,3 +115,8 @@ void AudioComponent::Deserialize(const json* in)
 {
 	SceneComponent::Deserialize(in);
 }
+
+ComponentType AudioComponent::GetComponentType()
+{
+	return AudioComponentType;
+}

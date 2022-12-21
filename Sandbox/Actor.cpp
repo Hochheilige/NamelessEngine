@@ -171,6 +171,13 @@ json Actor::Serialize() const
 
 	out["id"] = id;
 
+	if (mMonoActor != nullptr) {
+		json monoObj = json::object();
+		monoObj["namespace"] = mMonoActor->GetNamespace();
+		monoObj["class"] = mMonoActor->GetClassname();
+		out["mono"] = monoObj;
+	}
+
 	json componentArr = json::array();
 	for (auto component : Components) {
 		json wrapper = json::object();
@@ -201,6 +208,13 @@ json Actor::Serialize() const
 void Actor::Deserialize(const json* in)
 {
 	assert(in->is_object());
+
+	if(in->contains("mono")) {
+		auto monoObj = in->at("mono");
+		auto namespaceStr = monoObj.at("namespace").get<std::string>();
+		auto classnameStr = monoObj.at("class").get<std::string>();
+		InitializeMonoActor(namespaceStr.c_str(), classnameStr.c_str());
+	}
 
 	auto componentArr = in->at("components");
 	assert(componentArr.is_array());

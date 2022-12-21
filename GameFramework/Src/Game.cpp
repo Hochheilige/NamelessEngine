@@ -584,6 +584,6 @@ auto Game::UpdateCamerasAspectRatio(float NewAspectRatio) -> void
 	EditorPOV.UpdateAspectRatio(NewAspectRatio);
 	if (PlayerCamera != nullptr)
 	{
-		PlayerCamera->UpadateAspectRatio(NewAspectRatio);
+		PlayerCamera->UpdateAspectRatio(NewAspectRatio);
 	}
 }

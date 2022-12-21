@@ -6,9 +6,12 @@ namespace Scripts.Components
 {
     public class CameraComponent : Component
     {
-        public CameraComponent(Actor owner) : base(owner)
+        public CameraComponent(Actor owner, bool internalCreate) : base(owner)
         {
-            this.CppInstance = InternalCreateComponent(owner.CppInstance, (int)ComponentsEnum.CameraComponentType);
+            if (internalCreate)
+            {
+                this.CppInstance = InternalCreateComponent(owner.CppInstance, (int) ComponentsEnum.CameraComponentType);
+            }
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
