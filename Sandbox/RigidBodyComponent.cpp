@@ -178,6 +178,7 @@ void RigidBodyComponent::CreateShape(Vector3 scale)
         break;
     }
     default:
+        Shape = new btEmptyShape();
         break;
     }
 }
@@ -325,7 +326,21 @@ auto RigidBodyComponent::SetTransform(const Transform& InTransform, TeleportType
 
 ComponentType RigidBodyComponent::GetComponentType()
 {
-	return Undefined;
+    switch (ShapeType)
+    {
+    case CollisionShapeType::BOX:
+        return RigidBodyCubeType;
+        break;
+    case CollisionShapeType::SPHERE:
+        return RigidBodySphereType;
+        break;
+    case CollisionShapeType::CAPSULE:
+        return Undefined;
+        break;
+    default:
+        break;
+    }
+	
 }
 
 json RigidBodyComponent::Serialize() const
@@ -363,7 +378,7 @@ auto RigidBodyComponent::EnablePhysicsSimulation() -> void
 {   
 
     {
-        PhysicsModuleData::GetInstance()->GetDynamicsWorls()->addRigidBody(Body);
+        PhysicsModuleData::GetInstance()->GetDynamicsWorld()->addRigidBody(rigidBody.Body);
         isPhysicsSimulationEnabled = true;
     }
 }
@@ -371,7 +386,7 @@ auto RigidBodyComponent::EnablePhysicsSimulation() -> void
 auto RigidBodyComponent::DisablePhysicsSimulation() -> void
 {   
     if (isPhysicsSimulationEnabled) {
-        PhysicsModuleData::GetInstance()->GetDynamicsWorls()->removeRigidBody(Body);
+        PhysicsModuleData::GetInstance()->GetDynamicsWorld()->removeRigidBody(rigidBody.Body);
         isPhysicsSimulationEnabled = false;
     }
 }

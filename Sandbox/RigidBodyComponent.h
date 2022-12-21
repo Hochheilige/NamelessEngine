@@ -6,6 +6,8 @@
 #include "SceneComponent.h"
 
 
+#include "MonoObjects/MonoPhysicsComponent.h"
+
 enum class RigidBodyType
 {
 	STATIC,
@@ -47,6 +49,8 @@ public:
 
 	RigidBodyType GetType();
 
+	MonoComponent* GetMonoComponent() override { return mMonoComponent; }
+
 	void SetMass(float mass);
 
 	void SetGravity(float gravity);
@@ -83,12 +87,15 @@ public:
 	auto EnablePhysicsSimulation() -> void;
 	auto DisablePhysicsSimulation() -> void;
 
+	static Component* Create()
+	{
+		return new RigidBodyComponent();
+	}
+
 protected:
 	btCollisionShape* Shape;
-	//btRigidBody* Body;
 	btScalar Mass;
 	btTransform PhysicsTransform;
-	//btGhostObject* Ghost;
 
 	struct RigidBody
 	{
@@ -98,6 +105,8 @@ protected:
 	
 	RigidBodyUsage Usage;
 	CollisionShapeType ShapeType;
+
+	MonoPhysicsComponent* mMonoComponent = new MonoPhysicsComponent;
 
 	// todo: do we need this? - we can query type using Body->isKinematicObject(), Body->isStaticObject()
 	RigidBodyType rbType;

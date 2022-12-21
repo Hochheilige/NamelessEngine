@@ -11,7 +11,7 @@ MovementComponent::MovementComponent()
 MovementComponent::~MovementComponent()
 {
 	
-	btDynamicsWorld* world = PhysicsModuleData::GetInstance()->GetDynamicsWorls();
+	btDynamicsWorld* world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
 	world->removeAction(btController);
 	world->removeCollisionObject(ghostObject);
 
@@ -33,7 +33,7 @@ auto MovementComponent::Init() -> void
 	auto q = t.Rotation.GetQuaterion();
 	ghostObject->setWorldTransform(btTransform(btQuaternion(q.x, q.y, q.z, q.w), 
 		btVector3(t.Position.x, t.Position.y, t.Position.z)));
-	btDynamicsWorld* collisionWorld = PhysicsModuleData::GetInstance()->GetDynamicsWorls();
+	btDynamicsWorld* collisionWorld = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
 	collisionWorld->addCollisionObject(ghostObject, btBroadphaseProxy::CharacterFilter, 
 		btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter);
 
@@ -53,7 +53,7 @@ auto MovementComponent::Update(float deltaTime) -> void {
 
 auto MovementComponent::updateAction(btScalar deltaTime) -> void
 {
-	btCollisionWorld* collisionWorld = PhysicsModuleData::GetInstance()->GetDynamicsWorls();
+	btCollisionWorld* collisionWorld = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
 	btController->updateAction(collisionWorld, deltaTime);
 }
 
@@ -64,15 +64,15 @@ inline void MovementComponent::setUp(const btVector3& up)
 
 void MovementComponent::reset()
 { 
-	btController->reset(PhysicsModuleData::GetInstance()->GetDynamicsWorls());
+	btController->reset(PhysicsModuleData::GetInstance()->GetDynamicsWorld());
 }
 
 inline void MovementComponent::preStep() {
-	btController->preStep(PhysicsModuleData::GetInstance()->GetDynamicsWorls());
+	btController->preStep(PhysicsModuleData::GetInstance()->GetDynamicsWorld());
 }
 
 inline void MovementComponent::playerStep(btScalar dt) {
-	btController->playerStep(PhysicsModuleData::GetInstance()->GetDynamicsWorls(), dt);
+	btController->playerStep(PhysicsModuleData::GetInstance()->GetDynamicsWorld(), dt);
 }
 
 
