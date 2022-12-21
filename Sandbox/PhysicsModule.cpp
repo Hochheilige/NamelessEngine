@@ -2,24 +2,7 @@
 
 PhysicsModuleData* PhysicsModuleData::instance = nullptr;
 
-void callback(btDynamicsWorld* world, btScalar timeSleep)
-{
-    auto ghostObjects = PhysicsModuleData::GetInstance()->GetGhostObjects();
-    for (const auto ghost : ghostObjects)
-    {
-        if (ghost->getNumOverlappingObjects())
-        {
-            for (int i = 0; i < ghost->getNumOverlappingObjects(); ++i)
-            {
-                // We can get object that this object overlapp with
-                // I think that we should find somehow Actors of this objects
-                // and do something that we need on this callback
-                btCollisionObject* rb = ghost->getOverlappingObject(i);
-
-            }
-        }
-    }
-}
+void callback(btDynamicsWorld* world, btScalar timeSleep);
 
 PhysicsModuleData::PhysicsModuleData()
 {

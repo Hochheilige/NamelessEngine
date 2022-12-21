@@ -3,6 +3,7 @@
 #include "MeshRenderer.h"
 #include "LineRenderer.h"
 #include "RigidBodyComponent.h"
+#include "AudioComponent.h"
 #include "RenderingSystem.h"
 
 void Actor::Update(float DeltaTime)
@@ -126,5 +127,33 @@ void Actor::UnUsePhysicsSimulation()
 
 		auto physics = PhysicsModuleData::GetInstance();
 		physics->GetDynamicsWorld()->removeRigidBody(rigid_body->GetRigidBody());
+	}
+}
+
+void Actor::Overlap()
+{
+
+}
+
+
+void callback(btDynamicsWorld* world, btScalar timeSleep)
+{
+	auto ghostObjects = PhysicsModuleData::GetInstance()->GetGhostObjects();
+	for (auto ghost : ghostObjects)
+	{
+		if (ghost->getNumOverlappingObjects())
+		{
+			auto actor = reinterpret_cast<RigidBodyComponent*>(ghost->getUserPointer())->GetOwner();
+			for (int i = 0; i < ghost->getNumOverlappingObjects(); ++i)
+			{
+				// We can get object that this object overlapp with
+				// I think that we should find somehow Actors of this objects
+				// and do something that we need on this callback
+				btCollisionObject* rb = ghost->getOverlappingObject(i);
+
+				actor->Overlap();
+
+			}
+		}
 	}
 }

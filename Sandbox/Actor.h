@@ -114,6 +114,8 @@ public:
 		return RootComponent;
 	}
 
+	void Overlap();
+
 private:
 	Actor* Parent = nullptr;
 

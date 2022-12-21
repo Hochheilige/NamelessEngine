@@ -75,6 +75,8 @@ public:
 
 	virtual auto SetTransform(const Transform& InTransform, TeleportType InTeleportType) -> void;
 
+	void Overlap();
+
 protected:
 	btCollisionShape* Shape;
 	//btRigidBody* Body;

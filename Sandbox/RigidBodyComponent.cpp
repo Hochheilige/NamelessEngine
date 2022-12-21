@@ -47,6 +47,7 @@ void RigidBodyComponent::Init()
         btDefaultMotionState* myMotionState = new btDefaultMotionState(PhysicsTransform);
         btRigidBody::btRigidBodyConstructionInfo rbInfo(Mass, myMotionState, Shape, localInertia);
         rigidBody.Body = new btRigidBody(rbInfo);
+        rigidBody.Body->setUserPointer(this);
 
         RegisterRigidBodyType();
 
@@ -59,6 +60,7 @@ void RigidBodyComponent::Init()
 
         rigidBody.Collision->setCollisionShape(Shape);
         rigidBody.Collision->setWorldTransform(PhysicsTransform);
+        rigidBody.Collision->setUserPointer(this);
         world->addCollisionObject(rigidBody.Collision);
         world->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback);
 
@@ -78,6 +80,7 @@ void RigidBodyComponent::Init()
         btDefaultMotionState* myMotionState = new btDefaultMotionState(PhysicsTransform);
         btRigidBody::btRigidBodyConstructionInfo rbInfo(Mass, myMotionState, Shape, localInertia);
         rigidBody.Body = new btRigidBody(rbInfo);
+        rigidBody.Body->setUserPointer(this);
 
         RegisterRigidBodyType();
         break;
@@ -329,3 +332,4 @@ auto RigidBodyComponent::SetTransform(const Transform& InTransform, TeleportType
         rigidBody.Collision->setWorldTransform(PhysicsTransform);
     }
 }
+

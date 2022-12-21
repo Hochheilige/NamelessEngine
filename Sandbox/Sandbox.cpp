@@ -55,10 +55,9 @@ Actor* Sandbox::CreateStaticBox(Transform transform)
 	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
 	mesh_component->SetNormalSRV(EngineContentRegistry::GetInstance()->GetBasicNormalTexSRV());
 
-	auto audio = box->AddComponent<AudioComponent>();
-	audio->Init();
-	audio->LoadSound("../Assets/test.wav", true, true);
-	audio->SetVolume(0.1);
+	//auto audio = box->AddComponent<AudioComponent>();
+	//audio->Init();
+	//audio->LoadSound("../Assets/test.wav", true, true);
 	//audio->Play("../Assets/test.wav");
 
 	return box;
@@ -348,7 +347,6 @@ void Sandbox::PrepareResources()
 				tr.Scale = Vector3(1.0f, 1.0f, 1.0f);
 				auto box = CreateDynamicBox(tr);
 				box->UsePhysicsSimulation();
-				//box->GetComponentOfClass<RigidBodyComponent>()->SetCollisionShape(CollisionShapeType::CAPSULE, Vector3(2, 5, 0));
 			}
 
 	tr.Position = Vector3(0, 0, 10);
@@ -439,13 +437,6 @@ void Sandbox::Update(float DeltaTime)
 	// TODO: base game class should do this
 	if (GetPlayState() == PlayState::Playing)
 	{ 
-		// Temporary block just to check how sound works
-		if (prevPlayState == PlayState::Editor || prevPlayState == PlayState::Paused)
-		{
-			platform->GetComponentOfClass<AudioComponent>()->Play();
-			sphere->GetComponentOfClass<AudioComponent>()->Play();
-		}
-
 		// Physics Simulation
 		auto physics = PhysicsModuleData::GetInstance();
 		physics->OnUpdate(DeltaTime);
@@ -457,7 +448,6 @@ void Sandbox::Update(float DeltaTime)
 	else
 	{
 		// Temporary block just to check how sound works
-		platform->GetComponentOfClass<AudioComponent>()->StopChannel();
 		sphere->GetComponentOfClass<AudioComponent>()->StopChannel();
 	}
 
