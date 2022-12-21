@@ -3,8 +3,7 @@
 #include <utility>
 
 #include "ComponentsEnum.h"
-#include "RigidBodyCube.h"
-#include "RigidBodySphere.h"
+#include "RigidBodyComponent.h"
 #include "SceneComponent.h"
 #include "StaticMeshRenderer.h"
 #include "LightBase.h"
@@ -55,8 +54,8 @@ void ComponentRegistry::Register(ComponentType type, const std::string& name, Fa
 void ComponentRegistry::Init()
 {
 	Register(SceneComponentType, "SceneComponent", &SceneComponent::Create);
-	Register(RigidBodySphereType, "RigidBodySphereComponent", &RigidBodySphere::Create);
-	Register(RigidBodyCubeType, "RigidBodyCubeComponent", &RigidBodyCube::Create);
+	Register(RigidBodySphereType, "RigidBodySphereComponent", &RigidBodyComponent::Create);
+	Register(RigidBodyCubeType, "RigidBodyCubeComponent", &RigidBodyComponent::Create);
 	Register(StaticMeshRendererType, "StaticMeshRenderer", &StaticMeshRenderer::Create);
 	Register(LightPointType, "PointLight", &PointLight::Create);
 	//TODO: remove mesh renderer once it's useless

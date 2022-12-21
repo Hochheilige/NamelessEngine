@@ -3,7 +3,6 @@
 #include "../Actor.h"
 #include "../MonoSystem.h"
 #include "../RigidBodyComponent.h"
-#include "../RigidBodyCube.h"
 #include "MovementComponent.h"
 #include "ComponentRegistry.h"
 

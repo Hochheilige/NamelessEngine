@@ -150,7 +150,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\mono\include\;$(SolutionDir)External\bullet3\src\;$(SolutionDir)External\assimp\include\;$(SolutionDir)DirectXTK\Include\;$(SolutionDir)GameFramework\Include\;$(SolutionDir)imgui;$(SolutionDir)External\json\include\;$(SolutionDir)External\stduuid\include\;$(SolutionDir)External\GSL\include\;$(SolutionDir)External\fmod\studio\inc;$(SolutionDir)External\fmod\core\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\mono\include\;$(SolutionDir)External\bullet3\src\;$(SolutionDir)External\bullet3\src\Bullet3Collision\;$(SolutionDir)External\assimp\include\;$(SolutionDir)DirectXTK\Include\;$(SolutionDir)GameFramework\Include\;$(SolutionDir)imgui;$(SolutionDir)External\json\include\;$(SolutionDir)External\stduuid\include\;$(SolutionDir)External\GSL\include\;$(SolutionDir)External\fmod\studio\inc;$(SolutionDir)External\fmod\core\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -238,8 +238,6 @@ xcopy "$(SolutionDir)External\mono\lib\4.5\*" "$(TargetDir)mono\lib\4.5\" /y /i 
     <ClInclude Include="PhysicsModule.h" />
     <ClInclude Include="RigidBodyComponent.h" />
     <ClInclude Include="MonoSystem.h" />
-    <ClInclude Include="RigidBodyCube.h" />
-    <ClInclude Include="RigidBodySphere.h" />
     <ClInclude Include="Sandbox.h" />
     <ClInclude Include="SceneComponent.h" />
   </ItemGroup>
@@ -257,8 +255,6 @@ xcopy "$(SolutionDir)External\mono\lib\4.5\*" "$(TargetDir)mono\lib\4.5\" /y /i 
     <ClCompile Include="PhysicsModule.cpp" />
     <ClCompile Include="RigidBodyComponent.cpp" />
     <ClCompile Include="MonoSystem.cpp" />
-    <ClCompile Include="RigidBodyCube.cpp" />
-    <ClCompile Include="RigidBodySphere.cpp" />
     <ClCompile Include="Sandbox.cpp" />
     <ClCompile Include="SceneComponent.cpp" />
     <ClCompile Include="Source.cpp" />

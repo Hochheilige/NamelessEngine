@@ -3,6 +3,8 @@
 
 PhysicsModuleData* PhysicsModuleData::instance = nullptr;
 
+void callback(btDynamicsWorld* world, btScalar timeSleep);
+
 PhysicsModuleData::PhysicsModuleData()
 {
     CollisionConfiguration = new btDefaultCollisionConfiguration();
@@ -19,6 +21,8 @@ PhysicsModuleData::PhysicsModuleData()
     );
 
     World->setGravity(btVector3(0.0f, -9.8f, 0.0f));
+
+    World->setInternalTickCallback(callback, this, true);
 }
 
 PhysicsModuleData::~PhysicsModuleData()
@@ -48,8 +52,9 @@ PhysicsModuleData* PhysicsModuleData::GetInstance()
 
 void PhysicsModuleData::OnUpdate(float deltaTime)
 {
-    if (collisionShapes.size() != 0)
-        World->stepSimulation(deltaTime);
+
+    World->stepSimulation(deltaTime);
+
 }
 
 void PhysicsModuleData::AddCollisionShape(btCollisionShape* shape)
@@ -57,7 +62,17 @@ void PhysicsModuleData::AddCollisionShape(btCollisionShape* shape)
     collisionShapes.push_back(shape);
 }
 
-btDiscreteDynamicsWorld* PhysicsModuleData::GetDynamicsWorls()
+btDiscreteDynamicsWorld* PhysicsModuleData::GetDynamicsWorld()
 {
     return World;
+}
+
+void PhysicsModuleData::AddGhostObject(btGhostObject* obj)
+{
+    ghostObjects.push_back(obj);
+}
+
+std::vector<btGhostObject*> PhysicsModuleData::GetGhostObjects()
+{
+    return ghostObjects;
 }
