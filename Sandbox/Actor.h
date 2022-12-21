@@ -126,4 +126,8 @@ private:
 	uuids::uuid id;
 	friend class Game;
 	friend class Component;
+
+
+	std::string monoClassName;
+	std::string monoNamespace;
 };

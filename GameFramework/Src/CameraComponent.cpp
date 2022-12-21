@@ -20,7 +20,7 @@ auto CameraComponent::GetPOVData() const -> const Camera&
 	return povData;
 }
 
-auto CameraComponent::UpadateAspectRatio(float newAspectRatio) -> void
+auto CameraComponent::UpdateAspectRatio(float newAspectRatio) -> void
 {
 	povData.UpdateAspectRatio(newAspectRatio);
 }

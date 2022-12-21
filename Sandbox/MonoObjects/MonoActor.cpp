@@ -5,7 +5,7 @@
 MonoActor::MonoActor(Actor* actor, const char* nameSpace, const char* className) : NameSpace(nameSpace), ClassName(className)
 {
     auto mono = MonoSystem::GetInstance();
-    auto klass = mono->FindClass(nameSpace, ClassName);
+    auto klass = mono->FindClass(nameSpace, ClassName.c_str());
     
     Owner = actor;
     void *args [1];
@@ -55,7 +55,7 @@ void MonoActor::Update(float deltaTime)
     args [0] = &deltaTime;
     
     //MonoMethod* method = mono->GetVirtualMethod("Scripts", ClassName, "Update", CsInstance);
-    MonoMethod* method = mono->GetMethod(NameSpace, ClassName, "Update");
+    MonoMethod* method = mono->GetMethod(NameSpace.c_str(), ClassName.c_str(), "Update");
     MonoObject* result = mono->InvokeInstanceMethod(method, Handle, args, nullptr);
 
 }
@@ -64,7 +64,7 @@ void MonoActor::OnBeginPlay()
 {
     auto mono = MonoSystem::GetInstance();
 
-    MonoMethod* method = mono->GetMethod(NameSpace, ClassName, "OnBeginPlay");
+    MonoMethod* method = mono->GetMethod(NameSpace.c_str(), ClassName.c_str(), "OnBeginPlay");
     MonoObject* result = mono->InvokeInstanceMethod(method, Handle, nullptr, nullptr);
 }
 
@@ -72,7 +72,7 @@ const char* MonoActor::GetInheritors()
 {
     auto mono = MonoSystem::GetInstance();
     
-    MonoMethod* method = mono->GetMethod("Scripts", ClassName, "GetInheritors");
+    MonoMethod* method = mono->GetMethod("Scripts", ClassName.c_str(), "GetInheritors");
     MonoObject* result = mono->InvokeInstanceMethod(method, Handle, nullptr, nullptr);
     auto str = mono_string_to_utf8(mono_object_to_string(result, nullptr));
     return str;
@@ -81,4 +81,14 @@ const char* MonoActor::GetInheritors()
 MonoObject* MonoActor::GetCsInstance()
 {
     return mono_gchandle_get_target (Handle);
+}
+
+const std::string& MonoActor::GetNamespace() const
+{
+    return NameSpace;
+}
+
+const std::string& MonoActor::GetClassname() const
+{
+    return ClassName;
 }

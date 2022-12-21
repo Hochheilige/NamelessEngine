@@ -17,12 +17,15 @@ public:
     
     const char* GetInheritors();
     MonoObject* GetCsInstance();
+
+    const std::string& GetNamespace() const;
+    const std::string& GetClassname() const;
 private:
     Actor* Owner;
     uint32_t Handle;
     //MonoObject* CsInstance = nullptr;
-    const char* NameSpace;
-    const char* ClassName;
+    std::string NameSpace;
+    std::string ClassName;
     const char* BaseClassName = "Actor";
     bool isWorked = false;
 };

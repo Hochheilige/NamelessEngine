@@ -6,13 +6,17 @@ namespace Scripts.Components
 {
     public class MovementComponent : Component
     {
-        public MovementComponent(Actor owner) : base(owner)
+        public MovementComponent(Actor owner, bool internalCreate) : base(owner)
         {
-            this.CppInstance = InternalCreateComponent(owner.CppInstance, (int)ComponentsEnum.MovementComponentType);
+            if (internalCreate)
+            {
+                this.CppInstance =
+                    InternalCreateComponent(owner.CppInstance, (int) ComponentsEnum.MovementComponentType);
+            }
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void InternalJump(IntPtr handle);
+        private static extern void InternalJump(IntPtr handle, Vector3 direction);
         
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void InternalSetLinearVelocity(IntPtr handle, Vector3 speed);
@@ -20,9 +24,9 @@ namespace Scripts.Components
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void InternalSetWalkDirection(IntPtr handle, Vector3 direction);
 
-        public void Jump()
+        public void Jump(Vector3 direction)
         {
-            InternalJump(CppInstance);
+            InternalJump(CppInstance, direction);
         }
 
         public void SetLinearVelocity(Vector3 speed)

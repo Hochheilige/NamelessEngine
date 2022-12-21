@@ -31,6 +31,8 @@ public:
 	json Serialize() const override;
 	void Deserialize(const json* in) override;
 
+	ComponentType GetComponentType() override;
+
 	static Component* Create()
 	{
 		return new AudioComponent();

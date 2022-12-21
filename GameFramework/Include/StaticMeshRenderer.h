@@ -21,6 +21,8 @@ public:
 
 	virtual auto Render(const RenderingSystemContext& RSContext) -> void override;
 
+	auto SetMeshPath(std::string meshPath) -> void;
+
 	ComponentType GetComponentType() override { return StaticMeshRendererType; }
 	MonoComponent* GetMonoComponent() override { return mMonoComponent; }
 

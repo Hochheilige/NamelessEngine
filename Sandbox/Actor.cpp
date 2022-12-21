@@ -111,11 +111,15 @@ void Actor::SetUuid(uuid idIn)
 
 void Actor::InitializeMonoActor(const char* className)
 {
-	mMonoActor = new MonoActor(this, "Scripts", className);
+	monoClassName = className;
+	monoNamespace = "Scripts";
+	mMonoActor = new MonoActor(this, monoNamespace.c_str(), className);
 }
 
 void Actor::InitializeMonoActor(const char* nameSpace, const char* className)
 {
+	monoClassName = className;
+	monoNamespace = nameSpace;
 	mMonoActor = new MonoActor(this, nameSpace, className);
 }
 
@@ -168,6 +172,13 @@ json Actor::Serialize() const
 
 	out["id"] = id;
 
+	if (mMonoActor != nullptr) {
+		json monoObj = json::object();
+		monoObj["namespace"] = mMonoActor->GetNamespace();
+		monoObj["class"] = mMonoActor->GetClassname();
+		out["mono"] = monoObj;
+	}
+
 	json componentArr = json::array();
 	for (auto component : Components) {
 		json wrapper = json::object();
@@ -189,6 +200,9 @@ json Actor::Serialize() const
 
 	out["components"] = componentArr;
 
+	out["mono_class_name"] = std::string(monoClassName);
+	out["mono_namespace"] = std::string(monoNamespace);
+
 	return out;
 }
 
@@ -196,10 +210,24 @@ void Actor::Deserialize(const json* in)
 {
 	assert(in->is_object());
 
+	if(in->contains("mono")) {
+		auto monoObj = in->at("mono");
+		auto namespaceStr = monoObj.at("namespace").get<std::string>();
+		auto classnameStr = monoObj.at("class").get<std::string>();
+		InitializeMonoActor(namespaceStr.c_str(), classnameStr.c_str());
+	}
+
 	auto componentArr = in->at("components");
 	assert(componentArr.is_array());
 
  	std::vector<std::pair<SceneComponent*, uuid>> shouldBeBound;
+
+	monoClassName = in->at("mono_class_name").get<std::string>();
+	monoNamespace = in->at("mono_namespace").get<std::string>();
+
+	// breaks the game((
+	/*if (monoClassName != "" && monoNamespace != "")
+		InitializeMonoActor(monoNamespace.c_str(), monoClassName.c_str());*/
 
 	for (auto wrapper : componentArr) {
 		auto id = wrapper.at("id").get<uuid>();

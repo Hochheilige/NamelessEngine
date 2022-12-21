@@ -20,6 +20,6 @@ private:
     {
         component->setLinearVelocity(velocity);
     }
-    static void jump(MovementComponent* component) { component->jump(); }
+    static void jump(MovementComponent* component, Vector3 direction) { component->jump(direction); }
     static void setWalkDirection(MovementComponent* component, Vector3 direction) { component->setWalkDirection(direction); }
 };

@@ -17,6 +17,7 @@ namespace Scripts.Tests
 
         private bool isJumpPressed = false;
         private float characterSpeed = 4.0f;
+        private Vector3 jumpDirection = new Vector3(0, 10, 0);
 
         float Pitch = 0.0f;
         float Yaw = 0.0f;
@@ -27,12 +28,13 @@ namespace Scripts.Tests
         float OrbitRadius = 10.0f;
 
 
+
         public override void Update(float deltaTime)
         {
             var inputHandler = Game.GetInstance().InputHandler;
             if (inputHandler.IsKeyDown(Keys.Space))
             {
-                if (!isJumpPressed) { mv_cmp.Jump(); }
+                if (!isJumpPressed) { mv_cmp.Jump(jumpDirection); }
                 isJumpPressed = true;
             } 
             else
@@ -44,11 +46,11 @@ namespace Scripts.Tests
 
             Vector3 movementDelta = new Vector3(0, 0, 0);
 
-            if (inputHandler.IsKeyDown(Keys.D))
+            if (inputHandler.IsKeyDown(Keys.A))
             {
                 movementDelta.X += deltaTime * characterSpeed;
             }
-            if (inputHandler.IsKeyDown(Keys.A))
+            if (inputHandler.IsKeyDown(Keys.D))
             {
                 movementDelta.X -= deltaTime * characterSpeed;
             }
@@ -99,6 +101,7 @@ namespace Scripts.Tests
 
             mat.Decompose(out Vector3 scale, out Quaternion rot, out Vector3 pos);
             camComp.SetCameraTransform(pos, rot);
+            Console.WriteLine("Update Playah: " + this.GetHashCode());
 
             Console.WriteLine(rot.Axis.ToString() + " " + rot.Angle / (float)Math.PI * 180.0f);
         }
