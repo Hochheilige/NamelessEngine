@@ -96,5 +96,7 @@ namespace Scripts
         {
             //Components.ForEach(x => x.Dispose());
         }
+
+        public virtual void Overlap() { }
     }
 }

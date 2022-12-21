@@ -48,5 +48,10 @@ namespace Scripts.Tests
                 physics.SetGravity(5f);
             }
         }
+
+        public override void Overlap() {
+            base.Overlap();
+            Console.WriteLine("Overlap here");
+        }
     }
 }

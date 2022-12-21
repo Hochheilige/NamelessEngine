@@ -14,6 +14,8 @@ public:
     void RemoveComponent(Component* component);
     void Update(float deltaTime);
     void OnBeginPlay();
+
+    void Overlap();
     
     const char* GetInheritors();
     MonoObject* GetCsInstance();

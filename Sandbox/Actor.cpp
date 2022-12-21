@@ -297,7 +297,7 @@ uuid Actor::GetId() const
 
 void Actor::Overlap()
 {
-
+	mMonoActor->Overlap();
 }
 
 

@@ -175,6 +175,7 @@ Actor* Sandbox::CreateDynamicSphere(Transform transform)
 Actor* Sandbox::CreateKinematicSphere(Transform transform)
 {
 	Actor* sphere = CreateActor<Actor>();
+	//sphere->InitializeMonoActor("Scripts.Tests", "CustomActor");
 	auto sphere_rb = sphere->AddComponent<RigidBodyComponent>();
 	sphere->SetTransform(transform);
 	sphere_rb->SetRigidBodyType(RigidBodyType::KINEMATIC);
@@ -182,7 +183,7 @@ Actor* Sandbox::CreateKinematicSphere(Transform transform)
 	sphere_rb->SetCollisionShapeType(CollisionShapeType::SPHERE);
 	sphere_rb->SetMass(1);
 	sphere_rb->Init();
-	sphere_rb->EnablePhysicsSimulation();
+	//sphere_rb->EnablePhysicsSimulation();
 	auto mesh_component = sphere->AddComponent<MeshRenderer>();
 	mesh_component->SetMeshProxy(sphereMeshProxy);
 	mesh_component->SetPixelShader(ps);
@@ -371,10 +372,10 @@ void Sandbox::PrepareResources()
 	platform = CreateStaticBox(tr);
 
 	//CreateSphereObject(3.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1, 1, 1);
-	tr.Position = Vector3(10.0f, 0.8f, 0.0f);
+	tr.Position = Vector3(0.0f, 0.8f, 0.0f);
 	tr.Rotation.SetEulerAngles(0, 0, 0);
 	tr.Scale = Vector3(1, 1, 1);
-
+	
 	for (int i = 0; i < 5; ++i)
 		for (int j = 0; j < 5; ++j)
 			for (int k = 0; k < 1; ++k)
