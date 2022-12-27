@@ -50,6 +50,8 @@
     <Compile Include="Components\RigidBodyComponent.cs" />
     <Compile Include="Components\RigidBodyCubeComponent.cs" />
     <Compile Include="Components\RigidBodySphereComponent.cs" />
+    <Compile Include="Components\StaticMeshRenderer.cs" />
+    <Compile Include="Tests\SimpleProjectile.cs" />
     <Compile Include="Tests\PlayahActor.cs" />
     <Compile Include="Tests\CustomActor.cs" />
     <Compile Include="EngineSettings.cs" />

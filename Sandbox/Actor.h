@@ -103,6 +103,8 @@ public:
 	json Serialize() const;
 	void Deserialize(const json* in, bool destructive = false);
 	uuid GetId() const;
+	void Overlap();
+
 private:
 	void OnComponentAdded(Component* component);
 	void AddOrphanComponent(Component* component);

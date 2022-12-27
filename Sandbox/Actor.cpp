@@ -4,12 +4,13 @@
 #include "LineRenderer.h"
 #include "RigidBodyComponent.h"
 #include "ComponentRegistry.h"
+#include "AudioComponent.h"
 #include "RenderingSystem.h"
 #include "UUIDGenerator.h"
 
 void Actor::Update(float DeltaTime)
 {
-	if (is_physics_enabled)
+	if (true)
 	{
 		for (auto component : Components)
 		{
@@ -110,7 +111,7 @@ void Actor::SetUuid(uuid idIn)
 
 void Actor::InitializeMonoActor(const char* className)
 {
-	InitializeMonoActor("Scripts", className);
+	mMonoActor = new MonoActor(this, "Scripts", className);
 }
 
 void Actor::InitializeMonoActor(const char* nameSpace, const char* className, bool initComponents)
@@ -287,4 +288,32 @@ void Actor::Deserialize(const json* in, bool destructive)
 uuid Actor::GetId() const
 {
 	return id;
+}
+
+void Actor::Overlap()
+{
+	mMonoActor->Overlap();
+}
+
+
+void callback(btDynamicsWorld* world, btScalar timeSleep)
+{
+	auto ghostObjects = PhysicsModuleData::GetInstance()->GetGhostObjects();
+	for (auto ghost : ghostObjects)
+	{
+		if (ghost->getNumOverlappingObjects())
+		{
+			auto actor = reinterpret_cast<RigidBodyComponent*>(ghost->getUserPointer())->GetOwner();
+			for (int i = 0; i < ghost->getNumOverlappingObjects(); ++i)
+			{
+				// We can get object that this object overlapp with
+				// I think that we should find somehow Actors of this objects
+				// and do something that we need on this callback
+				btCollisionObject* rb = ghost->getOverlappingObject(i);
+
+				actor->Overlap();
+
+			}
+		}
+	}
 }

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "btBulletDynamicsCommon.h"
+#include "BulletCollision/CollisionDispatch/btGhostObject.h"
+#include <vector>
 
 class PhysicsModuleData
 {
@@ -13,7 +15,10 @@ public:
     void OnUpdate(float deltaTime);
 
     void AddCollisionShape(btCollisionShape* shape);
-    btDiscreteDynamicsWorld* GetDynamicsWorls();
+    btDiscreteDynamicsWorld* GetDynamicsWorld();
+
+    void AddGhostObject(btGhostObject* obj);
+    std::vector<btGhostObject*> GetGhostObjects();
 
 private:
     PhysicsModuleData();
@@ -27,4 +32,5 @@ private:
     btDiscreteDynamicsWorld* World;
 
     btAlignedObjectArray<btCollisionShape*> collisionShapes;
+    std::vector<btGhostObject*> ghostObjects;
 };

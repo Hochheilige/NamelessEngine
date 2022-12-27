@@ -13,6 +13,9 @@ public:
         mono_add_internal_call("Scripts.Components.RigidBodyComponent::InternalSetMass", &SetMass);
         mono_add_internal_call("Scripts.Components.RigidBodyComponent::InternalSetGravity", &SetGravity);
         mono_add_internal_call("Scripts.Components.RigidBodyComponent::InternalSetLinearVelocity", &SetLinearVelocity);
+        mono_add_internal_call("Scripts.Components.RigidBodyComponent::InternalApplyCentralImpulse", &ApplyCentralImpulse);
+        mono_add_internal_call("Scripts.Components.RigidBodyComponent::InternalEnablePhysicsSimulation", &EnablePhysicsSimulation);
+        mono_add_internal_call("Scripts.Components.RigidBodyComponent::InternalDisablePhysicsSimulation", &DisablePhysicsSimulation);
     }
 
 private:
@@ -23,4 +26,10 @@ private:
         auto x = velocity.x;
         component->SetLinearVelocity(btVector3(velocity.x, velocity.y, velocity.z));
     }
+    static void ApplyCentralImpulse(RigidBodyComponent* component, Vector3 impulse) {
+        component->applyCentralImpulse(impulse);
+    }
+
+    static void EnablePhysicsSimulation(RigidBodyComponent* component) { component->EnablePhysicsSimulation(); }
+    static void DisablePhysicsSimulation(RigidBodyComponent* component) { component->DisablePhysicsSimulation(); }
 };

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using Scripts.Components;
 using SharpDX;
 
@@ -43,14 +44,19 @@ namespace Scripts.Tests
 
         private bool isJumpPressed = false;
         private float characterSpeed = 4.0f;
+        private Vector3 jumpDirection = new Vector3(0, 10, 0);
 
         float Pitch = 0.0f;
         float Yaw = 0.0f;
 
         float MaxPitch = 80.0f;
-        float RotSpeedYaw = 20.0f;
+        float RotSpeedYaw = 200.0f;
         float RotSpeedPitch = 200.0f;
         float OrbitRadius = 10.0f;
+
+        private float fireDelay = 0.5f;
+        private float currentFireDelay = -0.1f;
+
 
 
         public override void Update(float deltaTime)
@@ -58,7 +64,7 @@ namespace Scripts.Tests
             var inputHandler = Game.GetInstance().InputHandler;
             if (inputHandler.IsKeyDown(Keys.Space))
             {
-                if (!isJumpPressed) { mv_cmp.Jump(); }
+                if (!isJumpPressed) { mv_cmp.Jump(jumpDirection); }
                 isJumpPressed = true;
             } 
             else
@@ -66,15 +72,32 @@ namespace Scripts.Tests
                 isJumpPressed = false;
             }
 
+            // shooting 
+
+            if (currentFireDelay < 0.0f)
+            {
+                currentFireDelay = fireDelay;
+            }
+            else
+            {
+                currentFireDelay -= deltaTime;
+            }
+
+            if (currentFireDelay < 0.0f && inputHandler.IsKeyDown(Keys.F))
+            {
+                fire();
+            }
+            
+
             //Walking
 
             Vector3 movementDelta = new Vector3(0, 0, 0);
 
-            if (inputHandler.IsKeyDown(Keys.D))
+            if (inputHandler.IsKeyDown(Keys.A))
             {
                 movementDelta.X += deltaTime * characterSpeed;
             }
-            if (inputHandler.IsKeyDown(Keys.A))
+            if (inputHandler.IsKeyDown(Keys.D))
             {
                 movementDelta.X -= deltaTime * characterSpeed;
             }
@@ -130,9 +153,21 @@ namespace Scripts.Tests
             Console.WriteLine(rot.Axis.ToString() + " " + rot.Angle / (float)Math.PI * 180.0f);
         }
 
+        private void fire()
+        {
+            Bullet bullet = (Bullet)Instantiator.InstantiateActor<Bullet>();
+            bullet.SetTransform(this.GetTransform());
+            bullet.fire();
+        }
+
         public override void OnBeginPlay()
         {
             
+        }
+
+        public override void SetTransform(Transform transform)
+        {
+
         }
 
     }

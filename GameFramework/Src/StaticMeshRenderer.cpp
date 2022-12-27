@@ -87,6 +87,16 @@ auto StaticMeshRenderer::Render(const RenderingSystemContext& RSContext) -> void
 	}
 }
 
+auto StaticMeshRenderer::SetMeshPath(std::string meshPath) -> void
+{
+	SetStaticMesh(Game::GetInstance()->GetAssetManager()->LoadStaticMesh(meshPath));
+	EngineContentRegistry* content = EngineContentRegistry::GetInstance();
+	SetPixelShader(content->GetDefaultPixelShader());
+	SetVertexShader(content->GetDefaultVertexShader());
+	SetAlbedoSRV(content->GetWhiteTexSRV());
+	SetNormalSRV(content->GetBasicNormalTexSRV());
+}
+
 json StaticMeshRenderer::Serialize() const
 {
 	auto out = Renderer::Serialize();

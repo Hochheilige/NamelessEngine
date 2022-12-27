@@ -14,6 +14,16 @@ namespace Scripts.Components
         
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void InternalSetLinearVelocity(IntPtr handle, Vector3 velocity);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void InternalApplyCentralImpulse(IntPtr handle, Vector3 impulse);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void InternalEnablePhysicsSimulation(IntPtr handle);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void InternalDisablePhysicsSimulation(IntPtr handle);
+
 
         public RigidBodyComponent(Actor owner, bool internalCreate = true) : base(owner)
         {
@@ -34,5 +44,21 @@ namespace Scripts.Components
             InternalSetLinearVelocity(CppInstance, velocity);
             Console.WriteLine("Velocity worked");
         }
+
+        public void ApplyCentralImpulse(Vector3 impulse)
+        {
+            InternalApplyCentralImpulse(CppInstance, impulse);
+        }
+
+        public void EnablePhysicsSimulation()
+        {
+            InternalEnablePhysicsSimulation(CppInstance);
+        }
+
+        public void DisablePhysicsSimulation()
+        {
+            InternalDisablePhysicsSimulation(CppInstance);
+        }
+
     }
 }

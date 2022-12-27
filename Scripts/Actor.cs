@@ -79,6 +79,9 @@ namespace Scripts
                 case ComponentsEnum.CameraComponentType:
                     component = new CameraComponent(this, internalCreate);
                     break;
+                case ComponentsEnum.StaticMeshRendererType:
+                    component = new StaticMeshRenderer(this, internalCreate);
+                    break;
                 default: 
                     Console.WriteLine("Default");
                     component = new Component(this); break;
@@ -93,7 +96,7 @@ namespace Scripts
             return InternalGetTransform(CppInstance);
         }
 
-        public void SetTransform(Transform transform)
+        public virtual void SetTransform(Transform transform)
         {
             InternalSetTransform(CppInstance, transform);
         }
@@ -102,6 +105,8 @@ namespace Scripts
         {
             //Components.ForEach(x => x.Dispose());
         }
+
+        public virtual void Overlap() { }
 
         private void cpp_RegisterComponents()
         {

@@ -106,3 +106,12 @@ const std::string& MonoActor::GetClassname() const
 {
     return ClassName;
 }
+
+void MonoActor::Overlap()
+{
+    auto mono = MonoSystem::GetInstance();
+    void* args[1];
+
+    MonoMethod* method = mono->GetMethod(NameSpace.c_str(), ClassName.c_str(), "Overlap");
+    MonoObject* result = mono->InvokeInstanceMethod(method, Handle, args, nullptr);
+}
