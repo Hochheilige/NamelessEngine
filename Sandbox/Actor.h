@@ -84,7 +84,7 @@ public:
 	void SetUuid(uuid in);
 
 	void InitializeMonoActor(const char* className = "Actor");
-	void InitializeMonoActor(const char* nameSpace, const char* className);
+	void InitializeMonoActor(const char* nameSpace, const char* className, bool initComponents = true);
 
 	MonoActor* GetMonoActor() { return mMonoActor;}
 
@@ -101,7 +101,7 @@ public:
 	}
 
 	json Serialize() const;
-	void Deserialize(const json* in);
+	void Deserialize(const json* in, bool destructive = false);
 	uuid GetId() const;
 private:
 	void OnComponentAdded(Component* component);

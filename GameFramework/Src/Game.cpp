@@ -95,14 +95,14 @@ void Game::Deserialize(const json* in, bool destructive)
 		for (const auto actor : Actors) {
 			if(actor->GetId() == id) {
 				exists = true;
-				actor->Deserialize(&actorObj);
+				actor->Deserialize(&actorObj, destructive);
 			}
 		}
 
 		if(!exists) {
 			Actor* actor = CreateActor<Actor>();
 			actor->SetUuid(id);
-			actor->Deserialize(&actorObj);
+			actor->Deserialize(&actorObj, destructive);
 		}
 	}
 }

@@ -11,9 +11,14 @@ namespace Scripts.Tests
 
         public CustomActor()
         {
+        }
+
+        private protected override void RegisterComponents()
+        {
+            base.RegisterComponents();
             //AddComponent(new RigidBodyCubeComponent(this));
         }
-        
+
         public override void Update(float deltaTime)
         {
             _transform = GetTransform();

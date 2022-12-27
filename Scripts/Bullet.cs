@@ -7,7 +7,7 @@ namespace Scripts
     {
         public Bullet()
         {
-            AddComponent(new RigidBodyCubeComponent(this));
+            AddComponent((int)ComponentsEnum.RigidBodyCubeType);
         }
         
         public override void Update(float deltaTime)

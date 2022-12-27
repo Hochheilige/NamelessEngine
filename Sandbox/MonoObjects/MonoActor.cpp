@@ -20,6 +20,20 @@ MonoActor::MonoActor(Actor* actor, const char* nameSpace, const char* className)
     mono_runtime_object_init(mono_gchandle_get_target (Handle));
 }
 
+void MonoActor::RegisterComponents()
+{
+    auto mono = MonoSystem::GetInstance();
+    MonoMethod* method = MonoSystem::GetInstance()->GetMethod("Scripts", "Actor", "cpp_RegisterComponents");
+    mono->InvokeInstanceMethod(method, Handle, nullptr, nullptr);
+}
+
+void MonoActor::Init()
+{
+    auto mono = MonoSystem::GetInstance();
+    MonoMethod* method = MonoSystem::GetInstance()->GetMethod("Scripts", "Actor", "cpp_Init");
+    mono->InvokeInstanceMethod(method, Handle, nullptr, nullptr);
+}
+
 MonoActor::~MonoActor()
 {
     auto mono = MonoSystem::GetInstance();

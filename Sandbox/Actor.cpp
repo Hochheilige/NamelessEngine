@@ -110,12 +110,17 @@ void Actor::SetUuid(uuid idIn)
 
 void Actor::InitializeMonoActor(const char* className)
 {
-	mMonoActor = new MonoActor(this, "Scripts", className);
+	InitializeMonoActor("Scripts", className);
 }
 
-void Actor::InitializeMonoActor(const char* nameSpace, const char* className)
+void Actor::InitializeMonoActor(const char* nameSpace, const char* className, bool initComponents)
 {
 	mMonoActor = new MonoActor(this, nameSpace, className);
+
+	if(initComponents) {
+		mMonoActor->RegisterComponents();
+		mMonoActor->Init();
+	}
 }
 
 void Actor::OnBeginPlay()
@@ -198,7 +203,7 @@ json Actor::Serialize() const
 	return out;
 }
 
-void Actor::Deserialize(const json* in)
+void Actor::Deserialize(const json* in, bool destructive)
 {
 	assert(in->is_object());
 
@@ -206,7 +211,7 @@ void Actor::Deserialize(const json* in)
 		auto monoObj = in->at("mono");
 		auto namespaceStr = monoObj.at("namespace").get<std::string>();
 		auto classnameStr = monoObj.at("class").get<std::string>();
-		InitializeMonoActor(namespaceStr.c_str(), classnameStr.c_str());
+		InitializeMonoActor(namespaceStr.c_str(), classnameStr.c_str(), false);
 	}
 
 	auto componentArr = in->at("components");
@@ -272,6 +277,10 @@ void Actor::Deserialize(const json* in)
 		assert(false && "No parent found with provided id");
 
 		nextChild:;
+	}
+
+	if (in->contains("mono")) {
+		mMonoActor->Init();
 	}
 }
 

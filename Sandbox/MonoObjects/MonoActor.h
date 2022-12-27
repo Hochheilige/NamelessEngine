@@ -9,7 +9,9 @@ public:
     ~MonoActor();
     
     MonoActor(Actor* actor, const char* nameSpace, const char* className);
-    
+    void RegisterComponents();
+    void Init();
+
     void AddComponent(Component* component);
     void RemoveComponent(Component* component);
     void Update(float deltaTime);

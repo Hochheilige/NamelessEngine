@@ -10,9 +10,35 @@ namespace Scripts.Tests
         private MovementComponent mv_cmp;
         private CameraComponent camComp;
         public PlayahActor() {
+           
+        }
+
+        private protected override void RegisterComponents()
+        {
+            base.RegisterComponents();
             //add components here
             mv_cmp = (MovementComponent)AddComponent((int)ComponentsEnum.MovementComponentType);
             camComp = (CameraComponent)AddComponent((int)ComponentsEnum.CameraComponentType);
+        }
+
+        private protected override void Init()
+        {
+            base.Init();
+
+            foreach (var component in Components)
+            {
+
+                if (component is MovementComponent)
+                {
+                    mv_cmp = (MovementComponent) component;
+                    continue;
+                }
+
+                if (component is CameraComponent)
+                {
+                    camComp = (CameraComponent) component;
+                }
+            }
         }
 
         private bool isJumpPressed = false;

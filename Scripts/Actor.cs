@@ -23,6 +23,20 @@ namespace Scripts
         {
         }
 
+        /**
+         * Here and only here components can be properly added to the Actor.
+         * Wouldn't be called upon deserializing.
+         */
+        private protected virtual void RegisterComponents()
+        {
+            
+        }
+
+        private protected virtual void Init()
+        {
+            
+        }
+
         public void SetCppInstance(IntPtr obj)
         {
             CppInstance = obj;
@@ -70,13 +84,8 @@ namespace Scripts
                     component = new Component(this); break;
             }
 
-            AddComponent(component);
-            return component;
-        }
-
-        public void AddComponent(Component component)
-        {
             Components.Add(component);
+            return component;
         }
 
         public Transform GetTransform()
@@ -92,6 +101,16 @@ namespace Scripts
         public void Dispose()
         {
             //Components.ForEach(x => x.Dispose());
+        }
+
+        private void cpp_RegisterComponents()
+        {
+            RegisterComponents();
+        }
+        
+        private void cpp_Init()
+        {
+            Init();
         }
     }
 }
