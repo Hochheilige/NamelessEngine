@@ -227,6 +227,7 @@
     <ClInclude Include="Include\Asset.h" />
     <ClInclude Include="Include\AssetManager.h" />
     <ClInclude Include="Include\CreateCommon.h" />
+    <ClInclude Include="Include\DebugDrawer.h" />
     <ClInclude Include="Include\Delegates.h" />
     <ClInclude Include="Include\DirectoryTree.h" />
     <ClInclude Include="Include\EditorContext.h" />
@@ -282,6 +283,7 @@
     <ClCompile Include="EditorContext.cpp" />
     <ClCompile Include="Include\Renderer.cpp" />
     <ClCompile Include="Src\CameraComponent.cpp" />
+    <ClCompile Include="Src\DebugDrawer.cpp" />
     <ClCompile Include="Src\JsonSerializers.cpp" />
     <ClCompile Include="Src\ComponentRegistry.cpp" />
     <ClCompile Include="Src\MonoMovementComponent.cpp" />

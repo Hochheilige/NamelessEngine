@@ -23,6 +23,7 @@ PhysicsModuleData::PhysicsModuleData()
     World->setGravity(btVector3(0.0f, -9.8f, 0.0f));
 
     World->setInternalTickCallback(callback, this, true);
+
 }
 
 PhysicsModuleData::~PhysicsModuleData()

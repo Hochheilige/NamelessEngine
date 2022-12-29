@@ -6,6 +6,7 @@
 #include "Shader.h"
 #include "ShaderCompiler.h"
 #include "ObjectLookupHelper.h"
+#include "DebugDrawer.h"
 
 RenderingSystem::RenderingSystem(Game* InGame)
 	: MyGame(InGame)
@@ -117,6 +118,8 @@ RenderingSystem::RenderingSystem(Game* InGame)
 	ResizeViewport(InGame->GetScreenWidth(), InGame->GetScreenHeight());
 
 	MyObjectLookupHelper = new ObjectLookupHelper(this);
+
+	debugDrawer.reset(new DebugDrawer());
 }
 
 void RenderingSystem::RegisterRenderer(Renderer* InRenderer)
@@ -450,6 +453,42 @@ void RenderingSystem::PerformLightingPass(float DeltaTime)
 	}
 }
 
+void RenderingSystem::PerformDebugPass()
+{
+	ID3D11DeviceContext* context = MyGame->GetD3DDeviceContext().Get();
+
+	context->RSSetState(CullNoneRasterizerState.Get());
+	context->OMSetBlendState(OpaqueBlendState.Get(), nullptr, D3D11_DEFAULT_SAMPLE_MASK);
+	context->OMSetDepthStencilState(OpaqueDepthStencilState.Get(), 0);
+
+	// @TODO: move to function for reuse?
+	/////////////////////////////////////////////////////////////////////////////////
+	context->VSSetConstantBuffers(0, 1, PerDrawCB.GetAddressOf());
+	context->PSSetConstantBuffers(0, 1, PerDrawCB.GetAddressOf());
+
+	CBPerDraw cbData;
+	const Camera& cam = *(MyGame->GetCurrentPOV());
+	cbData.WorldToClip = cam.GetWorldToClipMatrixTransposed();
+	cbData.CameraWorldPos = cam.Transform.Position;
+	cbData.ViewToClip = cam.GetProjectionMatrixTransposed();
+	cbData.WorldToView = cam.GetViewMatrixTransposed();
+
+	D3D11_MAPPED_SUBRESOURCE resource = {};
+	auto res = context->Map(PerDrawCB.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+
+	memcpy(resource.pData, &cbData, sizeof(cbData));
+
+	context->Unmap(PerDrawCB.Get(), 0);
+	/////////////////////////////////////////////////////////////////////////////////
+
+
+	ID3D11RenderTargetView* const target = ViewportRTV.Get();
+	ID3D11RenderTargetView* views[8] = { target, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+	context->OMSetRenderTargets(8, views, DepthStencilView.Get());
+
+	debugDrawer->Render();
+}
+
 void RenderingSystem::HandleScreenResize(const Vector2& NewSize)
 {
 	if (NewSize.x < 1 || NewSize.y < 1)
@@ -499,9 +538,10 @@ void RenderingSystem::Draw(float DeltaTime, const Camera* InCamera)
 
 	PerformShadowmapPass();
 
-	// @TODO: uncomment this
 	PerformOpaquePass(DeltaTime);
 	PerformLightingPass(DeltaTime);
+
+	PerformDebugPass();
 
 	//PerformForwardOpaquePass();
 

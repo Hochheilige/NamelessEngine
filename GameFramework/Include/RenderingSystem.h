@@ -1,12 +1,14 @@
 #pragma once
 
 #include <wrl/client.h>
+using namespace Microsoft::WRL;
+
+#include <memory>
 
 #include "MathInclude.h"
 #include "GBuffer.h"
 #include "RenderingSystemTypes.h"
 
-using namespace Microsoft::WRL;
 
 class Actor;
 class Camera;
@@ -15,6 +17,7 @@ class LightBase;
 class ObjectLookupHelper;
 class PixelShader;
 class Renderer;
+class DebugDrawer;
 
 class RenderingSystem
 {
@@ -41,6 +44,8 @@ public:
 
 	auto GetWorldPositionUnerScreenPosition(const Vector2& Pos)->Vector3;
 
+	auto GetDebugDrawer() const -> DebugDrawer* { return debugDrawer.get(); }
+
 private:
 
 	void PerformShadowmapPass();
@@ -49,6 +54,8 @@ private:
 
 	void PerformOpaquePass(float DeltaTime);
 	void PerformLightingPass(float DeltaTime);
+
+	void PerformDebugPass();
 
 	void ResizeViewport(int Width, int Height);
 
@@ -98,6 +105,8 @@ private:
 	Vector2 ViewportSize;
 
 	ObjectLookupHelper* MyObjectLookupHelper = nullptr;
+
+	std::unique_ptr<DebugDrawer> debugDrawer;
 private:
 
 	void SetScreenSizeViewport();

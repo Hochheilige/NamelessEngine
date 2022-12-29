@@ -27,6 +27,8 @@
 
 #include "CameraComponent.h"
 
+#include "DebugDrawer.h"
+
 
 Game* Game::Instance = nullptr;
 
@@ -54,6 +56,8 @@ void Game::InitializeInternal()
 
 	assetManager.reset(new AssetManager());
 	assetManager->Initialize();
+
+	PhysicsModuleData::GetInstance()->GetDynamicsWorld()->setDebugDrawer(MyRenderingSystem->GetDebugDrawer());
 
 	PrepareResources();
 
@@ -352,6 +356,8 @@ void Game::UpdateInternal(float DeltaTime)
 	}
 	
 	Update(DeltaTime);
+
+	PhysicsModuleData::GetInstance()->GetDynamicsWorld()->debugDrawWorld();
 }
 
 void Game::Update(float DeltaTime)

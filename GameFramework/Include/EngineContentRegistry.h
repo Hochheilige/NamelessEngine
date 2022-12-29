@@ -68,6 +68,16 @@ public:
 		return DefaultVertexShader;
 	}
 
+	auto GetPosColorVertexShader() const -> VertexShader*
+	{
+		return PosColorVertexShader;
+	}
+
+	auto GetPosColorPixelShader() const -> PixelShader*
+	{
+		return PosColorPixelShader;
+	}
+
 private:
 
 	typedef Actor* (EngineContentRegistry::*CreateFuncType)(const Transform& transform);
@@ -98,4 +108,7 @@ private:
 
 	VertexShader* DefaultVertexShader;
 	PixelShader* DefaultPixelShader;
+
+	VertexShader* PosColorVertexShader;
+	PixelShader* PosColorPixelShader;
 };

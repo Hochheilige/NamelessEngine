@@ -49,6 +49,18 @@ EngineContentRegistry::EngineContentRegistry(Game* InGame)
 	sc.SetTarget("ps_5_0");
 
 	DefaultPixelShader = sc.CreateShader<PixelShader>();
+
+	sc.SetPathToShader(L"../Shaders/MyVeryFirstShader.hlsl");
+	sc.SetEntryPoint("VSMain");
+	sc.SetTarget("vs_5_0");
+
+	PosColorVertexShader = sc.CreateShader<SimpleVertexShader>();
+
+	sc.SetEntryPoint("PSMain");
+	sc.SetTarget("ps_5_0");
+
+	PosColorPixelShader = sc.CreateShader<PixelShader>();
+
 #pragma endregion Create Shaders
 
 
