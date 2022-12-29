@@ -31,14 +31,15 @@ auto MovementComponent::Init() -> void
 	ghostObject->setCollisionShape(characterCapsule);
 	Transform t = GetTransform();
 	auto q = t.Rotation.GetQuaterion();
-	ghostObject->setWorldTransform(btTransform(btQuaternion(q.x, q.y, q.z, q.w), 
-		btVector3(t.Position.x, t.Position.y, t.Position.z)));
 	btDynamicsWorld* collisionWorld = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
 	collisionWorld->addCollisionObject(ghostObject, btBroadphaseProxy::CharacterFilter, 
 		btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter);
 
 	btController = new btKinematicCharacterController(ghostObject, characterCapsule, stepHeight, btVector3(up.x, up.y, up.z));
 	collisionWorld->addAction(btController);
+
+	btController->getGhostObject()->setWorldTransform(btTransform(btQuaternion(q.x, q.y, q.z, q.w),
+		btVector3(t.Position.x, t.Position.y, t.Position.z)));
 }
 
 auto MovementComponent::Update(float deltaTime) -> void {
@@ -46,7 +47,7 @@ auto MovementComponent::Update(float deltaTime) -> void {
 	Transform tr = GetTransform();
 	tr.Position = { bttr.getOrigin().x(),bttr.getOrigin().y(), bttr.getOrigin().z() };
 	tr.Rotation = Quaternion(bttr.getRotation());
-	SetTransform(tr);
+	SceneComponent::SetTransform(tr);
 }
 
 ///btActionInterface interface
@@ -73,6 +74,22 @@ inline void MovementComponent::preStep() {
 
 inline void MovementComponent::playerStep(btScalar dt) {
 	btController->playerStep(PhysicsModuleData::GetInstance()->GetDynamicsWorld(), dt);
+}
+
+auto MovementComponent::SetTransform(const Transform& InTransform, TeleportType InTeleportType) -> void
+{
+	SceneComponent::SetTransform(InTransform, InTeleportType);
+
+	Transform t = GetTransform();
+	auto q = t.Rotation.GetQuaterion();
+
+	btController->getGhostObject()->setWorldTransform(btTransform(btQuaternion(q.x, q.y, q.z, q.w),
+		btVector3(t.Position.x, t.Position.y, t.Position.z)));
+
+	if (InTeleportType == TeleportType::ResetPhysics)
+	{
+		reset();
+	}
 }
 
 

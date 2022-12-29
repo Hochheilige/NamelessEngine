@@ -111,6 +111,7 @@ public:
 	void setUpInterpolate(bool value) { btController->setUpInterpolate(value); }
 
 
+	virtual auto SetTransform(const Transform& InTransform, TeleportType InTeleportType) -> void;
 
 
 private:
@@ -122,7 +123,7 @@ private:
 	btPairCachingGhostObject* ghostObject = nullptr;
 
 	btScalar stepHeight = 0.2f;
-	Vector3 up = { 1.0f, 0.0f, 0.0f };
+	Vector3 up = { 0.0f, 1.0f, 0.0f };
 
 	MonoMovementComponent* mMonoComponent = new MonoMovementComponent;
 };
