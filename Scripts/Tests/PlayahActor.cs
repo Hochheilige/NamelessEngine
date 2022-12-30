@@ -57,6 +57,8 @@ namespace Scripts.Tests
         private float fireDelay = 0.5f;
         private float currentFireDelay = -0.1f;
 
+        private Transform cameraTransform;
+
 
 
         public override void Update(float deltaTime)
@@ -89,28 +91,9 @@ namespace Scripts.Tests
             }
             
 
-            //Walking
+            
 
-            Vector3 movementDelta = new Vector3(0, 0, 0);
 
-            if (inputHandler.IsKeyDown(Keys.A))
-            {
-                movementDelta.X += deltaTime * characterSpeed;
-            }
-            if (inputHandler.IsKeyDown(Keys.D))
-            {
-                movementDelta.X -= deltaTime * characterSpeed;
-            }
-            if (inputHandler.IsKeyDown(Keys.W))
-            {
-                movementDelta.Z += deltaTime * characterSpeed;
-            }
-            if (inputHandler.IsKeyDown(Keys.S))
-            {
-                movementDelta.Z -= deltaTime * characterSpeed;
-            }
-
-            mv_cmp.SetWalkDirection(movementDelta);
             float deltaX = 0.0f;
             float deltaY = 0.0f;
             // TODO: use mouse data when it has been added to C#
@@ -147,10 +130,44 @@ namespace Scripts.Tests
                 Matrix.Translation(GetTransform().Position);
 
             mat.Decompose(out Vector3 scale, out Quaternion rot, out Vector3 pos);
+            cameraTransform.Position = pos;
+            cameraTransform.Rotation = rot;
+            cameraTransform.Scale = scale;
             camComp.SetCameraTransform(pos, rot);
-            Console.WriteLine("Update Playah: " + this.GetHashCode());
 
-            Console.WriteLine(rot.Axis.ToString() + " " + rot.Angle / (float)Math.PI * 180.0f);
+            //Walking
+
+            Vector3 movementDelta = new Vector3(0, 0, 0);
+            Matrix moveMat = Matrix.RotationQuaternion(cameraTransform.Rotation);
+            Vector3 right = moveMat.Right;
+            Vector3 forward = Vector3.Cross(right, new Vector3(0, 1, 0));
+
+            float forwardInput = 0.0f;
+            float rightInput = 0.0f;
+
+            if (inputHandler.IsKeyDown(Keys.W))
+            {
+                forwardInput += deltaTime * characterSpeed;
+            }
+            if (inputHandler.IsKeyDown(Keys.S))
+            {
+                forwardInput -= deltaTime * characterSpeed;
+            }
+            if (inputHandler.IsKeyDown(Keys.D))
+            {
+                rightInput += deltaTime * characterSpeed;
+            }
+            if (inputHandler.IsKeyDown(Keys.A))
+            {
+                rightInput -= deltaTime * characterSpeed;
+            }
+
+            
+            movementDelta += right * rightInput;
+            movementDelta -= forward * forwardInput;
+
+            mv_cmp.SetWalkDirection(movementDelta);
+
         }
 
         private void fire()
