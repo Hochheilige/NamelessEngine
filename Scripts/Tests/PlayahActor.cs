@@ -1,7 +1,6 @@
 ﻿using System;
-using System.IO;
-using System.Runtime.InteropServices;
 using Scripts.Components;
+using Scripts.Engine;
 using SharpDX;
 
 namespace Scripts.Tests
@@ -16,30 +15,13 @@ namespace Scripts.Tests
 
         private protected override void RegisterComponents()
         {
-            base.RegisterComponents();
             //add components here
-            mv_cmp = (MovementComponent)AddComponent((int)ComponentsEnum.MovementComponentType);
-            camComp = (CameraComponent)AddComponent((int)ComponentsEnum.CameraComponentType);
         }
 
         private protected override void Init()
         {
-            base.Init();
-
-            foreach (var component in Components)
-            {
-
-                if (component is MovementComponent)
-                {
-                    mv_cmp = (MovementComponent) component;
-                    continue;
-                }
-
-                if (component is CameraComponent)
-                {
-                    camComp = (CameraComponent) component;
-                }
-            }
+            mv_cmp = AddComponent<MovementComponent>("MovementComponent");
+            camComp = AddComponent<CameraComponent>("CameraComponent");
         }
 
         private bool isJumpPressed = false;
@@ -76,11 +58,7 @@ namespace Scripts.Tests
 
             // shooting 
 
-            if (currentFireDelay < 0.0f)
-            {
-                currentFireDelay = fireDelay;
-            }
-            else
+            if (currentFireDelay >= 0.0f)
             {
                 currentFireDelay -= deltaTime;
             }
@@ -89,10 +67,6 @@ namespace Scripts.Tests
             {
                 fire();
             }
-            
-
-            
-
 
             float deltaX = 0.0f;
             float deltaY = 0.0f;
@@ -172,9 +146,11 @@ namespace Scripts.Tests
 
         private void fire()
         {
-            Bullet bullet = (Bullet)Instantiator.InstantiateActor<Bullet>();
+            Bullet bullet = Instantiator.InstantiateActor<Bullet>();
             bullet.SetTransform(this.GetTransform());
             bullet.fire();
+
+            currentFireDelay = fireDelay;
         }
 
         public override void OnBeginPlay()

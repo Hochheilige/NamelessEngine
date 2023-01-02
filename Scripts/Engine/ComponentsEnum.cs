@@ -1,0 +1,44 @@
+﻿using System;
+using Scripts.Components;
+
+namespace Scripts.Engine
+{
+    public enum ComponentType
+    {
+        Undefined = -1,
+
+        [ComponentType(typeof(MeshRendererComponent))]
+        MeshRendererType = 1,
+
+        [ComponentType(typeof(StaticMeshRenderer))]
+        StaticMeshRendererType,
+
+        [ComponentType(typeof(RigidBodyCubeComponent))]
+        RigidBodyCubeType,
+
+        [ComponentType(typeof(RigidBodySphereComponent))]
+        RigidBodySphereType,
+
+        LightPointType,
+
+        SceneComponentType,
+
+        [ComponentType(typeof(MovementComponent))]
+        MovementComponentType,
+
+        AudioComponentType,
+
+        [ComponentType(typeof(CameraComponent))]
+        CameraComponentType
+    }
+    
+    internal class ComponentTypeAttribute : Attribute
+    {
+        public Type Type { get; }
+
+        public ComponentTypeAttribute(Type type)
+        {
+            Type = type;
+        }
+    }
+}

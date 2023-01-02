@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Scripts.Components;
+using Scripts.Engine;
+using Scripts.Extensions;
 
 namespace Scripts
 {
@@ -40,15 +43,21 @@ namespace Scripts
         public void SetCppInstance(IntPtr obj)
         {
             CppInstance = obj;
+            Game.GetInstance().AddActor(this);
         }
         
         public virtual void OnBeginPlay() { }
         
         public virtual void Update(float deltaTime) { }
         
-        public Component AddComponent(int componentType)
+        public Component AddComponent(ComponentType componentType)
         {
-            return CreateComponent(componentType, true);
+            return CreateComponent((int)componentType, true);
+        }
+
+        protected T AddComponent<T>(string name = null) where T : Component
+        {
+            return CreateComponent((int)ComponentHelper.GetEnumValueFromType<T>(), true, name) as T;
         }
 
         private Component AddExternalComponent(int componentType)
@@ -56,37 +65,43 @@ namespace Scripts
             return CreateComponent(componentType, false);
         }
 
-        private Component CreateComponent(int componentType, bool internalCreate)
+        private Component CreateComponent(int componentType, bool internalCreate, string name = null)
         {
-            ComponentsEnum type = (ComponentsEnum) componentType;
+            ComponentType type = (ComponentType) componentType;
             //Console.WriteLine("Component type to add " + type);
             
             Component component = default;
             switch (type)
             {
-                case ComponentsEnum.AudioComponentType:
-                    component = new AudioComponent(this);
-                    break;
-                case ComponentsEnum.RigidBodyCubeType:
+                case ComponentType.RigidBodyCubeType:
                     component = new RigidBodyCubeComponent(this, internalCreate);
                     break;
-                case ComponentsEnum.RigidBodySphereType:
+                case ComponentType.RigidBodySphereType:
                     component = new RigidBodySphereComponent(this, internalCreate);
                     break;
-                case ComponentsEnum.MovementComponentType:
+                case ComponentType.MovementComponentType:
                     component = new MovementComponent(this, internalCreate);
                     break;
-                case ComponentsEnum.CameraComponentType:
+                case ComponentType.CameraComponentType:
                     component = new CameraComponent(this, internalCreate);
                     break;
-                case ComponentsEnum.StaticMeshRendererType:
+                case ComponentType.StaticMeshRendererType:
                     component = new StaticMeshRenderer(this, internalCreate);
                     break;
                 default: 
                     Console.WriteLine("Default");
-                    component = new Component(this); break;
+                    throw new Exception("Undefined Component");
             }
 
+            component.Name = name ?? component.GetHashCode().ToString();
+            
+            var intComp = Components.FirstOrDefault(x => x.Name == component.Name);
+            
+            if (intComp != null)
+            {
+                return intComp;
+            }
+            
             Components.Add(component);
             return component;
         }
@@ -106,8 +121,13 @@ namespace Scripts
             //Components.ForEach(x => x.Dispose());
         }
 
-        public virtual void Overlap() { }
+        protected virtual void Overlap() { }
 
+        internal virtual void OnGUI()
+        {
+            Console.WriteLine("Base");
+        }
+        
         private void cpp_RegisterComponents()
         {
             RegisterComponents();

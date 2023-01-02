@@ -55,10 +55,13 @@ auto DebugDrawer::Render() -> void
 	CBPerObject cbData;
 	cbData.ObjectToWorld = Matrix::Identity;
 
+	// todo: use MapGuard to avoid issues with forgetting to unmap the resource in the future
 	D3D11_MAPPED_SUBRESOURCE resource = {};
 	auto res = context->Map(game->GetPerObjectConstantBuffer().Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
 
 	memcpy(resource.pData, &cbData, sizeof(cbData));
+
+	context->Unmap(game->GetPerObjectConstantBuffer().Get(), 0);
 
 	// context->PSSetConstantBuffers(2, 1, game->GetPerObjectConstantBuffer().GetAddressOf()); // prolly don't need that here
 	context->VSSetConstantBuffers(2, 1, game->GetPerObjectConstantBuffer().GetAddressOf());

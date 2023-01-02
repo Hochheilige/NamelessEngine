@@ -1,6 +1,6 @@
 ﻿using SharpDX;
 
-namespace Scripts
+namespace Scripts.Engine
 {
     public struct Transform
     {

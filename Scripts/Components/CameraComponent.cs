@@ -1,16 +1,17 @@
 ﻿using System.Runtime.CompilerServices;
 using System;
+using Scripts.Engine;
 using SharpDX;
 
 namespace Scripts.Components
 {
-    public class CameraComponent : Component
+    public sealed class CameraComponent : Component
     {
         public CameraComponent(Actor owner, bool internalCreate) : base(owner)
         {
             if (internalCreate)
             {
-                this.CppInstance = InternalCreateComponent(owner.CppInstance, (int) ComponentsEnum.CameraComponentType);
+                this.CppInstance = InternalCreateComponent(owner.CppInstance, (int) ComponentType.CameraComponentType);
             }
         }
 

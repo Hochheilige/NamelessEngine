@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-
 using ImGuiNET;
 using imnodesNET;
 using Scripts.BehaviorTree;
+using Scripts.Engine;
 
 namespace Scripts
 {
     public class Game
     {
+        private List<Actor> actors = new List<Actor>();
+        
         private static Game _instance;
 
         public readonly InputHandler InputHandler = new InputHandler();
@@ -46,6 +45,19 @@ namespace Scripts
 
             return _instance;
         }
+
+        public IEnumerable<T> GetActorsOfClass<T>()
+        {
+            var objs = actors.Where(x => x.GetType() == typeof(T)).ToList();
+            if (objs.Any())
+            {
+                return objs.Cast<T>();
+            }
+
+            return new List<T>();
+        }
+
+        public void AddActor(Actor actor) { actors.Add(actor); }
 
         /**
          * Called upon start

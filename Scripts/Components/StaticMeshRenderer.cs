@@ -4,15 +4,16 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Scripts.Engine;
 
 namespace Scripts.Components
 {
-    internal class StaticMeshRenderer : Component
+    internal sealed class StaticMeshRenderer : Component
     {
         public StaticMeshRenderer(Actor owner, bool internalCreate) : base (owner)
         {
             if (internalCreate)
-                this.CppInstance = InternalCreateComponent(owner.CppInstance, (int)ComponentsEnum.StaticMeshRendererType);
+                this.CppInstance = InternalCreateComponent(owner.CppInstance, (int)ComponentType.StaticMeshRendererType);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]

@@ -25,9 +25,7 @@ namespace Scripts.Components
         private static extern void InternalDisablePhysicsSimulation(IntPtr handle);
 
 
-        public RigidBodyComponent(Actor owner, bool internalCreate = true) : base(owner)
-        {
-        }
+        protected RigidBodyComponent(Actor owner, bool internalCreate = true) : base(owner) { }
 
         public void SetMass(float mass)
         {
@@ -42,7 +40,7 @@ namespace Scripts.Components
         public void SetLinearVelocity(Vector3 velocity)
         {
             InternalSetLinearVelocity(CppInstance, velocity);
-            Console.WriteLine("Velocity worked");
+            //Console.WriteLine("Velocity worked");
         }
 
         public void ApplyCentralImpulse(Vector3 impulse)

@@ -1,17 +1,18 @@
 ﻿using System.Runtime.CompilerServices;
 using System;
+using Scripts.Engine;
 using SharpDX;
 
 namespace Scripts.Components
 {
-    public class MovementComponent : Component
+    public sealed class MovementComponent : Component
     {
         public MovementComponent(Actor owner, bool internalCreate) : base(owner)
         {
             if (internalCreate)
             {
                 this.CppInstance =
-                    InternalCreateComponent(owner.CppInstance, (int) ComponentsEnum.MovementComponentType);
+                    InternalCreateComponent(owner.CppInstance, (int) ComponentType.MovementComponentType);
             }
         }
 
