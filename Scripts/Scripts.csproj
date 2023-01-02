@@ -42,6 +42,10 @@
   <ItemGroup>
     <Compile Include="Actor.cs" />
     <Compile Include="AudioComponent.cs" />
+    <Compile Include="BehaviorTree\BehaviorTreeEditor.cs" />
+    <Compile Include="BehaviorTree\Selector.cs" />
+    <Compile Include="BehaviorTree\Sequence.cs" />
+    <Compile Include="BehaviorTree\Task.cs" />
     <Compile Include="Bullet.cs" />
     <Compile Include="ComponentsEnum.cs" />
     <Compile Include="Components\CameraComponent.cs" />
@@ -77,6 +81,10 @@
     <Reference Include="SharpDX.Mathematics, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.Mathematics.4.2.0\lib\net45\SharpDX.Mathematics.dll</HintPath>
     </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.4.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -86,11 +94,21 @@
       <Project>{d9679d15-cb53-48a2-b9a8-65e0f7045bba}</Project>
       <Name>ImGui.NET</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ImGui.NET\ImNodes.NET\ImNodes.NET.csproj">
+      <Project>{f1234464-3151-419c-a206-17ec265e10f9}</Project>
+      <Name>ImNodes.NET</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ContentWithTargetPath Include="../deps/cimgui/win-x64/cimgui.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <TargetPath>cimgui.dll</TargetPath>
+    </ContentWithTargetPath>
+  </ItemGroup>
+  <ItemGroup>
+    <ContentWithTargetPath Include="../deps/cimgui/win-x64/cimnodes.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>cimnodes.dll</TargetPath>
     </ContentWithTargetPath>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

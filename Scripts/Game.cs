@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 using ImGuiNET;
+using imnodesNET;
+using Scripts.BehaviorTree;
 
 namespace Scripts
 {
@@ -16,6 +18,8 @@ namespace Scripts
         public readonly InputHandler InputHandler = new InputHandler();
 
         public readonly EngineSettings EngineSettings;
+
+        private BehaviorTreeEditor btEditor = new BehaviorTreeEditor();
 
 
         internal Game()
@@ -49,6 +53,8 @@ namespace Scripts
         internal virtual void OnLoad()
         {
             Console.WriteLine("Hello!");
+            
+
         }
 
         /**
@@ -80,11 +86,12 @@ namespace Scripts
                 return;
             }
             else
-            {
-                ImGui.Begin("Testing testing c# window incoming");
-                ImGui.Text("I came from C#!!!");
-                //
-                ImGui.End();
+            {   
+                btEditor.Draw();
+                //ImGui.Begin("Testing testing c# window incoming");
+                //ImGui.Text("I came from C#!!!");
+                ////
+                //ImGui.End();
             }
         }
 
@@ -93,6 +100,13 @@ namespace Scripts
             ImGui.SetCurrentContext(contextPtr);
 
             ImGui.SetAllocatorFunctions(allocFunc, freeFunc, userData);
+
+            //init imnodes
+            imnodes.SetImGuiContext(contextPtr);
+            imnodes.Initialize();
+
+            //for fun
+            btEditor.Init();
         }
 
         /**

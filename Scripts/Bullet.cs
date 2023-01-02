@@ -13,9 +13,36 @@ namespace Scripts
 
         private float lifespan = 4.0f;
         private Vector3 initialSpeed = new Vector3(10.0f, 10.0f, 10.0f);
-      
+
         public Bullet()
         {
+
+        }
+
+        private protected override void Init()
+        {
+            base.Init();
+
+            foreach (var component in Components)
+            {
+
+                if (component is RigidBodyComponent)
+                {
+                    rigidbody = (RigidBodyComponent)component;
+                    continue;
+                }
+
+                if (component is StaticMeshRenderer)
+                {
+                    renderer = (StaticMeshRenderer)component;
+                }
+            }
+        }
+
+        private protected override void RegisterComponents()
+        {
+            base.RegisterComponents();
+            //add components here
             rigidbody = (RigidBodyComponent)AddComponent((int)ComponentsEnum.RigidBodyCubeType);
             rigidbody.EnablePhysicsSimulation();
             //mv_cmp = (MovementComponent)AddComponent((int)ComponentsEnum.MovementComponentType);
@@ -26,7 +53,7 @@ namespace Scripts
             renderer = (StaticMeshRenderer)AddComponent((int)ComponentsEnum.StaticMeshRendererType);
             renderer.SetMeshPath("../Assets/box.fbx/Cube");
         }
-        
+
         public override void Update(float deltaTime)
         {
             lifespan -= deltaTime;
@@ -35,7 +62,7 @@ namespace Scripts
             if (lifespan < 0.0f)
             {
                 
-                this.Dispose();
+                //this.Dispose();
             }
             //Move();
         }

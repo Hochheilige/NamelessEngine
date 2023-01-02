@@ -10,6 +10,119 @@
                         "shape_type": 0,
                         "transform": {
                             "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        "type": 0,
+                        "usage": 0
+                    },
+                    "id": "f5aaf4bd-80d5-487a-84ad-1db6148c7753",
+                    "name": "RigidBodyCubeComponent"
+                },
+                {
+                    "data": {
+                        "mesh_path": "../Assets/box.fbx/Cube",
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "bc624c96-1838-4668-bd8b-2e2c72bae5fc",
+                    "name": "StaticMeshRenderer",
+                    "parent": "f5aaf4bd-80d5-487a-84ad-1db6148c7753"
+                },
+                {
+                    "data": {
+                        "mass": 0.0,
+                        "need_physics": false,
+                        "physics_simulation": true,
+                        "shape_type": 0,
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        "type": 0,
+                        "usage": 0
+                    },
+                    "id": "7bb0cbb4-5432-4d7f-b0f7-4fcc4ef6215d",
+                    "name": "RigidBodyCubeComponent",
+                    "parent": "f5aaf4bd-80d5-487a-84ad-1db6148c7753"
+                },
+                {
+                    "data": {
+                        "mesh_path": "../Assets/box.fbx/Cube",
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "248283c4-d98e-43b6-a7fa-9e6495fc37c4",
+                    "name": "StaticMeshRenderer",
+                    "parent": "7bb0cbb4-5432-4d7f-b0f7-4fcc4ef6215d"
+                },
+                {
+                    "data": {
+                        "mass": 0.0,
+                        "need_physics": false,
+                        "physics_simulation": true,
+                        "shape_type": 0,
+                        "transform": {
+                            "pos": [
                                 3.8763198852539063,
                                 6.103515625e-05,
                                 -5.593106269836426
@@ -30,7 +143,8 @@
                         "usage": 0
                     },
                     "id": "956079e8-6b6b-4197-8aa2-381718e0a55a",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyCubeComponent",
+                    "parent": "7bb0cbb4-5432-4d7f-b0f7-4fcc4ef6215d"
                 },
                 {
                     "data": {
@@ -316,7 +430,7 @@
                             "scale": [
                                 20.0,
                                 0.5,
-                                20.0
+                                36.29999923706055
                             ]
                         },
                         "type": 0,
