@@ -40,14 +40,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Actor.cs" />
-    <Compile Include="AudioComponent.cs" />
     <Compile Include="BehaviorTree\BehaviorTreeEditor.cs" />
     <Compile Include="BehaviorTree\Selector.cs" />
     <Compile Include="BehaviorTree\Sequence.cs" />
     <Compile Include="BehaviorTree\Task.cs" />
-    <Compile Include="Bullet.cs" />
-    <Compile Include="ComponentsEnum.cs" />
     <Compile Include="Components\CameraComponent.cs" />
     <Compile Include="Components\Component.cs" />
     <Compile Include="Components\MeshRendererComponent.cs" />
