@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Scripts.Components;
 using Scripts.Engine;
@@ -92,7 +93,15 @@ namespace Scripts
                     throw new Exception("Undefined Component");
             }
 
-            component.Name = name ?? Guid.NewGuid().ToString();
+            component.Name = name ?? component.GetHashCode().ToString();
+            
+            var intComp = Components.FirstOrDefault(x => x.Name == component.Name);
+            
+            if (intComp != null)
+            {
+                return intComp;
+            }
+            
             Components.Add(component);
             return component;
         }
