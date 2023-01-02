@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Linq;
 using Scripts.Components;
+using Scripts.Tests;
 using SharpDX;
 
 namespace Scripts
 {
     public class Bullet : Actor
     {
-
         private StaticMeshRenderer renderer;
         private MovementComponent mv_cmp;
         private RigidBodyComponent rigidbody;
@@ -16,25 +17,25 @@ namespace Scripts
       
         public Bullet()
         {
-            rigidbody = (RigidBodyComponent)AddComponent((int)ComponentsEnum.RigidBodyCubeType);
+            //rigidbody = (RigidBodyComponent)AddComponent(ComponentType.RigidBodyCubeType);
+            rigidbody = AddComponent<RigidBodyCubeComponent>();
             rigidbody.EnablePhysicsSimulation();
             //mv_cmp = (MovementComponent)AddComponent((int)ComponentsEnum.MovementComponentType);
             // add a simple rigid body instead and activate physics after a slight offset to avoid collision with playah
             // gotta add the ability to activate/deactivate physics from here
             // and set impulse
 
-            renderer = (StaticMeshRenderer)AddComponent((int)ComponentsEnum.StaticMeshRendererType);
+            //renderer = (StaticMeshRenderer)AddComponent(ComponentType.StaticMeshRendererType);
+            renderer = AddComponent<StaticMeshRenderer>();
             renderer.SetMeshPath("../Assets/box.fbx/Cube");
         }
         
         public override void Update(float deltaTime)
         {
             lifespan -= deltaTime;
-            
 
             if (lifespan < 0.0f)
             {
-                
                 this.Dispose();
             }
             //Move();
@@ -46,6 +47,11 @@ namespace Scripts
             //rigidbody.ApplyCentralImpulse(initialSpeed);
 
             //mv_cmp.Jump(initialSpeed);
+        }
+
+        internal override void OnGUI()
+        {
+            
         }
 
         public void fire()

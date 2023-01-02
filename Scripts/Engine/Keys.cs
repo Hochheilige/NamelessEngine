@@ -1,4 +1,4 @@
-﻿namespace Scripts
+﻿namespace Scripts.Engine
 {
   //[TypeConverter(typeof(KeysConverter))]
   public enum Keys {

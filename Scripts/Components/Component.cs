@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using Scripts.Engine;
 
 namespace Scripts
 {
-    public class Component : IDisposable
+    public abstract class Component : IDisposable
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern IntPtr InternalCreateComponent(IntPtr actor, int componentType);
+        protected static extern IntPtr InternalCreateComponent(IntPtr actor, int componentType);
         
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern Transform InternalGetTransform(IntPtr handle);
@@ -14,17 +15,18 @@ namespace Scripts
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void InternalSetTransform(IntPtr handle, Transform transform);
 
-        public Actor Owner { get; set; }
+        private Actor Owner { get; set; }
         
         public Transform Transform;
-        public IntPtr CppInstance;
+        protected IntPtr CppInstance;
+        public string Name;
 
-        public Component(Actor owner)
+        protected Component(Actor owner)
         {
             Owner = owner;
         }
 
-        public void SetCppInstance(IntPtr obj)
+        private void SetCppInstance(IntPtr obj)
         {
             CppInstance = obj;
         }

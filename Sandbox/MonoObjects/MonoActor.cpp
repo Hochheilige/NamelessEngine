@@ -78,8 +78,15 @@ void MonoActor::OnBeginPlay()
 {
     auto mono = MonoSystem::GetInstance();
 
-    MonoMethod* method = mono->GetMethod(NameSpace.c_str(), ClassName.c_str(), "OnBeginPlay");
-    MonoObject* result = mono->InvokeInstanceMethod(method, Handle, nullptr, nullptr);
+    MonoMethod* onBeginPlay = mono->GetMethod(NameSpace.c_str(), ClassName.c_str(), "OnBeginPlay");
+    MonoObject* result = mono->InvokeInstanceMethod(onBeginPlay, Handle, nullptr, nullptr);
+
+    MonoMethod* onGui = mono->GetMethod(NameSpace.c_str(), ClassName.c_str(), "OnGUI");
+
+    if(onGui)
+    {
+        mono->InvokeInstanceMethod(onGui, Handle, nullptr, nullptr);
+    }
 }
 
 const char* MonoActor::GetInheritors()

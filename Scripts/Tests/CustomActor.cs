@@ -1,5 +1,7 @@
 ﻿using System;
 using Scripts.Components;
+using Scripts.Engine;
+using Scripts.Extensions;
 using SharpDX;
 
 namespace Scripts.Tests
@@ -15,8 +17,7 @@ namespace Scripts.Tests
 
         private protected override void RegisterComponents()
         {
-            base.RegisterComponents();
-            //AddComponent(new RigidBodyCubeComponent(this));
+            AddComponent<RigidBodyCubeComponent>();
         }
 
         public override void Update(float deltaTime)
@@ -54,7 +55,7 @@ namespace Scripts.Tests
             }
         }
 
-        public override void Overlap() {
+        protected override void Overlap() {
             base.Overlap();
             Console.WriteLine("Overlap here");
         }

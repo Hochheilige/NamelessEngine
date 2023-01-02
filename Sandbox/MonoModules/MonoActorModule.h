@@ -10,7 +10,7 @@ public:
     {
         mono_add_internal_call("Scripts.Actor::InternalGetTransform", &ActorGetTransform);
         mono_add_internal_call("Scripts.Actor::InternalSetTransform", &ActorSetTransform);
-        mono_add_internal_call("Scripts.Instantiator::InstantiateActorInternal", &InstantiateActor);
+        mono_add_internal_call("Scripts.Engine.Instantiator::InstantiateActorInternal", &InstantiateActor);
     }
 
 private:

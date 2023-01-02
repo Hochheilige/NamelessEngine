@@ -1,10 +1,12 @@
-﻿namespace Scripts.Components
+﻿using Scripts.Engine;
+
+namespace Scripts.Components
 {
-    public class MeshRendererComponent : Component
+    public sealed class MeshRendererComponent : Component
     {
         public MeshRendererComponent(Actor owner) : base(owner)
         {
-            this.CppInstance = InternalCreateComponent(owner.CppInstance, (int)ComponentsEnum.MovementComponentType);
+            this.CppInstance = InternalCreateComponent(owner.CppInstance, (int)ComponentType.MovementComponentType);
         }
     }
 }

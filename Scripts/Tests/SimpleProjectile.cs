@@ -1,18 +1,14 @@
 ﻿using Scripts.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Scripts.Tests
 {
     internal class SimpleProjectile : Actor
     {
-        private MovementComponent mv_cmp;
+        private readonly MovementComponent mv_cmp;
+        
         SimpleProjectile()
         {
-            mv_cmp = (MovementComponent)AddComponent((int)ComponentsEnum.MovementComponentType);
+            mv_cmp = AddComponent<MovementComponent>();
         }
 
         private float lifespan = 10.0f;
