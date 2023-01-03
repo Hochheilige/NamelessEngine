@@ -41,6 +41,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BehaviorTree\BehaviorTreeEditor.cs" />
+    <Compile Include="BehaviorTree\RootTask.cs" />
     <Compile Include="BehaviorTree\Selector.cs" />
     <Compile Include="BehaviorTree\Sequence.cs" />
     <Compile Include="BehaviorTree\Task.cs" />
