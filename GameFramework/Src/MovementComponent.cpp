@@ -40,6 +40,10 @@ auto MovementComponent::Init() -> void
 
 	btController->getGhostObject()->setWorldTransform(btTransform(btQuaternion(q.x, q.y, q.z, q.w),
 		btVector3(t.Position.x, t.Position.y, t.Position.z)));
+
+	collisionWorld->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback);
+	PhysicsModuleData::GetInstance()->AddGhostObject(ghostObject);
+	ghostObject->setUserPointer(this);
 }
 
 auto MovementComponent::Update(float deltaTime) -> void {

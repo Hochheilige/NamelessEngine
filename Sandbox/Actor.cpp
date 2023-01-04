@@ -5,6 +5,7 @@
 #include "RigidBodyComponent.h"
 #include "ComponentRegistry.h"
 #include "AudioComponent.h"
+#include "MovementComponent.h"
 #include "RenderingSystem.h"
 #include "UUIDGenerator.h"
 
@@ -304,6 +305,9 @@ void callback(btDynamicsWorld* world, btScalar timeSleep)
 		if (ghost->getNumOverlappingObjects())
 		{
 			auto actor = reinterpret_cast<RigidBodyComponent*>(ghost->getUserPointer())->GetOwner();
+			if (!actor)
+				actor = reinterpret_cast<MovementComponent*>(ghost->getUserPointer())->GetOwner();
+
 			for (int i = 0; i < ghost->getNumOverlappingObjects(); ++i)
 			{
 				// We can get object that this object overlapp with
