@@ -16,6 +16,9 @@ public:
         mono_add_internal_call("Scripts.Components.RigidBodyComponent::InternalApplyCentralImpulse", &ApplyCentralImpulse);
         mono_add_internal_call("Scripts.Components.RigidBodyComponent::InternalEnablePhysicsSimulation", &EnablePhysicsSimulation);
         mono_add_internal_call("Scripts.Components.RigidBodyComponent::InternalDisablePhysicsSimulation", &DisablePhysicsSimulation);
+        mono_add_internal_call("Scripts.Components.RigidBodyComponent::InternalSetType", &SetType);
+        mono_add_internal_call("Scripts.Components.RigidBodyComponent::InternalSetUsage", &SetUsage);
+        mono_add_internal_call("Scripts.Components.RigidBodyComponent::InternalSetCollisionShape", &SetCollisionShape);
     }
 
 private:
@@ -32,4 +35,8 @@ private:
 
     static void EnablePhysicsSimulation(RigidBodyComponent* component) { component->EnablePhysicsSimulation(); }
     static void DisablePhysicsSimulation(RigidBodyComponent* component) { component->DisablePhysicsSimulation(); }
+
+    static void SetType(RigidBodyComponent* component, RigidBodyType type) { component->SetRigidBodyType(type); }
+    static void SetUsage(RigidBodyComponent* component, RigidBodyUsage usage) { component->SetRigidBodyUsage(usage); }
+    static void SetCollisionShape(RigidBodyComponent* component, CollisionShapeType type) { component->SetCollisionShapeType(type); }
 };

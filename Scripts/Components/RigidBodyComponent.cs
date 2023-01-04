@@ -4,6 +4,27 @@ using SharpDX;
 
 namespace Scripts.Components
 {
+    public enum RigidBodyType
+    {
+        Static = 0,
+        Dynamic = 1,
+        Kinematic = 2,
+    }
+
+    public enum RigidBodyUsage
+    {
+        Physics = 0,
+        Collisions = 1,
+        CollisionsAndPhysics = 2,
+    }
+
+    public enum CollisionShape
+    {
+        Box,
+        Sphere,
+        Capsule,
+    }
+
     public class RigidBodyComponent: Component
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -23,6 +44,15 @@ namespace Scripts.Components
         
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void InternalDisablePhysicsSimulation(IntPtr handle);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void InternalSetType(IntPtr handle, RigidBodyType type);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void InternalSetUsage(IntPtr handle, RigidBodyUsage usage);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void InternalSetCollisionShape(IntPtr handle, CollisionShape shape);
 
 
         protected RigidBodyComponent(Actor owner, bool internalCreate = true) : base(owner) { }
@@ -58,5 +88,19 @@ namespace Scripts.Components
             InternalDisablePhysicsSimulation(CppInstance);
         }
 
+        public void SetType(RigidBodyType type)
+        {
+            InternalSetType(CppInstance, type);
+        }
+
+        public void SetUsage(RigidBodyUsage usage)
+        {
+            InternalSetUsage(CppInstance, usage);
+        }
+
+        public void SetCollisionShape(CollisionShape shape)
+        {
+            InternalSetCollisionShape(CppInstance, shape);
+        }
     }
 }

@@ -19,6 +19,10 @@ namespace Scripts
         {
             //rigidbody = (RigidBodyComponent)AddComponent(ComponentType.RigidBodyCubeType);
             rigidbody = AddComponent<RigidBodyCubeComponent>();
+            rigidbody.SetType(RigidBodyType.Dynamic);
+            rigidbody.SetUsage(RigidBodyUsage.CollisionsAndPhysics);
+            rigidbody.SetCollisionShape(CollisionShape.Sphere);
+            rigidbody.SetMass(1);
             rigidbody.EnablePhysicsSimulation();
             //mv_cmp = (MovementComponent)AddComponent((int)ComponentsEnum.MovementComponentType);
             // add a simple rigid body instead and activate physics after a slight offset to avoid collision with playah
