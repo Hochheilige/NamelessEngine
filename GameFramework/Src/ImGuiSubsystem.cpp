@@ -833,6 +833,13 @@ auto ImGuiSubsystem::ActorBrowserContextMenuPopUp(Actor* actor) const -> CONTEXT
 	}
 
 	if (ImGui::Selectable("Duplicate")) {
+		std::string ogName = GetEditorContext().GetSelectedActor()->GetName();
+		json ogActor = GetEditorContext().GetSelectedActor()->Serialize();
+		Actor* newActor = new Actor();
+		newActor->Deserialize(&ogActor, true);
+		newActor->SetName("Copy of " + ogName);
+		actors.push_back(newActor);
+		GetEditorContext().SetSelectedActor(newActor);
 		action = DUPLICATE_;
 	}
 

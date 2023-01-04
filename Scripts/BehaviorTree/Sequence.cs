@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Scripts.Components;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Scripts.BehaviorTree
 {
-    public class Sequence : Task
+    public class Sequence : Composite
     {
         List<Task> tasks = new List<Task>();
 
@@ -14,16 +15,10 @@ namespace Scripts.BehaviorTree
         {
             tasks.Add(task);
         }
-        public override bool run()
+
+        public override TaskStateEnum Execute(BehaviorTreeComponent btComponent, object nodeMemory)
         {
-            foreach (var task in tasks)
-            {
-                if (!task.run())
-                {
-                    return false;
-                }
-            }
-            return true;
+            throw new NotImplementedException();
         }
     }
 }

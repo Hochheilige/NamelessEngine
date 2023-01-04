@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 
 namespace Scripts.BehaviorTree
 {
-    public interface Task
+    public abstract class Composite : Task
     {
-
-        TaskStateEnum Execute(BehaviorTreeComponent btComponent, object nodeMemory);
-
-
+        Task currenNode = null;
+        public abstract TaskStateEnum Execute(BehaviorTreeComponent btComponent, object nodeMemory);
     }
 }

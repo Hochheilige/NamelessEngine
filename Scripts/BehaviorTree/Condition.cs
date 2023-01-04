@@ -7,17 +7,14 @@ using System.Threading.Tasks;
 
 namespace Scripts.BehaviorTree
 {
-    public class Selector : Composite
+    public abstract class Condition : Task
     {
-
-        List<Task> tasks = new List<Task>();
-
-        public void AddTask(Task task)
+        public TaskStateEnum Execute()
         {
-            tasks.Add(task);
+            throw new NotImplementedException();
         }
 
-        public override TaskStateEnum Execute(BehaviorTreeComponent btComponent, object nodeMemory)
+        public TaskStateEnum Execute(BehaviorTreeComponent btComponent, object nodeMemory)
         {
             throw new NotImplementedException();
         }
