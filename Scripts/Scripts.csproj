@@ -40,11 +40,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BehaviorTree\Action.cs" />
     <Compile Include="BehaviorTree\BehaviorTreeEditor.cs" />
+    <Compile Include="BehaviorTree\Composite.cs" />
+    <Compile Include="BehaviorTree\Condition.cs" />
     <Compile Include="BehaviorTree\RootTask.cs" />
     <Compile Include="BehaviorTree\Selector.cs" />
     <Compile Include="BehaviorTree\Sequence.cs" />
     <Compile Include="BehaviorTree\Task.cs" />
+    <Compile Include="BehaviorTree\TaskStateEnum.cs" />
+    <Compile Include="Components\BehaviorTreeComponent.cs" />
     <Compile Include="Components\CameraComponent.cs" />
     <Compile Include="Components\Component.cs" />
     <Compile Include="Components\MeshRendererComponent.cs" />

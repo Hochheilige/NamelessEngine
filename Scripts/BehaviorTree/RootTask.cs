@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Scripts.Components;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,9 +10,19 @@ namespace Scripts.BehaviorTree
     public class RootTask : Task
     {
         List<Task> tasks = new List<Task>();
-        public override bool run()
+
+        Task child;
+
+        public TaskStateEnum Execute(BehaviorTreeComponent btComponent, object nodeMemory)
         {
-            return true;
+            foreach (var task in tasks)
+            {
+                task.Execute(btComponent, nodeMemory);
+            }
+
+            return TaskStateEnum.Succeded ;
         }
+
+
     }
 }
