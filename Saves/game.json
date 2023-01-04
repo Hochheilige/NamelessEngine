@@ -29,8 +29,122 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "a2faabf0-54a2-4e3e-9455-9d69a988b34f",
+                    "id": "dba2d84f-5926-41f1-b8b6-09f7680d5723",
                     "name": "RigidBodySphereComponent"
+                },
+                {
+                    "data": {
+                        "mesh_path": "../Assets/box.fbx/Cube",
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "8ff114dc-3762-4727-95fe-bb029c69fe74",
+                    "name": "StaticMeshRenderer",
+                    "parent": "dba2d84f-5926-41f1-b8b6-09f7680d5723"
+                },
+                {
+                    "data": {
+                        "mass": 1.0,
+                        "need_physics": false,
+                        "physics_simulation": true,
+                        "shape_type": 1,
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        "type": 1,
+                        "usage": 2
+                    },
+                    "id": "eafa2699-5cb9-41c9-b7b8-9c58fa27e976",
+                    "name": "RigidBodySphereComponent",
+                    "parent": "dba2d84f-5926-41f1-b8b6-09f7680d5723"
+                },
+                {
+                    "data": {
+                        "mesh_path": "../Assets/box.fbx/Cube",
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "3cbb568f-819a-4743-8f03-419eff9a7685",
+                    "name": "StaticMeshRenderer",
+                    "parent": "eafa2699-5cb9-41c9-b7b8-9c58fa27e976"
+                },
+                {
+                    "data": {
+                        "mass": 1.0,
+                        "need_physics": false,
+                        "physics_simulation": true,
+                        "shape_type": 1,
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        "type": 1,
+                        "usage": 2
+                    },
+                    "id": "a2faabf0-54a2-4e3e-9455-9d69a988b34f",
+                    "name": "RigidBodySphereComponent",
+                    "parent": "eafa2699-5cb9-41c9-b7b8-9c58fa27e976"
                 },
                 {
                     "data": {
@@ -80,15 +194,15 @@
                                 0.0
                             ],
                             "rot": [
+                                -0.0,
                                 0.0,
-                                0.0,
-                                0.0,
+                                -0.0,
                                 1.0
                             ],
                             "scale": [
-                                20.0,
+                                60.47721862792969,
                                 0.5,
-                                20.0
+                                43.189720153808594
                             ]
                         },
                         "type": 0,
@@ -1908,6 +2022,106 @@
                     "id": "b3e6e57a-73d0-4947-8ba5-f7b65890b02c",
                     "name": "StaticMeshRenderer",
                     "parent": "c5a7d66e-91f0-478b-8fd6-63d39decca5d"
+                },
+                {
+                    "data": {
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "811f08e5-6925-4386-9c40-b78be4eca73b",
+                    "name": "MovementComponent",
+                    "parent": "c5a7d66e-91f0-478b-8fd6-63d39decca5d"
+                },
+                {
+                    "data": {
+                        "transform": {
+                            "pos": [
+                                -3.0,
+                                12.0,
+                                9.0
+                            ],
+                            "rot": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "b85e6e0a-a162-4f92-b1b1-e1549e84aa37",
+                    "name": "CameraComponent",
+                    "parent": "c5a7d66e-91f0-478b-8fd6-63d39decca5d"
+                },
+                {
+                    "data": {
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "73774a0a-be71-4fe3-a9dd-a81fa4dcd3b9",
+                    "name": "MovementComponent",
+                    "parent": "c5a7d66e-91f0-478b-8fd6-63d39decca5d"
+                },
+                {
+                    "data": {
+                        "transform": {
+                            "pos": [
+                                -3.0,
+                                12.0,
+                                9.0
+                            ],
+                            "rot": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "6a5fbdce-5b51-4c59-b17b-39a7a850cc41",
+                    "name": "CameraComponent",
+                    "parent": "c5a7d66e-91f0-478b-8fd6-63d39decca5d"
                 }
             ],
             "id": "6ad32392-07e7-4973-8c29-c03338566557",
@@ -2021,6 +2235,94 @@
                 }
             ],
             "id": "16945530-e730-4600-a5df-45e4fad21f14"
+        },
+        {
+            "components": [
+                {
+                    "data": {
+                        "mass": 0.0,
+                        "need_physics": false,
+                        "physics_simulation": true,
+                        "shape_type": 0,
+                        "transform": {
+                            "pos": [
+                                -9.389253616333008,
+                                3.9186644554138184,
+                                -5.423224449157715
+                            ],
+                            "rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                5.5,
+                                9.5,
+                                10.699999809265137
+                            ]
+                        },
+                        "type": 0,
+                        "usage": 2
+                    },
+                    "id": "522f9705-d9d0-4b6e-b4e9-39b7f0bd9165",
+                    "name": "RigidBodyCubeComponent"
+                },
+                {
+                    "data": {
+                        "mesh_path": "../Assets/box.fbx/Cube",
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "4d4d576f-258a-46db-afe1-9fdcafa24667",
+                    "name": "StaticMeshRenderer",
+                    "parent": "522f9705-d9d0-4b6e-b4e9-39b7f0bd9165"
+                },
+                {
+                    "data": {
+                        "channel_id": -1,
+                        "name": "",
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "bea098fc-35d9-4d5d-9a34-8b3104ebb751",
+                    "name": "AudioComponent",
+                    "parent": "522f9705-d9d0-4b6e-b4e9-39b7f0bd9165"
+                }
+            ],
+            "id": "e881300a-7e73-4753-b6a0-0c645c93ab6e"
         }
     ]
 }

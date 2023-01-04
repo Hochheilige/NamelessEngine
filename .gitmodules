@@ -13,3 +13,6 @@
 [submodule "External/GSL"]
 	path = External/GSL
 	url = https://github.com/microsoft/GSL.git
+[submodule "External/recastnavigation"]
+	path = External/recastnavigation
+	url = https://github.com/recastnavigation/recastnavigation.git

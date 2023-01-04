@@ -182,20 +182,24 @@ xcopy "$(SolutionDir)External\mono\lib\4.5\*" "$(TargetDir)mono\lib\4.5\" /y /i 
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;MONO_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\mono\include\;$(SolutionDir)External\bullet3\src\;$(SolutionDir)External\assimp\include\;$(SolutionDir)DirectXTK\Include\;$(SolutionDir)GameFramework\Include\;$(SolutionDir)imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\mono\include\;$(SolutionDir)External\bullet3\src\;$(SolutionDir)External\bullet3\src\Bullet3Collision\;$(SolutionDir)External\assimp\include\;$(SolutionDir)DirectXTK\Include\;$(SolutionDir)GameFramework\Include\;$(SolutionDir)imgui;$(SolutionDir)External\json\include\;$(SolutionDir)External\stduuid\include\;$(SolutionDir)External\GSL\include\;$(SolutionDir)External\fmod\studio\inc;$(SolutionDir)External\fmod\core\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)External\bullet3\lib\Debug;$(SolutionDir)External\mono\lib\Debug;$(SolutionDir)External\assimp\lib\Debug</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);mono-2.0-sgen.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\bullet3\lib\Debug;$(SolutionDir)External\mono\lib\Debug\;$(SolutionDir)External\assimp\lib\Debug;$(SolutionDir)External\fmod\core\lib\;$(SolutionDir)External\fmod\studio\lib\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(CoreLibraryDependencies);mono-2.0-sgen.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;assimp-vc143-mtd.lib;fmodL_vc.lib;fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)External\mono\bin\Debug\mono-2.0-sgen.dll" "$(TargetDir)" /y
 xcopy "$(SolutionDir)External\assimp\bin\Debug\assimp-vc143-mtd.dll" "$(TargetDir)" /y
+xcopy "$(SolutionDir)External\fmod\studio\lib\fmodstudio.dll" "$(TargetDir)" /y
+xcopy "$(SolutionDir)External\fmod\studio\lib\fmodstudioL.dll" "$(TargetDir)" /y
+xcopy "$(SolutionDir)External\fmod\core\lib\fmod.dll" "$(TargetDir)" /y
+xcopy "$(SolutionDir)External\fmod\core\lib\fmodL.dll" "$(TargetDir)" /y
 xcopy "$(SolutionDir)External\mono\lib\4.5\*" "$(TargetDir)mono\lib\4.5\" /y /i /s</Command>
     </PostBuildEvent>
     <PreLinkEvent>

@@ -27,3 +27,12 @@ ECHO Building Bullet Physics static libraries
 rm CMakeCache.txt
 cmake CMakeLists.txt
 cmake --build .
+
+cd ..\
+
+ECHO Building Recast Navigation static libraries
+
+cd recastnavigation
+
+cmake CMakeLists.txt -D RECASTNAVIGATION_DEMO=OFF -D RECASTNAVIGATION_TESTS=OFF
+cmake --build .
