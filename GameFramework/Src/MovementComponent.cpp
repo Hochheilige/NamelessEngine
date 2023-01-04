@@ -15,6 +15,8 @@ MovementComponent::~MovementComponent()
 	world->removeAction(btController);
 	world->removeCollisionObject(ghostObject);
 
+	PhysicsModuleData::GetInstance()->RemoveGhostObject(ghostObject);
+
 	delete(ghostObject);
 	delete(characterCapsule);
 	delete(btController);

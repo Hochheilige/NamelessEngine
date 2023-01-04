@@ -9,10 +9,19 @@ RigidBodyComponent::RigidBodyComponent()
 RigidBodyComponent::~RigidBodyComponent()
 {
     auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
-    world->removeRigidBody(rigidBody.Body);
-    delete rigidBody.Body->getCollisionShape();
-    delete rigidBody.Body->getMotionState();
-    delete rigidBody.Body;
+	if (rigidBody.Collision != nullptr)
+	{
+		PhysicsModuleData::GetInstance()->RemoveGhostObject(rigidBody.Collision);
+		world->removeCollisionObject(rigidBody.Collision);
+		delete rigidBody.Collision;
+	}
+	if (rigidBody.Body != nullptr)
+	{
+		world->removeRigidBody(rigidBody.Body);
+		delete rigidBody.Body->getCollisionShape();
+		delete rigidBody.Body->getMotionState();
+		delete rigidBody.Body;
+	}
 }
 
 void RigidBodyComponent::Init()

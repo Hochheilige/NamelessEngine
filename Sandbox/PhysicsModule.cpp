@@ -24,6 +24,7 @@ PhysicsModuleData::PhysicsModuleData()
 
     World->setInternalTickCallback(callback, this, true);
 
+	
 }
 
 PhysicsModuleData::~PhysicsModuleData()
@@ -76,4 +77,9 @@ void PhysicsModuleData::AddGhostObject(btGhostObject* obj)
 std::vector<btGhostObject*> PhysicsModuleData::GetGhostObjects()
 {
     return ghostObjects;
+}
+
+void PhysicsModuleData::RemoveGhostObject(btGhostObject* obj)
+{
+	ghostObjects.erase(std::remove(ghostObjects.begin(), ghostObjects.end(), obj));
 }

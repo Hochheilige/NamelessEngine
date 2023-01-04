@@ -19,6 +19,7 @@ public:
 
     void AddGhostObject(btGhostObject* obj);
     std::vector<btGhostObject*> GetGhostObjects();
+	void RemoveGhostObject(btGhostObject* obj);
 
 private:
     PhysicsModuleData();
