@@ -211,14 +211,14 @@ auto ImGuiSubsystem::DrawToolbar() -> void
 
 			if (ImGui::Button("Save"))
 			{
-				Serializer::SaveToFile("../Saves/game.json", Game::GetInstance());
+				Serializer::SaveToFile(savepath, Game::GetInstance());
 			}
 
 			ImGui::SameLine();
 
 			if (ImGui::Button("Load"))
 			{
-				Serializer::ReadFromFile("../Saves/game.json", Game::GetInstance());
+				Serializer::ReadFromFile(savepath, Game::GetInstance());
 			}
 
 			ImGui::SameLine();
@@ -226,8 +226,13 @@ auto ImGuiSubsystem::DrawToolbar() -> void
 			if (ImGui::Button("Force Load"))
 			{
 				GetEditorContext().SetSelectedActor(nullptr);
-				Serializer::ReadFromFile("../Saves/game.json", Game::GetInstance(), true);
+				Serializer::ReadFromFile(savepath, Game::GetInstance(), true);
 			}
+
+			ImGui::SameLine();
+
+			ImGui::InputTextWithHint("SaveFile", "Enter save file path", savepath, 0);
+
 			break;
 		case PlayState::Playing:
 			if (ImGui::Button(pauseText))
@@ -591,7 +596,7 @@ auto ImGuiSubsystem::DrawStaticMeshProperties() -> void {
 
 		//some material settings here
 		ImGui::SliderFloat("Specular Strength", &smr->Mat.specularCoef, 0.0f, 1.0f);
-		ImGui::SliderFloat("Specular Exp", &smr->Mat.specularExponent, 0.001f, 5.0f);
+		ImGui::SliderFloat("Specular Exp", &smr->Mat.specularExponent, 0.001f, 100.0f);
 		ImGui::SliderFloat("Diffuse  Strength", &smr->Mat.diffuesCoef, 0.0f, 1.0f);
 		ImGui::SliderFloat("Ambient Strength", &smr->Mat.ambientCoef, 0.0f, 1.0f);
 
