@@ -82,14 +82,15 @@ namespace Scripts
         
         internal virtual string GetActorInheritors()
         {
-            var listOfBs = (
+            var actorSignatures = (
                 from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
                 from type in domainAssembly.GetTypes()
                 where typeof(Actor).IsAssignableFrom(type)
                 select type.ToString()).ToArray();
             
-            var result = string.Join("\n", listOfBs);
-            //Console.WriteLine(result);
+            var cleanNames = actorSignatures.Select(x => x.Split('.').Last());
+            var result = string.Join("\n", cleanNames);
+            
             return result;
         }
 
