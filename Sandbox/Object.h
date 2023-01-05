@@ -14,6 +14,6 @@ public:
 	auto GetName() const -> const std::string& { return Name; }
 	auto SetName(std::string s) -> void { Name = s; }
 
-private:
+protected:
 	std::string Name = "";
 };

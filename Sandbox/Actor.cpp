@@ -201,6 +201,7 @@ json Actor::Serialize() const
 	}
 
 	out["components"] = componentArr;
+	out["name"] = Name;
 
 	return out;
 }
@@ -284,6 +285,8 @@ void Actor::Deserialize(const json* in, bool destructive)
 	if (in->contains("mono")) {
 		mMonoActor->Init();
 	}
+
+	Name = in->at("name");
 }
 
 uuid Actor::GetId() const
