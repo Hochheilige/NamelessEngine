@@ -464,6 +464,16 @@ const Camera* Game::GetCurrentPOV() const
 	return &PlayerCamera->GetPOVData();
 }
 
+auto Game::SetPlayerCamera(CameraComponent* Cam) -> void
+{
+	PlayerCamera = Cam;
+	if (PlayerCamera)
+	{
+		const Vector2& viewportSize = mImGuiSubsystem->GetViewportSize();
+		PlayerCamera->UpdateAspectRatio(viewportSize.x/viewportSize.y);
+	}
+}
+
 //void Game::DestroyComponent(GameComponent* GC)
 //{
 //	if (GC == nullptr)

@@ -139,7 +139,7 @@ public:
 	const Camera* GetCurrentPOV() const;
 
 	auto GetPlayerCamera() const -> CameraComponent* { return PlayerCamera; }
-	auto SetPlayerCamera(CameraComponent* Cam) -> auto { PlayerCamera = Cam; }
+	auto SetPlayerCamera(CameraComponent* Cam) -> void;
 
 
 	ComPtr<ID3D11SamplerState> GetDefaultSamplerState() { return DefaultSamplerState; }

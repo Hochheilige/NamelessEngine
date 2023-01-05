@@ -50,6 +50,8 @@ public:
 	~ImGuiSubsystem();
 
 	static auto GetInstance() { return Instance; }
+
+	auto GetViewportSize() const -> const Vector2& { return ViewportSize; }
 private:
 	auto LayOutMainMenuBar() -> void;
 	auto DrawDockspace() -> void;
