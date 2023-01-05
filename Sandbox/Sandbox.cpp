@@ -483,7 +483,9 @@ void Sandbox::Update(float DeltaTime)
 		// Physics Simulation
 		auto physics = PhysicsModuleData::GetInstance();
 		physics->OnUpdate(DeltaTime);
-		for (auto actor : Actors)
+		// create a copy of the Actors array to avoid iterator invalidation
+		std::vector<Actor*> actors = Actors;
+		for (auto actor : actors)
 		{
 			actor->Update(DeltaTime);
 		}
