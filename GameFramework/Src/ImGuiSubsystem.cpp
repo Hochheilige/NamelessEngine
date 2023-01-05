@@ -231,7 +231,7 @@ auto ImGuiSubsystem::DrawToolbar() -> void
 
 			ImGui::SameLine();
 
-			ImGui::InputTextWithHint("SaveFile", "Enter save file path", savepath, 0);
+			ImGui::InputTextWithHint("SaveFile", "Enter save file path", savepath, sizeof(savepath));
 
 			break;
 		case PlayState::Playing:
@@ -597,8 +597,8 @@ auto ImGuiSubsystem::DrawStaticMeshProperties() -> void {
 		//some material settings here
 		ImGui::SliderFloat("Specular Strength", &smr->Mat.specularCoef, 0.0f, 1.0f);
 		ImGui::SliderFloat("Specular Exp", &smr->Mat.specularExponent, 0.001f, 100.0f);
-		ImGui::SliderFloat("Diffuse  Strength", &smr->Mat.diffuesCoef, 0.0f, 1.0f);
-		ImGui::SliderFloat("Ambient Strength", &smr->Mat.ambientCoef, 0.0f, 1.0f);
+		/*ImGui::SliderFloat("Diffuse  Strength", &smr->Mat.diffuesCoef, 0.0f, 1.0f);
+		ImGui::SliderFloat("Ambient Strength", &smr->Mat.ambientCoef, 0.0f, 1.0f);*/
 
 		ImGui::EndChild();
 		ImGui::PopStyleVar();
