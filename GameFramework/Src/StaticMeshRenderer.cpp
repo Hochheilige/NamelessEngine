@@ -8,6 +8,7 @@
 #include "RenderingSystem.h"
 #include "EngineContentRegistry.h"
 #include "AlbedoTexture.h"
+#include "NormalTexture.h"
 
 StaticMeshRenderer::StaticMeshRenderer()
 {
@@ -116,11 +117,34 @@ auto StaticMeshRenderer::SetTexturePath(std::string texturePath) -> void
 	}
 }
 
+auto StaticMeshRenderer::SetNormalPath(std::string normalPath) -> void
+{
+	if (normalPath == "") {
+		SetNormalSRV(nullptr);
+		return;
+	}
+	auto am = Game::GetInstance()->GetAssetManager();
+	this->normalPath = normalPath;
+	auto at = am->LoadNormalTexture(normalPath);
+	if (at) {
+		SetNormalSRV(at->GetSRV());
+	}
+	else
+	{
+		SetNormalSRV(nullptr);
+	}
+}
+
 json StaticMeshRenderer::Serialize() const
 {
 	auto out = Renderer::Serialize();
 	out["mesh_path"] = GetStaticMesh()->GetFullPath();
 	out["texture_path"] = texturePath;
+	out["normal_path"] = normalPath;
+	out["mat_ambient"] = Mat.ambientCoef;
+	out["mat_diffuse"] = Mat.diffuesCoef;
+	out["mat_specular"] = Mat.specularCoef;
+	out["mat_specular_exp"] = Mat.specularExponent;
 	return out;
 }
 
@@ -136,6 +160,14 @@ void StaticMeshRenderer::Deserialize(const json* in)
 	if (mAlbedoSRV == nullptr) {
 		SetAlbedoSRV(content->GetWhiteTexSRV());
 	}
-	SetNormalSRV(content->GetBasicNormalTexSRV());
+	texPath = in->at("normal_path");
+	SetNormalPath(texPath);
+	if (mNormalSRV == nullptr) {
+		SetNormalSRV(content->GetBasicNormalTexSRV());
+	}
+	Mat.ambientCoef = in->at("mat_ambient");
+	Mat.diffuesCoef = in->at("mat_diffuse");
+	Mat.specularCoef = in->at("mat_specular");
+	Mat.specularExponent = in->at("mat_specular_exp");
 	Renderer::Deserialize(in);
 }

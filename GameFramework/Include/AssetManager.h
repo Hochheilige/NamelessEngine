@@ -10,6 +10,7 @@ class Asset;
 class DirectoryTree;
 class StaticMesh;
 class AlbedoTexture;
+class NormalTexture;
 
 class AssetManager
 {
@@ -22,6 +23,7 @@ public:
 
 	auto LoadStaticMesh(const Path& path)->StaticMesh*;
 	auto LoadAlbedoTexture(const Path& path)->AlbedoTexture*;
+	auto LoadNormalTexture(const Path& path) -> NormalTexture*;
 	
 
 	/*Asset* LoadAsset(const Path& AssetPath) {}

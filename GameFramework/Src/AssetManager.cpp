@@ -7,6 +7,7 @@
 
 #include "StaticMesh.h"
 #include "AlbedoTexture.h"
+#include "NormalTexture.h"
 #include <EngineContentRegistry.h>
 
 
@@ -113,4 +114,29 @@ auto AssetManager::LoadAlbedoTexture(const Path& path) -> AlbedoTexture*
 	LoadedAssetsMap.insert({ path, at });
 
 	return at;
+}
+
+auto AssetManager::LoadNormalTexture(const Path& path) -> NormalTexture*
+{
+	auto res = LoadedAssetsMap.find(path);
+	if (res != LoadedAssetsMap.end())
+	{
+		auto* stuff = res->second;
+		return dynamic_cast<NormalTexture*>(res->second);
+	}
+
+	NormalTexture* nt = new NormalTexture();
+
+	nt->fullPath = path;
+
+	if (!nt->Load())
+	{
+		//TODO: return white tex here
+
+		return nullptr;
+	}
+
+	LoadedAssetsMap.insert({ path, nt });
+
+	return nt;
 }

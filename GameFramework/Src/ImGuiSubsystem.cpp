@@ -522,9 +522,9 @@ auto ImGuiSubsystem::DrawStaticMeshProperties() -> void {
 
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-		ImGui::BeginChild("RB", ImVec2(0, 100), true, window_flags);
+		ImGui::BeginChild("RB", ImVec2(0, 250), true, window_flags);
 
-		ImGui::Button((smr->GetStaticMesh()->GetFullPath().filename().string() + "##StaticMesh").c_str(), ImVec2(100, 30));
+		ImGui::Button((smr->GetStaticMesh()->GetFullPath().filename().string() + "##StaticMesh").c_str(), ImVec2(150, 20));
 
 		if (ImGui::BeginDragDropTarget())
 		{
@@ -542,16 +542,14 @@ auto ImGuiSubsystem::DrawStaticMeshProperties() -> void {
 
 		ImGui::SameLine();
 
-		ImGui::PushFont(headerFont);
 		ImGui::Text("Static Mesh");
-		ImGui::PopFont();
 
 		/*ImGui::Button("Pick");
 		if (ImGui::IsItemHovered()) {
 			ImGui::SetTooltip("NOT READY:Places selected static mesh asset into renderer");
 		}*/
 
-		ImGui::Button((smr->GetTexturePath().filename().string() + "##Texture").c_str(), ImVec2(100, 30));
+		ImGui::Button((smr->GetTexturePath().filename().string() + "##Texture").c_str(), ImVec2(150, 20));
 
 		if (ImGui::BeginDragDropTarget())
 		{
@@ -569,10 +567,33 @@ auto ImGuiSubsystem::DrawStaticMeshProperties() -> void {
 
 		ImGui::SameLine();
 
-		ImGui::PushFont(headerFont);
 		ImGui::Text("Albedo Texture");
-		ImGui::PopFont();
 
+		ImGui::Button((smr->GetNormalPath().filename().string() + "##NormalTexture").c_str(), ImVec2(150, 20));
+
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(FileDragDropSourceType))
+			{
+				Path::value_type* first = static_cast<Path::value_type*>(payload->Data);
+				// it seems that last is really last and not one past last
+				Path::value_type* last = first + payload->DataSize / sizeof(Path::value_type);
+				Path p = Path(first, last);
+
+				smr->SetNormalPath(p.string());
+			}
+			ImGui::EndDragDropTarget();
+		}
+
+		ImGui::SameLine();
+
+		ImGui::Text("Normal Texture");
+
+		//some material settings here
+		ImGui::SliderFloat("Specular Strength", &smr->Mat.specularCoef, 0.0f, 1.0f);
+		ImGui::SliderFloat("Specular Exp", &smr->Mat.specularExponent, 0.001f, 5.0f);
+		ImGui::SliderFloat("Diffuse  Strength", &smr->Mat.diffuesCoef, 0.0f, 1.0f);
+		ImGui::SliderFloat("Ambient Strength", &smr->Mat.ambientCoef, 0.0f, 1.0f);
 
 		ImGui::EndChild();
 		ImGui::PopStyleVar();

@@ -27,6 +27,7 @@ public:
 
 	auto SetMeshPath(std::string meshPath) -> void;
 	auto SetTexturePath(std::string texturePath) -> void;
+	auto SetNormalPath(std::string normalPath) -> void;
 
 	ComponentType GetComponentType() override { return StaticMeshRendererType; }
 	MonoComponent* GetMonoComponent() override { return mMonoComponent; }
@@ -45,6 +46,7 @@ public:
 	}
 
 	auto GetTexturePath() -> Path { return texturePath; }
+	auto GetNormalPath() -> Path { return normalPath; }
 
 protected:
 	MonoComponent* mMonoComponent = new StaticMeshRendererComponent();
@@ -58,4 +60,5 @@ protected:
 
 private:
 	std::string texturePath;
+	std::string normalPath;
 };

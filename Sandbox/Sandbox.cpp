@@ -224,7 +224,7 @@ Actor* Sandbox::CreateBun(Transform transform)
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
 	mesh_component->SetTexturePath("../Assets/tjciddjqx_2K_Albedo.jpg");
-	mesh_component->SetNormalSRV(burgerNormalSRV);
+	mesh_component->SetNormalPath("../Assets/tjciddjqx_2K_Normal_LOD0.jpg");
 	mesh_component->SetSpecularSRV(burgerSpecSRV);
 
 	return actor;
@@ -244,8 +244,8 @@ auto Sandbox::CreateHierarcyTestActor() -> Actor*
 	mesh_component->SetStaticMesh(GetAssetManager()->LoadStaticMesh(path));
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
-	mesh_component->SetAlbedoSRV(burgerTexSRV);
-	mesh_component->SetNormalSRV(burgerNormalSRV);
+	mesh_component->SetTexturePath("../Assets/tjciddjqx_2K_Albedo.jpg");
+	mesh_component->SetNormalPath("../Assets/tjciddjqx_2K_Normal_LOD0.jpg");
 	mesh_component->SetSpecularSRV(burgerSpecSRV);
 
 	SceneComponent* sceneComp = actor->AddComponent<SceneComponent>();
@@ -426,7 +426,6 @@ void Sandbox::PrepareResources()
 	
 	tr.Scale = Vector3::One * 0.015f;
 	tr.Position = { 11.638, 3.463, -7.674 };
-	CreateBunny(tr);
 
 	EngineContentRegistry::GetInstance()->CreatePointLight(tr);
 
