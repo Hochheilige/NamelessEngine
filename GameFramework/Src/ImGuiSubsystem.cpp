@@ -311,6 +311,8 @@ auto ImGuiSubsystem::DrawViewport() -> void
 
 				Actor* actor = MyGame->CreateCustomActor(j.at("Namespace").get<std::string>().c_str(), j.at("Name").get<std::string>().c_str());
 				if (actor->RootComponent == nullptr) {
+					std::vector<Actor*>& actors = MyGame->Actors;
+					actors.erase(std::remove(actors.begin(), actors.end(), actor), actors.end());
 					delete(actor);
 				}
 				else
