@@ -24,6 +24,10 @@
 #include "RigidBodyComponent.h"
 #include "Serializer.h"
 
+#include "JsonInclude.h"
+
+#include "MonoSystem.h"
+
 //temporary include
 //#include "../External/bullet3/src/"
 
@@ -35,6 +39,7 @@ ImGuiSubsystem* ImGuiSubsystem::Instance = nullptr;
 static const char* ActorDragDropSourceType = "ActorDragDropSourceType";
 static const char* FileDragDropSourceType = "FileDragDropSourceType";
 static const char* MeshDragDropSourceType = "MeshDragDropSourceType";
+static const char* CustomActorDragDropSourceType = "CustomActorDragDropSourceType";
 
 ImGuiSubsystem::ImGuiSubsystem()
 	: mCurrentGizmoOperation(ImGuizmo::OPERATION::TRANSLATE)
@@ -294,6 +299,26 @@ auto ImGuiSubsystem::DrawViewport() -> void
 				//Actor* newActor = EngineContentRegistry::GetInstance()->CreateBasicActor(meshName, t);
 				//GetEditorContext().SetSelectedActor(newActor);
 
+			}
+
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(CustomActorDragDropSourceType)) {
+				const std::string str = static_cast<const char*>(payload->Data);
+
+				Transform t;
+				t.Position = MyGame->MyRenderingSystem->GetWorldPositionUnerScreenPosition(ViewportMousePos);
+
+				json j = json::parse(str);
+
+				Actor* actor = MyGame->CreateCustomActor(j.at("Namespace").get<std::string>().c_str(), j.at("Name").get<std::string>().c_str());
+				if (actor->RootComponent == nullptr) {
+					delete(actor);
+				}
+				else
+				{
+					actor->SetTransform(t);
+					GetEditorContext().SetSelectedActor(actor);
+				}
+				
 			}
 
 			ImGui::EndDragDropTarget();
@@ -709,7 +734,7 @@ auto ImGuiSubsystem::DrawBasicActorsWindow() -> void
 {
 	ImGui::SetNextWindowClass(&levelEditorClass);
 	EngineContentRegistry::GetInstance();
-	if (ImGui::Begin("Basic Actors"))
+	if (ImGui::Begin("Create Actors"))
 	{
 		for (const std::string& name : EngineContentRegistry::GetInstance()->GetBasicActorNames())
 		{
@@ -725,6 +750,37 @@ auto ImGuiSubsystem::DrawBasicActorsWindow() -> void
 
 				ImGui::EndDragDropSource();
 			}
+		}
+	}
+
+	if (BoldHeader("Custom actors", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		//draw custom actors here
+		auto mono = MonoSystem::GetInstance();
+		const auto mGame_GetInheritors = mono->GetVirtualMethod("Scripts", "Game", "GetActorInheritors()", MyGame->csGameInstance);
+		auto res = mono->InvokeInstanceMethod(mGame_GetInheritors, MyGame->csGameInstance, nullptr, nullptr);
+		auto str = mono_string_to_utf8(mono_object_to_string(res, nullptr));
+
+		json j = json::parse(str);
+		auto stuff = j;
+		for (auto elem : j) {
+
+			std::string name = elem.at("Name").get<std::string>();
+
+			ImGui::Selectable(name.c_str());
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip("Drag to place in scene");
+
+			if (ImGui::BeginDragDropSource())
+			{
+				std::string payload = elem.dump();
+				ImGui::SetDragDropPayload(CustomActorDragDropSourceType, payload.c_str(), payload.size() + 1);
+
+				ImGui::Text(name.c_str());
+
+				ImGui::EndDragDropSource();
+			}
+
 		}
 	}
 

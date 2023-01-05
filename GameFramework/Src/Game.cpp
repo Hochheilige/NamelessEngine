@@ -421,6 +421,13 @@ Collider* Game::GetOverlapping(const Collider* Col)
 	return nullptr;
 }
 
+auto Game::CreateCustomActor(const char* nameSpace, const char* className) -> Actor*
+{
+	Actor* actor = CreateActor<Actor>();
+	actor->InitializeMonoActor(nameSpace, className);
+	return actor;
+}
+
 Game* Game::GetInstance()
 {
 	return Instance;

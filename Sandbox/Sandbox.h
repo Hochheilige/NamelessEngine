@@ -37,7 +37,7 @@ public:
 private:
 	void LoadGameFacade();
 
-	uint32_t csGameInstance;
+	
 
 	class BoxMesh* boxMesh;
 	class CircleMesh* circleMesh;

@@ -128,6 +128,7 @@ public:
 	
 	*/
 
+	auto CreateCustomActor(const char* nameSpace, const char* className) -> Actor*;
 
 	static Game* GetInstance();
 
@@ -186,6 +187,8 @@ public:
 
 	auto GetImGuiSubsystem() const -> ImGuiSubsystem* { return mImGuiSubsystem; }
 protected:
+
+	uint32_t csGameInstance;
 
 	Game();
 
