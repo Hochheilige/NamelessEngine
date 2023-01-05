@@ -73,6 +73,12 @@ SamplerState DefaultSampler : register(s0);
 Texture2D shadowMap : register(t1);
 SamplerComparisonState shadowSampler : register(s1);
 
+/*
+ * GBufferContents:
+ * diffuse: xyz - color; w - specular map value
+ * normal: xyz - normal; w - specular exponent
+ * worldPos: xyz - world positon; w - specular coef
+ */
 struct PSOutput
 {
 	float4 diffuse : SV_Target0;
@@ -92,11 +98,14 @@ PSOutput PSMain(PS_IN input) : SV_Target
 	float3 normal = NormalMap.Sample(DefaultSampler, input.uv.xy).xyz;
 
 	float3 pixelPos = input.worldPos;
+	Material mat = Mat;
 #else
 	float4 col = float4(1.0f, 1.0f, 1.0f, 1.0f);
-	float specular = 0.5f;
 	float3 normal = float3(0.5f, 0.5f, 1.0f);
 	float3 pixelPos = input.worldPos;
+	Material mat;
+	mat.specularExponent = 50.0f;
+	mat.specularCoef = 0.5f;
 #endif
 #endif
 
@@ -114,10 +123,15 @@ PSOutput PSMain(PS_IN input) : SV_Target
 
 	unpackedNormal = mul(unpackedNormal, TBN);
 #else
-	float3 unpackedNormal = NormalMap.Load(float3(input.pos.xy, 0)).xyz;
+	float4 loadedNormal = NormalMap.Load(float3(input.pos.xy, 0));
+	float3 unpackedNormal = loadedNormal.xyz;
 	float4 col = DiffuseMap.Load(float3(input.pos.xy, 0));
-	float3 pixelPos = WorldPosMap.Load(float3(input.pos.xy, 0)).xyz;
+	float4 loadedWorldPos = WorldPosMap.Load(float3(input.pos.xy, 0));
+	float3 pixelPos = loadedWorldPos.xyz;
 	float specular = col.a;
+	Material mat;
+	mat.specularExponent = loadedNormal.w;
+	mat.specularCoef = loadedWorldPos.a;
 #endif
 
 #if defined(FORWARD_RENDERING) | defined(DEFERRED_LIGHTING)
@@ -130,20 +144,21 @@ PSOutput PSMain(PS_IN input) : SV_Target
 
 	float shadow = shadowMap.SampleCmp(shadowSampler, smUV, lightSpacePos.z - 0.003f);
 
-	ret.diffuse.xyz = shadow * CalculateDirLight(pixelPos, cameraWorldPos, unpackedNormal, col.xyz, specular, lightData, Mat);
+	ret.diffuse.xyz = shadow * CalculateDirLight(pixelPos, cameraWorldPos, unpackedNormal, col.xyz, lightData, mat);
 	ret.diffuse.a = 1.0f;
 #elif defined(AMBIENT_LIGHT)
 	ret.diffuse = float4(col.rgb * lightData.intensity * lightData.color.rgb, 1.0f);
 #elif defined(POINT_LIGHT)
-	ret.diffuse = float4(CalculatePointLight(pixelPos, cameraWorldPos, unpackedNormal, col.xyz, lightData, Mat), 1.0f);
+	ret.diffuse = float4(CalculatePointLight(pixelPos, cameraWorldPos, unpackedNormal, col.xyz, lightData, mat), 1.0f);
 #endif // defined (DIRECTIONAL_LIGHT)
 #endif
 
 #if defined(DEFERRED_OPAQUE) & !defined(DEFERRED_LIGHTING)
-	ret.worldPos = float4(pixelPos, 1.0f);
+	ret.worldPos = float4(pixelPos, mat.specularCoef);
 	ret.diffuse.xyz = col.xyz;
+	// todo: check this:
 	ret.diffuse.a = specular;
-	ret.normal = float4(unpackedNormal, 0.0f);
+	ret.normal = float4(unpackedNormal, mat.specularExponent);
 	//ret.diffuse.xyz = normalize(ret.normal.xyz) * 0.5f + 0.5f;
 #endif
 
