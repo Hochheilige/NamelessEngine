@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using ImGuiNET;
 using imnodesNET;
 using Scripts.BehaviorTree;
 using Scripts.Engine;
+
+using Newtonsoft.Json;
 
 namespace Scripts
 {
@@ -80,7 +79,7 @@ namespace Scripts
            
         }
         
-        internal virtual string GetActorInheritors()
+        private string GetActorInheritors()
         {
             var actorSignatures = (
                 from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
@@ -88,9 +87,20 @@ namespace Scripts
                 where typeof(Actor).IsAssignableFrom(type)
                 select type.ToString()).ToArray();
             
-            var cleanNames = actorSignatures.Select(x => x.Split('.').Last());
-            var result = string.Join("\n", cleanNames);
-            
+            var objs = new List<object>();
+            foreach (var str in actorSignatures)
+            {
+                var dividerIndex = str.LastIndexOf('.');
+                var ns = str.Substring(0, str.LastIndexOf('.'));
+                var name = str.Substring(dividerIndex + 1, str.Length - dividerIndex - 1);
+                objs.Add(new
+                {
+                    Namespace = ns,
+                    Name = name
+                });
+            }
+
+            var result = JsonConvert.SerializeObject(objs);
             return result;
         }
 
