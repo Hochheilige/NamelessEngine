@@ -1997,9 +1997,9 @@
                         "name": "MovementComponent",
                         "transform": {
                             "pos": [
-                                4.51489782333374,
+                                1.505597472190857,
                                 3.0001220703125,
-                                -2.7435851097106934
+                                0.1599082350730896
                             ],
                             "rot": [
                                 -0.0,
@@ -2206,6 +2206,200 @@
             ],
             "id": "409ce1e0-eb04-41f3-8293-1ef17dfe5433",
             "name": "BunnyOnABun"
+        },
+        {
+            "components": [
+                {
+                    "data": {
+                        "mass": 0.0,
+                        "name": "",
+                        "need_physics": false,
+                        "physics_simulation": true,
+                        "shape_type": 0,
+                        "transform": {
+                            "pos": [
+                                12.404895782470703,
+                                -0.5,
+                                10.300684928894043
+                            ],
+                            "rot": [
+                                -0.0,
+                                0.0,
+                                0.6657251119613647,
+                                0.7461971044540405
+                            ],
+                            "scale": [
+                                19.99994659423828,
+                                0.49999862909317017,
+                                20.0
+                            ]
+                        },
+                        "type": 0,
+                        "usage": 2
+                    },
+                    "id": "88599dc5-1b05-405f-b66f-91a763d1dad5",
+                    "name": "RigidBodyCubeComponent"
+                },
+                {
+                    "data": {
+                        "mat_ambient": 0.10000000149011612,
+                        "mat_diffuse": 0.5659999847412109,
+                        "mat_specular": 0.42100000381469727,
+                        "mat_specular_exp": 2.364000082015991,
+                        "mesh_path": "../Assets/box.fbx/Cube",
+                        "name": "",
+                        "normal_path": "",
+                        "texture_path": "..\\Assets\\Normal_map_example_-_Map.png",
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "df7b9560-e417-49ad-b8bb-9e8d547ca87f",
+                    "name": "StaticMeshRenderer",
+                    "parent": "88599dc5-1b05-405f-b66f-91a763d1dad5"
+                },
+                {
+                    "data": {
+                        "channel_id": -1,
+                        "name": "",
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "41f32267-7810-401a-9b1a-5428da365cae",
+                    "name": "AudioComponent",
+                    "parent": "88599dc5-1b05-405f-b66f-91a763d1dad5"
+                }
+            ],
+            "id": "7e0fdc34-1fd6-439d-a3f7-ee2e582d8b69",
+            "name": "Copy of Plane"
+        },
+        {
+            "components": [
+                {
+                    "data": {
+                        "mass": 0.0,
+                        "name": "",
+                        "need_physics": false,
+                        "physics_simulation": true,
+                        "shape_type": 0,
+                        "transform": {
+                            "pos": [
+                                5.34044885635376,
+                                -0.5,
+                                10.300684928894043
+                            ],
+                            "rot": [
+                                -0.3947199881076813,
+                                -0.44243311882019043,
+                                0.536084771156311,
+                                0.6008844971656799
+                            ],
+                            "scale": [
+                                19.999984741210938,
+                                0.4999985694885254,
+                                20.00001335144043
+                            ]
+                        },
+                        "type": 0,
+                        "usage": 2
+                    },
+                    "id": "88599dc5-1b05-405f-b66f-91a763d1dad5",
+                    "name": "RigidBodyCubeComponent"
+                },
+                {
+                    "data": {
+                        "mat_ambient": 0.10000000149011612,
+                        "mat_diffuse": 0.5659999847412109,
+                        "mat_specular": 0.42100000381469727,
+                        "mat_specular_exp": 2.364000082015991,
+                        "mesh_path": "../Assets/box.fbx/Cube",
+                        "name": "",
+                        "normal_path": "",
+                        "texture_path": "..\\Assets\\Normal_map_example_-_Map.png",
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "df7b9560-e417-49ad-b8bb-9e8d547ca87f",
+                    "name": "StaticMeshRenderer",
+                    "parent": "88599dc5-1b05-405f-b66f-91a763d1dad5"
+                },
+                {
+                    "data": {
+                        "channel_id": -1,
+                        "name": "",
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "41f32267-7810-401a-9b1a-5428da365cae",
+                    "name": "AudioComponent",
+                    "parent": "88599dc5-1b05-405f-b66f-91a763d1dad5"
+                }
+            ],
+            "id": "bb987580-7acc-4659-be8a-85ce8efe83af",
+            "name": "Copy of Copy of Plane"
         }
     ]
 }
