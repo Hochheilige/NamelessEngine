@@ -26,6 +26,8 @@ public:
 	Matrix GetWorldToClipMatrixTransposed() const;
 
 	float GetFOV() const;
+
+	auto GetAspectRatio() const -> float { return AspectRatio; }
 	
 private:
 	Matrix ProjectionMatrix = Matrix::Identity;
