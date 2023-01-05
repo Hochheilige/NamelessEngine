@@ -316,6 +316,14 @@ auto RigidBodyComponent::SetTransform(const Transform& InTransform, TeleportType
             rigidBody.Body->setCenterOfMassTransform(PhysicsTransform);
         }
 
+		if (ShapeType == CollisionShapeType::BOX || ShapeType == CollisionShapeType::SPHERE || ShapeType == CollisionShapeType::CAPSULE)
+		{
+			btConvexInternalShape* castedShape = static_cast<btConvexInternalShape*>(Shape);
+			Vector3 scale = InTransform.Scale;
+			if (ShapeType == CollisionShapeType::BOX)
+				scale /= 2;
+			castedShape->setImplicitShapeDimensions(btVector3(scale.x, scale.y, scale.z));
+		}
 
         if (InTeleportType == TeleportType::ResetPhysics)
         {
