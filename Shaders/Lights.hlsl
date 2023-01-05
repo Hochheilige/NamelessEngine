@@ -27,7 +27,6 @@ float3 CalculateDirLight(
 	float3 viewPos,
 	float3 normal,
 	float3 baseColor,
-	float spec,
 	LightData light, 
 	Material mat
 )
@@ -35,9 +34,9 @@ float3 CalculateDirLight(
 	float3 viewDir = normalize(viewPos - pixelPos);
 	//@TODO: don't use mat.specularCoef here?
 	float3 lightDiffuse =  0.1f * saturate(-dot(light.direction, normal)) * baseColor;
-	float3 lightSpecular = mat.specularCoef * pow(saturate(dot(reflect(light.direction, normal), viewDir)), 50.0f);
+	float3 lightSpecular = mat.specularCoef * pow(saturate(dot(reflect(light.direction, normal), viewDir)), mat.specularExponent);
 
-	return (lightDiffuse + lightSpecular) * light.intensity * light.color;
+	return (lightDiffuse + lightSpecular) * light.intensity * light.color.xyz;
 }
 
 float3 CalculatePointLight
@@ -52,19 +51,19 @@ float3 CalculatePointLight
 {
 	float3 viewDir = normalize(viewPos - pixelPos);
 	// attenuation
-	float distance = length(light.position - pixelPos);
+	float distance = length(light.position.xyz - pixelPos);
 	// x - constant
 	// y - linear
 	// z - quadratic
 	float attenuation = 1.0f / (light.params.x + light.params.y * distance + light.params.z * distance * distance);
 	// diffuse shading
-	float3 lightDir = normalize(light.position - pixelPos);
+	float3 lightDir = normalize(light.position.xyz - pixelPos);
 	float3 diffuse = saturate(dot(normal, lightDir)) * baseColor;
 	// specular shading
 	float3 reflectDir = reflect(-lightDir, normal);
 	float3 specular = pow(saturate(dot(viewDir, reflectDir)), mat.specularExponent) * mat.specularCoef;
 
-	float3 lightCol = light.color * light.intensity;
+	float3 lightCol = light.color.xyz * light.intensity;
 	return (diffuse + specular) * lightCol * attenuation;
 }
 
@@ -79,7 +78,7 @@ float3 CalculateSpotLight
 )
 {
 	float3 viewDir = normalize(viewPos - pixelPos);
-	float3 lightDir = normalize(pixelPos - light.position);
+	float3 lightDir = normalize(pixelPos - light.position.xyz);
 	float3 spotDir = normalize(light.direction);
 	float theta = dot(spotDir, lightDir);
 
@@ -97,7 +96,7 @@ float3 CalculateSpotLight
 	float3 specular = pow(saturate(dot(viewDir, reflectDir)), mat.specularExponent) * mat.specularCoef;
 
 
-	float3 lightColor = light.color * light.intensity;
+	float3 lightColor = light.color.xyz * light.intensity;
 	return (diffuse + specular) * lightColor * alpha;
 }
 
