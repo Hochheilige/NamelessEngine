@@ -222,6 +222,7 @@
   <ItemGroup>
     <ClInclude Include="..\imgui\backends\imgui_impl_dx11.h" />
     <ClInclude Include="..\imgui\backends\imgui_impl_win32.h" />
+    <ClInclude Include="Include\AlbedoTexture.h" />
     <ClInclude Include="Include\CameraComponent.h" />
     <ClInclude Include="Include\ComponentRegistry.h" />
     <ClInclude Include="Include\AABB2DCollider.h" />
@@ -283,6 +284,7 @@
     <ClCompile Include="..\imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="EditorContext.cpp" />
     <ClCompile Include="Include\Renderer.cpp" />
+    <ClCompile Include="Src\AlbedoTexture.cpp" />
     <ClCompile Include="Src\CameraComponent.cpp" />
     <ClCompile Include="Src\DebugDrawer.cpp" />
     <ClCompile Include="Src\JsonSerializers.cpp" />

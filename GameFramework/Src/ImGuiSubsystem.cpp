@@ -522,7 +522,7 @@ auto ImGuiSubsystem::DrawStaticMeshProperties() -> void {
 
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-		ImGui::BeginChild("RB", ImVec2(0, 47), true, window_flags);
+		ImGui::BeginChild("RB", ImVec2(0, 100), true, window_flags);
 
 		ImGui::Button((smr->GetStaticMesh()->GetFullPath().filename().string() + "##StaticMesh").c_str(), ImVec2(100, 30));
 
@@ -535,17 +535,43 @@ auto ImGuiSubsystem::DrawStaticMeshProperties() -> void {
 				Path::value_type* last = first + payload->DataSize / sizeof(Path::value_type);
 				Path p = Path(first, last);
 
-				smr->SetStaticMesh(MyGame->GetAssetManager()->LoadStaticMesh(p));
+				smr->SetMeshPath(p.string());
 			}
 			ImGui::EndDragDropTarget();
 		}
 
 		ImGui::SameLine();
 
-		ImGui::Button("Pick");
+		ImGui::PushFont(headerFont);
+		ImGui::Text("Static Mesh");
+		ImGui::PopFont();
+
+		/*ImGui::Button("Pick");
 		if (ImGui::IsItemHovered()) {
 			ImGui::SetTooltip("NOT READY:Places selected static mesh asset into renderer");
+		}*/
+
+		ImGui::Button((smr->GetTexturePath().filename().string() + "##Texture").c_str(), ImVec2(100, 30));
+
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(FileDragDropSourceType))
+			{
+				Path::value_type* first = static_cast<Path::value_type*>(payload->Data);
+				// it seems that last is really last and not one past last
+				Path::value_type* last = first + payload->DataSize / sizeof(Path::value_type);
+				Path p = Path(first, last);
+
+				smr->SetTexturePath(p.string());
+			}
+			ImGui::EndDragDropTarget();
 		}
+
+		ImGui::SameLine();
+
+		ImGui::PushFont(headerFont);
+		ImGui::Text("Albedo Texture");
+		ImGui::PopFont();
 
 
 		ImGui::EndChild();
@@ -1045,7 +1071,8 @@ auto ImGuiSubsystem::DrawAsset(const DirectoryTreeNode* file, const Vector2& ite
 	// Setting up drag and drop as source
 	if (!file->IsAssetFromCollection() && ImGui::BeginDragDropSource())
 	{
-		ImGui::SetDragDropPayload(FileDragDropSourceType, nameAsString.c_str(), nameAsString.size() + 1);
+		Path p = Path("..") / file->GetPathFromTreeRoot();
+		ImGui::SetDragDropPayload(FileDragDropSourceType, p.c_str(), p.native().size() * sizeof(Path::value_type));
 
 		ImGui::Text(nameAsString.c_str());
 

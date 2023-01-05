@@ -9,6 +9,7 @@
 class Asset;
 class DirectoryTree;
 class StaticMesh;
+class AlbedoTexture;
 
 class AssetManager
 {
@@ -20,6 +21,8 @@ public:
 	using AssetMapType = std::unordered_map<K, V>;
 
 	auto LoadStaticMesh(const Path& path)->StaticMesh*;
+	auto LoadAlbedoTexture(const Path& path)->AlbedoTexture*;
+	
 
 	/*Asset* LoadAsset(const Path& AssetPath) {}
 

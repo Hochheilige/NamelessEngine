@@ -4,6 +4,8 @@
 #include "RenderingSystemTypes.h"
 #include "MonoObjects/StaticMeshRendererComponent.h"
 #include <d3d11.h>
+#include <filesystem>
+using Path = std::filesystem::path;
 
 #include <wrl/client.h>
 using namespace Microsoft::WRL;
@@ -14,6 +16,8 @@ class StaticMeshRenderer : public Renderer
 {
 public: 
 
+	friend class ImGuiSubsystem;
+
 	StaticMeshRenderer();
 
 	auto GetStaticMesh() const -> StaticMesh* { return staticMesh; }
@@ -22,6 +26,7 @@ public:
 	virtual auto Render(const RenderingSystemContext& RSContext) -> void override;
 
 	auto SetMeshPath(std::string meshPath) -> void;
+	auto SetTexturePath(std::string texturePath) -> void;
 
 	ComponentType GetComponentType() override { return StaticMeshRendererType; }
 	MonoComponent* GetMonoComponent() override { return mMonoComponent; }
@@ -39,6 +44,8 @@ public:
 		return new StaticMeshRenderer();
 	}
 
+	auto GetTexturePath() -> Path { return texturePath; }
+
 protected:
 	MonoComponent* mMonoComponent = new StaticMeshRendererComponent();
 
@@ -48,4 +55,7 @@ protected:
 	ComPtr<ID3D11ShaderResourceView> mAlbedoSRV = nullptr;
 	ComPtr<ID3D11ShaderResourceView> mNormalSRV = nullptr;
 	ComPtr<ID3D11ShaderResourceView> mSpecularSRV = nullptr;
+
+private:
+	std::string texturePath;
 };

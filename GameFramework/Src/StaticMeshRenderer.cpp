@@ -7,6 +7,7 @@
 #include "StaticMesh.h"
 #include "RenderingSystem.h"
 #include "EngineContentRegistry.h"
+#include "AlbedoTexture.h"
 
 StaticMeshRenderer::StaticMeshRenderer()
 {
@@ -97,10 +98,29 @@ auto StaticMeshRenderer::SetMeshPath(std::string meshPath) -> void
 	SetNormalSRV(content->GetBasicNormalTexSRV());
 }
 
+auto StaticMeshRenderer::SetTexturePath(std::string texturePath) -> void
+{
+	if (texturePath == "") {
+		SetAlbedoSRV(nullptr);
+		return;
+	}
+	auto am = Game::GetInstance()->GetAssetManager();
+	this->texturePath = texturePath;
+	auto at = am->LoadAlbedoTexture(texturePath);
+	if (at) {
+		SetAlbedoSRV(at->GetSRV());
+	}
+	else
+	{
+		SetAlbedoSRV(nullptr);
+	}
+}
+
 json StaticMeshRenderer::Serialize() const
 {
 	auto out = Renderer::Serialize();
 	out["mesh_path"] = GetStaticMesh()->GetFullPath();
+	out["texture_path"] = texturePath;
 	return out;
 }
 
@@ -111,7 +131,11 @@ void StaticMeshRenderer::Deserialize(const json* in)
 	EngineContentRegistry* content = EngineContentRegistry::GetInstance();
 	SetPixelShader(content->GetDefaultPixelShader());
 	SetVertexShader(content->GetDefaultVertexShader());
-	SetAlbedoSRV(content->GetWhiteTexSRV());
+	auto texPath = in->at("texture_path");
+	SetTexturePath(texPath);
+	if (mAlbedoSRV == nullptr) {
+		SetAlbedoSRV(content->GetWhiteTexSRV());
+	}
 	SetNormalSRV(content->GetBasicNormalTexSRV());
 	Renderer::Deserialize(in);
 }

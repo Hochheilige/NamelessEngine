@@ -25,6 +25,7 @@
 #include "StaticMeshRenderer.h"
 #include "AssetManager.h"
 
+
 #include "CreateCommon.h"
 
 Actor* Sandbox::CreateNonPhysicsBox(Transform transform) {
@@ -35,7 +36,7 @@ Actor* Sandbox::CreateNonPhysicsBox(Transform transform) {
 	mesh_component->SetStaticMesh(GetAssetManager()->LoadStaticMesh(path));
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
-	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
+	mesh_component->SetTexturePath("../Assets/white.png");
 	mesh_component->SetNormalSRV(EngineContentRegistry::GetInstance()->GetBasicNormalTexSRV());
 	mesh_component->SetTransform(transform);
 
@@ -50,7 +51,7 @@ Actor* Sandbox::CreatePlayahActor(Transform transform) {
 	mesh_component->SetStaticMesh(GetAssetManager()->LoadStaticMesh(path));
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
-	mesh_component->SetAlbedoSRV(EngineContentRegistry::GetInstance()->GetWhiteTexSRV());
+	mesh_component->SetTexturePath("../Assets/white.png");
 	mesh_component->SetNormalSRV(EngineContentRegistry::GetInstance()->GetBasicNormalTexSRV());
 	box->GetRoot()->SetTransform(transform);
 
@@ -222,7 +223,7 @@ Actor* Sandbox::CreateBun(Transform transform)
 	actor->SetTransform(transform);
 	mesh_component->SetPixelShader(ps);
 	mesh_component->SetVertexShader(vs);
-	mesh_component->SetAlbedoSRV(burgerTexSRV);
+	mesh_component->SetTexturePath("../Assets/tjciddjqx_2K_Albedo.jpg");
 	mesh_component->SetNormalSRV(burgerNormalSRV);
 	mesh_component->SetSpecularSRV(burgerSpecSRV);
 

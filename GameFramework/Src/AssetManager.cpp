@@ -6,6 +6,8 @@
 #include <assimp/postprocess.h>
 
 #include "StaticMesh.h"
+#include "AlbedoTexture.h"
+#include <EngineContentRegistry.h>
 
 
 auto AssetManager::Initialize() -> void
@@ -86,4 +88,29 @@ auto AssetManager::LoadStaticMesh(const Path& path)->StaticMesh*
 	LoadedAssetsMap.insert({ path, sm });
 
 	return sm;
+}
+
+auto AssetManager::LoadAlbedoTexture(const Path& path) -> AlbedoTexture*
+{	
+	auto res = LoadedAssetsMap.find(path);
+	if (res != LoadedAssetsMap.end())
+	{
+		auto* stuff = res->second;
+		return dynamic_cast<AlbedoTexture*>(res->second);
+	}
+
+	AlbedoTexture* at = new AlbedoTexture();
+
+	at->fullPath = path;
+
+	if (!at->Load())
+	{
+		//TODO: return white tex here
+
+		return nullptr;
+	}
+
+	LoadedAssetsMap.insert({ path, at });
+
+	return at;
 }
