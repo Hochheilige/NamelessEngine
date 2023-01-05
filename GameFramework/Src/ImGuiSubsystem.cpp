@@ -317,7 +317,7 @@ auto ImGuiSubsystem::DrawViewport() -> void
 				}
 				else
 				{
-					actor->SetTransform(t);
+					actor->SetTransform(t, TeleportType::ResetPhysics);
 					GetEditorContext().SetSelectedActor(actor);
 				}
 				

@@ -30,6 +30,9 @@ public:
 
 	auto GetTransform() const -> const Transform& { return RootComponent ? RootComponent->GetTransform() : Transform::Identity; }
 	auto SetTransform(const Transform& InTransform) const -> void { if (RootComponent)  RootComponent->SetRelativeTransform(InTransform); else assert(false); /*attempting to set transform when actor doesn't have a root component*/ }
+	virtual auto SetTransform(const Transform& InTransform, TeleportType InTeleportType = TeleportType::TeleportPhysics) -> void 
+		{ if (RootComponent)  RootComponent->SetTransform(InTransform, InTeleportType); else assert(false); };
+
 
 	template<typename T>
 	auto AddComponent() -> T*

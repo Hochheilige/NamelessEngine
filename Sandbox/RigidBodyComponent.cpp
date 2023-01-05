@@ -326,7 +326,7 @@ auto RigidBodyComponent::SetTransform(const Transform& InTransform, TeleportType
             // todo: make sure everything is cleared
         }
     }
-    else
+    else if (rigidBody.Collision)
     {
         rigidBody.Collision->setWorldTransform(PhysicsTransform);
     }

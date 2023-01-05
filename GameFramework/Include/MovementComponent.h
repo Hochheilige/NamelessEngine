@@ -113,6 +113,7 @@ public:
 
 	virtual auto SetTransform(const Transform& InTransform, TeleportType InTeleportType) -> void;
 
+	virtual void OnDeserializationCompleted() override;
 
 private:
 	//character capsule shape ??

@@ -98,6 +98,7 @@ auto MovementComponent::SetTransform(const Transform& InTransform, TeleportType 
 	}
 }
 
-
-
-
+void MovementComponent::OnDeserializationCompleted()
+{
+	SetTransform(GetTransform(), TeleportType::ResetPhysics);
+}
