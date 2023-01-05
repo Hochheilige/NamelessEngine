@@ -21,6 +21,7 @@ private:
         auto str = mono_string_to_utf8(mono_object_to_string(name, nullptr));
         auto actor = CreateActor<Actor>();
         actor->InitializeMonoActor(str);
+        //actor->GetMonoActor()->Init();
         
         auto csActor = actor->GetMonoActor();
         return csActor->GetCsInstance();

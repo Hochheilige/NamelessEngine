@@ -50,7 +50,7 @@ namespace Scripts.Tests
             {
                 if (!isJumpPressed) { mv_cmp.Jump(jumpDirection); }
                 isJumpPressed = true;
-            } 
+            }
             else
             {
                 isJumpPressed = false;
@@ -97,10 +97,10 @@ namespace Scripts.Tests
             //OrbitRadius += orbitRadiusDelta;
 
             // todo: ignore only GCToOrbit's yaw and pitch rotation and scale
-            
-            
+
+
             Matrix mat = Matrix.Translation(new Vector3(0.0f, 0.0f, OrbitRadius)) *
-                Matrix.RotationYawPitchRoll(Yaw  *(float)Math.PI / 180.0f, Pitch * (float)Math.PI / 180.0f, 0.0f) *
+                Matrix.RotationYawPitchRoll(Yaw * (float)Math.PI / 180.0f, Pitch * (float)Math.PI / 180.0f, 0.0f) *
                 Matrix.Translation(GetTransform().Position);
 
             mat.Decompose(out Vector3 scale, out Quaternion rot, out Vector3 pos);
@@ -136,7 +136,7 @@ namespace Scripts.Tests
                 rightInput -= deltaTime * characterSpeed;
             }
 
-            
+
             movementDelta += right * rightInput;
             movementDelta -= forward * forwardInput;
 
@@ -147,7 +147,9 @@ namespace Scripts.Tests
         private void fire()
         {
             Bullet bullet = Instantiator.InstantiateActor<Bullet>();
-            bullet.SetTransform(this.GetTransform());
+            bullet.PublicInit();
+            bullet.SetTransform(GetTransform());
+           
             bullet.fire();
 
             currentFireDelay = fireDelay;

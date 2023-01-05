@@ -17,10 +17,10 @@ namespace Scripts.Tests
             Console.WriteLine("Me booted, kek.");
             Console.Out.Flush();
 
-            Actor bullet = Instantiator.InstantiateActor<Bullet>();
+            //Actor bullet = Instantiator.InstantiateActor<Bullet>();
         }
 
-        
+
     }
 
 }

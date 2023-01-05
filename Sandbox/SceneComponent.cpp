@@ -51,6 +51,7 @@ json SceneComponent::Serialize() const
 {
 	json out = json::object();
 	out["transform"] = mTransform;
+	out["name"] = GetName();
 	return out;
 }
 
@@ -59,6 +60,7 @@ void SceneComponent::Deserialize(const json* in)
 	assert(in->is_object());
 
 	mTransform = in->at("transform");
+	SetName(in->at("name"));
 }
 
 auto SceneComponent::GetAttahcmentRoot() -> SceneComponent*

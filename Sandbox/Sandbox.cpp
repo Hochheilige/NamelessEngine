@@ -94,7 +94,7 @@ Actor* Sandbox::CreateDynamicBox(Transform transform)
 	box_rb->SetRigidBodyType(RigidBodyType::DYNAMIC);
 	box_rb->SetRigidBodyUsage(RigidBodyUsage::COLLISIONS_AND_PHYSICS);
 	box_rb->SetCollisionShapeType(CollisionShapeType::BOX);
-	box_rb->SetMass(1);
+	box_rb->SetMass(0.1f);
 	box_rb->Init();
 	box_rb->EnablePhysicsSimulation();
 	Path path = "../Assets/box.fbx/Cube";
@@ -116,7 +116,7 @@ Actor* Sandbox::CreateKinematicBox(Transform transform)
 	box_rb->SetRigidBodyType(RigidBodyType::KINEMATIC);
 	box_rb->SetRigidBodyUsage(RigidBodyUsage::COLLISIONS_AND_PHYSICS);
 	box_rb->SetCollisionShapeType(CollisionShapeType::BOX);
-	box_rb->SetMass(1);
+	box_rb->SetMass(0.1f);
 	box_rb->Init();
 	box_rb->EnablePhysicsSimulation();
 	Path path = "../Assets/box.fbx/Cube";

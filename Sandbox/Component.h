@@ -12,7 +12,7 @@ class MonoComponent;
 class Actor;
 class Game;
 
-typedef std::string name;
+//typedef std::string name;
 
 class Component
 {
@@ -21,6 +21,14 @@ class Component
 
 public:
 	Component();
+
+	void SetName(const std::string &name) {
+		this->name = name;
+	}
+
+	const std::string& GetName() const {
+		return this->name;
+	}
 
 	virtual void Init()
 	{
@@ -75,4 +83,6 @@ private:
 
 	Actor* mOwner;
 	uuid id;
+
+	std::string name;
 };

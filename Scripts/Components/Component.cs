@@ -10,6 +10,16 @@ namespace Scripts
         protected static extern IntPtr InternalCreateComponent(IntPtr actor, int componentType);
         
         [MethodImpl(MethodImplOptions.InternalCall)]
+        protected static extern void InternalSetName(IntPtr actor, String name);
+
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        protected static extern string InternalGetName(IntPtr actor);
+
+
+
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern Transform InternalGetTransform(IntPtr handle);
         
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -29,6 +39,17 @@ namespace Scripts
         private void SetCppInstance(IntPtr obj)
         {
             CppInstance = obj;
+        }
+
+        public void SetName(string name)
+        {
+            InternalSetName(CppInstance, name);
+            this.Name = name;
+        }
+
+        public string GetName()
+        {
+            return InternalGetName(CppInstance);
         }
 
         public void SetTransform(Transform transform)

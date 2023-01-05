@@ -69,7 +69,18 @@ namespace Scripts
         {
             ComponentType type = (ComponentType) componentType;
             //Console.WriteLine("Component type to add " + type);
+
             
+
+            if (internalCreate && name != null)
+            {
+                var intComp = Components.FirstOrDefault(x => x.GetName().Equals(name));
+                if (intComp != null)
+                {
+                    return intComp;
+                }
+            }
+
             Component component = default;
             switch (type)
             {
@@ -93,15 +104,12 @@ namespace Scripts
                     throw new Exception("Undefined Component");
             }
 
-            component.Name = name ?? component.GetHashCode().ToString();
-            
-            var intComp = Components.FirstOrDefault(x => x.Name == component.Name);
-            
-            if (intComp != null)
+            if (internalCreate)
             {
-                return intComp;
+                component.SetName(name ?? component.GetHashCode().ToString());
+                //component.Name = name ?? component.GetHashCode().ToString();
             }
-            
+
             Components.Add(component);
             return component;
         }

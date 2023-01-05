@@ -17,8 +17,17 @@ namespace Scripts
       
         public Bullet()
         {
+            
+        }
+
+        public void PublicInit()
+        {
+            Init();
+        }
+        private protected override void Init()
+        {
             //rigidbody = (RigidBodyComponent)AddComponent(ComponentType.RigidBodyCubeType);
-            rigidbody = AddComponent<RigidBodyCubeComponent>();
+            rigidbody = AddComponent<RigidBodySphereComponent>("RigidBodyComponent");
             rigidbody.SetType(RigidBodyType.Dynamic);
             rigidbody.SetUsage(RigidBodyUsage.CollisionsAndPhysics);
             rigidbody.SetCollisionShape(CollisionShape.Sphere);
@@ -30,10 +39,10 @@ namespace Scripts
             // and set impulse
 
             //renderer = (StaticMeshRenderer)AddComponent(ComponentType.StaticMeshRendererType);
-            renderer = AddComponent<StaticMeshRenderer>();
+            renderer = AddComponent<StaticMeshRenderer>("StaticMeshRenderer");
             renderer.SetMeshPath("../Assets/box.fbx/Cube");
         }
-        
+
         public override void Update(float deltaTime)
         {
             lifespan -= deltaTime;

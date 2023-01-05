@@ -6,13 +6,18 @@
 #include "MovementComponent.h"
 #include "ComponentRegistry.h"
 
+
 class MonoComponentModule
 {
 public:
     MonoComponentModule()
     {
         mono_add_internal_call("Scripts.Component::InternalCreateComponent", &CreateComponent);
+        mono_add_internal_call("Scripts.Component::InternalSetName", &SetName);
+        mono_add_internal_call("Scripts.Component::InternalGetName", &GetName);
     }
+
+
 
 private:
     static Component* CreateComponent(Actor* actor, int compType)
@@ -20,17 +25,14 @@ private:
         auto* cmp = ComponentRegistry::CreateByType(static_cast<ComponentType>(compType));
         return actor->AddComponent(cmp);
        
-        ////return actor->AddComponent<RigidBodyComponent>();
-        //auto box_rb = actor->AddComponent<RigidBodyCube>();
-        //Transform tr;
-        //tr.Position = Vector3(16, 3, 0);
-        //tr.Rotation.SetEulerAngles(0, 0, 0);
-        //tr.Scale = Vector3(4.0, 4.0, 20.0);
-        //actor->SetTransform(tr);
-        //box_rb->SetRigidBodyType(RigidBodyType::STATIC);
-        //box_rb->SetMass(0);
-        //box_rb->Init();
-        //return box_rb;
+    }
+    static void SetName(Component* component, MonoObject* name)
+    {
+        auto str = mono_string_to_utf8(mono_object_to_string(name, nullptr));
+        component->SetName(str);
+    }
 
+    static MonoString* GetName(Component* component) {
+        return mono_string_new(mono_domain_get(), component->GetName().c_str());
     }
 };
