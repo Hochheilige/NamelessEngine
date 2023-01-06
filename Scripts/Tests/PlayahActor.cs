@@ -54,11 +54,6 @@ namespace Scripts.Tests
                 isJumpPressed = false;
             }
 
-            if (Game.GetInstance().InputHandler.IsMouseButtonDown(InputHandler.MouseButton.Right))
-            {
-                Console.WriteLine("Right button!");
-            }
-
             // shooting 
 
             if (currentFireDelay >= 0.0f)
