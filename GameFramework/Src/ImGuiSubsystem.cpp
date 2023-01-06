@@ -286,11 +286,17 @@ auto ImGuiSubsystem::DrawViewport() -> void
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	if (ImGui::Begin("Viewport"))
 	{
+		
 		ViewportStart = ImGui::GetCursorScreenPos();
 		ViewportSize = ImGui::GetContentRegionAvail();
 		ViewportMousePos = Vector2(ImGui::GetMousePos()) - ViewportStart;
 		MyGame->MyRenderingSystem->HandleScreenResize({ ViewportSize.x, ViewportSize.y });
 		ImGui::Image(MyGame->MyRenderingSystem->GetViewportTextureID(), ViewportSize);
+
+		if (ImGui::IsMouseDown(ImGuiMouseButton_::ImGuiMouseButton_Right) && ImGui::IsItemHovered())
+			ImGui::SetWindowFocus();
+
+		isViewportFocused = ImGui::IsWindowFocused();
 
 		if (ImGui::BeginDragDropTarget())
 		{
@@ -362,6 +368,8 @@ auto ImGuiSubsystem::DrawViewport() -> void
 	}
 	ImGui::End();
 	ImGui::PopStyleVar();
+
+	
 }
 
 auto ImGuiSubsystem::DrawActorExplorer() -> void
@@ -474,6 +482,10 @@ auto ImGuiSubsystem::DrawComponentSelector(class Actor* actor) -> void {
 	}
 }
 
+auto ImGuiSubsystem::CanChangeGuizmo() -> bool{
+	return !ImGui::IsMouseDown(ImGuiMouseButton_::ImGuiMouseButton_Right) && isViewportFocused;
+}
+
 auto ImGuiSubsystem::LayOutTransform() -> void
 {
 	SceneComponent* ssc = GetSelectedSceneComponent();
@@ -487,13 +499,16 @@ auto ImGuiSubsystem::LayOutTransform() -> void
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
 		ImGui::BeginChild("ChildR", ImVec2(0, 132), true, window_flags);
 
-		if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
+		if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE) || 
+			(CanChangeGuizmo() && ImGui::IsKeyDown(ImGuiKey_W)))
 			mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
 		ImGui::SameLine();
-		if (ImGui::RadioButton("Rotate", mCurrentGizmoOperation == ImGuizmo::ROTATE))
+		if (ImGui::RadioButton("Rotate", mCurrentGizmoOperation == ImGuizmo::ROTATE) ||
+			(CanChangeGuizmo() && ImGui::IsKeyDown(ImGuiKey_E)))
 			mCurrentGizmoOperation = ImGuizmo::ROTATE;
 		ImGui::SameLine();
-		if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE))
+		if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE) ||
+			(CanChangeGuizmo() && ImGui::IsKeyDown(ImGuiKey_R)))
 			mCurrentGizmoOperation = ImGuizmo::SCALE;
 
 		Transform t = mCurrentGizmoMode == ImGuizmo::MODE::LOCAL ? ssc->GetRelativeTransform() : ssc->GetTransform();
