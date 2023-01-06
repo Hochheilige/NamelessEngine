@@ -19,6 +19,11 @@ namespace Scripts.Internal
         {
             Game.GetInstance().InputHandler.cpp_KeyReleased(key);
         }
+        
+        private static void MouseInput(int mouseButton, int mouseAction)
+        {
+            Game.GetInstance().InputHandler.cpp_MouseInput(mouseButton, mouseAction);
+        }
     }
 
     internal class ExternalApi

@@ -38,32 +38,7 @@ namespace Scripts
             return ExternalApi.IsMouseDown((int)button);
         }
 
-        internal void cpp_KeyPressed(int key)
-        {
-            var keyObj = (Keys)key;
-            if (_pressedKeys.Add(keyObj))
-            {
-                // first press
-                Console.WriteLine($"Key Pressed: {keyObj} ({key})");
-                _game.OnKeyInput(keyObj, ActionType.Pressed);
-            }
-            else
-            {
-                Console.WriteLine($"Key Repeated: {keyObj} ({key})");
-                _game.OnKeyInput(keyObj, ActionType.Repeated);
-            }
-        }
-
-        internal void cpp_KeyReleased(int key)
-        {
-            var keyObj = (Keys)key;
-            Console.WriteLine($"Key Released: {keyObj} ({key})");
-            _pressedKeys.Remove((Keys)key);
-
-            _game.OnKeyInput(keyObj, ActionType.Released);
-        }
-
-        public enum ActionType
+        public enum KeyAction
         {
             Pressed,
             Repeated,
@@ -75,6 +50,39 @@ namespace Scripts
             Left,
             Middle,
             Right
+        }
+
+        public enum MouseAction
+        {
+            Pressed,
+            Released
+        }
+        
+        internal void cpp_KeyPressed(int key)
+        {
+            var keyObj = (Keys)key;
+            if (_pressedKeys.Add(keyObj))
+            {
+                // first press
+                _game.OnKeyInput(keyObj, KeyAction.Pressed);
+            }
+            else
+            {
+                _game.OnKeyInput(keyObj, KeyAction.Repeated);
+            }
+        }
+
+        internal void cpp_KeyReleased(int key)
+        {
+            var keyObj = (Keys)key;
+            _pressedKeys.Remove((Keys)key);
+
+            _game.OnKeyInput(keyObj, KeyAction.Released);
+        }
+
+        internal void cpp_MouseInput(int mouseButton, int mouseAction)
+        {
+            _game.OnMouseInput((MouseButton)mouseButton, (MouseAction)mouseAction);
         }
     }
 }

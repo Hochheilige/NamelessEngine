@@ -8,6 +8,7 @@ using Scripts.Engine;
 
 using Newtonsoft.Json;
 using static Scripts.InputHandler;
+using Action = Scripts.BehaviorTree.Action;
 
 namespace Scripts
 {
@@ -69,11 +70,19 @@ namespace Scripts
 
         public void AddActor(Actor actor) { actors.Add(actor); }
 
-        protected internal virtual void OnKeyInput(Keys key, ActionType action)
+        protected internal virtual void OnKeyInput(Keys key, KeyAction action)
         {
             foreach (var actor in actors)
             {
                 actor.OnKeyInput(key, action);
+            }
+        }
+
+        protected internal virtual void OnMouseInput(MouseButton button, MouseAction action)
+        {
+            foreach (var actor in actors)
+            {
+                actor.OnMouseInput(button, action);
             }
         }
 

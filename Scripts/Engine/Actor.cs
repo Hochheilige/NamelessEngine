@@ -50,9 +50,14 @@ namespace Scripts
         
         public virtual void Update(float deltaTime) { }
 
-        protected internal virtual void OnKeyInput(Keys key, InputHandler.ActionType type)
+        protected internal virtual void OnKeyInput(Keys key, InputHandler.KeyAction type)
         {
 
+        }
+        
+        protected internal virtual void OnMouseInput(InputHandler.MouseButton button, InputHandler.MouseAction action)
+        {
+            
         }
         
         public Component AddComponent(ComponentType componentType)
