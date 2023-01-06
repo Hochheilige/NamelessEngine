@@ -24,7 +24,7 @@ namespace Scripts.BehaviorTree
             mem.remainingTime = moveTime;
             mem.startPosition = btComponent.GetOwner().GetTransform().Position;
             Random rnd = new Random();
-            Vector3 dir = new Vector3(rnd.Next(), 0, rnd.Next());
+            Vector3 dir = new Vector3(rnd.NextFloat(-1.0f, 1.0f), 0, rnd.NextFloat(-1.0f, 1.0f));
             dir.Normalize();
             mem.endPosition = mem.startPosition + dir * radius;
             return TaskStateEnum.InProgress;
@@ -41,6 +41,8 @@ namespace Scripts.BehaviorTree
             if (alpha < 0) alpha = 0.0f; 
 
             t.Position = mem.startPosition * alpha + mem.endPosition * (1-alpha);
+
+            btComponent.GetOwner().SetTransform(t);
 
             if (mem.remainingTime < 0.0f)
             {

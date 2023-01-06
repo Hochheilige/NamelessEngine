@@ -10,6 +10,10 @@ namespace Scripts.BehaviorTree
     {
         public BTComposite GetParent() { return parent; }
 
+        public void SetParent(BTComposite composite)
+        {
+            parent = composite;
+        }
         private BTComposite parent;
     }
 }

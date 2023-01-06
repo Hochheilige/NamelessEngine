@@ -96,6 +96,7 @@ namespace Scripts.BehaviorTree
             while (comp != null)
             {
                 int nextChildIndex = comp.GetNextChildIndex(nodeData.prevIndex, nodeData.prevResult);
+                nodeData.prevIndex = nextChildIndex;
                 if (nextChildIndex == (int)SpecialIndexValues.ReturnToParent)
                 {
                     comp = comp.GetParent();

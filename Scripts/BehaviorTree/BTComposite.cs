@@ -9,7 +9,7 @@ namespace Scripts.BehaviorTree
 {
     public abstract class BTComposite : BTNode
     {
-        protected List<BTCompositeChild> children;
+        protected List<BTCompositeChild> children = new List<BTCompositeChild>();
 
         public abstract int GetNextChildIndex(int prevIndex, TaskStateEnum prevResult);
 
@@ -24,9 +24,11 @@ namespace Scripts.BehaviorTree
         {
             if (node == null) throw new ArgumentNullException("Trying to add a null node as a child");
 
+            node.SetParent(this);
             BTCompositeChild child = new BTCompositeChild();
             child.childNode = node;
             child.isTaskNode = node is BTTask;
+            children.Add(child);
         }
     }
 
