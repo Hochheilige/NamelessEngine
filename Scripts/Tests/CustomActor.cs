@@ -15,7 +15,7 @@ namespace Scripts.Tests
         {
         }
 
-        private protected override void RegisterComponents()
+        protected internal override void RegisterComponents()
         {
             AddComponent<RigidBodyCubeComponent>();
         }

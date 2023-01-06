@@ -24,7 +24,8 @@ namespace Scripts
         {
             Init();
         }
-        private protected override void Init()
+
+        protected internal override void Init()
         {
             //rigidbody = (RigidBodyComponent)AddComponent(ComponentType.RigidBodyCubeType);
             rigidbody = AddComponent<RigidBodySphereComponent>("RigidBodyComponent");

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using static Scripts.InputHandler;
@@ -18,5 +19,11 @@ namespace Scripts.Internal
         {
             Game.GetInstance().InputHandler.cpp_KeyReleased(key);
         }
+    }
+
+    internal class ExternalApi
+    {
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool IsMouseDown(int button);
     }
 }

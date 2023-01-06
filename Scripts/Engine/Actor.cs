@@ -30,12 +30,12 @@ namespace Scripts
          * Here and only here components can be properly added to the Actor.
          * Wouldn't be called upon deserializing.
          */
-        private protected virtual void RegisterComponents()
+        protected internal virtual void RegisterComponents()
         {
             
         }
 
-        private protected virtual void Init()
+        protected internal virtual void Init()
         {
             
         }
@@ -49,6 +49,11 @@ namespace Scripts
         public virtual void OnBeginPlay() { }
         
         public virtual void Update(float deltaTime) { }
+
+        protected internal virtual void OnKeyInput(Keys key, InputHandler.ActionType type)
+        {
+
+        }
         
         public Component AddComponent(ComponentType componentType)
         {

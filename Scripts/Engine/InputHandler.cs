@@ -6,15 +6,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using Scripts.Engine;
+using System.Runtime.CompilerServices;
+using Scripts.Internal;
 
 namespace Scripts
 {
     public class InputHandler
     {
         private readonly HashSet<Keys> _pressedKeys = new HashSet<Keys>();
+        private readonly Game _game;
 
-        public delegate void KeyInputHandler(Keys key, ActionType action);
-        public event KeyInputHandler OnKeyInput;
+        public InputHandler(Game game)
+        {
+            _game = game;
+        }
 
         //TODO uncomment
         //public delegate void MouseInputHandler();
@@ -28,6 +33,11 @@ namespace Scripts
             return _pressedKeys.Contains(key);
         }
 
+        public bool IsMouseButtonDown(MouseButton button)
+        {
+            return ExternalApi.IsMouseDown((int)button);
+        }
+
         internal void cpp_KeyPressed(int key)
         {
             var keyObj = (Keys)key;
@@ -35,12 +45,12 @@ namespace Scripts
             {
                 // first press
                 Console.WriteLine($"Key Pressed: {keyObj} ({key})");
-                OnKeyInput?.Invoke(keyObj, ActionType.Pressed);
+                _game.OnKeyInput(keyObj, ActionType.Pressed);
             }
             else
             {
                 Console.WriteLine($"Key Repeated: {keyObj} ({key})");
-                OnKeyInput?.Invoke(keyObj, ActionType.Repeated);
+                _game.OnKeyInput(keyObj, ActionType.Repeated);
             }
         }
 
@@ -50,7 +60,7 @@ namespace Scripts
             Console.WriteLine($"Key Released: {keyObj} ({key})");
             _pressedKeys.Remove((Keys)key);
 
-            OnKeyInput?.Invoke(keyObj, ActionType.Released);
+            _game.OnKeyInput(keyObj, ActionType.Released);
         }
 
         public enum ActionType
@@ -58,6 +68,13 @@ namespace Scripts
             Pressed,
             Repeated,
             Released
+        }
+
+        public enum MouseButton
+        {
+            Left,
+            Middle,
+            Right
         }
     }
 }

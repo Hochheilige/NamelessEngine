@@ -105,6 +105,9 @@
     <ClInclude Include="MonoModules\MonoRigidBodyComponentModule.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MonoModules\MonoMasterModule.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mappings.h" />

@@ -7,6 +7,7 @@ using Scripts.BehaviorTree;
 using Scripts.Engine;
 
 using Newtonsoft.Json;
+using static Scripts.InputHandler;
 
 namespace Scripts
 {
@@ -16,7 +17,7 @@ namespace Scripts
         
         private static Game _instance;
 
-        public readonly InputHandler InputHandler = new InputHandler();
+        public readonly InputHandler InputHandler;
 
         public readonly EngineSettings EngineSettings;
 
@@ -31,6 +32,8 @@ namespace Scripts
             }
 
             _instance = this;
+
+            InputHandler = new InputHandler(this);
 
             //TODO
             //var builder = new EngineSettings.Builder();
@@ -59,7 +62,20 @@ namespace Scripts
             return new List<T>();
         }
 
+        public IEnumerable<Actor> GetActors()
+        {
+            return actors;
+        }
+
         public void AddActor(Actor actor) { actors.Add(actor); }
+
+        protected internal virtual void OnKeyInput(Keys key, ActionType action)
+        {
+            foreach (var actor in actors)
+            {
+                actor.OnKeyInput(key, action);
+            }
+        }
 
         /**
          * Called upon start
@@ -67,8 +83,6 @@ namespace Scripts
         internal virtual void OnLoad()
         {
             Console.WriteLine("Hello!");
-            
-
         }
 
         /**
@@ -78,7 +92,7 @@ namespace Scripts
         {
            
         }
-        
+
         private string GetActorInheritors()
         {
             var actorSignatures = (
