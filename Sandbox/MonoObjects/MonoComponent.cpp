@@ -14,8 +14,11 @@ void MonoComponent::ConstructFromCsInstance(MonoObject* instance, Component* com
 
 MonoComponent::~MonoComponent()
 {
-    auto mono = MonoSystem::GetInstance();
+    if(mono_gchandle_get_target(Handle) != nullptr)
+    {
+        auto mono = MonoSystem::GetInstance();
     
-    MonoMethod* method = mono->GetVirtualMethod("Scripts", "Component", "Dispose", Handle);
-    MonoObject* result = mono->InvokeInstanceMethod(method, Handle, nullptr, nullptr);
+        MonoMethod* method = mono->GetVirtualMethod("Scripts", "Component", "Dispose", Handle);
+        MonoObject* result = mono->InvokeInstanceMethod(method, Handle, nullptr, nullptr);
+    }
 }

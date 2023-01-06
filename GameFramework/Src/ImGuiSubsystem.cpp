@@ -214,6 +214,19 @@ auto ImGuiSubsystem::DrawToolbar() -> void
 			}
 			ImGui::SameLine();
 
+			if (ImGui::Button("Reload Assemblies"))
+			{
+				GetEditorContext().SetSelectedActor(nullptr);
+				auto mono = MonoSystem::GetInstance();
+				Serializer::SaveToFile(tempsavepath, Game::GetInstance());
+				mono->RestartMono();
+				
+				Serializer::ReadFromFile(tempsavepath, Game::GetInstance(), true);
+				std::filesystem::remove(tempsavepath);
+			}
+
+			ImGui::SameLine();
+
 			if (ImGui::Button("Save"))
 			{
 				Serializer::SaveToFile(savepath, Game::GetInstance());
@@ -273,11 +286,17 @@ auto ImGuiSubsystem::DrawViewport() -> void
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	if (ImGui::Begin("Viewport"))
 	{
+		
 		ViewportStart = ImGui::GetCursorScreenPos();
 		ViewportSize = ImGui::GetContentRegionAvail();
 		ViewportMousePos = Vector2(ImGui::GetMousePos()) - ViewportStart;
 		MyGame->MyRenderingSystem->HandleScreenResize({ ViewportSize.x, ViewportSize.y });
 		ImGui::Image(MyGame->MyRenderingSystem->GetViewportTextureID(), ViewportSize);
+
+		if (ImGui::IsMouseDown(ImGuiMouseButton_::ImGuiMouseButton_Right) && ImGui::IsItemHovered())
+			ImGui::SetWindowFocus();
+
+		isViewportFocused = ImGui::IsWindowFocused();
 
 		if (ImGui::BeginDragDropTarget())
 		{
@@ -349,6 +368,8 @@ auto ImGuiSubsystem::DrawViewport() -> void
 	}
 	ImGui::End();
 	ImGui::PopStyleVar();
+
+	
 }
 
 auto ImGuiSubsystem::DrawActorExplorer() -> void
@@ -461,6 +482,10 @@ auto ImGuiSubsystem::DrawComponentSelector(class Actor* actor) -> void {
 	}
 }
 
+auto ImGuiSubsystem::CanChangeGuizmo() -> bool{
+	return !ImGui::IsMouseDown(ImGuiMouseButton_::ImGuiMouseButton_Right) && isViewportFocused;
+}
+
 auto ImGuiSubsystem::LayOutTransform() -> void
 {
 	SceneComponent* ssc = GetSelectedSceneComponent();
@@ -474,13 +499,16 @@ auto ImGuiSubsystem::LayOutTransform() -> void
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
 		ImGui::BeginChild("ChildR", ImVec2(0, 132), true, window_flags);
 
-		if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
+		if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE) || 
+			(CanChangeGuizmo() && ImGui::IsKeyDown(ImGuiKey_W)))
 			mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
 		ImGui::SameLine();
-		if (ImGui::RadioButton("Rotate", mCurrentGizmoOperation == ImGuizmo::ROTATE))
+		if (ImGui::RadioButton("Rotate", mCurrentGizmoOperation == ImGuizmo::ROTATE) ||
+			(CanChangeGuizmo() && ImGui::IsKeyDown(ImGuiKey_E)))
 			mCurrentGizmoOperation = ImGuizmo::ROTATE;
 		ImGui::SameLine();
-		if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE))
+		if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE) ||
+			(CanChangeGuizmo() && ImGui::IsKeyDown(ImGuiKey_R)))
 			mCurrentGizmoOperation = ImGuizmo::SCALE;
 
 		Transform t = mCurrentGizmoMode == ImGuizmo::MODE::LOCAL ? ssc->GetRelativeTransform() : ssc->GetTransform();
@@ -522,7 +550,7 @@ auto ImGuiSubsystem::DrawRigidBodyProperties(Actor* actor) -> void
 		if (!BoldHeader("RigidBody Component", 0)) {
 			ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 			ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-			ImGui::BeginChild("RB", ImVec2(0, 36), true, window_flags);
+			ImGui::BeginChild("RB", ImVec2(0, 60), true, window_flags);
 
 			bool is_p_enabled = cmp->isPhysicsSimulationEnabled;
 			bool is_p_enabled_old = cmp->isPhysicsSimulationEnabled;
@@ -538,6 +566,28 @@ auto ImGuiSubsystem::DrawRigidBodyProperties(Actor* actor) -> void
 					cmp->EnablePhysicsSimulation();
 				}
 			}
+
+			RigidBodyType rbType = cmp->GetType();
+
+			ImGui::Selectable("Static", rbType == RigidBodyType::STATIC, 0, ImVec2(80, 18));
+			if (ImGui::IsItemClicked()) {
+				cmp->MakeStatic();
+			}
+
+			ImGui::SameLine();
+
+			ImGui::Selectable("Kinematic", rbType == RigidBodyType::KINEMATIC, 0, ImVec2(80, 18));
+			if (ImGui::IsItemClicked()) {
+				cmp->MakeKinematic();
+			}
+
+			ImGui::SameLine();
+			
+			ImGui::Selectable("Dynamic", rbType == RigidBodyType::DYNAMIC, 0, ImVec2(80, 18));
+			if (ImGui::IsItemClicked()) {
+				cmp->MakeDynamic();
+			}
+
 
 			ImGui::EndChild();
 			ImGui::PopStyleVar();

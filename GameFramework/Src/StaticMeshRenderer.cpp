@@ -95,7 +95,9 @@ auto StaticMeshRenderer::SetMeshPath(std::string meshPath) -> void
 	EngineContentRegistry* content = EngineContentRegistry::GetInstance();
 	SetPixelShader(content->GetDefaultPixelShader());
 	SetVertexShader(content->GetDefaultVertexShader());
-	SetAlbedoSRV(content->GetWhiteTexSRV());
+	if (!mAlbedoSRV)
+		SetAlbedoSRV(content->GetWhiteTexSRV());
+	if (!mNormalSRV)
 	SetNormalSRV(content->GetBasicNormalTexSRV());
 }
 

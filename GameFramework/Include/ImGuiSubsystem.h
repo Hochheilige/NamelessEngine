@@ -52,6 +52,9 @@ public:
 	static auto GetInstance() { return Instance; }
 
 	auto GetViewportSize() const -> const Vector2& { return ViewportSize; }
+
+	auto GetIsViewportFocused() -> bool { return isViewportFocused; }
+
 private:
 	auto LayOutMainMenuBar() -> void;
 	auto DrawDockspace() -> void;
@@ -60,6 +63,7 @@ private:
 	auto DrawActorExplorer() -> void;
 	// begin inspector
 	auto DrawComponentSelector(class Actor* actor) -> void;
+	auto CanChangeGuizmo() -> bool;
 	auto LayOutTransform() -> void;
 	auto DrawActorInspector() -> void;
 	auto DrawGeneralProperties(class Actor* actor) -> void;
@@ -109,6 +113,9 @@ private:
 	ImGuizmo::MODE mCurrentGizmoMode;
 	bool useSnap;
 	Vector3 snap;
+
+
+
 private:
 
 	std::vector<std::string> MessagesToDisplay;
@@ -123,5 +130,8 @@ private:
 	std::vector<Path> OpenedFbxInspectorWindows;
 
 	char savepath[512]{"../Saves/game.json"};
+	char tempsavepath[512]{"../Saves/gameTemp.json"};
+
+	bool isViewportFocused;
 
 };

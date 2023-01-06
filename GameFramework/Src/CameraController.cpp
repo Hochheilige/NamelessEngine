@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "InputDevice.h"
 #include "Keyboard.h"
+#include "ImGuiSubsystem.h"
 
 CameraController::CameraController()
 {
@@ -34,7 +35,10 @@ void CameraController::Update(float DeltaTime)
 
 	auto keyboard = input.GetKeyboard();
 
-	if (Game::GetInstance()->GetPlayState() != PlayState::Playing) {
+	if (Game::GetInstance()->GetPlayState() != PlayState::Playing && 
+		Game::GetInstance()->GetImGuiSubsystem()->GetIsViewportFocused() && 
+		input.GetMouse()->IsDown(RIGHT)) {
+
 		if (keyboard->IsDown(KEY_W))
 		{
 			movementDelta.x += DeltaTime * Speed;
@@ -83,7 +87,8 @@ void CameraController::Update(float DeltaTime)
 	float deltaY;
 	input.GetMouse()->GetDeltas(deltaX, deltaY);
 
-	if (input.GetMouse()->IsDown(RIGHT)){
+	if (input.GetMouse()->IsDown(RIGHT) &&
+		Game::GetInstance()->GetImGuiSubsystem()->GetIsViewportFocused()){
 		Pitch += DeltaTime * deltaY * RotSpeedPitch;
 		Pitch = Pitch < -MaxPitch ? -MaxPitch : Pitch > MaxPitch ? MaxPitch : Pitch;
 		Yaw += DeltaTime * deltaX * RotSpeedYaw;
