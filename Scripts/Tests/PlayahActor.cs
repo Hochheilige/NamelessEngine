@@ -165,7 +165,7 @@ namespace Scripts.Tests
 
         protected override void Overlap()
         {
-            Console.WriteLine("PlayahActor Overlap event");
+            //Console.WriteLine("PlayahActor Overlap event");
         }
 
     }

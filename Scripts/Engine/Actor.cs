@@ -21,6 +21,9 @@ namespace Scripts
         
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void InternalSetTransform(IntPtr cppInstance, Transform transform);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void InternalDestroy(IntPtr cppInstance);
 
         public Actor()
         {
@@ -131,6 +134,11 @@ namespace Scripts
         internal virtual void OnGUI()
         {
             Console.WriteLine("Base");
+        }
+
+        internal void Destroy()
+        {
+            InternalDestroy(CppInstance);
         }
         
         private void cpp_RegisterComponents()

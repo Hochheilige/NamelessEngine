@@ -216,6 +216,7 @@ auto ImGuiSubsystem::DrawToolbar() -> void
 
 			if (ImGui::Button("Reload Assemblies"))
 			{
+				GetEditorContext().SetSelectedActor(nullptr);
 				auto mono = MonoSystem::GetInstance();
 				Serializer::SaveToFile(tempsavepath, Game::GetInstance());
 				mono->RestartMono();

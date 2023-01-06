@@ -40,6 +40,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BasicScene\Floor.cs" />
     <Compile Include="BehaviorTree\Action.cs" />
     <Compile Include="BehaviorTree\BehaviorTreeEditor.cs" />
     <Compile Include="BehaviorTree\Composite.cs" />

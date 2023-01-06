@@ -53,6 +53,10 @@ Actor::Actor()
 Actor::~Actor()
 {
 	delete(mMonoActor);
+
+	auto game = Game::GetInstance();
+	game->Actors.erase(std::remove(game->Actors.begin(), game->Actors.end(), this), game->Actors.end());
+	
 	for (auto comp : Components) {
 		delete(comp);
 	}

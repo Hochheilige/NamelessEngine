@@ -78,10 +78,13 @@ json Game::Serialize() const
 
 void Game::Deserialize(const json* in, bool destructive)
 {
-	if(destructive) {
-		for (const auto actor : Actors) {
-			delete actor;
+	if(destructive)
+	{
+		for(int i = Actors.size() - 1; i > 0; i--)
+		{
+			delete Actors[i];
 		}
+		
 		Actors.clear();
 	}
 

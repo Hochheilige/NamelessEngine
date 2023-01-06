@@ -73,8 +73,11 @@ void MonoActor::Update(float deltaTime)
     
     //MonoMethod* method = mono->GetVirtualMethod("Scripts", ClassName, "Update", CsInstance);
     MonoMethod* method = mono->GetMethod(NameSpace.c_str(), ClassName.c_str(), "Update");
-    MonoObject* result = mono->InvokeInstanceMethod(method, Handle, args, nullptr);
-
+    if(method)
+    {
+        MonoObject* result = mono->InvokeInstanceMethod(method, Handle, args, nullptr);
+    }
+    
 }
 
 void MonoActor::OnBeginPlay()
@@ -82,7 +85,11 @@ void MonoActor::OnBeginPlay()
     auto mono = MonoSystem::GetInstance();
 
     MonoMethod* onBeginPlay = mono->GetMethod(NameSpace.c_str(), ClassName.c_str(), "OnBeginPlay");
-    MonoObject* result = mono->InvokeInstanceMethod(onBeginPlay, Handle, nullptr, nullptr);
+    
+    if(onBeginPlay)
+    {
+        MonoObject* result = mono->InvokeInstanceMethod(onBeginPlay, Handle, nullptr, nullptr);
+    }
 
     MonoMethod* onGui = mono->GetMethod(NameSpace.c_str(), ClassName.c_str(), "OnGUI");
 
@@ -123,5 +130,8 @@ void MonoActor::Overlap()
     void* args[1];
 
     MonoMethod* method = mono->GetMethod(NameSpace.c_str(), ClassName.c_str(), "Overlap");
-    MonoObject* result = mono->InvokeInstanceMethod(method, Handle, args, nullptr);
+    if(method)
+    {
+        MonoObject* result = mono->InvokeInstanceMethod(method, Handle, args, nullptr);
+    }
 }

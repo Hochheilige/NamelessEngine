@@ -12,7 +12,7 @@ namespace Scripts
         private MovementComponent mv_cmp;
         private RigidBodyComponent rigidbody;
 
-        private float lifespan = 4.0f;
+        private float lifespan = 2.0f;
         private Vector3 initialSpeed = new Vector3(10.0f, 10.0f, 10.0f);
       
         public Bullet()
@@ -49,7 +49,7 @@ namespace Scripts
 
             if (lifespan < 0.0f)
             {
-                this.Dispose();
+                Destroy();
             }
             //Move();
         }
