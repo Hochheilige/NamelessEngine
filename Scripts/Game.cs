@@ -24,6 +24,7 @@ namespace Scripts
 
         private BehaviorTreeEditor btEditor = new BehaviorTreeEditor();
 
+        public bool IsInPlayState { private set; get; }
 
         internal Game()
         {
@@ -173,6 +174,11 @@ namespace Scripts
         internal virtual void OnSpecifyEngineSettings(EngineSettings.Builder settingsBuilder)
         {
 
+        }
+
+        private void ChangeState(bool isPlaying)
+        {
+            IsInPlayState = isPlaying;
         }
     }
 }

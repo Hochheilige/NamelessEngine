@@ -86,4 +86,12 @@ private:
 
 
 	virtual auto OnBeginPlay() -> void override;
+	virtual auto StartPlay() -> void override;
+	virtual auto PausePlay() -> void override;
+	virtual auto StopPlay() -> void override;
+	virtual auto ResumePlay() -> void override;
+
+	void ChangeGameState(bool isPlaying);
+	
+
 };

@@ -542,16 +542,47 @@ void Sandbox::Update(float DeltaTime)
 	}
 }
 
-auto Sandbox::OnBeginPlay() -> void {
-	/*CurrentCC = OrbitCC;
-	FPSCC->SetCameraToControl(nullptr);
-	OrbitCC->SetCameraToControl(PerspCamera);
-	FPSCC->bShouldUpdate = false;
-	OrbitCC->bShouldUpdate = true;*/
+void Sandbox::StartPlay()
+{
+	Game::StartPlay();
+	ChangeGameState(true);
+}
 
+void Sandbox::PausePlay()
+{
+	Game::PausePlay();
+	ChangeGameState(false);
+}
+
+void Sandbox::StopPlay()
+{
+	Game::StopPlay();
+	ChangeGameState(false);
+}
+
+void Sandbox::ResumePlay()
+{
+	Game::ResumePlay();
+	ChangeGameState(true);
+}
+
+auto Sandbox::OnBeginPlay() -> void
+{
+	Game::OnBeginPlay();
+	ChangeGameState(true);
 	for (auto actor : Actors)
 	{
 		actor->OnBeginPlay();
 	}
+}
+
+void Sandbox::ChangeGameState(bool isPlaying)
+{
+	auto mono = MonoSystem::GetInstance();
+	void *args [1];
+	bool result = isPlaying;
+	args[0] = &result;
+	const auto changeState = mono->GetVirtualMethod("Scripts", "Game", "ChangeState", csGameInstance);
+	mono->InvokeInstanceMethod(changeState, csGameInstance, args, nullptr);
 }
 
