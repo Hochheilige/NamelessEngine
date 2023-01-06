@@ -174,7 +174,7 @@ namespace Scripts.BehaviorTree
         {
             public abstract void Draw();
             public int node_id;
-            public Task task;
+            public BTTask task;
             public int input_id;
             public int output_id;
         }
@@ -184,7 +184,7 @@ namespace Scripts.BehaviorTree
             public RootEditorNode(int id, int input, int output)
             {
                 node_id = id;
-                task = new Sequence();
+                //task = new BTSequence();
                 input_id = input;
                 output_id = output;
             }
@@ -208,7 +208,7 @@ namespace Scripts.BehaviorTree
             public SequenceEditorNode(int id, int input, int output)
             {
                 node_id = id;
-                task = new Sequence();
+                //task = new BTSequence();
                 input_id = input;
                 output_id = output;
             }
@@ -235,7 +235,7 @@ namespace Scripts.BehaviorTree
             public SelectorEditorNode(int id, int input, int output)
             {
                 node_id = id;
-                task = new Sequence();
+                //task = new BTSequence();
                 input_id = input;
                 output_id = output;
             }
@@ -262,7 +262,7 @@ namespace Scripts.BehaviorTree
             public TaskEditorNode(int id, int input, int output)
             {
                 node_id = id;
-                task = new Sequence();
+                //task = new BTSequence();
                 input_id = input;
                 output_id = output;
             }

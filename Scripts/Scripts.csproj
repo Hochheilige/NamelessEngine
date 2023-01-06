@@ -41,13 +41,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BehaviorTree\Action.cs" />
+    <Compile Include="BehaviorTree\BTTask_RandomMove.cs" />
+    <Compile Include="BehaviorTree\BTTask_Wait.cs" />
+    <Compile Include="BehaviorTree\BTTree.cs" />
     <Compile Include="BehaviorTree\BehaviorTreeEditor.cs" />
-    <Compile Include="BehaviorTree\Composite.cs" />
+    <Compile Include="BehaviorTree\BTComposite.cs" />
+    <Compile Include="BehaviorTree\BTTreeExecutor.cs" />
     <Compile Include="BehaviorTree\Condition.cs" />
+    <Compile Include="BehaviorTree\BTNode.cs" />
     <Compile Include="BehaviorTree\RootTask.cs" />
-    <Compile Include="BehaviorTree\Selector.cs" />
-    <Compile Include="BehaviorTree\Sequence.cs" />
-    <Compile Include="BehaviorTree\Task.cs" />
+    <Compile Include="BehaviorTree\BTSelector.cs" />
+    <Compile Include="BehaviorTree\BTSequence.cs" />
+    <Compile Include="BehaviorTree\BTTask.cs" />
     <Compile Include="BehaviorTree\TaskStateEnum.cs" />
     <Compile Include="Components\BehaviorTreeComponent.cs" />
     <Compile Include="Components\CameraComponent.cs" />
@@ -67,6 +72,7 @@
     <Compile Include="Engine\Keys.cs" />
     <Compile Include="Engine\Transform.cs" />
     <Compile Include="Extensions\ComponentHelper.cs" />
+    <Compile Include="Tests\AITestActor.cs" />
     <Compile Include="Tests\Bullet.cs" />
     <Compile Include="Tests\SimpleProjectile.cs" />
     <Compile Include="Tests\PlayahActor.cs" />

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Scripts.BehaviorTree
 {
-    public interface Action : Task
+    public interface Action 
     {
         void TickTask(BehaviorTreeComponent btComponent, float deltaTime);
         TaskStateEnum FinishLatentTask();

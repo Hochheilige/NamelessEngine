@@ -7,19 +7,22 @@ using System.Threading.Tasks;
 
 namespace Scripts.BehaviorTree
 {
-    public class Selector : Composite
+    public class BTTask_RandomMove : BTTask
     {
-
-        List<Task> tasks = new List<Task>();
-
-        public void AddTask(Task task)
+        public override object CreateMemoryObject()
         {
-            tasks.Add(task);
+            return base.CreateMemoryObject();
         }
 
         public override TaskStateEnum Execute(BehaviorTreeComponent btComponent, object nodeMemory)
         {
             throw new NotImplementedException();
+        }
+
+        public override void TickTask(BehaviorTreeComponent btComponent, object nodeMemory, float deltaTime)
+        {
+            
+            base.TickTask(btComponent, nodeMemory, deltaTime);
         }
     }
 }
