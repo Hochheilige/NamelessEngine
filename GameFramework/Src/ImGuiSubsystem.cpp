@@ -522,7 +522,7 @@ auto ImGuiSubsystem::DrawRigidBodyProperties(Actor* actor) -> void
 		if (!BoldHeader("RigidBody Component", 0)) {
 			ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 			ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-			ImGui::BeginChild("RB", ImVec2(0, 36), true, window_flags);
+			ImGui::BeginChild("RB", ImVec2(0, 60), true, window_flags);
 
 			bool is_p_enabled = cmp->isPhysicsSimulationEnabled;
 			bool is_p_enabled_old = cmp->isPhysicsSimulationEnabled;
@@ -538,6 +538,28 @@ auto ImGuiSubsystem::DrawRigidBodyProperties(Actor* actor) -> void
 					cmp->EnablePhysicsSimulation();
 				}
 			}
+
+			RigidBodyType rbType = cmp->GetType();
+
+			ImGui::Selectable("Static", rbType == RigidBodyType::STATIC, 0, ImVec2(80, 18));
+			if (ImGui::IsItemClicked()) {
+				cmp->MakeStatic();
+			}
+
+			ImGui::SameLine();
+
+			ImGui::Selectable("Kinematic", rbType == RigidBodyType::KINEMATIC, 0, ImVec2(80, 18));
+			if (ImGui::IsItemClicked()) {
+				cmp->MakeKinematic();
+			}
+
+			ImGui::SameLine();
+			
+			ImGui::Selectable("Dynamic", rbType == RigidBodyType::DYNAMIC, 0, ImVec2(80, 18));
+			if (ImGui::IsItemClicked()) {
+				cmp->MakeDynamic();
+			}
+
 
 			ImGui::EndChild();
 			ImGui::PopStyleVar();

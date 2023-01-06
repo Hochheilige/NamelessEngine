@@ -220,18 +220,21 @@ void RigidBodyComponent::MakeKinematic()
 {
     rigidBody.Body->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
     rbType = RigidBodyType::KINEMATIC;
+    rigidBody.Body->forceActivationState(DISABLE_DEACTIVATION);
 }
 
 void RigidBodyComponent::MakeDynamic()
 {
     rigidBody.Body->setCollisionFlags(btCollisionObject::CF_DYNAMIC_OBJECT);
     rbType = RigidBodyType::DYNAMIC;
+    rigidBody.Body->forceActivationState(DISABLE_DEACTIVATION);
 }
 
 void RigidBodyComponent::MakeStatic()
 {
     rigidBody.Body->setCollisionFlags(btCollisionObject::CF_STATIC_OBJECT);
     rbType = RigidBodyType::STATIC;
+    rigidBody.Body->forceActivationState(DISABLE_DEACTIVATION);
 }
 
 void RigidBodyComponent::RegisterRigidBodyType()
