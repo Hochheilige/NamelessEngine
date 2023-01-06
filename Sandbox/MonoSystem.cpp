@@ -9,6 +9,7 @@
 #include "MonoCameraComponentModule.h"
 #include "MonoStaticMeshRendererModule.h"
 #include "Sandbox.h"
+#include "MonoModules/MonoMasterModule.h"
 
 MonoSystem* MonoSystem::Instance = nullptr;
 
@@ -66,7 +67,7 @@ void MonoSystem::InitializeMono()
 			image = mono_assembly_get_image(scriptAssembly);
 			PrintAssemblyTypes(scriptAssembly);
 			if (image) {
-
+				new MonoMasterModule;
 				new MonoComponentModule;
 				new MonoActorModule;
 				new MonoRigidBodyComponentModule;

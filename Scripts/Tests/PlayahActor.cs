@@ -13,12 +13,12 @@ namespace Scripts.Tests
            
         }
 
-        private protected override void RegisterComponents()
+        protected internal override void RegisterComponents()
         {
             //add components here
         }
 
-        private protected override void Init()
+        protected internal override void Init()
         {
             mv_cmp = AddComponent<MovementComponent>("MovementComponent");
             camComp = AddComponent<CameraComponent>("CameraComponent");

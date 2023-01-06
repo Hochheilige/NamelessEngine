@@ -73,7 +73,7 @@
     <Compile Include="Tests\PlayahActor.cs" />
     <Compile Include="Tests\CustomActor.cs" />
     <Compile Include="Game.cs" />
-    <Compile Include="Internal\InternalApi.cs" />
+    <Compile Include="Internal\ApiBindings.cs" />
     <Compile Include="Internal\Loader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\TestGame.cs" />

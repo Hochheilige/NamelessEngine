@@ -5,6 +5,7 @@
 
 #include "DisplayWin32.h"
 #include "Game.h"
+#include "MonoSystem.h"
 
 
 void Mouse::ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam)
@@ -71,6 +72,14 @@ void Mouse::SetPressStateByButton(Button button, bool press)
     if (button == LEFT) leftButtonPressed = press;
     else if (button == MIDDLE) middleButtonPressed = press;
     else rightButtonPressed = press;
+
+    void* args[2];
+    args[0] = &button;
+    int mouseAction = press ? 0 : 1;
+    args[1] = &mouseAction;
+    auto mono = MonoSystem::GetInstance();
+    MonoMethod* method = mono->GetMethod("Scripts.Internal", "InternalApi", "MouseInput");
+    mono->InvokeStaticMethod(method, args, nullptr);
 }
 
 bool Mouse::IsDown(Button button) const
