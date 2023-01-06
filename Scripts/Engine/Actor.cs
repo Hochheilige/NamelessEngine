@@ -68,9 +68,6 @@ namespace Scripts
         private Component CreateComponent(int componentType, bool internalCreate, string name = null)
         {
             ComponentType type = (ComponentType) componentType;
-            //Console.WriteLine("Component type to add " + type);
-
-            
 
             if (internalCreate && name != null)
             {

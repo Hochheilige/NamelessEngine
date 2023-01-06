@@ -123,5 +123,6 @@ private:
 	std::vector<Path> OpenedFbxInspectorWindows;
 
 	char savepath[512]{"../Saves/game.json"};
+	char tempsavepath[512]{"../Saves/gameTemp.json"};
 
 };

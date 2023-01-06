@@ -226,6 +226,16 @@ auto ImGuiSubsystem::DrawToolbar() -> void
 				Serializer::ReadFromFile(savepath, Game::GetInstance());
 			}
 
+			if (ImGui::Button("Restart"))
+			{
+				auto mono = MonoSystem::GetInstance();
+				Serializer::SaveToFile(tempsavepath, Game::GetInstance());
+				mono->RestartMono();
+				
+				Serializer::ReadFromFile(tempsavepath, Game::GetInstance(), true);
+				std::filesystem::remove(tempsavepath);
+			}
+
 			ImGui::SameLine();
 
 			if (ImGui::Button("Force Load"))

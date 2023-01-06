@@ -41,8 +41,6 @@ namespace Scripts.Tests
 
         private Transform cameraTransform;
 
-
-
         public override void Update(float deltaTime)
         {
             var inputHandler = Game.GetInstance().InputHandler;
@@ -149,7 +147,7 @@ namespace Scripts.Tests
             Bullet bullet = Instantiator.InstantiateActor<Bullet>();
             bullet.PublicInit();
             bullet.SetTransform(GetTransform());
-           
+            
             bullet.fire();
 
             currentFireDelay = fireDelay;

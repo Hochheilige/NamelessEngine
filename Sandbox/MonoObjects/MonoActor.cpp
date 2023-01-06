@@ -36,9 +36,12 @@ void MonoActor::Init()
 
 MonoActor::~MonoActor()
 {
-    auto mono = MonoSystem::GetInstance();
-    MonoMethod* method = mono->GetVirtualMethod("Scripts", BaseClassName, "Dispose", Handle);
-    mono->InvokeInstanceMethod(method, Handle, nullptr, nullptr);
+    if(mono_gchandle_get_target(Handle) != nullptr)
+    {
+        auto mono = MonoSystem::GetInstance();
+        MonoMethod* method = mono->GetVirtualMethod("Scripts", BaseClassName, "Dispose", Handle);
+        mono->InvokeInstanceMethod(method, Handle, nullptr, nullptr);
+    }
 }
 
 void MonoActor::AddComponent(Component* component)
