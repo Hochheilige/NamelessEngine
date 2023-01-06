@@ -214,6 +214,18 @@ auto ImGuiSubsystem::DrawToolbar() -> void
 			}
 			ImGui::SameLine();
 
+			if (ImGui::Button("Reload Assemblies"))
+			{
+				auto mono = MonoSystem::GetInstance();
+				Serializer::SaveToFile(tempsavepath, Game::GetInstance());
+				mono->RestartMono();
+				
+				Serializer::ReadFromFile(tempsavepath, Game::GetInstance(), true);
+				std::filesystem::remove(tempsavepath);
+			}
+
+			ImGui::SameLine();
+
 			if (ImGui::Button("Save"))
 			{
 				Serializer::SaveToFile(savepath, Game::GetInstance());
@@ -224,16 +236,6 @@ auto ImGuiSubsystem::DrawToolbar() -> void
 			if (ImGui::Button("Load"))
 			{
 				Serializer::ReadFromFile(savepath, Game::GetInstance());
-			}
-
-			if (ImGui::Button("Restart"))
-			{
-				auto mono = MonoSystem::GetInstance();
-				Serializer::SaveToFile(tempsavepath, Game::GetInstance());
-				mono->RestartMono();
-				
-				Serializer::ReadFromFile(tempsavepath, Game::GetInstance(), true);
-				std::filesystem::remove(tempsavepath);
 			}
 
 			ImGui::SameLine();
