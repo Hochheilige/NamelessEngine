@@ -8,7 +8,7 @@ namespace Scripts.BasicScene
         private RigidBodyCubeComponent cubeComponent;
         private StaticMeshRenderer renderer;
 
-        private protected override void RegisterComponents()
+        protected internal override void RegisterComponents()
         {
             cubeComponent = AddComponent<RigidBodyCubeComponent>("RigidBodyCube");
             cubeComponent.SetUsage(RigidBodyUsage.CollisionsAndPhysics);
@@ -25,17 +25,14 @@ namespace Scripts.BasicScene
             Console.WriteLine("Register Floor");
         }
 
-        private protected override void Init()
+        protected internal override void Init()
         {
             cubeComponent = AddComponent<RigidBodyCubeComponent>("RigidBodyCube");
             renderer = AddComponent<StaticMeshRenderer>("StaticMeshRender");
-            
-            Console.WriteLine("Init Floor");
         }
 
         public override void OnBeginPlay()
         {
-            Console.WriteLine("Begin derived");
         }
     }
 }
