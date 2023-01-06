@@ -174,12 +174,16 @@ public:
 	auto GetPlayState() const -> PlayState { return mPlayState; }
 
 	// TODO: make propter implementations of these functions
-	auto StartPlay() -> void;
+	/*auto StartPlay() -> void;
 	auto PausePlay() -> void;
 	auto ResumePlay() -> void;
-	auto StopPlay() -> void;
+	auto StopPlay() -> void;*/
 
 	virtual auto OnBeginPlay() -> void;
+	virtual auto StartPlay() -> void;
+	virtual auto PausePlay() -> void;
+	virtual auto ResumePlay() -> void;
+	virtual auto StopPlay() -> void;
 
 	json Serialize() const;
 	void Deserialize(const json* in, bool destructive = false);

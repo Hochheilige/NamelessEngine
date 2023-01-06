@@ -7,6 +7,8 @@ using Scripts.BehaviorTree;
 using Scripts.Engine;
 
 using Newtonsoft.Json;
+using static Scripts.InputHandler;
+using Action = Scripts.BehaviorTree.Action;
 
 namespace Scripts
 {
@@ -16,12 +18,13 @@ namespace Scripts
         
         private static Game _instance;
 
-        public readonly InputHandler InputHandler = new InputHandler();
+        public readonly InputHandler InputHandler;
 
         public readonly EngineSettings EngineSettings;
 
         private BehaviorTreeEditor btEditor = new BehaviorTreeEditor();
 
+        public bool IsInPlayState { private set; get; }
 
         internal Game()
         {
@@ -31,6 +34,8 @@ namespace Scripts
             }
 
             _instance = this;
+
+            InputHandler = new InputHandler(this);
 
             //TODO
             //var builder = new EngineSettings.Builder();
@@ -59,7 +64,28 @@ namespace Scripts
             return new List<T>();
         }
 
+        public IEnumerable<Actor> GetActors()
+        {
+            return actors;
+        }
+
         public void AddActor(Actor actor) { actors.Add(actor); }
+
+        protected internal virtual void OnKeyInput(Keys key, KeyAction action)
+        {
+            foreach (var actor in actors)
+            {
+                actor.OnKeyInput(key, action);
+            }
+        }
+
+        protected internal virtual void OnMouseInput(MouseButton button, MouseAction action)
+        {
+            foreach (var actor in actors)
+            {
+                actor.OnMouseInput(button, action);
+            }
+        }
 
         /**
          * Called upon start
@@ -67,8 +93,6 @@ namespace Scripts
         internal virtual void OnLoad()
         {
             Console.WriteLine("Hello!");
-            
-
         }
 
         /**
@@ -78,7 +102,7 @@ namespace Scripts
         {
            
         }
-        
+
         private string GetActorInheritors()
         {
             var actorSignatures = (
@@ -150,6 +174,11 @@ namespace Scripts
         internal virtual void OnSpecifyEngineSettings(EngineSettings.Builder settingsBuilder)
         {
 
+        }
+
+        private void ChangeState(bool isPlaying)
+        {
+            IsInPlayState = isPlaying;
         }
     }
 }

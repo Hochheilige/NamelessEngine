@@ -14,7 +14,8 @@ public:
 	~MonoSystem();
 
 	MonoImage* GetImage();
-
+	
+	void RestartMono();
 	//TODO check? throw error?
 	MonoClass* FindClass(const char* name_space, const char* className);
 	MonoMethodDesc* MakeMethodDescriptor(const char* descriptor, bool includeNamespace);
@@ -35,7 +36,7 @@ public:
 
 	static MonoSystem* GetInstance();
 
-	
+	int version = 0;
 	MonoDomain* rootDomain = nullptr;
 	MonoDomain* appDomain = nullptr;
 	MonoAssembly* scriptAssembly = nullptr;
@@ -47,4 +48,6 @@ public:
 	 * Name of the main namespace in the 
 	 */
 	static constexpr char MAIN_NAMESPACE[] = "Scripts";
+private:
+	void InitializeMono();
 };

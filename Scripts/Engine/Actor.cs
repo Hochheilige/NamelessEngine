@@ -21,6 +21,9 @@ namespace Scripts
         
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void InternalSetTransform(IntPtr cppInstance, Transform transform);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void InternalDestroy(IntPtr cppInstance);
 
         public Actor()
         {
@@ -30,12 +33,12 @@ namespace Scripts
          * Here and only here components can be properly added to the Actor.
          * Wouldn't be called upon deserializing.
          */
-        private protected virtual void RegisterComponents()
+        protected internal virtual void RegisterComponents()
         {
             
         }
 
-        private protected virtual void Init()
+        protected internal virtual void Init()
         {
             
         }
@@ -49,6 +52,16 @@ namespace Scripts
         public virtual void OnBeginPlay() { }
         
         public virtual void Update(float deltaTime) { }
+
+        protected internal virtual void OnKeyInput(Keys key, InputHandler.KeyAction type)
+        {
+
+        }
+        
+        protected internal virtual void OnMouseInput(InputHandler.MouseButton button, InputHandler.MouseAction action)
+        {
+            
+        }
         
         public Component AddComponent(ComponentType componentType)
         {
@@ -68,9 +81,6 @@ namespace Scripts
         private Component CreateComponent(int componentType, bool internalCreate, string name = null)
         {
             ComponentType type = (ComponentType) componentType;
-            //Console.WriteLine("Component type to add " + type);
-
-            
 
             if (internalCreate && name != null)
             {
@@ -134,6 +144,11 @@ namespace Scripts
         internal virtual void OnGUI()
         {
             Console.WriteLine("Base");
+        }
+
+        internal void Destroy()
+        {
+            InternalDestroy(CppInstance);
         }
         
         private void cpp_RegisterComponents()

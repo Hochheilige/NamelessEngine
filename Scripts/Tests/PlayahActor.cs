@@ -13,12 +13,12 @@ namespace Scripts.Tests
            
         }
 
-        private protected override void RegisterComponents()
+        protected internal override void RegisterComponents()
         {
             //add components here
         }
 
-        private protected override void Init()
+        protected internal override void Init()
         {
             mv_cmp = AddComponent<MovementComponent>("MovementComponent");
             camComp = AddComponent<CameraComponent>("CameraComponent");
@@ -40,8 +40,6 @@ namespace Scripts.Tests
         private float currentFireDelay = -0.1f;
 
         private Transform cameraTransform;
-
-
 
         public override void Update(float deltaTime)
         {
@@ -149,7 +147,7 @@ namespace Scripts.Tests
             Bullet bullet = Instantiator.InstantiateActor<Bullet>();
             bullet.PublicInit();
             bullet.SetTransform(GetTransform());
-           
+            
             bullet.fire();
 
             currentFireDelay = fireDelay;
@@ -167,7 +165,7 @@ namespace Scripts.Tests
 
         protected override void Overlap()
         {
-            Console.WriteLine("PlayahActor Overlap event");
+            //Console.WriteLine("PlayahActor Overlap event");
         }
 
     }

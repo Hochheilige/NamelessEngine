@@ -8,6 +8,8 @@
 #include "MonoMovementComponentModule.h"
 #include "MonoCameraComponentModule.h"
 #include "MonoStaticMeshRendererModule.h"
+#include "Sandbox.h"
+#include "MonoModules/MonoMasterModule.h"
 
 MonoSystem* MonoSystem::Instance = nullptr;
 
@@ -17,7 +19,6 @@ MonoSystem::MonoSystem()
 	auto exePath = __argv[0];
 	std::filesystem::path path(exePath);
 	auto parentPath = path.parent_path().string();
-	auto result = parentPath.c_str();
 
 	mono_set_assemblies_path((parentPath + "/mono/lib/4.5").c_str());
 
@@ -31,20 +32,42 @@ MonoSystem::MonoSystem()
 
 	rootDomain = mono_jit_init("NamelessEngine");
 
-	if (rootDomain) {
-		auto pathStr = parentPath + "\\Scripts.dll";
+	InitializeMono();
+}
 
-		appDomain = mono_domain_create_appdomain(const_cast<char*>("EngineAppDomain"), nullptr);
-		mono_domain_set(appDomain, true);
+void MonoSystem::InitializeMono()
+{
+	auto exePath = __argv[0];
+	std::filesystem::path path(exePath);
+	auto parentPath = path.parent_path();
+	auto pathStr = parentPath.string() + "\\Scripts.dll";
+	auto origin = parentPath.parent_path().string() + "\\CS" + "Debug" +"\\Scripts.dll";
 
-		LoadMonoAssembly(pathStr);
+	if (appDomain!=nullptr && appDomain != rootDomain) {
+		mono_domain_set(rootDomain, 0);
+		mono_domain_unload(appDomain);
+	}
 
+	//auto originPath = "C:\\Git\\NewNE\\NamelessEngine\\Test\\Debug\\Scripts.dll";
+	if (std::filesystem::exists(origin)) {
+        
+		if (std::filesystem::exists(pathStr))
+			std::filesystem::remove(pathStr);
+
+		std::filesystem::copy(origin, pathStr);
+	}
+	
+	appDomain = mono_domain_create_appdomain(const_cast<char*>("EngineAppDomain"), NULL);
+	if (appDomain)
+	{
+		mono_domain_set(appDomain, 0);
+		LoadMonoAssembly(origin);
 		scriptAssembly = mono_domain_assembly_open(appDomain, pathStr.c_str());
 		if (scriptAssembly) {
 			image = mono_assembly_get_image(scriptAssembly);
 			PrintAssemblyTypes(scriptAssembly);
 			if (image) {
-				//mono_add_internal_call("Scripts.Component::GetTransform", &Mappings::CubeSetMass);
+				new MonoMasterModule;
 				new MonoComponentModule;
 				new MonoActorModule;
 				new MonoRigidBodyComponentModule;
@@ -54,6 +77,14 @@ MonoSystem::MonoSystem()
 			}
 		}
 	}
+}
+
+void MonoSystem::RestartMono()
+{
+	InitializeMono();
+	
+	auto game = (Sandbox*) Game::GetInstance();
+	game->LoadGameFacade();
 }
 
 
