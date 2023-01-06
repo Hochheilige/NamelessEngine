@@ -15,5 +15,10 @@ namespace Scripts.BehaviorTree
         {
             return root;
         }
+
+        public void SetRoot(BTComposite root)
+        {
+            this.root = root;
+        }
     }
 }
