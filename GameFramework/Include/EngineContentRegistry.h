@@ -11,6 +11,9 @@ class Game;
 class RenderPrimitiveProxy;
 class VertexShader;
 class PixelShader;
+class QuadRenderer;
+class MeshRenderer;
+class Renderer;
 
 struct Transform;
 struct ID3D11Resource;
@@ -78,6 +81,13 @@ public:
 		return PosColorPixelShader;
 	}
 
+	auto GetQuadRenderer() const -> QuadRenderer*
+	{
+		return quadRenderer;
+	}
+
+	auto GetBoxLightRenderer() const->Renderer*;
+
 private:
 
 	typedef Actor* (EngineContentRegistry::*CreateFuncType)(const Transform& transform);
@@ -111,4 +121,7 @@ private:
 
 	VertexShader* PosColorVertexShader;
 	PixelShader* PosColorPixelShader;
+
+	QuadRenderer* quadRenderer;
+	MeshRenderer* boxRenderer;
 };

@@ -406,14 +406,14 @@ void Sandbox::PrepareResources()
 	DirectiLight.direction = LightCam.Transform.Rotation.GetForwardVector();
 
 	AmbientLight* al = new AmbientLight();
-	QuadRenderer* qr = new QuadRenderer();
+	/*QuadRenderer* qr = new QuadRenderer();
 	qr->SetVertexShader(vs);
 	qr->SetPixelShader(ps);
-	al->SetRenderer(qr);
+	al->SetRenderer(qr);*/
 
 	DirectionalLight* dr = new DirectionalLight();
 
-	dr->SetRenderer(qr);
+	//dr->SetRenderer(qr);
 
 	//Create simple static box for testing
 	tr.Position = Vector3(16, 3, 0);
