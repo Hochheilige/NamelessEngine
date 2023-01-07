@@ -7,6 +7,7 @@ void AudioComponent::LoadSound(const std::string& soundName, bool b3d, bool loop
 	
 	if (auto found = sounds.find(soundName); found != sounds.end())
 	{
+		sound = sounds[soundName];
 		return;
 	}
 

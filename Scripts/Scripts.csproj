@@ -55,6 +55,7 @@
     <Compile Include="BehaviorTree\BTSequence.cs" />
     <Compile Include="BehaviorTree\BTTask.cs" />
     <Compile Include="BehaviorTree\TaskStateEnum.cs" />
+    <Compile Include="Components\AudioComponent.cs" />
     <Compile Include="Components\BehaviorTreeComponent.cs" />
     <Compile Include="Components\CameraComponent.cs" />
     <Compile Include="Components\Component.cs" />
