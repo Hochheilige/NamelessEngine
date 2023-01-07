@@ -232,6 +232,7 @@ void RigidBodyComponent::MakeDynamic()
 
 void RigidBodyComponent::MakeStatic()
 {
+    SetMass(0.0f);
     rigidBody.Body->setCollisionFlags(btCollisionObject::CF_STATIC_OBJECT);
     rbType = RigidBodyType::STATIC;
     rigidBody.Body->forceActivationState(DISABLE_DEACTIVATION);

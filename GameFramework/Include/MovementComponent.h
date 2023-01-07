@@ -64,7 +64,11 @@ public:
 	{
 		btController->setLinearVelocity(btVector3(velocity.x, velocity.y, velocity.z));
 	}
-	virtual btVector3 getLinearVelocity() const { return btController->getLinearVelocity(); }
+	virtual Vector3 getLinearVelocity() const
+	{ 
+		btVector3 v = btController->getLinearVelocity();
+		return Vector3(v.x(), v.y(), v.z());
+	}
 
 	void setLinearDamping(btScalar d) { btController->setLinearDamping(d); }
 	btScalar getLinearDamping() const { return btController->getLinearDamping(); }
@@ -86,11 +90,14 @@ public:
 	void setMaxJumpHeight(btScalar maxJumpHeight) { btController->setMaxJumpHeight(maxJumpHeight); }
 	bool canJump() const { return btController->canJump(); }
 
- 	void jump(const Vector3& v = Vector3(0, 10, 0)) { btController->jump(btVector3(v.x, v.y, v.z)); }
+ 	void jump(const Vector3& v = Vector3(0, 10, 0))
+	{ 
+		btController->jump(btVector3(v.x, v.y, v.z)); 
+	}
 
 	void applyImpulse(const btVector3& v) { btController->applyImpulse(v); }
 
-	void setGravity(const btVector3& gravity = btVector3(0,-9.81,0)) { btController->setGravity(gravity); }
+	void setGravity(const Vector3& gravity = Vector3(0,-9.81,0)) { btController->setGravity(btVector3(gravity.x, gravity.y, gravity.z)); }
 	btVector3 getGravity() const { btController->getGravity(); }
 
 	/// The max slope determines the maximum angle that the controller can walk up.
