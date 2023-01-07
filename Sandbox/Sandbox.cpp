@@ -490,7 +490,8 @@ void Sandbox::Update(float DeltaTime)
 	}
 	else
 	{
-		// Temporary block just to check how sound works
+		auto audio = AudioModule::GetInstance();
+		audio->StopAllChannels();
 	}
 
 	prevPlayState = GetPlayState();

@@ -29,6 +29,8 @@ public:
 
 	ChannelMap& GetChannels() { return Channels; }
 
+	void StopAllChannels();
+
 private:
 	AudioModule();
 

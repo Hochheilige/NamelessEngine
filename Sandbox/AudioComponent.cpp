@@ -75,10 +75,6 @@ void AudioComponent::Play()
 
 void AudioComponent::StopChannel()
 {
-	auto audio = AudioModule::GetInstance();
-	auto& sounds = audio->GetSounds();
-	auto& channels = audio->GetChannels();
-
 	channel->stop();
 }
 
