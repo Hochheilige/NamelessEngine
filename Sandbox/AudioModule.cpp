@@ -45,3 +45,11 @@ void AudioModule::Update()
 
 	StudioSystem->update();
 }
+
+void AudioModule::StopAllChannels()
+{
+	for (auto [id, channel] : Channels)
+	{
+		channel->stop();
+	}
+}

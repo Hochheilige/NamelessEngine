@@ -63,6 +63,8 @@ void ComponentRegistry::Init()
 	Register(MovementComponentType, "MovementComponent", &MovementComponent::Create);
 	Register(AudioComponentType, "AudioComponent", &AudioComponent::Create);
 	Register(CameraComponentType, "CameraComponent", &CameraComponent::Create);
+	Register(CameraComponentType, "AmbientLight", &AmbientLight::Create);
+	Register(CameraComponentType, "DirectionalLight", &DirectionalLight::Create);
 }
 
 void ComponentRegistry::Validate()

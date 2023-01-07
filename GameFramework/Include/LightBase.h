@@ -3,6 +3,8 @@
 #include "RenderingSystemTypes.h"
 #include "SceneComponent.h"
 #include "MonoObjects/MonoPhysicsComponent.h"
+#include "EngineContentRegistry.h"
+#include "Renderer.h"
 
 class Renderer;
 
@@ -21,23 +23,21 @@ enum class LightType
 class LightBase : public SceneComponent
 {
 public:
-
+	LightBase();
 	~LightBase();
 
 	// @TODO: should this be virtual? Should I return a reference?
 	virtual LightData GetLightData() { return LightData(); };
 
-	virtual LightType GetLightType() = 0;
+	virtual LightType GetLightType() const = 0;
 
 	virtual Renderer* GetLightRenderer() { return renderer; }
 
 	Renderer* renderer;
 
 	MonoComponent* GetMonoComponent() override { return mMonoComponent; }
-	ComponentType GetComponentType() override { return ComponentType::SceneComponentType; }
 
 	void SetRenderer(Renderer* InRenderer) { renderer = InRenderer; }
-
 private:
 	//TODO: POPRAVIT'
 	MonoPhysicsComponent* mMonoComponent = new MonoPhysicsComponent;
@@ -48,7 +48,9 @@ class AmbientLight : public LightBase
 {
 public:
 
-	virtual LightType GetLightType() override { return LightType::Ambient; }
+	LightType GetLightType() const override { return LightType::Ambient; }
+
+	ComponentType GetComponentType() override { return AmbientLightType; };
 
 	virtual LightData GetLightData() 
 	{ 
@@ -57,7 +59,10 @@ public:
 		return light; 
 	};
 
+	static auto Create() -> Component* { return new AmbientLight(); }
 
+	// todo: mb this should be the base implementation?
+	virtual auto GetLightRenderer() -> Renderer* override { return EngineContentRegistry::GetInstance()->GetQuadRenderer(); }
 };
 
 //@TODO: move this to a separate file
@@ -65,11 +70,15 @@ class DirectionalLight : public LightBase
 {
 public:
 
-	virtual LightType GetLightType() override { return LightType::Directional; }
+	LightType GetLightType() const override { return LightType::Directional; }
+
+	ComponentType GetComponentType() override { return DirectionalLightType; };
 
 	virtual LightData GetLightData() { return LightData(); };
 
+	static auto Create() -> Component* { return new DirectionalLight(); }
 
+	virtual auto GetLightRenderer() -> Renderer* override { return EngineContentRegistry::GetInstance()->GetQuadRenderer(); }
 };
 
 
@@ -77,7 +86,9 @@ class PointLight : public LightBase
 {
 public:
 
-	virtual LightType GetLightType() override { return LightType::Point; }
+	LightType GetLightType() const override { return LightType::Point; }
+
+	ComponentType GetComponentType() override { return LightPointType; };
 
 	virtual LightData GetLightData()
 	{ 
@@ -93,4 +104,13 @@ public:
 	Color color = Color(1.0f, 1.0f, 1.0f, 1.0f);
 
 	static auto Create() -> Component* { return new PointLight(); }
+
+	virtual auto GetLightRenderer() -> Renderer* override { 
+		Renderer* r = EngineContentRegistry::GetInstance()->GetBoxLightRenderer();
+		// todo: calculate size based on intensity
+		r->SetRelativeScale(Vector3::One * 50.0f);
+		r->SetRelativePosition(GetTransform().Position);
+		return r; 
+	}
+
 };

@@ -71,6 +71,17 @@ EngineContentRegistry::EngineContentRegistry(Game* InGame)
 #pragma endregion Save Create Funcs
 
 
+#pragma region Light Renderers
+	quadRenderer = new QuadRenderer();
+	quadRenderer->SetVertexShader(GetDefaultVertexShader());
+	quadRenderer->SetPixelShader(GetDefaultPixelShader());
+
+	boxRenderer = new MeshRenderer(false);
+	boxRenderer->SetMeshProxy(TexturedBoxMeshProxy);
+	boxRenderer->SetVertexShader(DefaultVertexShader);
+	boxRenderer->SetPixelShader(DefaultPixelShader);
+#pragma endregion Light Renderers
+
 	for (auto pair : CreateActionsMap)
 	{
 		BasicActorNames.push_back(pair.first);
@@ -82,6 +93,8 @@ EngineContentRegistry::~EngineContentRegistry()
 	delete TexturedBoxMeshProxy;
 	delete DefaultPixelShader;
 	delete DefaultVertexShader;
+	delete quadRenderer;
+	delete boxRenderer;
 }
 
 auto EngineContentRegistry::CreateBasicActor(const std::string& BaseActorName, const Transform& transform)->Actor*
@@ -120,7 +133,6 @@ auto EngineContentRegistry::CreatePointLight(const Transform& transform)->Actor*
 
 	PointLight* pl = actor->AddComponent<PointLight>();
 	pl->SetRelativePosition(transform.Position);
-	MyGame->MyRenderingSystem->RegisterLight(pl);
 
 	// TODO: create renderer in light ?
 	MeshRenderer* mr = new MeshRenderer(false);
@@ -168,4 +180,9 @@ auto EngineContentRegistry::CreateNormalMapTextureFromFile(const wchar_t* fileNa
 		DirectX::WIC_LOADER_IGNORE_SRGB,
 		texture,
 		textureView);
+}
+
+auto EngineContentRegistry::GetBoxLightRenderer() const -> Renderer*
+{
+	return boxRenderer;
 }

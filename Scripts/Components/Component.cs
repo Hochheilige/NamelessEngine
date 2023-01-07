@@ -54,13 +54,18 @@ namespace Scripts
 
         public void SetTransform(Transform transform)
         {
-            //Transform = InternalSetTransform(CppInstance, transform);
+            InternalSetTransform(CppInstance, transform);
         }
 
         public void Dispose()
         {
             CppInstance = IntPtr.Zero;
             Owner.Components.Remove(this);
+        }
+
+        public string GetIdentifier()
+        {
+            return CppInstance.ToString();
         }
     }
 }

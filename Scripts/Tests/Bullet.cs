@@ -11,6 +11,7 @@ namespace Scripts
         private StaticMeshRenderer renderer;
         private MovementComponent mv_cmp;
         private RigidBodyComponent rigidbody;
+        private AudioComponent audio;
 
         private float lifespan = 2.0f;
         private Vector3 initialSpeed = new Vector3(10.0f, 10.0f, 10.0f);
@@ -42,6 +43,10 @@ namespace Scripts
             //renderer = (StaticMeshRenderer)AddComponent(ComponentType.StaticMeshRendererType);
             renderer = AddComponent<StaticMeshRenderer>("StaticMeshRenderer");
             renderer.SetMeshPath("../Assets/box.fbx/Cube");
+
+            audio = AddComponent<AudioComponent>("Audio");
+            audio.LoadSound("../Assets/explosion.mp3", true, false);
+            audio.SetVolume(0.5f);
         }
 
         public override void Update(float deltaTime)
@@ -71,6 +76,7 @@ namespace Scripts
         public void fire()
         {
             rigidbody.ApplyCentralImpulse(initialSpeed);
+            audio.Play();
         }
 
         public void SetInittialSpeed(Vector3 speed)

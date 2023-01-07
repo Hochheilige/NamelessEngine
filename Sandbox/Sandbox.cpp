@@ -406,16 +406,14 @@ void Sandbox::PrepareResources()
 	DirectiLight.direction = LightCam.Transform.Rotation.GetForwardVector();
 
 	AmbientLight* al = new AmbientLight();
-	MyRenderingSystem->RegisterLight(al);
-	QuadRenderer* qr = new QuadRenderer();
+	/*QuadRenderer* qr = new QuadRenderer();
 	qr->SetVertexShader(vs);
 	qr->SetPixelShader(ps);
-	al->SetRenderer(qr);
+	al->SetRenderer(qr);*/
 
 	DirectionalLight* dr = new DirectionalLight();
-	MyRenderingSystem->RegisterLight(dr);
 
-	dr->SetRenderer(qr);
+	//dr->SetRenderer(qr);
 
 	//Create simple static box for testing
 	tr.Position = Vector3(16, 3, 0);
@@ -492,7 +490,8 @@ void Sandbox::Update(float DeltaTime)
 	}
 	else
 	{
-		// Temporary block just to check how sound works
+		auto audio = AudioModule::GetInstance();
+		audio->StopAllChannels();
 	}
 
 	prevPlayState = GetPlayState();

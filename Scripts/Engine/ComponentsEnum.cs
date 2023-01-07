@@ -26,6 +26,7 @@ namespace Scripts.Engine
         [ComponentType(typeof(MovementComponent))]
         MovementComponentType,
 
+        [ComponentType(typeof(AudioComponent))]
         AudioComponentType,
 
         [ComponentType(typeof(CameraComponent))]
