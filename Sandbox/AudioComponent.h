@@ -43,6 +43,9 @@ private:
 	FMOD::Sound* sound = nullptr;
 	int channelID = -1;
 	std::string name;
+	bool is_3d;
+	bool is_looping;
+	bool is_stream;
 	
 	const float kDefaultVolume = 0.3f;
 	float volume = .0f;
