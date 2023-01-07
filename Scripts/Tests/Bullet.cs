@@ -79,6 +79,11 @@ namespace Scripts
             audio.Play();
         }
 
+        public void SetInittialSpeed(Vector3 speed)
+        {
+            initialSpeed = speed;
+        }
+
         private void Move()
         {
             var root = GetTransform();
