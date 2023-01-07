@@ -27,6 +27,7 @@
 #include "JsonInclude.h"
 
 #include "MonoSystem.h"
+#include <LightBase.h>
 
 //temporary include
 //#include "../External/bullet3/src/"
@@ -703,6 +704,25 @@ auto ImGuiSubsystem::DrawStaticMeshProperties() -> void {
 
 }
 
+auto ImGuiSubsystem::DrawLightPointProperties(Actor* actor) -> void
+{
+	if (auto* cmp = dynamic_cast<PointLight*>(GetEditorContext().GetSelectedComponent()))
+	{
+		if (BoldHeader("Point Light", ImGuiTreeNodeFlags_DefaultOpen)) {
+
+			ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
+			ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+			ImGui::BeginChild("ChildPointLight", ImVec2(0, 100), true, window_flags);
+
+			ImGui::ColorEdit4("Color", &cmp->lightData.Color.x);
+			ImGui::DragFloat("Intensity", &cmp->lightData.Intensity);
+
+			ImGui::EndChild();
+			ImGui::PopStyleVar();
+		}
+	}
+}
+
 auto ImGuiSubsystem::DrawActorInspector() -> void
 {
 	ImGui::SetNextWindowClass(&levelEditorClass);
@@ -729,6 +749,7 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 				break;
 			case LightPointType:
 				//TODO add point light properties
+				DrawLightPointProperties(actor);
 				break;
 			}
 
