@@ -64,6 +64,11 @@ namespace Scripts
             return new List<T>();
         }
 
+        public T GetActorOfClass<T>() where T : Actor
+        {
+            return actors.Find(x => x is T) as T;
+        }
+
         public IEnumerable<Actor> GetActors()
         {
             return actors;

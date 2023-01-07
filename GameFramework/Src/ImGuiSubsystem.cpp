@@ -625,7 +625,8 @@ auto ImGuiSubsystem::DrawStaticMeshProperties() -> void {
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
 		ImGui::BeginChild("RB", ImVec2(0, 250), true, window_flags);
 
-		ImGui::Button((smr->GetStaticMesh()->GetFullPath().filename().string() + "##StaticMesh").c_str(), ImVec2(150, 20));
+		std::string meshName = smr->GetStaticMesh() ? smr->GetStaticMesh()->GetFullPath().filename().string() : "";
+		ImGui::Button(( meshName + "##StaticMesh").c_str(), ImVec2(150, 20));
 
 		if (ImGui::BeginDragDropTarget())
 		{

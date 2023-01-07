@@ -26,6 +26,8 @@ namespace Scripts.Components
 
         BTTreeExecutor executor;
 
+        public void Execute(float deltaTime) { executor.Execute(deltaTime); }
+
         public BTTreeExecutor GetExecutor() { return executor; }
 
         public void FinishLatentTask(BTTask task, TaskStateEnum result)
