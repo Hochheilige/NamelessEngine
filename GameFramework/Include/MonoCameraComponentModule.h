@@ -8,6 +8,8 @@ public:
 	MonoCameraComponentModule()
 	{
 		mono_add_internal_call("Scripts.Components.CameraComponent::SetCameraTransformInternal", &SetCameraTransformInternal);
+		mono_add_internal_call("Scripts.Components.CameraComponent::GetMouseDeltaXInternal", &GetMouseDeltaXInternal);
+		mono_add_internal_call("Scripts.Components.CameraComponent::GetMouseDeltaYInternal", &GetMouseDeltaYInternal);
 	}
 
 private:
@@ -17,5 +19,7 @@ private:
 		t.Rotation = rotationQuaternion;
 		component->SetTransform(t); 
 	}
+	static float GetMouseDeltaXInternal(CameraComponent* component) { return component->GetMouseDeltaX(); }
+	static float GetMouseDeltaYInternal(CameraComponent* component) { return component->GetMouseDeltaY(); }
 
 };

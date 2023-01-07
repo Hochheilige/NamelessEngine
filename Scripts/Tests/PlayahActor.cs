@@ -32,8 +32,8 @@ namespace Scripts.Tests
         float Yaw = 0.0f;
 
         float MaxPitch = 80.0f;
-        float RotSpeedYaw = 200.0f;
-        float RotSpeedPitch = 200.0f;
+        float RotSpeedYaw = 40000.0f;
+        float RotSpeedPitch = 12000.0f;
         float OrbitRadius = 10.0f;
 
         private float fireDelay = 0.5f;
@@ -66,27 +66,29 @@ namespace Scripts.Tests
                 fire();
             }
 
-            float deltaX = 0.0f;
-            float deltaY = 0.0f;
+
+
+            float deltaX = camComp.GetMouseDeltaX();
+            float deltaY = camComp.GetMouseDeltaY();
             // TODO: use mouse data when it has been added to C#
             //inputHandler.GetMouse()->GetDeltas(deltaX, deltaY);
-            if (inputHandler.IsKeyDown(Keys.Left))
-            {
-                deltaX -= 1.0f;
-            }
-            if (inputHandler.IsKeyDown(Keys.Right))
-            {
-                deltaX += 1.0f;
-            }
+            //if (inputHandler.IsKeyDown(Keys.Left))
+            //{
+            //    deltaX -= 1.0f;
+            //}
+            //if (inputHandler.IsKeyDown(Keys.Right))
+            //{
+            //    deltaX += 1.0f;
+            //}
 
-            if (inputHandler.IsKeyDown(Keys.Up))
-            {
-                deltaY -= 1.0f;
-            }
-            if (inputHandler.IsKeyDown(Keys.Down))
-            {
-                deltaY += 1.0f;
-            }
+            //if (inputHandler.IsKeyDown(Keys.Up))
+            //{
+            //    deltaY -= 1.0f;
+            //}
+            //if (inputHandler.IsKeyDown(Keys.Down))
+            //{
+            //    deltaY += 1.0f;
+            //}
 
             Pitch += deltaTime * deltaY * RotSpeedPitch;
             Pitch = Pitch < -MaxPitch ? -MaxPitch : Pitch > MaxPitch ? MaxPitch : Pitch;
