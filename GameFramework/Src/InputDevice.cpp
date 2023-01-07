@@ -4,6 +4,7 @@
 #include <iostream>
 #include <windowsx.h>
 #include "DisplayWin32.h"
+#include "AssetManager.h"
 
 LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
 
@@ -51,6 +52,16 @@ LRESULT InputDevice::HandleMessage(HWND hwnd, UINT umessage, WPARAM wparam, LPAR
 			::SetWindowPos(Game::GetInstance()->GetDisplay()->GetWindowHandle(), NULL, suggested_rect->left, suggested_rect->top, suggested_rect->right - suggested_rect->left, suggested_rect->bottom - suggested_rect->top, SWP_NOZORDER | SWP_NOACTIVATE);
 		}
 		return 0;
+	case WM_SETFOCUS:
+	{
+		// todo: make a application focused callback func in Game and move this there
+		AssetManager* am = Game::GetInstance()->GetAssetManager();
+		if (am)
+		{
+			am->Initialize();
+		}
+		return 0;
+	}
 	default:
 		return DefWindowProc(hwnd, umessage, wparam, lparam);
 	}

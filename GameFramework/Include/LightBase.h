@@ -21,23 +21,21 @@ enum class LightType
 class LightBase : public SceneComponent
 {
 public:
-
+	LightBase();
 	~LightBase();
 
 	// @TODO: should this be virtual? Should I return a reference?
 	virtual LightData GetLightData() { return LightData(); };
 
-	virtual LightType GetLightType() = 0;
+	virtual LightType GetLightType() const = 0;
 
 	virtual Renderer* GetLightRenderer() { return renderer; }
 
 	Renderer* renderer;
 
 	MonoComponent* GetMonoComponent() override { return mMonoComponent; }
-	ComponentType GetComponentType() override { return ComponentType::SceneComponentType; }
 
 	void SetRenderer(Renderer* InRenderer) { renderer = InRenderer; }
-
 private:
 	//TODO: POPRAVIT'
 	MonoPhysicsComponent* mMonoComponent = new MonoPhysicsComponent;
@@ -48,7 +46,9 @@ class AmbientLight : public LightBase
 {
 public:
 
-	virtual LightType GetLightType() override { return LightType::Ambient; }
+	LightType GetLightType() const override { return LightType::Ambient; }
+
+	ComponentType GetComponentType() override { return AmbientLightType; };
 
 	virtual LightData GetLightData() 
 	{ 
@@ -57,7 +57,7 @@ public:
 		return light; 
 	};
 
-
+	static auto Create() -> Component* { return new AmbientLight(); }
 };
 
 //@TODO: move this to a separate file
@@ -65,11 +65,13 @@ class DirectionalLight : public LightBase
 {
 public:
 
-	virtual LightType GetLightType() override { return LightType::Directional; }
+	LightType GetLightType() const override { return LightType::Directional; }
+
+	ComponentType GetComponentType() override { return DirectionalLightType; };
 
 	virtual LightData GetLightData() { return LightData(); };
 
-
+	static auto Create() -> Component* { return new DirectionalLight(); }
 };
 
 
@@ -77,7 +79,9 @@ class PointLight : public LightBase
 {
 public:
 
-	virtual LightType GetLightType() override { return LightType::Point; }
+	LightType GetLightType() const override { return LightType::Point; }
+
+	ComponentType GetComponentType() override { return LightPointType; };
 
 	virtual LightData GetLightData()
 	{ 

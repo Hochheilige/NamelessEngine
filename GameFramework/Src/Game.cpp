@@ -360,7 +360,8 @@ void Game::UpdateInternal(float DeltaTime)
 	
 	Update(DeltaTime);
 
-	PhysicsModuleData::GetInstance()->GetDynamicsWorld()->debugDrawWorld();
+	if (doDebugRender)
+		PhysicsModuleData::GetInstance()->GetDynamicsWorld()->debugDrawWorld();
 }
 
 void Game::Update(float DeltaTime)
