@@ -54,7 +54,7 @@ namespace Scripts
 
         public void SetTransform(Transform transform)
         {
-            //Transform = InternalSetTransform(CppInstance, transform);
+            InternalSetTransform(CppInstance, transform);
         }
 
         public void Dispose()
