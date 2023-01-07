@@ -195,6 +195,15 @@
     <ClInclude Include="Include\NormalTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\RecastNavigationManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\RecastInputMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Singleton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\AABB2DCollider.cpp">
@@ -333,6 +342,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Include\NormalTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\RecastNavigationManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\RecastInputMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
