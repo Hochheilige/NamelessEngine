@@ -8,6 +8,7 @@
 #include "MonoMovementComponentModule.h"
 #include "MonoCameraComponentModule.h"
 #include "MonoStaticMeshRendererModule.h"
+#include "MonoModules/MonoAudioComponentModule.h"
 #include "Sandbox.h"
 #include "MonoModules/MonoMasterModule.h"
 
@@ -74,6 +75,7 @@ void MonoSystem::InitializeMono()
 				new MonoMovementComponentModule;
 				new MonoCameraComponentModule();
 				new MonoStaticMeshRendererModule();
+				new MonoAudioComponentModule;
 			}
 		}
 	}

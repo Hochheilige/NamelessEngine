@@ -108,6 +108,9 @@
     <ClInclude Include="MonoModules\MonoMasterModule.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MonoModules\MonoAudioComponentModule.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mappings.h" />

@@ -109,6 +109,9 @@ namespace Scripts
                 case ComponentType.StaticMeshRendererType:
                     component = new StaticMeshRenderer(this, internalCreate);
                     break;
+                case ComponentType.AudioComponentType:
+                    component = new AudioComponent(this, internalCreate);
+                    break;
                 default: 
                     Console.WriteLine("Default");
                     throw new Exception("Undefined Component");
