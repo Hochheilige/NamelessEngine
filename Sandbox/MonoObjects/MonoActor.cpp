@@ -2,6 +2,8 @@
 
 #include "MonoComponent.h"
 
+#include "../Actor.h"
+
 MonoActor::MonoActor(Actor* actor, const char* nameSpace, const char* className) : NameSpace(nameSpace), ClassName(className)
 {
     auto mono = MonoSystem::GetInstance();
@@ -124,10 +126,17 @@ const std::string& MonoActor::GetClassname() const
     return ClassName;
 }
 
-void MonoActor::Overlap()
+void MonoActor::Overlap(Actor* otherActor)
 {
     auto mono = MonoSystem::GetInstance();
     void* args[1];
+	MonoActor* otherMonoActor = otherActor->GetMonoActor();
+	if (!otherMonoActor)
+	{
+		// avoid calling anything if other actor doesn't have a mono actor
+		return;
+	}
+	args[0] = otherMonoActor->GetCsInstance();
 
     MonoMethod* method = mono->GetMethod(NameSpace.c_str(), ClassName.c_str(), "Overlap");
     if(method)
