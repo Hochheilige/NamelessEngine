@@ -588,6 +588,12 @@ auto ImGuiSubsystem::DrawRigidBodyProperties(Actor* actor) -> void
 				cmp->MakeDynamic();
 			}
 
+			if (rbType != RigidBodyType::STATIC)
+			{
+				float mass = cmp->GetMass();
+				ImGui::DragFloat("Mass", &mass, .1f, 0.0f, 100.0f);
+				cmp->SetMass(mass);
+			}
 
 			ImGui::EndChild();
 			ImGui::PopStyleVar();

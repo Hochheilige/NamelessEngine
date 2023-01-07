@@ -25,6 +25,15 @@ namespace Scripts.Components
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void InternalSetWalkDirection(IntPtr handle, Vector3 direction);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void InternalSetGravity(IntPtr handle, Vector3 gravity);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern bool InternalCanJump(IntPtr handle);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern Vector3 InternalGetLinearVelocity(IntPtr handle);
+
         public void Jump(Vector3 direction)
         {
             InternalJump(CppInstance, direction);
@@ -38,6 +47,21 @@ namespace Scripts.Components
         public void SetWalkDirection(Vector3 direction)
         {
             InternalSetWalkDirection(CppInstance, direction);
+        }
+
+        public void SetGravity(Vector3 gravity)
+        {
+            InternalSetGravity(CppInstance, gravity);
+        }
+
+        public bool CanJump()
+        {
+            return InternalCanJump(CppInstance);
+        }
+
+        public Vector3 GetLinearVelocity()
+        {
+            return InternalGetLinearVelocity(CppInstance);
         }
 
     }
