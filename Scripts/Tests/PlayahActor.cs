@@ -1,6 +1,7 @@
 ﻿using System;
 using Scripts.Components;
 using Scripts.Engine;
+using Scripts.Extensions;
 using SharpDX;
 
 namespace Scripts.Tests
@@ -172,9 +173,10 @@ namespace Scripts.Tests
 
         }
 
-        protected override void Overlap()
+        protected override void Overlap(Actor otherActor)
         {
-            //Console.WriteLine("PlayahActor Overlap event");
+            //otherActor.Components.GetComponent<StaticMeshRenderer>().SetMeshPath("../Assets/Meshes/test.fbx/Torus");
+            Console.WriteLine("PlayahActor Overlap event");
         }
 
     }
