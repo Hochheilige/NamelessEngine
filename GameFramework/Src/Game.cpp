@@ -585,6 +585,7 @@ auto Game::StopPlay() -> void
 {
 	if (mPlayState == PlayState::Playing || mPlayState == PlayState::Paused)
 	{
+		MyEditorContext.SetSelectedActor(nullptr);
 		mPlayState = PlayState::Editor;
 		Serializer::Deserialize(&tempGameSave, *this, true);
 		tempGameSave.clear();
