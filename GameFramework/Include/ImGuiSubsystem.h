@@ -134,4 +134,5 @@ private:
 
 	bool isViewportFocused;
 
+	bool doDebug = false;
 };

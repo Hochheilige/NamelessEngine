@@ -1,6 +1,7 @@
 ﻿using System;
 using Scripts.Components;
 using Scripts.Engine;
+using Scripts.Extensions;
 using SharpDX;
 
 namespace Scripts.Tests
@@ -25,8 +26,12 @@ namespace Scripts.Tests
         }
 
         private bool isJumpPressed = false;
-        private float characterSpeed = 4.0f;
+        private float characterSpeed = 10.0f;
         private Vector3 jumpDirection = new Vector3(0, 10, 0);
+        private Vector3 movementDelta = new Vector3(0, 0, 0);
+        private float airControlModifier = 0.15f;
+        private float jumpSpeadModifier = 3.0f;
+        private Vector3 playerGravity = new Vector3(0, -9.81f, 0);
 
         float Pitch = 0.0f;
         float Yaw = 0.0f;
@@ -36,6 +41,8 @@ namespace Scripts.Tests
         float RotSpeedPitch = 12000.0f;
         float OrbitRadius = 10.0f;
 
+
+
         private float fireDelay = 0.5f;
         private float currentFireDelay = -0.1f;
 
@@ -44,9 +51,9 @@ namespace Scripts.Tests
         public override void Update(float deltaTime)
         {
             var inputHandler = Game.GetInstance().InputHandler;
-            if (inputHandler.IsKeyDown(Keys.Space))
+            if (inputHandler.IsKeyDown(Keys.Space) && mv_cmp.CanJump())
             {
-                if (!isJumpPressed) { mv_cmp.Jump(jumpDirection); }
+                if (!isJumpPressed) { mv_cmp.Jump(jumpDirection + movementDelta * characterSpeed * jumpSpeadModifier); }
                 isJumpPressed = true;
             }
             else
@@ -110,8 +117,7 @@ namespace Scripts.Tests
             camComp.SetCameraTransform(pos, rot);
 
             //Walking
-
-            Vector3 movementDelta = new Vector3(0, 0, 0);
+            movementDelta = new Vector3(0, 0, 0);
             Matrix moveMat = Matrix.RotationQuaternion(cameraTransform.Rotation);
             Vector3 right = moveMat.Right;
             Vector3 forward = Vector3.Cross(right, new Vector3(0, 1, 0));
@@ -140,6 +146,8 @@ namespace Scripts.Tests
             movementDelta += right * rightInput;
             movementDelta -= forward * forwardInput;
 
+            if (!mv_cmp.CanJump()) movementDelta *= airControlModifier;
+
             mv_cmp.SetWalkDirection(movementDelta);
 
         }
@@ -165,9 +173,10 @@ namespace Scripts.Tests
 
         }
 
-        protected override void Overlap()
+        protected override void Overlap(Actor otherActor)
         {
-            //Console.WriteLine("PlayahActor Overlap event");
+            //otherActor.Components.GetComponent<StaticMeshRenderer>().SetMeshPath("../Assets/Meshes/test.fbx/Torus");
+            Console.WriteLine("PlayahActor Overlap event");
         }
 
     }

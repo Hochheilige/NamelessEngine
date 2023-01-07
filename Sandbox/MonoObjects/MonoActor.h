@@ -3,6 +3,8 @@
 #include "..\MonoSystem.h"
 #include "..\Component.h"
 
+class Actor;
+
 class MonoActor
 {
 public:
@@ -17,7 +19,7 @@ public:
     void Update(float deltaTime);
     void OnBeginPlay();
 
-    void Overlap();
+    void Overlap(Actor* otherActor);
     
     const char* GetInheritors();
     MonoObject* GetCsInstance();

@@ -205,16 +205,24 @@ auto ImGuiSubsystem::DrawToolbar() -> void
 		const char resumeText[] = "Resume";
 		const char stopText[] = "Stop";
 
+		//disable debug draw here
+		if (ImGui::Checkbox("PhysicsDebug", &doDebug))
+		{
+			MyGame->SetDebugRender(doDebug);
+		}
+		ImGui::SameLine();
+
 		switch (MyGame->GetPlayState())
 		{
 		case PlayState::Editor:
+
 			if (ImGui::Button(playText))
 			{	
 				MyGame->StartPlay();
 			}
 			ImGui::SameLine();
 
-			if (ImGui::Button("Reload Assemblies"))
+			if (ImGui::Button("Hot Reload"))
 			{
 				GetEditorContext().SetSelectedActor(nullptr);
 				auto mono = MonoSystem::GetInstance();
@@ -550,7 +558,7 @@ auto ImGuiSubsystem::DrawRigidBodyProperties(Actor* actor) -> void
 		if (!BoldHeader("RigidBody Component", 0)) {
 			ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 			ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-			ImGui::BeginChild("RB", ImVec2(0, 60), true, window_flags);
+			ImGui::BeginChild("RB", ImVec2(0, 100), true, window_flags);
 
 			bool is_p_enabled = cmp->isPhysicsSimulationEnabled;
 			bool is_p_enabled_old = cmp->isPhysicsSimulationEnabled;
@@ -568,6 +576,16 @@ auto ImGuiSubsystem::DrawRigidBodyProperties(Actor* actor) -> void
 			}
 
 			RigidBodyType rbType = cmp->GetType();
+
+			if (rbType != RigidBodyType::STATIC)
+			{
+				float mass = cmp->GetMass();
+				if (rbType != RigidBodyType::STATIC && mass < 0.0001f) {
+					mass = 0.001f;
+				}
+				ImGui::DragFloat("Mass", &mass, .1f, 0.001f, 100.0f);
+				cmp->SetMass(mass);
+			}
 
 			ImGui::Selectable("Static", rbType == RigidBodyType::STATIC, 0, ImVec2(80, 18));
 			if (ImGui::IsItemClicked()) {
@@ -588,6 +606,7 @@ auto ImGuiSubsystem::DrawRigidBodyProperties(Actor* actor) -> void
 				cmp->MakeDynamic();
 			}
 
+			
 
 			ImGui::EndChild();
 			ImGui::PopStyleVar();
