@@ -9,12 +9,14 @@ enum ComponentType
     MeshRendererType = 1,
     StaticMeshRendererType,
     RigidBodyCubeType, 
-    RigidBodySphereType, 
+    RigidBodySphereType,
     LightPointType,
     SceneComponentType,
     MovementComponentType,
     AudioComponentType,
 	CameraComponentType,
+    AmbientLightType,
+    DirectionalLightType,
 
     Last
 };
