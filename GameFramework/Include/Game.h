@@ -30,6 +30,7 @@ class ImGuiSubsystem;
 class EngineContentRegistry;
 class Serializer;
 class CameraComponent;
+class RecastNavigationManager;
 
 using namespace Microsoft::WRL;
 
@@ -256,6 +257,8 @@ private:
 	UUIDGenerator* uuidGenerator = nullptr;
 	std::unique_ptr<AssetManager> assetManager;
 
+	std::unique_ptr<RecastNavigationManager> recastNavigationManager;
+
 private:
 	json tempGameSave;
 
@@ -270,5 +273,7 @@ public:
 	auto GetUseEditorCamera() const -> bool { return bUseEditorCamera; }
 
 	auto UpdateCamerasAspectRatio(float NewAspectRatio) -> void;
+
+	auto GetRecastNavigationManager() const -> RecastNavigationManager* { return recastNavigationManager.get(); }
 };
 

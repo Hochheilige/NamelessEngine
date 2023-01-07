@@ -258,6 +258,8 @@
     <ClInclude Include="Include\MonoStaticMeshRendererModule.h" />
     <ClInclude Include="Include\MovementComponent.h" />
     <ClInclude Include="Include\NormalTexture.h" />
+    <ClInclude Include="Include\RecastInputMesh.h" />
+    <ClInclude Include="Include\RecastNavigationManager.h" />
     <ClInclude Include="Include\RenderPrimitiveProxy.h" />
     <ClInclude Include="Include\MeshRenderer.h" />
     <ClInclude Include="Include\ObjectLookupHelper.h" />
@@ -269,6 +271,7 @@
     <ClInclude Include="Include\Serializer.h" />
     <ClInclude Include="Include\Shader.h" />
     <ClInclude Include="Include\ShaderCompiler.h" />
+    <ClInclude Include="Include\Singleton.h" />
     <ClInclude Include="Include\SphereCollider.h" />
     <ClInclude Include="Include\StaticMesh.h" />
     <ClInclude Include="Include\StaticMeshRenderer.h" />
@@ -293,6 +296,8 @@
     <ClCompile Include="Src\ComponentRegistry.cpp" />
     <ClCompile Include="Src\MonoMovementComponent.cpp" />
     <ClCompile Include="Src\MovementComponent.cpp" />
+    <ClCompile Include="Src\RecastInputMesh.cpp" />
+    <ClCompile Include="Src\RecastNavigationManager.cpp" />
     <ClCompile Include="Src\Serializer.cpp" />
     <ClCompile Include="Src\AABB2DCollider.cpp" />
     <ClCompile Include="Src\Asset.cpp" />
