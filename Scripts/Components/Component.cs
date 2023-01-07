@@ -62,5 +62,10 @@ namespace Scripts
             CppInstance = IntPtr.Zero;
             Owner.Components.Remove(this);
         }
+
+        public string GetIdentifier()
+        {
+            return CppInstance.ToString();
+        }
     }
 }
