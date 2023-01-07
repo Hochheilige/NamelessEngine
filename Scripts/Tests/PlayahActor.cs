@@ -40,6 +40,9 @@ namespace Scripts.Tests
         float RotSpeedYaw = 40000.0f;
         float RotSpeedPitch = 12000.0f;
         float OrbitRadius = 10.0f;
+        private Vector3 bulletOffset = Vector3.ForwardLH * 2.0f;
+        private float bulletSpeed = 50f;
+        private Vector3 cameraOffset = new Vector3(1.5f, 1.0f, 0.0f);
 
 
 
@@ -105,6 +108,9 @@ namespace Scripts.Tests
 
             // todo: ignore only GCToOrbit's yaw and pitch rotation and scale
 
+            Matrix moveMat = Matrix.RotationQuaternion(cameraTransform.Rotation);
+            Vector3 right = moveMat.Right;
+            Vector3 forward = Vector3.Cross(right, new Vector3(0, 1, 0));
 
             Matrix mat = Matrix.Translation(new Vector3(0.0f, 0.0f, OrbitRadius)) *
                 Matrix.RotationYawPitchRoll(Yaw * (float)Math.PI / 180.0f, Pitch * (float)Math.PI / 180.0f, 0.0f) *
@@ -114,13 +120,14 @@ namespace Scripts.Tests
             cameraTransform.Position = pos;
             cameraTransform.Rotation = rot;
             cameraTransform.Scale = scale;
+            Vector3 camMod = cameraOffset;
+            camMod -= cameraOffset.Z * forward;
+            camMod += cameraOffset.X * right;
             camComp.SetCameraTransform(pos, rot);
 
             //Walking
             movementDelta = new Vector3(0, 0, 0);
-            Matrix moveMat = Matrix.RotationQuaternion(cameraTransform.Rotation);
-            Vector3 right = moveMat.Right;
-            Vector3 forward = Vector3.Cross(right, new Vector3(0, 1, 0));
+            
 
             float forwardInput = 0.0f;
             float rightInput = 0.0f;
@@ -156,8 +163,19 @@ namespace Scripts.Tests
         {
             Bullet bullet = Instantiator.InstantiateActor<Bullet>();
             bullet.PublicInit();
-            bullet.SetTransform(GetTransform());
-            
+
+            Matrix moveMat = Matrix.RotationQuaternion(cameraTransform.Rotation);
+            Transform t = GetTransform();
+            Vector3 right = moveMat.Right;
+            Vector3 forward = Vector3.Cross(right, new Vector3(0, 1, 0));
+            t.Position -= bulletOffset.Z * forward;
+            t.Position += bulletOffset.X * right;
+            bullet.SetTransform(t);
+
+           
+
+            bullet.SetInittialSpeed(moveMat.Forward * bulletSpeed);
+
             bullet.fire();
 
             currentFireDelay = fireDelay;

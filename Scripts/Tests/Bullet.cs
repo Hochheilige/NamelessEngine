@@ -73,6 +73,11 @@ namespace Scripts
             rigidbody.ApplyCentralImpulse(initialSpeed);
         }
 
+        public void SetInittialSpeed(Vector3 speed)
+        {
+            initialSpeed = speed;
+        }
+
         private void Move()
         {
             var root = GetTransform();
