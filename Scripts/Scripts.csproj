@@ -72,6 +72,9 @@
     <Compile Include="Engine\InputHandler.cs" />
     <Compile Include="Engine\Instantiator.cs" />
     <Compile Include="Engine\Keys.cs" />
+    <Compile Include="Engine\Meta\Meta.cs" />
+    <Compile Include="Engine\Meta\MetaInfo.cs" />
+    <Compile Include="Engine\Meta\MetaObject.cs" />
     <Compile Include="Engine\Transform.cs" />
     <Compile Include="Extensions\ComponentHelper.cs" />
     <Compile Include="Tests\AITestActor.cs" />
@@ -86,6 +89,7 @@
     <Compile Include="Tests\TestGame.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>

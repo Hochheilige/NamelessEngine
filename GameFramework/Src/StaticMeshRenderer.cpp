@@ -140,7 +140,7 @@ auto StaticMeshRenderer::SetNormalPath(std::string normalPath) -> void
 json StaticMeshRenderer::Serialize() const
 {
 	auto out = Renderer::Serialize();
-	out["mesh_path"] = GetStaticMesh()->GetFullPath();
+	out["mesh_path"] = GetStaticMesh() ? GetStaticMesh()->GetFullPath() : "";
 	out["texture_path"] = texturePath;
 	out["normal_path"] = normalPath;
 	out["mat_ambient"] = Mat.ambientCoef;

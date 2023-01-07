@@ -86,19 +86,22 @@ namespace Scripts.BehaviorTree
                 return;
             }
 
-            perNodeData.TryGetValue(comp, out PerNodeData nodeData);
-            if (nodeData == null)
-            {
-                nodeData = new PerNodeData();
-                perNodeData.Add(comp, nodeData);
-            }
 
             while (comp != null)
             {
+                perNodeData.TryGetValue(comp, out PerNodeData nodeData);
+                if (nodeData == null)
+                {
+                    nodeData = new PerNodeData();
+                    perNodeData.Add(comp, nodeData);
+                }
+
                 int nextChildIndex = comp.GetNextChildIndex(nodeData.prevIndex, nodeData.prevResult);
                 nodeData.prevIndex = nextChildIndex;
                 if (nextChildIndex == (int)SpecialIndexValues.ReturnToParent)
                 {
+                    if (comp.GetParent() != null)
+                        perNodeData[comp.GetParent()].prevResult = nodeData.prevResult;
                     comp = comp.GetParent();
                     continue;
                 }

@@ -10,6 +10,13 @@ namespace Scripts.BehaviorTree
     public class BTTask_Wait : BTTask
     {
 
+        public BTTask_Wait() { }
+
+        public BTTask_Wait(float waitTime)
+        {
+            this.waitTime = waitTime;
+        }
+
         private float waitTime = 5.0f;
 
         public override object CreateMemoryObject()

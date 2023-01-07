@@ -7,6 +7,7 @@ using Scripts.BehaviorTree;
 using Scripts.Engine;
 
 using Newtonsoft.Json;
+using Scripts.Engine.Meta;
 using static Scripts.InputHandler;
 using Action = Scripts.BehaviorTree.Action;
 
@@ -62,6 +63,11 @@ namespace Scripts
             }
 
             return new List<T>();
+        }
+
+        public T GetActorOfClass<T>() where T : Actor
+        {
+            return actors.Find(x => x is T) as T;
         }
 
         public IEnumerable<Actor> GetActors()
@@ -126,6 +132,24 @@ namespace Scripts
 
             var result = JsonConvert.SerializeObject(objs);
             return result;
+        }
+
+        private string GetTasks()
+        {
+            var actorSignatures = (
+                from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
+                from type in domainAssembly.GetTypes()
+                where typeof(BTTask).IsAssignableFrom(type)
+                select type.ToString()).ToArray();
+            
+            var objs = new List<MetaInfo>();
+            
+            foreach (var str in actorSignatures)
+            {
+                objs.Add(new MetaInfo(str));
+            }
+
+            return JsonConvert.SerializeObject(objs);
         }
 
         internal virtual void OnGUI()

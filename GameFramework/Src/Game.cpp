@@ -29,6 +29,8 @@
 
 #include "DebugDrawer.h"
 
+#include "RecastNavigationManager.h"
+
 
 Game* Game::Instance = nullptr;
 
@@ -58,6 +60,8 @@ void Game::InitializeInternal()
 	assetManager->Initialize();
 
 	PhysicsModuleData::GetInstance()->GetDynamicsWorld()->setDebugDrawer(MyRenderingSystem->GetDebugDrawer());
+
+	recastNavigationManager.reset(new RecastNavigationManager());
 
 	PrepareResources();
 
@@ -362,6 +366,9 @@ void Game::UpdateInternal(float DeltaTime)
 
 	if (doDebugRender)
 		PhysicsModuleData::GetInstance()->GetDynamicsWorld()->debugDrawWorld();
+
+	/*recastNavigationManager->GenerateNavMesh();
+	recastNavigationManager->DrawDebugInputMesh();*/
 }
 
 void Game::Update(float DeltaTime)

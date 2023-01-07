@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include "Singleton.h"
+
 class Actor;
 class Game;
 class RenderPrimitiveProxy;
@@ -20,21 +22,6 @@ struct ID3D11Resource;
 struct ID3D11ShaderResourceView;
 
 using namespace Microsoft::WRL;
-
-template<class T>
-class Singleton
-{
-public:
-	static auto GetInstance() -> T* { return Instance; }
-
-protected:
-	Singleton()
-	{
-		Instance = static_cast<T*>(this);
-	}
-
-	static T* Instance;
-};
 
 template<class T>
 T* Singleton<T>::Instance = nullptr;

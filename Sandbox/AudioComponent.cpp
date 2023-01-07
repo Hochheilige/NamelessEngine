@@ -4,6 +4,11 @@ void AudioComponent::LoadSound(const std::string& soundName, bool b3d, bool loop
 {
 	auto audio = AudioModule::GetInstance();
 	auto& sounds = audio->GetSounds();
+
+	name = soundName;
+	is_3d = b3d;
+	is_looping = looping;
+	is_stream = stream;
 	
 	if (auto found = sounds.find(soundName); found != sounds.end())
 	{
@@ -102,14 +107,20 @@ void AudioComponent::SetVolume(float volume)
 json AudioComponent::Serialize() const
 {
 	auto out = SceneComponent::Serialize();
-	out["channel_id"] = channelID;
-	//out["audio_path"] = "";
 	out["name"] = name;
+	out["channel_id"] = channelID;
+	out["is_3d"] = is_3d;
+	out["loop"] = is_looping;
+	out["stream"] = is_stream;
+	//out["audio_path"] = "";
 	return out;
 }
 
 void AudioComponent::Deserialize(const json* in)
 {
+	channelID = in->at("channel_id").get<int>();
+	LoadSound(in->at("name").get<std::string>(), in->at("is_3d").get<bool>(), 
+		in->at("loop").get<bool>(), in->at("stream").get<bool>());
 	SceneComponent::Deserialize(in);
 }
 
