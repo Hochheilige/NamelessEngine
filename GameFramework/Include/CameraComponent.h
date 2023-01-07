@@ -27,6 +27,9 @@ public:
 
 	auto UpdateAspectRatio(float newAspectRatio) -> void;
 
+	auto GetMouseDeltaX() -> float;
+	auto GetMouseDeltaY() -> float;
+
 protected:
 	mutable Camera povData;
 };

@@ -6,23 +6,31 @@ using System.Text;
 
 namespace Scripts.Components
 {
+    // TODO: update it to be like other components
     public class BehaviorTreeComponent
     {
-        public float deltaTime;
-
-        private List<Task> tasks = new List<Task>();
-
-        private RootTask root;
-
-        public void AddTask(Task task)
+        public BehaviorTreeComponent(Actor inOwner)
         {
-            tasks.Add(task);
+            executor = new BTTreeExecutor(this);
+            owner = inOwner;
         }
 
-        public TaskStateEnum Execute()
+        Actor owner;
+
+        public Actor GetOwner() { return owner; }
+
+        public void SetBTTree(BTTree tree)
         {
-            return root.Execute(this, null);
+            executor.SetTreeToExecute(tree);
         }
 
+        BTTreeExecutor executor;
+
+        public BTTreeExecutor GetExecutor() { return executor; }
+
+        public void FinishLatentTask(BTTask task, TaskStateEnum result)
+        {
+            executor.StopInProgressTask(task, result);
+        }
     }
 }

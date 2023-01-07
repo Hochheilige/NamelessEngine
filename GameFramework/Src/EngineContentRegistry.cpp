@@ -120,7 +120,6 @@ auto EngineContentRegistry::CreatePointLight(const Transform& transform)->Actor*
 
 	PointLight* pl = actor->AddComponent<PointLight>();
 	pl->SetRelativePosition(transform.Position);
-	MyGame->MyRenderingSystem->RegisterLight(pl);
 
 	// TODO: create renderer in light ?
 	MeshRenderer* mr = new MeshRenderer(false);

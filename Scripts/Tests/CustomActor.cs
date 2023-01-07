@@ -55,8 +55,8 @@ namespace Scripts.Tests
             }
         }
 
-        protected override void Overlap() {
-            base.Overlap();
+        protected override void Overlap(Actor otherActor) {
+            base.Overlap(otherActor);
             Console.WriteLine("Overlap here");
         }
     }

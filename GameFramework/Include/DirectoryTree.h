@@ -53,6 +53,8 @@ public:
 	auto IsLeafNode() const -> bool { return GetNumDirectories() == 0; }
 
 	auto GetNumDirectories() const -> size_t { return counts[static_cast<size_t>(DirectoryTreeNodeType::Directory)] + counts[static_cast<size_t>(DirectoryTreeNodeType::AssetCollection)]; }
+
+	~DirectoryTreeNode();
 };
 
 
@@ -70,6 +72,8 @@ public:
 	auto GetRootNode() const -> DirectoryTreeNode* { return root; }
 
 	auto GetDirectoryByPath(const Path& path)->DirectoryTreeNode*;
+
+	~DirectoryTree();
 
 	// TODO:
 	//class DirectoryOnlyIterator

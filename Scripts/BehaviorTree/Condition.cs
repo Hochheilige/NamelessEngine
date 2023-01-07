@@ -7,16 +7,12 @@ using System.Threading.Tasks;
 
 namespace Scripts.BehaviorTree
 {
-    public abstract class Condition : Task
+    public abstract class Condition : BTTask
     {
         public TaskStateEnum Execute()
         {
             throw new NotImplementedException();
         }
 
-        public TaskStateEnum Execute(BehaviorTreeComponent btComponent, object nodeMemory)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

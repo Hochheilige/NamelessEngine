@@ -2,6 +2,7 @@
 
 #include "Game.h"
 #include "DisplayWin32.h"
+#include <InputDevice.h>
 
 CameraComponent::CameraComponent()
 {
@@ -23,4 +24,26 @@ auto CameraComponent::GetPOVData() const -> const Camera&
 auto CameraComponent::UpdateAspectRatio(float newAspectRatio) -> void
 {
 	povData.UpdateAspectRatio(newAspectRatio);
+}
+
+auto CameraComponent::GetMouseDeltaX() -> float
+{
+	InputDevice& input = *Game::GetInstance()->GetInputDevice();
+	
+	float deltaX;
+	float deltaY;
+	input.GetMouse()->GetDeltas(deltaX, deltaY);
+
+	return deltaX;
+}
+
+auto CameraComponent::GetMouseDeltaY() -> float
+{
+	InputDevice& input = *Game::GetInstance()->GetInputDevice();
+
+	float deltaX;
+	float deltaY;
+	input.GetMouse()->GetDeltas(deltaX, deltaY);
+
+	return deltaY;
 }

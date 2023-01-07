@@ -17,10 +17,28 @@ namespace Scripts.Components
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void SetCameraTransformInternal(IntPtr handle, Vector3 position, Quaternion rotationQuaternion);
+        
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern float GetMouseDeltaXInternal(IntPtr handle);
+        
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern float GetMouseDeltaYInternal(IntPtr handle);
 
         public void SetCameraTransform(Vector3 position, Quaternion rotationQuaternion)
         {
             SetCameraTransformInternal(CppInstance, position, rotationQuaternion);
+        }
+
+        public float GetMouseDeltaX()
+        {
+            return GetMouseDeltaXInternal(CppInstance);
+        }
+
+        public float GetMouseDeltaY()
+        {
+            return GetMouseDeltaYInternal(CppInstance);
         }
 
     }

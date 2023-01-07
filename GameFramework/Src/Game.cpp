@@ -80,7 +80,7 @@ void Game::Deserialize(const json* in, bool destructive)
 {
 	if(destructive)
 	{
-		for(int i = Actors.size() - 1; i > 0; i--)
+		for(int i = Actors.size() - 1; i >= 0; i--)
 		{
 			delete Actors[i];
 		}
@@ -360,7 +360,8 @@ void Game::UpdateInternal(float DeltaTime)
 	
 	Update(DeltaTime);
 
-	PhysicsModuleData::GetInstance()->GetDynamicsWorld()->debugDrawWorld();
+	if (doDebugRender)
+		PhysicsModuleData::GetInstance()->GetDynamicsWorld()->debugDrawWorld();
 }
 
 void Game::Update(float DeltaTime)
@@ -585,6 +586,7 @@ auto Game::StopPlay() -> void
 {
 	if (mPlayState == PlayState::Playing || mPlayState == PlayState::Paused)
 	{
+		MyEditorContext.SetSelectedActor(nullptr);
 		mPlayState = PlayState::Editor;
 		Serializer::Deserialize(&tempGameSave, *this, true);
 		tempGameSave.clear();

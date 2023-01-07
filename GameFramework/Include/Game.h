@@ -85,6 +85,7 @@ public:
 	
 
 	void Render();
+	void SetDebugRender(bool doDebug) { doDebugRender = doDebug; }
 
 	virtual void DestroyResources();
 
@@ -260,6 +261,7 @@ private:
 
 
 	bool bUseEditorCamera = true;
+	bool doDebugRender = false;
 
 public:
 	auto GetAssetManager() const -> AssetManager* { return assetManager.get(); }

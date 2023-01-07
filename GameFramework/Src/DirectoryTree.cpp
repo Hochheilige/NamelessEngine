@@ -16,6 +16,14 @@ auto DirectoryTreeNode::GetPathFromTreeRoot() const->Path
 	return path;
 }
 
+DirectoryTreeNode::~DirectoryTreeNode()
+{
+	for (DirectoryTreeNode* child : children)
+	{
+		delete child;
+	}
+}
+
 DirectoryTreeNode::DirectoryTreeNode(Path p, DirectoryTreeNodeType nodeType)
 	: name(p)
 	, nodeType(nodeType)
@@ -93,6 +101,11 @@ auto DirectoryTree::GetDirectoryByPath(const Path& path) -> DirectoryTreeNode*
 		node = node->GetDirectChildByName(*(current));
 	}
 	return node;
+}
+
+DirectoryTree::~DirectoryTree()
+{
+	delete root;
 }
 
 //auto DirectoryTree::DirectoryOnlyIterator::operator++()->DirectoryOnlyIterator&

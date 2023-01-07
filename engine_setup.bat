@@ -1,5 +1,7 @@
 TITLE External Libraries Build
 
+git submodule update --init --recursive
+
 cd External
 
 ECHO Building Assimp library
@@ -36,3 +38,5 @@ cd recastnavigation
 
 cmake CMakeLists.txt -D RECASTNAVIGATION_DEMO=OFF -D RECASTNAVIGATION_TESTS=OFF
 cmake --build .
+
+pause

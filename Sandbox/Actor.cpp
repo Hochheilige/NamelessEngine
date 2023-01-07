@@ -298,22 +298,27 @@ uuid Actor::GetId() const
 	return id;
 }
 
-void Actor::Overlap()
+void Actor::Overlap(Actor* otherActor)
 {
-	mMonoActor->Overlap();
+	mMonoActor->Overlap(otherActor);
 }
 
 
 void callback(btDynamicsWorld* world, btScalar timeSleep)
 {
 	auto ghostObjects = PhysicsModuleData::GetInstance()->GetGhostObjects();
-	for (auto ghost : ghostObjects)
+
+	btCollisionObjectArray& arr = world->getCollisionObjectArray();
+	for (int i = 0; i < arr.size(); ++i)
 	{
-		if (ghost->getNumOverlappingObjects())
+		if (arr[i]->getInternalType() != btCollisionObject::CO_GHOST_OBJECT)
 		{
-			auto actor = reinterpret_cast<RigidBodyComponent*>(ghost->getUserPointer())->GetOwner();
-			if (!actor)
-				actor = reinterpret_cast<MovementComponent*>(ghost->getUserPointer())->GetOwner();
+			continue;
+		}
+		btGhostObject* ghost = static_cast<btGhostObject*>(arr[i]);
+		if (ghost->getNumOverlappingObjects() && ghost->getUserPointer())
+		{
+			auto actor = reinterpret_cast<SceneComponent*>(ghost->getUserPointer())->GetOwner();
 
 			for (int i = 0; i < ghost->getNumOverlappingObjects(); ++i)
 			{
@@ -322,8 +327,12 @@ void callback(btDynamicsWorld* world, btScalar timeSleep)
 				// and do something that we need on this callback
 				btCollisionObject* rb = ghost->getOverlappingObject(i);
 
-				actor->Overlap();
+				if (rb->getUserPointer())
+				{
+					auto otherActor = reinterpret_cast<SceneComponent*>(rb->getUserPointer())->GetOwner();
 
+					actor->Overlap(otherActor);
+				}
 			}
 		}
 	}
