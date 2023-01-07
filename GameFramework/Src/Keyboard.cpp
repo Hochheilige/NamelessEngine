@@ -17,7 +17,7 @@ void Keyboard::ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (wParam == KEY_ESC)
 			{
-				Game::GetInstance()->Exit();
+				Game::GetInstance()->StopPlay();
 				return;
 			}
 

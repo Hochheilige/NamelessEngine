@@ -232,12 +232,12 @@ auto ImGuiSubsystem::DrawToolbar() -> void
 				Serializer::SaveToFile(savepath, Game::GetInstance());
 			}
 
-			ImGui::SameLine();
+			/*ImGui::SameLine();
 
 			if (ImGui::Button("Load"))
 			{
 				Serializer::ReadFromFile(savepath, Game::GetInstance());
-			}
+			}*/
 
 			ImGui::SameLine();
 
