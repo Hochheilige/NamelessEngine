@@ -69,7 +69,10 @@
                 {
                     "data": {
                         "channel_id": -1,
+                        "is_3d": false,
+                        "loop": false,
                         "name": "",
+                        "stream": false,
                         "transform": {
                             "pos": [
                                 0.0,
@@ -2172,17 +2175,24 @@
                 "class": "PlayahActor",
                 "namespace": "Scripts.Tests"
             },
-            "name": ""
+            "name": "Actor30"
         },
         {
             "components": [
                 {
                     "data": {
+                        "Intensity": 12.0,
+                        "color": [
+                            1.0,
+                            0.8093022704124451,
+                            0.0,
+                            1.0
+                        ],
                         "name": "",
                         "transform": {
                             "pos": [
                                 6.354311466217041,
-                                0.7565584182739258,
+                                7.629336357116699,
                                 -3.374088764190674
                             ],
                             "rot": [
@@ -2203,6 +2213,44 @@
                 }
             ],
             "id": "647e94e5-d084-4b73-9b49-248632d703d4",
+            "name": "Actor31"
+        },
+        {
+            "components": [
+                {
+                    "data": {
+                        "Intensity": 1.0,
+                        "color": [
+                            0.15813922882080078,
+                            0.0,
+                            1.0,
+                            1.0
+                        ],
+                        "name": "",
+                        "transform": {
+                            "pos": [
+                                12.626038551330566,
+                                0.8801997303962708,
+                                8.644112586975098
+                            ],
+                            "rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "2cda15fd-77e8-48cc-989f-5600577aeeef",
+                    "name": "PointLight"
+                }
+            ],
+            "id": "49684c80-491a-486a-9ce6-4520f0c1781a",
             "name": ""
         }
     ]

@@ -69,7 +69,10 @@
                 {
                     "data": {
                         "channel_id": -1,
+                        "is_3d": false,
+                        "loop": false,
                         "name": "",
+                        "stream": false,
                         "transform": {
                             "pos": [
                                 0.0,
@@ -2276,7 +2279,10 @@
                 {
                     "data": {
                         "channel_id": -1,
+                        "is_3d": false,
+                        "loop": false,
                         "name": "",
+                        "stream": false,
                         "transform": {
                             "pos": [
                                 0.0,
@@ -2373,7 +2379,10 @@
                 {
                     "data": {
                         "channel_id": -1,
+                        "is_3d": false,
+                        "loop": false,
                         "name": "",
+                        "stream": false,
                         "transform": {
                             "pos": [
                                 0.0,
@@ -2470,7 +2479,10 @@
                 {
                     "data": {
                         "channel_id": -1,
+                        "is_3d": false,
+                        "loop": false,
                         "name": "",
+                        "stream": false,
                         "transform": {
                             "pos": [
                                 0.0,
@@ -2567,7 +2579,10 @@
                 {
                     "data": {
                         "channel_id": -1,
+                        "is_3d": false,
+                        "loop": false,
                         "name": "",
+                        "stream": false,
                         "transform": {
                             "pos": [
                                 0.0,
@@ -2664,7 +2679,10 @@
                 {
                     "data": {
                         "channel_id": -1,
+                        "is_3d": false,
+                        "loop": false,
                         "name": "",
+                        "stream": false,
                         "transform": {
                             "pos": [
                                 0.0,
@@ -2696,12 +2714,19 @@
             "components": [
                 {
                     "data": {
+                        "Intensity": 13.0,
+                        "color": [
+                            1.0,
+                            0.7255813479423523,
+                            0.0,
+                            1.0
+                        ],
                         "name": "",
                         "transform": {
                             "pos": [
-                                8.98840618133545,
+                                8.975303649902344,
                                 7.989430904388428,
-                                3.252764940261841
+                                6.582033634185791
                             ],
                             "rot": [
                                 -0.0,
@@ -2721,7 +2746,7 @@
                 }
             ],
             "id": "2006c663-fe37-4c74-966b-97ab0e5c5e0b",
-            "name": ""
+            "name": "Actor36"
         }
     ]
 }

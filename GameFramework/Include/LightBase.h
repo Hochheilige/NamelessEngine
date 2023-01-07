@@ -41,6 +41,30 @@ public:
 	MonoComponent* GetMonoComponent() override { return mMonoComponent; }
 
 	void SetRenderer(Renderer* InRenderer) { renderer = InRenderer; }
+
+	json Serialize() const
+	{
+		auto json = SceneComponent::Serialize();
+		assert(json.is_object());
+
+		json["color"] = lightData.Color;
+		json["Intensity"] = lightData.Intensity;
+
+		return json;
+	}
+
+	void Deserialize(const json* in)
+	{
+		lightData.Color = (in->at("color").get<Vector4>());
+		lightData.Intensity = (in->at("Intensity").get<float>());
+		
+
+		SceneComponent::Deserialize(in);
+
+
+
+	}
+
 private:
 	//TODO: POPRAVIT'
 	MonoPhysicsComponent* mMonoComponent = new MonoPhysicsComponent;
