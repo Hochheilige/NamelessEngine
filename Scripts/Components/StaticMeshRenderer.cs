@@ -19,9 +19,17 @@ namespace Scripts.Components
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void InternalSetMeshPath(IntPtr handle, string meshPath);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void InternalSetTexturePath(IntPtr handle, string texturePath);
+
         public void SetMeshPath(string meshPath)
         {
             InternalSetMeshPath(CppInstance, meshPath);
+        }
+
+        public void SetTexturePath(string texturePath)
+        {
+            InternalSetTexturePath(CppInstance, texturePath);
         }
 
     }
