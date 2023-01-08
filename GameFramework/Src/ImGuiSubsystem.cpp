@@ -299,6 +299,29 @@ auto ImGuiSubsystem::DrawViewport() -> void
 	if (ImGui::Begin("Viewport"))
 	{
 		
+		//some hotkeys
+		if (MyGame->GetPlayState() == PlayState::Editor) {
+			if (GetEditorContext().GetSelectedActor() && ImGui::IsKeyPressed(ImGuiKey_Delete, false)) {
+				auto actor = GetEditorContext().GetSelectedActor();
+				GetEditorContext().SetSelectedActor(nullptr);
+				delete(actor);
+			}
+
+		
+			if (MyGame->GetPlayState() == PlayState::Editor && GetEditorContext().GetSelectedActor()
+				&& ImGui::IsKeyPressed(ImGuiKey_D, false) && ImGui::IsKeyDown(ImGuiKey_LeftCtrl)) {
+				// duplicate here
+				auto& actors = MyGame->Actors;
+				std::string ogName = GetEditorContext().GetSelectedActor()->GetName();
+				json ogActor = GetEditorContext().GetSelectedActor()->Serialize();
+				Actor* newActor = new Actor();
+				newActor->Deserialize(&ogActor, true);
+				newActor->SetName("Copy of " + ogName);
+				actors.push_back(newActor);
+				GetEditorContext().SetSelectedActor(newActor);
+			}
+		}
+
 		ViewportStart = ImGui::GetCursorScreenPos();
 		ViewportSize = ImGui::GetContentRegionAvail();
 		ViewportMousePos = Vector2(ImGui::GetMousePos()) - ViewportStart;
