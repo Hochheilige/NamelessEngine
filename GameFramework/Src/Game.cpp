@@ -118,8 +118,11 @@ void Game::Deserialize(const json* in, bool destructive)
 			actor->Deserialize(&actorObj, destructive);
 		}
 	}
-	json dirlight = in->at("dirlight");
-	dr->Deserialize(&dirlight);
+	if (in->contains("dirLight"))
+	{
+		const json& dirlight = in->at("dirlight");
+		dr->Deserialize(&dirlight);
+	}
 }
 
 UUIDGenerator* Game::GetUuidGenerator() const

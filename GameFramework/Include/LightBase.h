@@ -55,8 +55,14 @@ public:
 
 	void Deserialize(const json* in)
 	{
-		lightData.Color = (in->at("color").get<Vector4>());
-		lightData.Intensity = (in->at("Intensity").get<float>());
+		if (in->contains("color"))
+		{
+			lightData.Color = (in->at("color").get<Vector4>());
+		}
+		if (in->contains("Intensity"))
+		{
+			lightData.Intensity = (in->at("Intensity").get<float>());
+		}
 		
 
 		SceneComponent::Deserialize(in);

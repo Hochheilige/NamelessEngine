@@ -407,9 +407,9 @@ void RenderingSystem::PerformLightingPass(float DeltaTime)
 			context->PSSetConstantBuffers(1, 1, LightsCB.GetAddressOf());
 
 			CBLights lightsCBData;
-			lightsCBData.LightData.Color = MyGame->DirectiLight.color;
+			lightsCBData.LightData.Color = light->GetLightData().Color;
 			lightsCBData.LightData.Direction = MyGame->DirectiLight.direction;
-			lightsCBData.LightData.Intensity = MyGame->DirectiLight.intensity;
+			lightsCBData.LightData.Intensity = light->GetLightData().Intensity;
 			lightsCBData.LightData.WorldToLightClip = MyGame->LightCam.GetWorldToClipMatrixTransposed();
 			D3D11_MAPPED_SUBRESOURCE lightsCBResource = {};
 			res = context->Map(LightsCB.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &lightsCBResource);
