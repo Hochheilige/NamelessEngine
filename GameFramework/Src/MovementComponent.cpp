@@ -29,7 +29,7 @@ auto MovementComponent::Init() -> void
 {
 	ghostObject = new btPairCachingGhostObject();
 	ghostObject->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
-	characterCapsule = new btCapsuleShape(capsuleRadius, 2 * halfHeight);
+	characterCapsule = new btCapsuleShape(capsuleRadius, 2 * halfHeight - 2 * capsuleRadius);
 	ghostObject->setCollisionShape(characterCapsule);
 	Transform t = GetTransform();
 	auto q = t.Rotation.GetQuaterion();

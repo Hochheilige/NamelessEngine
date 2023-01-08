@@ -124,7 +124,7 @@ public:
 
 private:
 	//character capsule shape ??
-	btScalar capsuleRadius = 1.0f;
+	btScalar capsuleRadius = .6f;
 	btScalar halfHeight = 1.0f;
 	btConvexShape* characterCapsule = nullptr;
 
