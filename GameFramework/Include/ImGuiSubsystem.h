@@ -84,6 +84,9 @@ private:
 	auto DrawNavMeshSettings() -> void;
 
 private:
+	auto PollHotkeys() -> void;
+
+private:
 	auto GetEditorContext() const -> EditorContext&;
 	auto GetSelectedSceneComponent() const->SceneComponent*;
 	auto GetAssetManager() const->AssetManager*;

@@ -309,27 +309,7 @@ auto ImGuiSubsystem::DrawViewport() -> void
 	{
 		
 		//some hotkeys
-		if (MyGame->GetPlayState() == PlayState::Editor) {
-			if (GetEditorContext().GetSelectedActor() && ImGui::IsKeyPressed(ImGuiKey_Delete, false)) {
-				auto actor = GetEditorContext().GetSelectedActor();
-				GetEditorContext().SetSelectedActor(nullptr);
-				delete(actor);
-			}
-
-		
-			if (MyGame->GetPlayState() == PlayState::Editor && GetEditorContext().GetSelectedActor()
-				&& ImGui::IsKeyPressed(ImGuiKey_D, false) && ImGui::IsKeyDown(ImGuiKey_LeftCtrl)) {
-				// duplicate here
-				auto& actors = MyGame->Actors;
-				std::string ogName = GetEditorContext().GetSelectedActor()->GetName();
-				json ogActor = GetEditorContext().GetSelectedActor()->Serialize();
-				Actor* newActor = new Actor();
-				newActor->Deserialize(&ogActor, true);
-				newActor->SetName("Copy of " + ogName);
-				actors.push_back(newActor);
-				GetEditorContext().SetSelectedActor(newActor);
-			}
-		}
+		PollHotkeys();
 
 		ViewportStart = ImGui::GetCursorScreenPos();
 		ViewportSize = ImGui::GetContentRegionAvail();
@@ -543,16 +523,13 @@ auto ImGuiSubsystem::LayOutTransform() -> void
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
 		ImGui::BeginChild("ChildR", ImVec2(0, 132), true, window_flags);
 
-		if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE) || 
-			(CanChangeGuizmo() && ImGui::IsKeyDown(ImGuiKey_W)))
+		if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
 			mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
 		ImGui::SameLine();
-		if (ImGui::RadioButton("Rotate", mCurrentGizmoOperation == ImGuizmo::ROTATE) ||
-			(CanChangeGuizmo() && ImGui::IsKeyDown(ImGuiKey_E)))
+		if (ImGui::RadioButton("Rotate", mCurrentGizmoOperation == ImGuizmo::ROTATE))
 			mCurrentGizmoOperation = ImGuizmo::ROTATE;
 		ImGui::SameLine();
-		if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE) ||
-			(CanChangeGuizmo() && ImGui::IsKeyDown(ImGuiKey_R)))
+		if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE))
 			mCurrentGizmoOperation = ImGuizmo::SCALE;
 
 		Transform t = mCurrentGizmoMode == ImGuizmo::MODE::LOCAL ? ssc->GetRelativeTransform() : ssc->GetTransform();
@@ -1387,7 +1364,7 @@ auto ImGuiSubsystem::DrawNavMeshSettings() -> void
 
 		BoldText("Debug");
 		ImGui::Checkbox("Draw NavMesh Debug", &rnm->bDrawNavMeshDebug);
-		ImGui::Checkbox("Draw Imput Mesh Debug", &rnm->bDrawInputMeshDebug);
+		ImGui::Checkbox("Draw Input Mesh Debug", &rnm->bDrawInputMeshDebug);
 		rnm->DrawDebugNavMesh();
 		rnm->DrawDebugInputMesh();
 
@@ -1434,6 +1411,47 @@ auto ImGuiSubsystem::DrawNavMeshSettings() -> void
 		if (ImGui::Button("Build", ImVec2(ImGui::GetContentRegionAvail().x, 0)))
 		{
 			rnm->GenerateNavMesh();
+		}
+	}
+}
+
+auto ImGuiSubsystem::PollHotkeys() -> void
+{
+	if (MyGame->GetPlayState() == PlayState::Editor) {
+		if (GetEditorContext().GetSelectedActor() && ImGui::IsKeyPressed(ImGuiKey_Delete, false)) {
+			auto actor = GetEditorContext().GetSelectedActor();
+			GetEditorContext().SetSelectedActor(nullptr);
+			delete(actor);
+		}
+
+
+		if (MyGame->GetPlayState() == PlayState::Editor && GetEditorContext().GetSelectedActor()
+			&& ImGui::IsKeyPressed(ImGuiKey_D, false) && ImGui::IsKeyDown(ImGuiKey_LeftCtrl)) {
+			// duplicate here
+			auto& actors = MyGame->Actors;
+			std::string ogName = GetEditorContext().GetSelectedActor()->GetName();
+			json ogActor = GetEditorContext().GetSelectedActor()->Serialize();
+			Actor* newActor = new Actor();
+			newActor->Deserialize(&ogActor, true);
+			newActor->SetName("Copy of " + ogName);
+			actors.push_back(newActor);
+			GetEditorContext().SetSelectedActor(newActor);
+		}
+
+		if (CanChangeGuizmo())
+		{
+			if (ImGui::IsKeyDown(ImGuiKey_W))
+			{
+				mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+			}
+			else if (ImGui::IsKeyDown(ImGuiKey_E))
+			{
+				mCurrentGizmoOperation = ImGuizmo::ROTATE;
+			}
+			else if (ImGui::IsKeyDown(ImGuiKey_R))
+			{
+				mCurrentGizmoOperation = ImGuizmo::SCALE;
+			}
 		}
 	}
 }
