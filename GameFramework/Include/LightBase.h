@@ -49,6 +49,7 @@ public:
 
 		json["color"] = lightData.Color;
 		json["Intensity"] = lightData.Intensity;
+		json["direction"] = lightData.Direction;
 
 		return json;
 	}
@@ -62,6 +63,10 @@ public:
 		if (in->contains("Intensity"))
 		{
 			lightData.Intensity = (in->at("Intensity").get<float>());
+		}
+		if (in->contains("direction"))
+		{
+			lightData.Direction = (in->at("direction").get<Vector3>());
 		}
 		
 
@@ -82,6 +87,7 @@ protected:
 class AmbientLight : public LightBase
 {
 public:
+	friend class ImGuiSubsystem;
 
 	LightType GetLightType() const override { return LightType::Ambient; }
 

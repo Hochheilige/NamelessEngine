@@ -55,6 +55,8 @@ public:
 
 	auto GetIsViewportFocused() -> bool { return isViewportFocused; }
 
+	auto OnSceneLoaded() -> void;
+
 private:
 	auto LayOutMainMenuBar() -> void;
 	auto DrawDockspace() -> void;
@@ -139,4 +141,6 @@ private:
 	bool isViewportFocused;
 
 	bool doDebug = false;
+
+	Vector3 dirLightRotation;
 };

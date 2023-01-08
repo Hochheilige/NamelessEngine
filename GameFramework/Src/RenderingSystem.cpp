@@ -408,8 +408,10 @@ void RenderingSystem::PerformLightingPass(float DeltaTime)
 
 			CBLights lightsCBData;
 			lightsCBData.LightData.Color = light->GetLightData().Color;
-			lightsCBData.LightData.Direction = MyGame->DirectiLight.direction;
+			lightsCBData.LightData.Direction = light->GetLightData().Direction;
 			lightsCBData.LightData.Intensity = light->GetLightData().Intensity;
+			//set light cam direction here
+			MyGame->LightCam.Transform.Rotation.SetForwardVector(light->GetLightData().Direction);
 			lightsCBData.LightData.WorldToLightClip = MyGame->LightCam.GetWorldToClipMatrixTransposed();
 			D3D11_MAPPED_SUBRESOURCE lightsCBResource = {};
 			res = context->Map(LightsCB.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &lightsCBResource);
@@ -420,6 +422,12 @@ void RenderingSystem::PerformLightingPass(float DeltaTime)
 			rsContext.ShaderFlags = static_cast<int>(ShaderFlag::DeferredLighting | ShaderFlag::QuadOnly | ShaderFlag::DirectionalLight);
 			////////////////////////////////////////////////////////////
 		}
+		//TODO move dir light debug
+		/*Vector3 pos = MyGame->LightCam.Transform.Position;
+		Quaternion rot = MyGame->LightCam.Transform.Rotation.GetQuaterion();
+		
+		GetDebugDrawer()->drawBox(btVector3(-20.0f, -20.0f, -100.0f), btVector3(20.0f, 20.0f, 0.0f), 
+			btTransform({rot.x, rot.y, rot.z, rot.w}, { pos.x, pos.y, pos.z }), btVector3(1.0f, 1.0f, 0.0f));*/
 
 
 		switch (lightType)

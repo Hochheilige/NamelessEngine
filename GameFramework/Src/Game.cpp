@@ -67,6 +67,8 @@ void Game::InitializeInternal()
 	PrepareResources();
 
 	Initialize();
+
+	mImGuiSubsystem->OnSceneLoaded();
 }
 
 json Game::Serialize() const
@@ -118,11 +120,13 @@ void Game::Deserialize(const json* in, bool destructive)
 			actor->Deserialize(&actorObj, destructive);
 		}
 	}
-	if (in->contains("dirLight"))
+	if (in->contains("dirlight"))
 	{
 		const json& dirlight = in->at("dirlight");
 		dr->Deserialize(&dirlight);
 	}
+
+	mImGuiSubsystem->OnSceneLoaded();
 }
 
 UUIDGenerator* Game::GetUuidGenerator() const
@@ -342,6 +346,13 @@ LRESULT Game::HandleMessage(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lpar
 void Game::PrepareResources()
 {
 
+	LightCam.Transform.Rotation = Vector3(-70.0f, 0.0f, 0.0f);
+	LightCam.Transform.Position = Vector3(0.0f, 20.0f, 0.0f);
+	LightCam.UpdateProjectionMatrixOrthographic(40.0f, 40.0f, 0.0f, 100.0f);
+	DirectiLight.direction = LightCam.Transform.Rotation.GetForwardVector();
+
+	al = new AmbientLight();
+	dr = new DirectionalLight();
 }
 
 ComPtr<ID3D11Device> Game::GetD3DDevice()

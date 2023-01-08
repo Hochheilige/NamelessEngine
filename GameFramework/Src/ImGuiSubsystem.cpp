@@ -92,6 +92,15 @@ auto ImGuiSubsystem::Initialize(Game* const InGame) -> void
 	levelEditorClass.DockingAllowUnclassed = true;
 	// do i want this?
 	//levelEditorClass.DockingAlwaysTabBar = true;
+
+	
+}
+
+auto ImGuiSubsystem::OnSceneLoaded() -> void
+{
+	Rotator rot = Rotator();
+	rot.SetForwardVector(MyGame->dr->lightData.Direction);
+	dirLightRotation = rot.GetEulerDegrees();
 }
 
 auto ImGuiSubsystem::NewFrame() -> void
@@ -741,8 +750,8 @@ auto ImGuiSubsystem::DrawLightPointProperties(Actor* actor) -> void
 			ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
 			ImGui::BeginChild("ChildPointLight", ImVec2(0, 100), true, window_flags);
 
-			ImGui::ColorEdit4("Color", &cmp->lightData.Color.x);
-			ImGui::DragFloat("Intensity", &cmp->lightData.Intensity);
+			ImGui::ColorEdit3("Color", &cmp->lightData.Color.x);
+			ImGui::DragFloat("Intensity", &cmp->lightData.Intensity, 0.5f);
 
 			ImGui::EndChild();
 			ImGui::PopStyleVar();
@@ -1350,10 +1359,13 @@ auto ImGuiSubsystem::DrawWorldSettings() -> void
 	ImGui::SetNextWindowClass(&levelEditorClass);
 	ImGui::Begin("World Settings");
 
+
 	if (BoldHeader("Directional Light", ImGuiTreeNodeFlags_DefaultOpen)) {
 		ImGui::ColorEdit3("Color", &MyGame->dr->lightData.Color.x);
-		ImGui::DragFloat("Intensity", &MyGame->dr->lightData.Intensity);
-		ImGui::DragFloat3("Direction", &MyGame->dr->lightData.Direction.x);
+		MyGame->al->lightData.Color = MyGame->dr->lightData.Color;
+		ImGui::DragFloat("Intensity", &MyGame->dr->lightData.Intensity, 0.1f);
+		ImGui::DragFloat3("Light rotation", &dirLightRotation.x, 1.0f);
+		MyGame->dr->lightData.Direction = Rotator(dirLightRotation).GetForwardVector();
 	}
 
 	DrawNavMeshSettings();
