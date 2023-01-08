@@ -3,6 +3,7 @@
 #include "MathInclude.h"
 #include "ImGuiInclude.h"
 #include "JsonInclude.h"
+#include "ImGuiNodeEditorInclude.h"
 
 #include <string>
 #include <vector>
@@ -82,6 +83,8 @@ private:
 	// World settings
 	auto DrawWorldSettings() -> void;
 	auto DrawNavMeshSettings() -> void;
+	// Node Editor
+	auto DrawNodeEditor(ned::EditorContext* nodeEditorContext) -> void;
 
 private:
 	auto PollHotkeys() -> void;
@@ -147,4 +150,6 @@ private:
 	bool doDebug = false;
 
 	Vector3 dirLightRotation;
+
+	ned::EditorContext* nodeEdtiorCtx = nullptr;
 };

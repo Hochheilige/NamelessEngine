@@ -45,6 +45,24 @@
     <ClInclude Include="..\imgui\imguizmo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\imgui\crude_json.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\imgui\imgui_bezier_math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\imgui\imgui_canvas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\imgui\imgui_extra_math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\imgui\imgui_node_editor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\imgui\imgui_node_editor_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\imgui\imgui.cpp">
@@ -74,5 +92,28 @@
     <ClCompile Include="..\imgui\imguizmo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\imgui\crude_json.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\imgui\imgui_canvas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\imgui\imgui_node_editor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\imgui\imgui_node_editor_api.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\imgui\imgui_bezier_math.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="..\imgui\imgui_extra_math.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="..\imgui\imgui_node_editor_internal.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
