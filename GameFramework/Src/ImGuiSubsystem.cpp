@@ -29,6 +29,8 @@
 #include "MonoSystem.h"
 #include <LightBase.h>
 
+#include "RecastNavigationManager.h"
+
 //temporary include
 //#include "../External/bullet3/src/"
 
@@ -1329,10 +1331,26 @@ auto ImGuiSubsystem::DrawWorldSettings() -> void
 		ImGui::ColorEdit3("Color", &MyGame->dr->lightData.Color.x);
 		ImGui::DragFloat("Intensity", &MyGame->dr->lightData.Intensity);
 		ImGui::DragFloat3("Direction", &MyGame->dr->lightData.Direction.x);
-		MyGame->dr->lightData;
 	}
 
+	DrawNavMeshSettings();
+
 	ImGui::End();
+}
+
+auto ImGuiSubsystem::DrawNavMeshSettings() -> void
+{
+	if (BoldHeader("NavMesh", ImGuiTreeNodeFlags_DefaultOpen)) {
+		RecastNavigationManager* rnm = RecastNavigationManager::GetInstance();
+
+		ImGui::Checkbox("Draw NavMesh Debug", &rnm->bDrawNavMeshDebug);
+		rnm->DrawDebugNavMesh();
+
+		if (ImGui::Button("Build"))
+		{
+			rnm->GenerateNavMesh();
+		}
+	}
 }
 
 

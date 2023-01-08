@@ -77,8 +77,9 @@ private:
 	// asset browser
 	auto DrawAssetBrowser() -> void;
 	auto DrawAsset(const DirectoryTreeNode* file, const Vector2& itemSize = Vector2(80, 110)) -> void;
-
+	// World settings
 	auto DrawWorldSettings() -> void;
+	auto DrawNavMeshSettings() -> void;
 
 private:
 	auto GetEditorContext() const -> EditorContext&;
