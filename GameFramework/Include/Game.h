@@ -198,6 +198,8 @@ protected:
 
 	Game();
 
+	class DirectionalLight* dr;
+
 	std::vector<class Renderer*> Renderers;
 	std::vector<class Collider*> Colliders;
 

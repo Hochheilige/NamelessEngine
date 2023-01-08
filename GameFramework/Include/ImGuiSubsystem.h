@@ -78,6 +78,8 @@ private:
 	auto DrawAssetBrowser() -> void;
 	auto DrawAsset(const DirectoryTreeNode* file, const Vector2& itemSize = Vector2(80, 110)) -> void;
 
+	auto DrawWorldSettings() -> void;
+
 private:
 	auto GetEditorContext() const -> EditorContext&;
 	auto GetSelectedSceneComponent() const->SceneComponent*;

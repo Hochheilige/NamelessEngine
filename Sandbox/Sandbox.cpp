@@ -411,7 +411,7 @@ void Sandbox::PrepareResources()
 	qr->SetPixelShader(ps);
 	al->SetRenderer(qr);*/
 
-	DirectionalLight* dr = new DirectionalLight();
+	dr = new DirectionalLight();
 
 	//dr->SetRenderer(qr);
 

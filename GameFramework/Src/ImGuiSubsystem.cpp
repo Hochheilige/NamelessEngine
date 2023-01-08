@@ -153,6 +153,7 @@ auto ImGuiSubsystem::DoLayout() -> void
 		DrawActorExplorer();
 		DrawActorInspector();
 		DrawBasicActorsWindow();
+		DrawWorldSettings();
 	}
 	// common(unclassed) windows
 	DrawAssetBrowser();
@@ -1317,6 +1318,21 @@ auto ImGuiSubsystem::DrawAsset(const DirectoryTreeNode* file, const Vector2& ite
 	ImGui::SetCursorPos(ImGui::GetCursorPos() + style.ItemSpacing);
 	ImGui::Text(str.c_str());
 	ImGui::EndGroup();
+}
+
+auto ImGuiSubsystem::DrawWorldSettings() -> void
+{
+	ImGui::SetNextWindowClass(&levelEditorClass);
+	ImGui::Begin("World Settings");
+
+	if (BoldHeader("Directional Light", ImGuiTreeNodeFlags_DefaultOpen)) {
+		ImGui::ColorEdit3("Color", &MyGame->dr->lightData.Color.x);
+		ImGui::DragFloat("Intensity", &MyGame->dr->lightData.Intensity);
+		ImGui::DragFloat3("Direction", &MyGame->dr->lightData.Direction.x);
+		MyGame->dr->lightData;
+	}
+
+	ImGui::End();
 }
 
 

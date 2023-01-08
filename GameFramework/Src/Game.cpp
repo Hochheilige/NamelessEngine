@@ -13,6 +13,7 @@
 #include "DirectoryTree.h"
 #include "CreateCommon.h"
 #include "Serializer.h"
+#include "LightBase.h"
 
 
 #include <chrono>
@@ -77,6 +78,7 @@ json Game::Serialize() const
 		actorsArr.push_back(actor->Serialize());
 	}
 	out["actors"] = actorsArr;
+	out["dirlight"] = dr->Serialize();
 	return out;
 }
 
@@ -116,6 +118,8 @@ void Game::Deserialize(const json* in, bool destructive)
 			actor->Deserialize(&actorObj, destructive);
 		}
 	}
+	json dirlight = in->at("dirlight");
+	dr->Deserialize(&dirlight);
 }
 
 UUIDGenerator* Game::GetUuidGenerator() const

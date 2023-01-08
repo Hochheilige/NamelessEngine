@@ -98,6 +98,8 @@ class DirectionalLight : public LightBase
 {
 public:
 
+	friend class ImGuiSubsystem;
+
 	LightType GetLightType() const override { return LightType::Directional; }
 
 	ComponentType GetComponentType() override { return DirectionalLightType; };
