@@ -245,6 +245,7 @@
     <ClInclude Include="Include\GBuffer.h" />
     <ClInclude Include="Include\ImGuiInclude.h" />
     <ClInclude Include="Include\ImGuiNodeEditorInclude.h" />
+    <ClInclude Include="Include\ImGuiNodeEditorManager.h" />
     <ClInclude Include="Include\ImGuiSubsystem.h" />
     <ClInclude Include="Include\InputDevice.h" />
     <ClInclude Include="Include\JsonInclude.h" />
@@ -293,6 +294,7 @@
     <ClCompile Include="Src\AlbedoTexture.cpp" />
     <ClCompile Include="Src\CameraComponent.cpp" />
     <ClCompile Include="Src\DebugDrawer.cpp" />
+    <ClCompile Include="Src\ImGuiNodeEditorManager.cpp" />
     <ClCompile Include="Src\JsonSerializers.cpp" />
     <ClCompile Include="Src\ComponentRegistry.cpp" />
     <ClCompile Include="Src\MonoMovementComponent.cpp" />

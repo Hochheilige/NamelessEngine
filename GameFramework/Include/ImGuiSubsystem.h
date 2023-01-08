@@ -4,6 +4,7 @@
 #include "ImGuiInclude.h"
 #include "JsonInclude.h"
 #include "ImGuiNodeEditorInclude.h"
+#include "ImGuiNodeEditorManager.h"
 
 #include <string>
 #include <vector>
@@ -137,6 +138,7 @@ private:
 
 	ImGuiWindowClass topLevelClass;
 	ImGuiWindowClass levelEditorClass;
+	ImGuiWindowClass behaviorTreeEditorClass;
 
 	auto DrawFBXInspector(const Path& path) -> void;
 
@@ -152,4 +154,6 @@ private:
 	Vector3 dirLightRotation;
 
 	ned::EditorContext* nodeEdtiorCtx = nullptr;
+
+	ImGuiNodeEditorManager nodeEditorManager;
 };

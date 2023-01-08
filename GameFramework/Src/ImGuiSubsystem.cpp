@@ -36,6 +36,8 @@
 //temporary include
 //#include "../External/bullet3/src/"
 
+#include "ImGuiNodeEditorManager.h"
+
 ImGuiSubsystem* ImGuiSubsystem::Instance = nullptr;
 
 
@@ -94,6 +96,10 @@ auto ImGuiSubsystem::Initialize(Game* const InGame) -> void
 	levelEditorClass.DockingAllowUnclassed = true;
 	// do i want this?
 	//levelEditorClass.DockingAlwaysTabBar = true;
+
+	behaviorTreeEditorClass.ClassId = 3;
+	behaviorTreeEditorClass.DockingAllowUnclassed = true;
+	behaviorTreeEditorClass.DockingAlwaysTabBar = true;
 
 	nodeEdtiorCtx = ned::CreateEditor();
 }
@@ -1418,72 +1424,37 @@ auto ImGuiSubsystem::DrawNavMeshSettings() -> void
 	}
 }
 
-///////////////////////////////////////////////////////// copying in progress
-enum class PinType
-{
-	Flow,
-	Bool,
-	Int,
-	Float,
-	String,
-	Object,
-	Function,
-	Delegate,
-};
-
-enum class PinKind
-{
-	Output,
-	Input
-};
-
-struct Node;
-
-struct Pin
-{
-	ned::PinId ID;
-	std::string Name;
-	PinType     Type;
-	PinKind     Kind;
-	Node* Node;
-
-	Pin(int id, const char* name, PinType type) :
-		ID(id), Node(nullptr), Name(name), Type(type), Kind(PinKind::Input)
-	{
-	}
-};
-struct Node {
-	ned::NodeId ID;
-	std::string Name;
-	std::vector<Pin> Inputs;
-	std::vector<Pin> Outputs;
-
-};
-
-static inline ImRect ImGui_GetItemRect()
-{
-	return ImRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax());
-}
-
-bool CanCreateLink(Pin* a, Pin* b)
-{
-	if (!a || !b || a == b || a->Kind == b->Kind || a->Type != b->Type || a->Node == b->Node)
-		return false;
-
-	return true;
-}
-
-///////////////////////////////////////////////////////// copying in progress
-
 auto ImGuiSubsystem::DrawNodeEditor(ned::EditorContext* nodeEditorContext) -> void
 {
+	ImGui::SetNextWindowClass(&topLevelClass);
+	bool editorWindowOpen = ImGui::Begin("BT Editor");
+	ImGuiID btEditorDockspaceId = ImGui::GetID("BehaviorTreeEditorDockspace");
+	ImGui::DockSpace(btEditorDockspaceId, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None, &behaviorTreeEditorClass);
+	ImGui::End();
 
-	
-	if (ImGui::Begin("BT Editor"))
+	if (!editorWindowOpen)
+	{
+		return;
+	}
+
+	ImGui::SetNextWindowClass(&behaviorTreeEditorClass);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2());
+	const bool drawingNodeEditor = ImGui::Begin("Node Canvas");
+	ImGui::PopStyleVar();
+
+	if (drawingNodeEditor)
 	{
 		ned::SetCurrentEditor(nodeEditorContext);
 		ned::Begin("BT Edtior");
 
+		auto cursorTopLeft = ImGui::GetCursorScreenPos();
+
+
+		static bool createNewNode = false;
+		static Pin* newNodeLinkPin = nullptr;
+		static Pin* newLinkPin = nullptr;
+
+#pragma region Node
 		const float rounding = 5.0f;
 		const float padding = 12.0f;
 
@@ -1502,7 +1473,7 @@ auto ImGuiSubsystem::DrawNodeEditor(ned::EditorContext* nodeEditorContext) -> vo
 		ned::PushStyleVar(ned::StyleVar_PinBorderWidth, 1.0f);
 		ned::PushStyleVar(ned::StyleVar_PinRadius, 5.0f);
 
-		int uniqueId = 1;
+		int uniqueId = 0;
 		
 		Node node;
 		node.ID = uniqueId++;
@@ -1523,8 +1494,7 @@ auto ImGuiSubsystem::DrawNodeEditor(ned::EditorContext* nodeEditorContext) -> vo
 		}
 		// end temp
 
-		static Pin* newNodeLinkPin = nullptr;
-		static Pin* newLinkPin = nullptr;
+
 
 		ned::BeginNode(node.ID);
 
@@ -1655,10 +1625,152 @@ auto ImGuiSubsystem::DrawNodeEditor(ned::EditorContext* nodeEditorContext) -> vo
 			contentRect.GetBR(),
 			IM_COL32(48, 128, 255, 100), 0.0f);
 		//ImGui::PopStyleVar();
+#pragma endregion Node
 
+		ImGui::SetCursorScreenPos(cursorTopLeft);
+
+#pragma region LinkDragging
+		if (!createNewNode)
+		{
+			if (ned::BeginCreate(ImColor(255, 255, 255), 2.0f))
+			{
+				auto showLabel = [](const char* label, ImColor color)
+				{
+					ImGui::SetCursorPosY(ImGui::GetCursorPosY() - ImGui::GetTextLineHeight());
+					auto size = ImGui::CalcTextSize(label);
+
+					auto padding = ImGui::GetStyle().FramePadding;
+					auto spacing = ImGui::GetStyle().ItemSpacing;
+
+					ImGui::SetCursorPos(ImGui::GetCursorPos() + ImVec2(spacing.x, -spacing.y));
+
+					auto rectMin = ImGui::GetCursorScreenPos() - padding;
+					auto rectMax = ImGui::GetCursorScreenPos() + size + padding;
+
+					auto drawList = ImGui::GetWindowDrawList();
+					drawList->AddRectFilled(rectMin, rectMax, color, size.y * 0.15f);
+					ImGui::TextUnformatted(label);
+				};
+
+				ned::PinId startPinId = 0, endPinId = 0;
+				if (ned::QueryNewLink(&startPinId, &endPinId))
+				{
+					//auto startPin = FindPin(startPinId);
+					//auto endPin = FindPin(endPinId);
+
+					//newLinkPin = startPin ? startPin : endPin;
+
+					//if (startPin->Kind == PinKind::Input)
+					//{
+					//	std::swap(startPin, endPin);
+					//	std::swap(startPinId, endPinId);
+					//}
+
+					//if (startPin && endPin)
+					//{
+					//	if (endPin == startPin)
+					//	{
+					//		ned::RejectNewItem(ImColor(255, 0, 0), 2.0f);
+					//	}
+					//	else if (endPin->Kind == startPin->Kind)
+					//	{
+					//		showLabel("x Incompatible Pin Kind", ImColor(45, 32, 32, 180));
+					//		ned::RejectNewItem(ImColor(255, 0, 0), 2.0f);
+					//	}
+					//	//else if (endPin->Node == startPin->Node)
+					//	//{
+					//	//    showLabel("x Cannot connect to self", ImColor(45, 32, 32, 180));
+					//	//    ed::RejectNewItem(ImColor(255, 0, 0), 1.0f);
+					//	//}
+					//	else if (endPin->Type != startPin->Type)
+					//	{
+					//		showLabel("x Incompatible Pin Type", ImColor(45, 32, 32, 180));
+					//		ned::RejectNewItem(ImColor(255, 128, 128), 1.0f);
+					//	}
+					//	else
+					//	{
+					//		showLabel("+ Create Link", ImColor(32, 45, 32, 180));
+					//		if (ned::AcceptNewItem(ImColor(128, 255, 128), 4.0f))
+					//		{
+					//			m_Links.emplace_back(Link(GetNextId(), startPinId, endPinId));
+					//			m_Links.back().Color = GetIconColor(startPin->Type);
+					//		}
+					//	}
+					//}
+				}
+
+				ned::PinId pinId = 0;
+				if (ned::QueryNewNode(&pinId))
+				{
+					/*newLinkPin = FindPin(pinId);
+					if (newLinkPin)
+						showLabel("+ Create Node", ImColor(32, 45, 32, 180));
+
+					if (ned::AcceptNewItem())
+					{
+						createNewNode = true;
+						newNodeLinkPin = FindPin(pinId);
+						newLinkPin = nullptr;
+						ned::Suspend();
+						ImGui::OpenPopup("Create New Node");
+						ned::Resume();
+					}*/
+				}
+			}
+			else
+			{
+				newLinkPin = nullptr;
+			}
+
+			ned::EndCreate();
+		}
+#pragma endregion
+
+		ned::Suspend();
+		if (ned::ShowBackgroundContextMenu())
+		{
+			ImGui::OpenPopup("Create New Node");
+		}
+		ned::Resume();
+
+		ned::Suspend();
+		ImGui::SetNextWindowSize(ImVec2(400, 400));
+		if (ImGui::BeginPopup("Create New Node"))
+		{
+			if (ImGui::CollapsingHeader("Composites"))
+			{
+				if (ImGui::MenuItem("Sequence"))
+				{
+
+				}
+			}
+			if (ImGui::CollapsingHeader("Tasks"))
+			{
+				ImGui::MenuItem("Wait");
+			}
+			ImGui::EndPopup();
+		}
+		ned::Resume();
 
 		ned::End();
 		ned::SetCurrentEditor(nullptr);
+	}
+	ImGui::End();
+
+	ImGui::SetNextWindowClass(&behaviorTreeEditorClass);
+	if (ImGui::Begin("Toolbar##NodeEditor"))
+	{
+		if (ImGui::Button("Save"))
+		{
+
+		}
+	}
+	ImGui::End();
+
+	ImGui::SetNextWindowClass(&behaviorTreeEditorClass);
+	if (ImGui::Begin("Details"))
+	{
+		
 	}
 	ImGui::End();
 
