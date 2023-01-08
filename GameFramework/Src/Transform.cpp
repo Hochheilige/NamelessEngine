@@ -78,6 +78,12 @@ Quaternion Rotator::GetQuaterion() const
 	return Quat;
 }
 
+auto Rotator::SetForwardVector(const Vector3& forward) -> void
+{
+	Matrix rotMat = Matrix::CreateLookAt(Vector3::Zero, forward, Vector3::Up);
+	Quat = Quaternion::CreateFromRotationMatrix(rotMat.Transpose()); // transpose is equal to inverse here
+}
+
 Transform::Transform(Matrix mat)
 {
 	SetFromMatrix(mat);
