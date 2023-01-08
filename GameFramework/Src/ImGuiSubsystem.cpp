@@ -1098,6 +1098,13 @@ auto ImGuiSubsystem::BoldHeader(const char* label, ImGuiTreeNodeFlags flags) con
 	return isHeader;
 }
 
+auto ImGuiSubsystem::BoldText(const char* label) const -> void
+{
+	ImGui::PushFont(headerFont);
+	ImGui::Text(label);
+	ImGui::PopFont();
+}
+
 auto ImGuiSubsystem::ToolBarStopButton(const char stopText[]) -> void
 {
 	if (ImGui::Button(stopText))
@@ -1286,7 +1293,7 @@ auto ImGuiSubsystem::DrawAsset(const DirectoryTreeNode* file, const Vector2& ite
 
 		ImGui::Text(nameAsString.c_str());
 
-		ImGui::EndDragDropSource();
+ImGui::EndDragDropSource();
 	}
 
 	if (file->IsAssetFromCollection() && ImGui::BeginDragDropSource())
@@ -1300,7 +1307,7 @@ auto ImGuiSubsystem::DrawAsset(const DirectoryTreeNode* file, const Vector2& ite
 	}
 
 	//Setting up drag and drop as target for directories
-	if (isDirectory && !file->IsAssetCollection()  && ImGui::BeginDragDropTarget())
+	if (isDirectory && !file->IsAssetCollection() && ImGui::BeginDragDropTarget())
 	{
 		//compute paths here
 
@@ -1378,10 +1385,53 @@ auto ImGuiSubsystem::DrawNavMeshSettings() -> void
 	if (BoldHeader("NavMesh", ImGuiTreeNodeFlags_DefaultOpen)) {
 		RecastNavigationManager* rnm = RecastNavigationManager::GetInstance();
 
+		BoldText("Debug");
 		ImGui::Checkbox("Draw NavMesh Debug", &rnm->bDrawNavMeshDebug);
+		ImGui::Checkbox("Draw Imput Mesh Debug", &rnm->bDrawInputMeshDebug);
 		rnm->DrawDebugNavMesh();
+		rnm->DrawDebugInputMesh();
 
-		if (ImGui::Button("Build"))
+		BoldText("Area");
+		ImGui::DragFloat3("Bounds Min", rnm->navMeshBMin, 1.0f, -1000.0f, 0.0f);
+		ImGui::DragFloat3("Bounds Max", rnm->navMeshBMax, 1.0f,  0.0f, 1000.0f);
+
+		BoldText("Rasterezation");
+		ImGui::SliderFloat("Cell Size", &rnm->m_cellSize, 0.1f, 1.0f);
+		ImGui::SliderFloat("Cell Height", &rnm->m_cellHeight, 0.1f, 1.0f);
+
+		BoldText("Agent");
+		ImGui::SliderFloat("Height", &rnm->m_agentHeight, 0.1f, 5.0f);
+		ImGui::SliderFloat("Radius", &rnm->m_agentRadius, 0.0f, 5.0f);
+		ImGui::SliderFloat("Max Climb", &rnm->m_agentMaxClimb, 0.1f, 5.0f);
+		ImGui::SliderFloat("Max Slope", &rnm->m_agentMaxSlope, 0.0f, 90.0f);
+		
+		BoldText("Region");
+		ImGui::SliderFloat("Min Region Size", &rnm->m_regionMinSize, 0.0f, 150.0f);
+		ImGui::SliderFloat("Merged Region Size", &rnm->m_regionMergeSize, 0.0f, 150.0f);
+
+		BoldText("Partitioning");
+		if (ImGui::RadioButton("Watershed", rnm->m_partitionType == SAMPLE_PARTITION_WATERSHED))
+			rnm->m_partitionType = SAMPLE_PARTITION_WATERSHED;
+		if (ImGui::RadioButton("Monotone", rnm->m_partitionType == SAMPLE_PARTITION_MONOTONE))
+			rnm->m_partitionType = SAMPLE_PARTITION_MONOTONE;
+		if (ImGui::RadioButton("Layers", rnm->m_partitionType == SAMPLE_PARTITION_LAYERS))
+			rnm->m_partitionType = SAMPLE_PARTITION_LAYERS;
+
+		BoldText("Filtering");
+		ImGui::Checkbox("Low Hanging Obstacles", &rnm->m_filterLowHangingObstacles);
+		ImGui::Checkbox("Ledge Spans", &rnm->m_filterLedgeSpans);
+		ImGui::Checkbox("Walkable Low Height Spans", &rnm->m_filterWalkableLowHeightSpans);
+
+		BoldText("Polygonization");
+		ImGui::SliderFloat("Max Edge Length", &rnm->m_edgeMaxLen, 0.0f, 50.0f);
+		ImGui::SliderFloat("Max Edge Error", &rnm->m_edgeMaxError, 0.1f, 3.0f);
+		ImGui::SliderFloat("Verts Per Poly", &rnm->m_vertsPerPoly, 3.0f, 12.0f);
+
+		BoldText("Detail Mesh");
+		ImGui::SliderFloat("Sample Distance", &rnm->m_detailSampleDist, 0.0f, 16.0f);
+		ImGui::SliderFloat("Max Sample Error", &rnm->m_detailSampleMaxError, 0.0f, 16.0f);
+
+		if (ImGui::Button("Build", ImVec2(ImGui::GetContentRegionAvail().x, 0)))
 		{
 			rnm->GenerateNavMesh();
 		}

@@ -411,7 +411,7 @@ auto RecastNavigationManager::GenerateNavMesh() -> bool
 
 auto RecastNavigationManager::DrawDebugInputMesh() const -> void
 {
-	if (meshFromPhysicsWorld.get() == nullptr)
+	if (meshFromPhysicsWorld.get() == nullptr || bDrawInputMeshDebug == false)
 	{
 		return;
 	}
@@ -488,14 +488,14 @@ auto RecastNavigationManager::GenerateRecastInputMesh() -> void
 
 		btVector3 localBox[] =
 		{
-			{aabbMin.x(), aabbMin.y(), aabbMax.z()}, // v0
-			{aabbMax.x(), aabbMin.y(), aabbMax.z()}, // v1
-			{aabbMin.x(), aabbMax.y(), aabbMax.z()}, // v2
-			{aabbMax.x(), aabbMax.y(), aabbMax.z()}, // v3
-			{aabbMin.x(), aabbMin.y(), aabbMin.z()}, // v4
-			{aabbMax.x(), aabbMin.y(), aabbMin.z()}, // v5
-			{aabbMin.x(), aabbMax.y(), aabbMin.z()}, // v6
-			{aabbMax.x(), aabbMax.y(), aabbMin.z()}, // v7
+			{aabbMin.x(), aabbMin.y(), aabbMin.z()}, // v0
+			{aabbMax.x(), aabbMin.y(), aabbMin.z()}, // v1
+			{aabbMin.x(), aabbMax.y(), aabbMin.z()}, // v2
+			{aabbMax.x(), aabbMax.y(), aabbMin.z()}, // v3
+			{aabbMin.x(), aabbMin.y(), aabbMax.z()}, // v4
+			{aabbMax.x(), aabbMin.y(), aabbMax.z()}, // v5
+			{aabbMin.x(), aabbMax.y(), aabbMax.z()}, // v6
+			{aabbMax.x(), aabbMax.y(), aabbMax.z()}, // v7
 		};
 
 		const int vertIndexOffset = meshFromPhysicsWorld->GetNumVertices();
@@ -510,15 +510,15 @@ auto RecastNavigationManager::GenerateRecastInputMesh() -> void
 
 		meshFromPhysicsWorld->AddFace(vertIndexOffset + 0, vertIndexOffset + 2, vertIndexOffset + 1); // front
 		meshFromPhysicsWorld->AddFace(vertIndexOffset + 1, vertIndexOffset + 2, vertIndexOffset + 3); // front
-		meshFromPhysicsWorld->AddFace(vertIndexOffset + 4, vertIndexOffset + 6, vertIndexOffset + 5); // back
-		meshFromPhysicsWorld->AddFace(vertIndexOffset + 5, vertIndexOffset + 6, vertIndexOffset + 7); // back
+		meshFromPhysicsWorld->AddFace(vertIndexOffset + 4, vertIndexOffset + 5, vertIndexOffset + 6); // back
+		meshFromPhysicsWorld->AddFace(vertIndexOffset + 5, vertIndexOffset + 7, vertIndexOffset + 6); // back
 		meshFromPhysicsWorld->AddFace(vertIndexOffset + 0, vertIndexOffset + 4, vertIndexOffset + 2); // left
 		meshFromPhysicsWorld->AddFace(vertIndexOffset + 4, vertIndexOffset + 6, vertIndexOffset + 2); // left
-		meshFromPhysicsWorld->AddFace(vertIndexOffset + 1, vertIndexOffset + 5, vertIndexOffset + 3); // right
-		meshFromPhysicsWorld->AddFace(vertIndexOffset + 5, vertIndexOffset + 7, vertIndexOffset + 3); // right
+		meshFromPhysicsWorld->AddFace(vertIndexOffset + 1, vertIndexOffset + 3, vertIndexOffset + 5); // right
+		meshFromPhysicsWorld->AddFace(vertIndexOffset + 5, vertIndexOffset + 3, vertIndexOffset + 7); // right
 		meshFromPhysicsWorld->AddFace(vertIndexOffset + 0, vertIndexOffset + 1, vertIndexOffset + 4); // bottom
 		meshFromPhysicsWorld->AddFace(vertIndexOffset + 1, vertIndexOffset + 5, vertIndexOffset + 4); // bottom
-		meshFromPhysicsWorld->AddFace(vertIndexOffset + 2, vertIndexOffset + 3, vertIndexOffset + 6); // top
-		meshFromPhysicsWorld->AddFace(vertIndexOffset + 3, vertIndexOffset + 7, vertIndexOffset + 6); // top
+		meshFromPhysicsWorld->AddFace(vertIndexOffset + 2, vertIndexOffset + 6, vertIndexOffset + 3); // top
+		meshFromPhysicsWorld->AddFace(vertIndexOffset + 3, vertIndexOffset + 6, vertIndexOffset + 7); // top
 	}
 }

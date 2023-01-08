@@ -96,6 +96,7 @@ private:
 
 	// Helper style functions
 	auto BoldHeader(const char* label, ImGuiTreeNodeFlags flags) const -> bool;
+	auto BoldText(const char* label) const -> void;
 
 
 	//Toolbar buttons

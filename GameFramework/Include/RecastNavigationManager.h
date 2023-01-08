@@ -53,6 +53,7 @@ public:
 	float m_totalBuildTimeMs;
 
 	bool bDrawNavMeshDebug = false;
+	bool bDrawInputMeshDebug = false;
 
 protected:
 
