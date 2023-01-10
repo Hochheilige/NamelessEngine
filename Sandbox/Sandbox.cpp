@@ -281,6 +281,16 @@ void Sandbox::LoadGameFacade() {
 	mono->InvokeInstanceMethod(mGame_Load, csGameInstance, nullptr, nullptr);
 }
 
+char* Sandbox::GetTasksJson()
+{
+	auto mono = MonoSystem::GetInstance();
+	const auto mGame_GetInheritors = mono->GetVirtualMethod("Scripts", "Game", "GetTasks()", csGameInstance);
+	auto res = mono->InvokeInstanceMethod(mGame_GetInheritors, csGameInstance, nullptr, nullptr);
+	auto str = mono_string_to_utf8(mono_object_to_string(res, nullptr));
+
+	return str;
+}
+
 void Sandbox::PrepareResources()
 {
 	Game::PrepareResources();
