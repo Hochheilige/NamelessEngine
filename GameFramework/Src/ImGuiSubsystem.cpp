@@ -27,9 +27,16 @@
 #include "JsonInclude.h"
 
 #include "MonoSystem.h"
+#include <LightBase.h>
+
+#include "RecastNavigationManager.h"
+
+#include "imgui_internal.h"
 
 //temporary include
 //#include "../External/bullet3/src/"
+
+#include "ImGuiNodeEditorManager.h"
 
 ImGuiSubsystem* ImGuiSubsystem::Instance = nullptr;
 
@@ -82,13 +89,22 @@ auto ImGuiSubsystem::Initialize(Game* const InGame) -> void
 
 	// Create imgui winodw classes
 	// todo: use ImGui::GetID ?
-	topLevelClass.ClassId = 1;
+	topLevelClass.ClassId = GetNextWindowClassId();
 	topLevelClass.DockingAllowUnclassed = true;
 
-	levelEditorClass.ClassId = 2;
+	levelEditorClass.ClassId = GetNextWindowClassId();
 	levelEditorClass.DockingAllowUnclassed = true;
 	// do i want this?
 	//levelEditorClass.DockingAlwaysTabBar = true;
+
+	nodeEditorManager.OpenEditor(Path());
+}
+
+auto ImGuiSubsystem::OnSceneLoaded() -> void
+{
+	Rotator rot = Rotator();
+	rot.SetForwardVector(MyGame->dr->lightData.Direction);
+	dirLightRotation = rot.GetEulerDegrees();
 }
 
 auto ImGuiSubsystem::NewFrame() -> void
@@ -152,10 +168,14 @@ auto ImGuiSubsystem::DoLayout() -> void
 		DrawActorExplorer();
 		DrawActorInspector();
 		DrawBasicActorsWindow();
+		DrawWorldSettings();
 	}
 	// common(unclassed) windows
 	DrawAssetBrowser();
 	DrawMessagesWindow();
+
+
+	nodeEditorManager.DrawOpenEditors();
 
 	// todo: remove this
 	/*for (const Path& path : OpenedFbxInspectorWindows)
@@ -295,6 +315,9 @@ auto ImGuiSubsystem::DrawViewport() -> void
 	if (ImGui::Begin("Viewport"))
 	{
 		
+		//some hotkeys
+		PollHotkeys();
+
 		ViewportStart = ImGui::GetCursorScreenPos();
 		ViewportSize = ImGui::GetContentRegionAvail();
 		ViewportMousePos = Vector2(ImGui::GetMousePos()) - ViewportStart;
@@ -507,16 +530,13 @@ auto ImGuiSubsystem::LayOutTransform() -> void
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
 		ImGui::BeginChild("ChildR", ImVec2(0, 132), true, window_flags);
 
-		if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE) || 
-			(CanChangeGuizmo() && ImGui::IsKeyDown(ImGuiKey_W)))
+		if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
 			mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
 		ImGui::SameLine();
-		if (ImGui::RadioButton("Rotate", mCurrentGizmoOperation == ImGuizmo::ROTATE) ||
-			(CanChangeGuizmo() && ImGui::IsKeyDown(ImGuiKey_E)))
+		if (ImGui::RadioButton("Rotate", mCurrentGizmoOperation == ImGuizmo::ROTATE))
 			mCurrentGizmoOperation = ImGuizmo::ROTATE;
 		ImGui::SameLine();
-		if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE) ||
-			(CanChangeGuizmo() && ImGui::IsKeyDown(ImGuiKey_R)))
+		if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE))
 			mCurrentGizmoOperation = ImGuizmo::SCALE;
 
 		Transform t = mCurrentGizmoMode == ImGuizmo::MODE::LOCAL ? ssc->GetRelativeTransform() : ssc->GetTransform();
@@ -704,6 +724,25 @@ auto ImGuiSubsystem::DrawStaticMeshProperties() -> void {
 
 }
 
+auto ImGuiSubsystem::DrawLightPointProperties(Actor* actor) -> void
+{
+	if (auto* cmp = dynamic_cast<PointLight*>(GetEditorContext().GetSelectedComponent()))
+	{
+		if (BoldHeader("Point Light", ImGuiTreeNodeFlags_DefaultOpen)) {
+
+			ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
+			ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+			ImGui::BeginChild("ChildPointLight", ImVec2(0, 100), true, window_flags);
+
+			ImGui::ColorEdit3("Color", &cmp->lightData.Color.x);
+			ImGui::DragFloat("Intensity", &cmp->lightData.Intensity, 0.5f);
+
+			ImGui::EndChild();
+			ImGui::PopStyleVar();
+		}
+	}
+}
+
 auto ImGuiSubsystem::DrawActorInspector() -> void
 {
 	ImGui::SetNextWindowClass(&levelEditorClass);
@@ -730,6 +769,7 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 				break;
 			case LightPointType:
 				//TODO add point light properties
+				DrawLightPointProperties(actor);
 				break;
 			}
 
@@ -1042,6 +1082,13 @@ auto ImGuiSubsystem::BoldHeader(const char* label, ImGuiTreeNodeFlags flags) con
 	return isHeader;
 }
 
+auto ImGuiSubsystem::BoldText(const char* label) const -> void
+{
+	ImGui::PushFont(headerFont);
+	ImGui::Text(label);
+	ImGui::PopFont();
+}
+
 auto ImGuiSubsystem::ToolBarStopButton(const char stopText[]) -> void
 {
 	if (ImGui::Button(stopText))
@@ -1230,7 +1277,7 @@ auto ImGuiSubsystem::DrawAsset(const DirectoryTreeNode* file, const Vector2& ite
 
 		ImGui::Text(nameAsString.c_str());
 
-		ImGui::EndDragDropSource();
+ImGui::EndDragDropSource();
 	}
 
 	if (file->IsAssetFromCollection() && ImGui::BeginDragDropSource())
@@ -1244,7 +1291,7 @@ auto ImGuiSubsystem::DrawAsset(const DirectoryTreeNode* file, const Vector2& ite
 	}
 
 	//Setting up drag and drop as target for directories
-	if (isDirectory && !file->IsAssetCollection()  && ImGui::BeginDragDropTarget())
+	if (isDirectory && !file->IsAssetCollection() && ImGui::BeginDragDropTarget())
 	{
 		//compute paths here
 
@@ -1296,6 +1343,124 @@ auto ImGuiSubsystem::DrawAsset(const DirectoryTreeNode* file, const Vector2& ite
 	ImGui::SetCursorPos(ImGui::GetCursorPos() + style.ItemSpacing);
 	ImGui::Text(str.c_str());
 	ImGui::EndGroup();
+}
+
+auto ImGuiSubsystem::DrawWorldSettings() -> void
+{
+	ImGui::SetNextWindowClass(&levelEditorClass);
+	ImGui::Begin("World Settings");
+
+
+	if (BoldHeader("Directional Light", ImGuiTreeNodeFlags_DefaultOpen)) {
+		ImGui::ColorEdit3("Color", &MyGame->dr->lightData.Color.x);
+		MyGame->al->lightData.Color = MyGame->dr->lightData.Color;
+		ImGui::DragFloat("Intensity", &MyGame->dr->lightData.Intensity, 0.1f);
+		ImGui::DragFloat3("Light rotation", &dirLightRotation.x, 1.0f);
+		MyGame->dr->lightData.Direction = Rotator(dirLightRotation).GetForwardVector();
+	}
+
+	DrawNavMeshSettings();
+
+	ImGui::End();
+}
+
+auto ImGuiSubsystem::DrawNavMeshSettings() -> void
+{
+	if (BoldHeader("NavMesh", ImGuiTreeNodeFlags_DefaultOpen)) {
+		RecastNavigationManager* rnm = RecastNavigationManager::GetInstance();
+
+		BoldText("Debug");
+		ImGui::Checkbox("Draw NavMesh Debug", &rnm->bDrawNavMeshDebug);
+		ImGui::Checkbox("Draw Input Mesh Debug", &rnm->bDrawInputMeshDebug);
+		rnm->DrawDebugNavMesh();
+		rnm->DrawDebugInputMesh();
+
+		BoldText("Area");
+		ImGui::DragFloat3("Bounds Min", rnm->navMeshBMin, 1.0f, -1000.0f, 0.0f);
+		ImGui::DragFloat3("Bounds Max", rnm->navMeshBMax, 1.0f,  0.0f, 1000.0f);
+
+		BoldText("Rasterezation");
+		ImGui::SliderFloat("Cell Size", &rnm->m_cellSize, 0.1f, 1.0f);
+		ImGui::SliderFloat("Cell Height", &rnm->m_cellHeight, 0.1f, 1.0f);
+
+		BoldText("Agent");
+		ImGui::SliderFloat("Height", &rnm->m_agentHeight, 0.1f, 5.0f);
+		ImGui::SliderFloat("Radius", &rnm->m_agentRadius, 0.0f, 5.0f);
+		ImGui::SliderFloat("Max Climb", &rnm->m_agentMaxClimb, 0.1f, 5.0f);
+		ImGui::SliderFloat("Max Slope", &rnm->m_agentMaxSlope, 0.0f, 90.0f);
+		
+		BoldText("Region");
+		ImGui::SliderFloat("Min Region Size", &rnm->m_regionMinSize, 0.0f, 150.0f);
+		ImGui::SliderFloat("Merged Region Size", &rnm->m_regionMergeSize, 0.0f, 150.0f);
+
+		BoldText("Partitioning");
+		if (ImGui::RadioButton("Watershed", rnm->m_partitionType == SAMPLE_PARTITION_WATERSHED))
+			rnm->m_partitionType = SAMPLE_PARTITION_WATERSHED;
+		if (ImGui::RadioButton("Monotone", rnm->m_partitionType == SAMPLE_PARTITION_MONOTONE))
+			rnm->m_partitionType = SAMPLE_PARTITION_MONOTONE;
+		if (ImGui::RadioButton("Layers", rnm->m_partitionType == SAMPLE_PARTITION_LAYERS))
+			rnm->m_partitionType = SAMPLE_PARTITION_LAYERS;
+
+		BoldText("Filtering");
+		ImGui::Checkbox("Low Hanging Obstacles", &rnm->m_filterLowHangingObstacles);
+		ImGui::Checkbox("Ledge Spans", &rnm->m_filterLedgeSpans);
+		ImGui::Checkbox("Walkable Low Height Spans", &rnm->m_filterWalkableLowHeightSpans);
+
+		BoldText("Polygonization");
+		ImGui::SliderFloat("Max Edge Length", &rnm->m_edgeMaxLen, 0.0f, 50.0f);
+		ImGui::SliderFloat("Max Edge Error", &rnm->m_edgeMaxError, 0.1f, 3.0f);
+		ImGui::SliderFloat("Verts Per Poly", &rnm->m_vertsPerPoly, 3.0f, 12.0f);
+
+		BoldText("Detail Mesh");
+		ImGui::SliderFloat("Sample Distance", &rnm->m_detailSampleDist, 0.0f, 16.0f);
+		ImGui::SliderFloat("Max Sample Error", &rnm->m_detailSampleMaxError, 0.0f, 16.0f);
+
+		if (ImGui::Button("Build", ImVec2(ImGui::GetContentRegionAvail().x, 0)))
+		{
+			rnm->GenerateNavMesh();
+		}
+	}
+}
+
+auto ImGuiSubsystem::PollHotkeys() -> void
+{
+	if (MyGame->GetPlayState() == PlayState::Editor) {
+		if (GetEditorContext().GetSelectedActor() && ImGui::IsKeyPressed(ImGuiKey_Delete, false)) {
+			auto actor = GetEditorContext().GetSelectedActor();
+			GetEditorContext().SetSelectedActor(nullptr);
+			delete(actor);
+		}
+
+
+		if (MyGame->GetPlayState() == PlayState::Editor && GetEditorContext().GetSelectedActor()
+			&& ImGui::IsKeyPressed(ImGuiKey_D, false) && ImGui::IsKeyDown(ImGuiKey_LeftCtrl)) {
+			// duplicate here
+			auto& actors = MyGame->Actors;
+			std::string ogName = GetEditorContext().GetSelectedActor()->GetName();
+			json ogActor = GetEditorContext().GetSelectedActor()->Serialize();
+			Actor* newActor = new Actor();
+			newActor->Deserialize(&ogActor, true);
+			newActor->SetName("Copy of " + ogName);
+			actors.push_back(newActor);
+			GetEditorContext().SetSelectedActor(newActor);
+		}
+
+		if (CanChangeGuizmo())
+		{
+			if (ImGui::IsKeyDown(ImGuiKey_W))
+			{
+				mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+			}
+			else if (ImGui::IsKeyDown(ImGuiKey_E))
+			{
+				mCurrentGizmoOperation = ImGuizmo::ROTATE;
+			}
+			else if (ImGui::IsKeyDown(ImGuiKey_R))
+			{
+				mCurrentGizmoOperation = ImGuizmo::SCALE;
+			}
+		}
+	}
 }
 
 

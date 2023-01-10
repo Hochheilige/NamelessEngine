@@ -1,6 +1,7 @@
 #pragma once
 
 #include "LinearMath/btIDebugDraw.h"
+#include "DebugDraw.h"
 
 #include "MathInclude.h"
 
@@ -13,7 +14,7 @@ class RenderingSystemContext;
 class VertexShader;
 class PixelShader;
 
-class DebugDrawer : public btIDebugDraw
+class DebugDrawer : public btIDebugDraw, public duDebugDraw
 {
 public:
 
@@ -34,6 +35,19 @@ public:
 
 	// End btIDebugDraw implementation
 
+	void drawSolidTriangle(const btVector3& a, const btVector3& b, btVector3 c, const btVector3& color);
+
+	// Begin duDebugDraw implementation
+	virtual void depthMask(bool state);
+	virtual void texture(bool state);
+	virtual void begin(duDebugDrawPrimitives prim, float size = 1.0f);
+	virtual void vertex(const float* pos, unsigned int color);
+	virtual void vertex(const float x, const float y, const float z, unsigned int color);
+	virtual void vertex(const float* pos, unsigned int color, const float* uv);
+	virtual void vertex(const float x, const float y, const float z, unsigned int color, const float u, const float v);
+	virtual void end();
+	// End duDebugDraw implementation
+
 	void Render();
 
 private:
@@ -49,15 +63,33 @@ private:
 	};
 #pragma pack(pop)
 
-	std::vector<DebugVertex> renderBuffer;
+	std::vector<DebugVertex> lineBuffer;
 
 	VertexShader* vertexShader;
 	PixelShader* pixelShader;
 
-	auto UpdateVertexBuffer() -> void;
+	auto UpdateLineVertexBuffer() -> void;
 
-	auto CreateVertexBuffer() -> void;
+	auto CreateLineVertexBuffer() -> void;
 
-	ComPtr<ID3D11Buffer> vertexBuffer;
-	UINT vertexBufferSizeInVertices = 0;
+	ComPtr<ID3D11Buffer> vertexLineBuffer;
+	UINT vertexLineBufferSizeInVertices = 0;
+
+private:
+	std::vector<DebugVertex> triangleBuffer;
+
+	auto UpdateTriangleVertexBuffer() -> void;
+
+	auto CreateTriangleVertexBuffer() -> void;
+
+	// todo: use only one vertex buffer?
+	ComPtr<ID3D11Buffer> triangleVertexBuffer;
+	UINT vertexTriangleBufferSizeInVertices = 0;
+
+private:
+	duDebugDrawPrimitives curPrimType = static_cast<duDebugDrawPrimitives>(-1);
+	int curPrimVertIndex = 0;
+	btVector3 primInput[4];
+
+	btVector3 navMeshColor{ 0.0f, 1.0f, 1.0f };
 };

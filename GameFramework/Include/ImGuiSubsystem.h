@@ -3,6 +3,8 @@
 #include "MathInclude.h"
 #include "ImGuiInclude.h"
 #include "JsonInclude.h"
+#include "ImGuiNodeEditorInclude.h"
+#include "ImGuiNodeEditorManager.h"
 
 #include <string>
 #include <vector>
@@ -55,6 +57,12 @@ public:
 
 	auto GetIsViewportFocused() -> bool { return isViewportFocused; }
 
+	auto OnSceneLoaded() -> void;
+
+	auto GetTopLevelWindowClass() const -> const ImGuiWindowClass* { return &topLevelClass; }
+
+	auto GetNextWindowClassId() -> int { return nextClassId++; }
+
 private:
 	auto LayOutMainMenuBar() -> void;
 	auto DrawDockspace() -> void;
@@ -69,6 +77,7 @@ private:
 	auto DrawGeneralProperties(class Actor* actor) -> void;
 	auto DrawRigidBodyProperties(Actor* actor) -> void;
 	auto DrawStaticMeshProperties() -> void;
+	auto DrawLightPointProperties(Actor* actor) -> void;
 	// end instpector
 	auto DrawGizmos() -> void;
 	auto DrawMessagesWindow() -> void;
@@ -76,6 +85,14 @@ private:
 	// asset browser
 	auto DrawAssetBrowser() -> void;
 	auto DrawAsset(const DirectoryTreeNode* file, const Vector2& itemSize = Vector2(80, 110)) -> void;
+	// World settings
+	auto DrawWorldSettings() -> void;
+	auto DrawNavMeshSettings() -> void;
+	// Node Editor
+	auto DrawNodeEditor(ned::EditorContext* nodeEditorContext) -> void;
+
+private:
+	auto PollHotkeys() -> void;
 
 private:
 	auto GetEditorContext() const -> EditorContext&;
@@ -90,6 +107,7 @@ private:
 
 	// Helper style functions
 	auto BoldHeader(const char* label, ImGuiTreeNodeFlags flags) const -> bool;
+	auto BoldText(const char* label) const -> void;
 
 
 	//Toolbar buttons
@@ -122,6 +140,8 @@ private:
 
 	static ImGuiSubsystem* Instance;
 
+
+	int nextClassId = 1;
 	ImGuiWindowClass topLevelClass;
 	ImGuiWindowClass levelEditorClass;
 
@@ -135,4 +155,8 @@ private:
 	bool isViewportFocused;
 
 	bool doDebug = false;
+
+	Vector3 dirLightRotation;
+
+	ImGuiNodeEditorManager nodeEditorManager;
 };

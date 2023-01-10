@@ -160,12 +160,12 @@ namespace Scripts
                 return;
             }
             else
-            {   
-                btEditor.Draw();
-                //ImGui.Begin("Testing testing c# window incoming");
-                //ImGui.Text("I came from C#!!!");
+            {
+                //btEditor.Draw();
+                ImGui.Begin("Testing testing c# window incoming");
+                ImGui.Text("I came from C#!!!");
                 ////
-                //ImGui.End();
+                ImGui.End();
             }
         }
 

@@ -37,6 +37,17 @@ namespace DirectX {
 			quaternion.w = in[3].get<float>();
 		}
 
+		static void from_json(const json& in, Vector4& v) {
+			assert(in.is_array());
+			assert(in.size() == 4);
+
+			v.x = in[0].get<float>();
+			v.y = in[1].get<float>();
+			v.z = in[2].get<float>();
+			v.w = in[3].get<float>();
+			
+		}
+
 		static void to_json(json& out, const Vector3& v3) {
 			out = json::array();
 			out.push_back(v3.x);

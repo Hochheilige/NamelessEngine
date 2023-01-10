@@ -410,18 +410,15 @@ void Sandbox::PrepareResources()
 	//pc->SetPixelShader(basicPS);
 	//pc->SetVertexShader(basicVS);
 
-	LightCam.Transform.Rotation = Vector3(-70.0f, 0.0f, 0.0f);
-	LightCam.Transform.Position = Vector3(0.0f, 20.0f, 0.0f);
-	LightCam.UpdateProjectionMatrixOrthographic(40.0f, 40.0f, 0.0f, 100.0f);
-	DirectiLight.direction = LightCam.Transform.Rotation.GetForwardVector();
 
-	AmbientLight* al = new AmbientLight();
+
+
+
 	/*QuadRenderer* qr = new QuadRenderer();
 	qr->SetVertexShader(vs);
 	qr->SetPixelShader(ps);
 	al->SetRenderer(qr);*/
 
-	DirectionalLight* dr = new DirectionalLight();
 
 	//dr->SetRenderer(qr);
 

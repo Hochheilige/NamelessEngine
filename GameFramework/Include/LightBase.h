@@ -23,11 +23,14 @@ enum class LightType
 class LightBase : public SceneComponent
 {
 public:
+
+	friend class ImGuiSubsystem;
+
 	LightBase();
 	~LightBase();
 
 	// @TODO: should this be virtual? Should I return a reference?
-	virtual LightData GetLightData() { return LightData(); };
+	virtual LightData GetLightData() { return lightData; };
 
 	virtual LightType GetLightType() const = 0;
 
@@ -38,15 +41,53 @@ public:
 	MonoComponent* GetMonoComponent() override { return mMonoComponent; }
 
 	void SetRenderer(Renderer* InRenderer) { renderer = InRenderer; }
+
+	json Serialize() const
+	{
+		auto json = SceneComponent::Serialize();
+		assert(json.is_object());
+
+		json["color"] = lightData.Color;
+		json["Intensity"] = lightData.Intensity;
+		json["direction"] = lightData.Direction;
+
+		return json;
+	}
+
+	void Deserialize(const json* in)
+	{
+		if (in->contains("color"))
+		{
+			lightData.Color = (in->at("color").get<Vector4>());
+		}
+		if (in->contains("Intensity"))
+		{
+			lightData.Intensity = (in->at("Intensity").get<float>());
+		}
+		if (in->contains("direction"))
+		{
+			lightData.Direction = (in->at("direction").get<Vector3>());
+		}
+		
+
+		SceneComponent::Deserialize(in);
+
+
+
+	}
+
 private:
 	//TODO: POPRAVIT'
 	MonoPhysicsComponent* mMonoComponent = new MonoPhysicsComponent;
+protected:
+	LightData lightData = LightData();
 };
 
 //@TODO: move this to a separate file
 class AmbientLight : public LightBase
 {
 public:
+	friend class ImGuiSubsystem;
 
 	LightType GetLightType() const override { return LightType::Ambient; }
 
@@ -54,9 +95,8 @@ public:
 
 	virtual LightData GetLightData() 
 	{ 
-		LightData light;
-		light.Intensity = 0.45f;
-		return light; 
+		lightData.Intensity = 0.45f;
+		return lightData; 
 	};
 
 	static auto Create() -> Component* { return new AmbientLight(); }
@@ -70,11 +110,13 @@ class DirectionalLight : public LightBase
 {
 public:
 
+	friend class ImGuiSubsystem;
+
 	LightType GetLightType() const override { return LightType::Directional; }
 
 	ComponentType GetComponentType() override { return DirectionalLightType; };
 
-	virtual LightData GetLightData() { return LightData(); };
+	virtual LightData GetLightData() { return lightData; };
 
 	static auto Create() -> Component* { return new DirectionalLight(); }
 
@@ -86,19 +128,23 @@ class PointLight : public LightBase
 {
 public:
 
+	friend class ImGuiSubsystem;
+
+	PointLight() {
+		lightData.Params = Vector3(0.3f, 0.3f, 0.3f);
+		lightData.Intensity = 1.0f;
+		lightData.Color = color;
+	}
+
 	LightType GetLightType() const override { return LightType::Point; }
 
 	ComponentType GetComponentType() override { return LightPointType; };
 
 	virtual LightData GetLightData()
 	{ 
-		LightData light;
 		Transform t = GetTransform();
-		light.Position = Vector4(t.Position.x, t.Position.y, t.Position.z, 1.0f);
-		light.Params = Vector3(0.3f, 0.3f, 0.3f);
-		light.Intensity = 1.0f;
-		light.Color = color;
-		return light;
+		lightData.Position = Vector4(t.Position.x, t.Position.y, t.Position.z, 1.0f);
+		return lightData;
 	};
 
 	Color color = Color(1.0f, 1.0f, 1.0f, 1.0f);

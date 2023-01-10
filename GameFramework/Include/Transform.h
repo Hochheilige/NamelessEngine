@@ -38,6 +38,8 @@ public:
 
 	Quaternion GetQuaterion() const;
 
+	auto SetForwardVector(const Vector3& forward) -> void;
+
 	friend struct Transform;
 };
 
