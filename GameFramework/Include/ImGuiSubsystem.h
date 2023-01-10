@@ -59,6 +59,10 @@ public:
 
 	auto OnSceneLoaded() -> void;
 
+	auto GetTopLevelWindowClass() const -> const ImGuiWindowClass* { return &topLevelClass; }
+
+	auto GetNextWindowClassId() -> int { return nextClassId++; }
+
 private:
 	auto LayOutMainMenuBar() -> void;
 	auto DrawDockspace() -> void;
@@ -136,9 +140,10 @@ private:
 
 	static ImGuiSubsystem* Instance;
 
+
+	int nextClassId = 1;
 	ImGuiWindowClass topLevelClass;
 	ImGuiWindowClass levelEditorClass;
-	ImGuiWindowClass behaviorTreeEditorClass;
 
 	auto DrawFBXInspector(const Path& path) -> void;
 
@@ -152,8 +157,6 @@ private:
 	bool doDebug = false;
 
 	Vector3 dirLightRotation;
-
-	ned::EditorContext* nodeEdtiorCtx = nullptr;
 
 	ImGuiNodeEditorManager nodeEditorManager;
 };

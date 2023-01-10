@@ -8,6 +8,8 @@ using Path = std::filesystem::path;
 #include "ImGuiNodeEditorInclude.h"
 #include "imgui_internal.h"
 
+class ImGuiSubsystem;
+
 enum class PinType
 {
 	Flow
@@ -23,6 +25,14 @@ enum class NodeType
 {
 	Tree,
 	Comment
+};
+
+enum class NodeKind
+{
+	Root,
+	Sequence,
+	Selector,
+	Task
 };
 
 struct Node;
@@ -46,16 +56,18 @@ struct Node {
 	std::string Name;
 	ImColor Color;
 	NodeType Type;
+	NodeKind Kind;
 	ImVec2 Size;
 	// need to add stuff that will allow to find out what type of node it is : root, sequence, selector, task (for task we need to remember what task it is
 	// mb just a json object?
 
-	auto AddInputPin(const Pin& pin) -> void;
-	auto AddOutputPin(const Pin& pin) -> void;
-
-//protected:
 	std::vector<Pin> Inputs;
 	std::vector<Pin> Outputs;
+
+	Node(int id, const char* name, ImColor color = ImColor(255, 255, 255)) :
+		ID(id), Name(name), Color(color), Type(NodeType::Tree), Size(0, 0), Kind(NodeKind::Selector)
+	{
+	}
 };
 
 struct Link
@@ -73,17 +85,28 @@ struct Link
 	}
 };
 
+struct NodeEditorData
+{
+	Path path;
+	ned::EditorContext* context;
+
+	std::vector<Node> nodes;
+	std::vector<Link> links;
+
+	ImGuiWindowClass windowClass;
+
+	// should the following be here?
+	bool createNewNode = false;
+	Pin* newNodeLinkPin = nullptr;
+	Pin* newLinkPin = nullptr;
+	ned::NodeId contextNodeId = 0;
+	ned::LinkId contextLinkId = 0;
+	ned::PinId  contextPinId = 0;
+};
+
 static inline ImRect ImGui_GetItemRect()
 {
 	return ImRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax());
-}
-
-static bool CanCreateLink(Pin* a, Pin* b)
-{
-	if (!a || !b || a == b || a->Kind == b->Kind || a->Type != b->Type || a->Node == b->Node)
-		return false;
-
-	return true;
 }
 
 class ImGuiNodeEditorManager
@@ -93,24 +116,40 @@ public:
 	// Should the path be here or
 	auto OpenEditor(const Path& path) -> void;
 
-	struct NodeEditorData
-	{
-		Path path;
-		ned::EditorContext* context;
+	
 
-		std::vector<Node> nodes;
-		std::vector<Link> links;
-	};
+	auto DrawOpenEditors() -> void;
+
+private:
 
 	std::vector<NodeEditorData> openEditors;
 
 	int nextId = 0;
 
-	auto DrawOpenEditors() -> void;
+protected:
+
+	auto GetImGuiSubsystem() -> ImGuiSubsystem&;
 
 protected:
 
+	auto SpawnRootNode(NodeEditorData& nodeEditorData) -> Node&;
+	auto SpawnSequenceNode(NodeEditorData& nodeEditorData) -> Node&;
+	auto SpawnTaskNode(NodeEditorData& nodeEditorData) -> Node&;
+	auto SpawnSelectorNode(NodeEditorData& nodeEditorData) -> Node&;
+protected:
+
+	auto GetNextId() -> int { return nextId++; }
+
 	auto DrawNodeEditorWindow(NodeEditorData& nodeEditorData) -> void;
 
-	auto DrawNode(Node& node, Pin*& newLinkPin) -> void;
+	auto DrawNode(NodeEditorData& nodeEditorData, Node& node) -> void;
+
+	auto TryCreateNewLink(NodeEditorData& nodeEditorData) -> void;
+
+	auto TryDeleteNodesAndLinks(NodeEditorData& nodeEditorData) -> void;
+
+	auto DrawNodeContextMenuPopup(NodeEditorData& nodeEditorData) -> void;
+	auto DrawPinContextMenuPopup(NodeEditorData& nodeEditorData) -> void;
+	auto DrawLinkContextMenuPopup(NodeEditorData& nodeEditorData) -> void;
+	auto DrawCreateNodeContextMenuPopup(NodeEditorData& nodeEditorData, const ImVec2& newNodePosition) -> void;
 };
