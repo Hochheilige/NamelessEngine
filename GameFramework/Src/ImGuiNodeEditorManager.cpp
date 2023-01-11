@@ -1,6 +1,7 @@
 #include "ImGuiNodeEditorManager.h"
 #include "MathInclude.h"
 #include "ImGuiSubsystem.h"
+#include "Game.h"
 
 Node* FindNode(NodeEditorData& data, ned::NodeId id)
 {
@@ -98,6 +99,9 @@ void BuildNodes(NodeEditorData& data)
 
 auto ImGuiNodeEditorManager::OpenEditor(const Path& path) -> void
 {
+	// todo: initialize it somewhere else?
+	taskTypes = Game::GetInstance()->GetTasksJson();
+
 	std::unique_ptr<NodeEditorData>& dataPtr = openEditors.emplace_back();
 	dataPtr.reset(new NodeEditorData());
 	NodeEditorData& data = *dataPtr;
@@ -184,12 +188,14 @@ auto ImGuiNodeEditorManager::SpawnSelectorNode(NodeEditorData& nodeEditorData) -
 	return node;
 }
 
-auto ImGuiNodeEditorManager::SpawnTaskNode(NodeEditorData& nodeEditorData) -> Node&
+auto ImGuiNodeEditorManager::SpawnTaskNode(NodeEditorData& nodeEditorData, json& taskType) -> Node&
 {
-	Node& node = nodeEditorData.nodes.emplace_back(GetNextId(), "Task", ImColor(255, 0, 255));
+	Node& node = nodeEditorData.nodes.emplace_back(GetNextId(), taskType["Name"].get<std::string>().c_str(), ImColor(255, 0, 255));
 	node.Type = NodeType::Tree;
 	node.Inputs.emplace_back(GetNextId(), "", PinType::Flow);
 	node.Kind = NodeKind::Task;
+
+	node.taskData = taskType;
 
 	BuildNode(&node);
 
@@ -722,10 +728,16 @@ auto ImGuiNodeEditorManager::DrawCreateNodeContextMenuPopup(NodeEditorData& node
 		}
 		if (ImGui::CollapsingHeader("Tasks"))
 		{
-			// todo: get tasks to display proper nodes
-			if (ImGui::MenuItem("Wait"))
+			for (json& j : taskTypes)
 			{
-				node = &SpawnTaskNode(nodeEditorData);
+				if (j["Name"].get<std::string>() == "BTTask")
+				{
+					continue;
+				}
+				if (ImGui::MenuItem(j["Name"].get<std::string>().c_str()))
+				{
+					node = &SpawnTaskNode(nodeEditorData, j);
+				}
 			}
 		}
 

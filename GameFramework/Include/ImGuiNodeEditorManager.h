@@ -5,6 +5,7 @@
 using Path = std::filesystem::path;
 
 #include "ImGuiInclude.h"
+#include "JsonInclude.h"
 #include "ImGuiNodeEditorInclude.h"
 #include "imgui_internal.h"
 
@@ -60,7 +61,8 @@ struct Node {
 	NodeType Type;
 	NodeKind Kind;
 	ImVec2 Size;
-	int Ordinal = -1;
+	int Ordinal;
+	json taskData;
 	// need to add stuff that will allow to find out what type of node it is : root, sequence, selector, task (for task we need to remember what task it is
 	// mb just a json object?
 
@@ -133,6 +135,8 @@ private:
 	// todo: should each node editor have its own id generator? To combat possible overflow?
 	int nextId = 1;
 
+	json taskTypes;
+
 protected:
 
 	auto GetImGuiSubsystem() -> ImGuiSubsystem&;
@@ -141,7 +145,7 @@ protected:
 
 	auto SpawnRootNode(NodeEditorData& nodeEditorData) -> Node&;
 	auto SpawnSequenceNode(NodeEditorData& nodeEditorData) -> Node&;
-	auto SpawnTaskNode(NodeEditorData& nodeEditorData) -> Node&;
+	auto SpawnTaskNode(NodeEditorData& nodeEditorData, json& taskType) -> Node&;
 	auto SpawnSelectorNode(NodeEditorData& nodeEditorData) -> Node&;
 protected:
 

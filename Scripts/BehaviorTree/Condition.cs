@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Scripts.BehaviorTree
 {
-    public abstract class Condition : BTTask
+    public abstract class Condition
     {
         public TaskStateEnum Execute()
         {
