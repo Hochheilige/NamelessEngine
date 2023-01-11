@@ -1,0 +1,181 @@
+{
+    "actors": [
+        {
+            "components": [
+                {
+                    "data": {
+                        "mass": 1.0,
+                        "name": "",
+                        "need_physics": false,
+                        "physics_simulation": true,
+                        "shape_type": 0,
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        "type": 1,
+                        "usage": 2
+                    },
+                    "id": "22ca77fc-7f04-4c2a-ac83-1469c6764e8a",
+                    "name": "RigidBodyCubeComponent"
+                },
+                {
+                    "data": {
+                        "mat_ambient": 0.10000000149011612,
+                        "mat_diffuse": 0.800000011920929,
+                        "mat_specular": 0.5,
+                        "mat_specular_exp": 1.0,
+                        "mesh_path": "../Assets/box.fbx/Cube",
+                        "name": "",
+                        "normal_path": "",
+                        "texture_path": "",
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "8fbcdc42-94af-488d-acd3-64ccee26f639",
+                    "name": "StaticMeshRenderer",
+                    "parent": "22ca77fc-7f04-4c2a-ac83-1469c6764e8a"
+                }
+            ],
+            "id": "cec32551-2c1a-45c2-b521-083af1e7616f",
+            "name": ""
+        },
+        {
+            "components": [
+                {
+                    "data": {
+                        "mass": 1.0,
+                        "name": "RigidBodyCube",
+                        "need_physics": false,
+                        "physics_simulation": true,
+                        "shape_type": 0,
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                -1.0462772846221924,
+                                0.14307577908039093
+                            ],
+                            "rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                3.799999952316284,
+                                0.699999988079071,
+                                3.5999999046325684
+                            ]
+                        },
+                        "type": 0,
+                        "usage": 2
+                    },
+                    "id": "47baf24b-f19e-4246-a0ad-eca7d2522d45",
+                    "name": "RigidBodyCubeComponent"
+                },
+                {
+                    "data": {
+                        "mat_ambient": 0.10000000149011612,
+                        "mat_diffuse": 0.800000011920929,
+                        "mat_specular": 0.5,
+                        "mat_specular_exp": 1.0,
+                        "mesh_path": "../Assets/box.fbx/Cube",
+                        "name": "StaticMeshRender",
+                        "normal_path": "",
+                        "texture_path": "",
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "e845b58f-6273-45ee-8c7d-b4083931edd9",
+                    "name": "StaticMeshRenderer",
+                    "parent": "47baf24b-f19e-4246-a0ad-eca7d2522d45"
+                }
+            ],
+            "id": "ebcd251f-668b-4d23-b372-c80f21ceeea3",
+            "mono": {
+                "class": "Floor",
+                "namespace": "Scripts.BasicScene"
+            },
+            "name": ""
+        }
+    ],
+    "dirlight": {
+        "Intensity": 1.0,
+        "color": [
+            0.37962138652801514,
+            0.4473443627357483,
+            0.7627906799316406,
+            0.0
+        ],
+        "direction": [
+            0.3310600519180298,
+            -0.7660443782806396,
+            0.550976574420929
+        ],
+        "name": "",
+        "transform": {
+            "pos": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rot": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        }
+    }
+}

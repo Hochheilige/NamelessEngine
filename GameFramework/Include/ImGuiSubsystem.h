@@ -156,6 +156,8 @@ private:
 
 	bool doDebug = false;
 
+	bool isPhysicsEnabled;
+
 	Vector3 dirLightRotation;
 
 	ImGuiNodeEditorManager nodeEditorManager;

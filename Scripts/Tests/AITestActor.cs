@@ -13,8 +13,16 @@ namespace Scripts.Tests
 
         StaticMeshRenderer meshRenderer;
         BehaviorTreeComponent btComp;
+        RigidBodyComponent rigidbody;
         protected internal override void Init()
         {
+            rigidbody = AddComponent<RigidBodySphereComponent>("RigidBody");
+            rigidbody.SetType(RigidBodyType.Dynamic);
+            rigidbody.SetUsage(RigidBodyUsage.CollisionsAndPhysics);
+            rigidbody.SetCollisionShape(CollisionShape.Sphere);
+            rigidbody.SetMass(1);
+            //rigidbody.EnablePhysicsSimulation();
+
             meshRenderer = AddComponent<StaticMeshRenderer>("Mesh Renderer");
             meshRenderer.SetMeshPath("../Assets/box.fbx/Cube");
             btComp = new BehaviorTreeComponent(this);

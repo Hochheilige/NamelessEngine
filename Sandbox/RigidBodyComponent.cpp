@@ -115,7 +115,8 @@ void RigidBodyComponent::SetMass(float mass)
     if (rigidBody.Body)
     {
         auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
-        world->removeRigidBody(rigidBody.Body);
+        if (isPhysicsSimulationEnabled)
+            world->removeRigidBody(rigidBody.Body);
         btVector3 inertia;
         rigidBody.Body->getCollisionShape()->calculateLocalInertia(mass, inertia);
         rigidBody.Body->setActivationState(DISABLE_DEACTIVATION);
@@ -124,7 +125,8 @@ void RigidBodyComponent::SetMass(float mass)
         rigidBody.Body->setAngularFactor(btVector3(1, 1, 1));
         rigidBody.Body->updateInertiaTensor();
         rigidBody.Body->clearForces();
-        world->addRigidBody(rigidBody.Body);
+        if (isPhysicsSimulationEnabled)
+            world->addRigidBody(rigidBody.Body);
     }
     //mMonoComponent->SetMass(mass);
 }
@@ -134,10 +136,12 @@ void RigidBodyComponent::SetGravity(float gravity)
     if (rigidBody.Body)
     {
         auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
-        world->removeRigidBody(rigidBody.Body);
+        if (isPhysicsSimulationEnabled)
+            world->removeRigidBody(rigidBody.Body);
         rigidBody.Body->setGravity(btVector3(0, -gravity, 0));
         rigidBody.Body->setFlags(rigidBody.Body->getFlags() | BT_DISABLE_WORLD_GRAVITY);
-        world->addRigidBody(rigidBody.Body);
+        if (isPhysicsSimulationEnabled)
+            world->addRigidBody(rigidBody.Body);
     }
 }
 
@@ -202,7 +206,8 @@ void RigidBodyComponent::SetCollisionShape(CollisionShapeType type, Vector3 scal
         CreateShape(scale);
 
         auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
-        world->removeRigidBody(rigidBody.Body);
+        if (isPhysicsSimulationEnabled)
+            world->removeRigidBody(rigidBody.Body);
         btVector3 inertia;
         rigidBody.Body->setCollisionShape(Shape);
         rigidBody.Body->getCollisionShape()->calculateLocalInertia(Mass, inertia);
@@ -212,7 +217,9 @@ void RigidBodyComponent::SetCollisionShape(CollisionShapeType type, Vector3 scal
         rigidBody.Body->setAngularFactor(btVector3(1, 1, 1));
         rigidBody.Body->updateInertiaTensor();
         rigidBody.Body->clearForces();
-        world->addRigidBody(rigidBody.Body);
+
+        if (isPhysicsSimulationEnabled)
+            world->addRigidBody(rigidBody.Body);
     }
 }
 
@@ -404,16 +411,25 @@ auto RigidBodyComponent::EnablePhysicsSimulation() -> void
     if (!rigidBody.Body) Init();
 
     {
+        int before = PhysicsModuleData::GetInstance()->GetDynamicsWorld()->getNumCollisionObjects();
         PhysicsModuleData::GetInstance()->GetDynamicsWorld()->addRigidBody(rigidBody.Body);
         isPhysicsSimulationEnabled = true;
+        int after = PhysicsModuleData::GetInstance()->GetDynamicsWorld()->getNumCollisionObjects();
+        bool WasAddedOnce = after == before + 1;
     }
 }
 
 auto RigidBodyComponent::DisablePhysicsSimulation() -> void
 {   
     if (isPhysicsSimulationEnabled) {
+
+        int before = PhysicsModuleData::GetInstance()->GetDynamicsWorld()->getNumCollisionObjects();
+
         PhysicsModuleData::GetInstance()->GetDynamicsWorld()->removeRigidBody(rigidBody.Body);
         isPhysicsSimulationEnabled = false;
+
+        int after = PhysicsModuleData::GetInstance()->GetDynamicsWorld()->getNumCollisionObjects();
+        bool WasNOTDeleted = after == before;
     }
 }
 

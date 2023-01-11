@@ -580,18 +580,17 @@ auto ImGuiSubsystem::DrawRigidBodyProperties(Actor* actor) -> void
 			ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
 			ImGui::BeginChild("RB", ImVec2(0, 100), true, window_flags);
 
-			bool is_p_enabled = cmp->isPhysicsSimulationEnabled;
-			bool is_p_enabled_old = cmp->isPhysicsSimulationEnabled;
-			ImGui::Checkbox("Simulate Physics", &is_p_enabled);
+			//Enabling physics
+			isPhysicsEnabled = cmp->isPhysicsSimulationEnabled;
+			ImGui::Checkbox("Simulate Physics", &isPhysicsEnabled);
 
-			if (is_p_enabled != is_p_enabled_old)
-			{
-				is_p_enabled_old = is_p_enabled;
-				if (cmp->isPhysicsSimulationEnabled) {
-					cmp->DisablePhysicsSimulation();
-				}
-				else {
+			if (ImGui::IsItemClicked()) {
+				if (!isPhysicsEnabled) {
 					cmp->EnablePhysicsSimulation();
+				}
+				else
+				{
+					cmp->DisablePhysicsSimulation();
 				}
 			}
 
@@ -604,7 +603,8 @@ auto ImGuiSubsystem::DrawRigidBodyProperties(Actor* actor) -> void
 					mass = 0.001f;
 				}
 				ImGui::DragFloat("Mass", &mass, .1f, 0.001f, 100.0f);
-				cmp->SetMass(mass);
+				if (cmp->isPhysicsSimulationEnabled)
+					cmp->SetMass(mass);
 			}
 
 			ImGui::Selectable("Static", rbType == RigidBodyType::STATIC, 0, ImVec2(80, 18));
