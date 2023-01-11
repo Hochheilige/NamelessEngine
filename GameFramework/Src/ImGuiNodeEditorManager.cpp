@@ -595,18 +595,6 @@ auto ImGuiNodeEditorManager::TryDeleteNodesAndLinks(NodeEditorData& nodeEditorDa
 {
 	if (ned::BeginDelete())
 	{
-		ned::LinkId linkId = 0;
-		while (ned::QueryDeletedLink(&linkId))
-		{
-			if (ned::AcceptDeletedItem())
-			{
-				std::vector<Link>& links = nodeEditorData.links;
-				auto iter = std::find_if(links.begin(), links.end(), [linkId](auto& link) { return link.ID == linkId; });
-				if (iter != links.end())
-					links.erase(iter);
-			}
-		}
-
 		ned::NodeId nodeId = 0;
 		while (ned::QueryDeletedNode(&nodeId))
 		{
@@ -616,6 +604,18 @@ auto ImGuiNodeEditorManager::TryDeleteNodesAndLinks(NodeEditorData& nodeEditorDa
 				auto iter = std::find_if(nodes.begin(), nodes.end(), [nodeId](auto& node) { return node.ID == nodeId; });
 				if (iter != nodes.end())
 					nodes.erase(iter);
+			}
+		}
+
+		ned::LinkId linkId = 0;
+		while (ned::QueryDeletedLink(&linkId))
+		{
+			if (ned::AcceptDeletedItem())
+			{
+				std::vector<Link>& links = nodeEditorData.links;
+				auto iter = std::find_if(links.begin(), links.end(), [linkId](auto& link) { return link.ID == linkId; });
+				if (iter != links.end())
+					links.erase(iter);
 			}
 		}
 	}
