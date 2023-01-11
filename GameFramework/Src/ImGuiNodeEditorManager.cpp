@@ -98,13 +98,18 @@ void BuildNodes(NodeEditorData& data)
 
 auto ImGuiNodeEditorManager::OpenEditor(const Path& path) -> void
 {
-	NodeEditorData& data = openEditors.emplace_back();
+	std::unique_ptr<NodeEditorData>& dataPtr = openEditors.emplace_back();
+	dataPtr.reset(new NodeEditorData());
+	NodeEditorData& data = *dataPtr;
+
+	data.config.SettingsFile = nullptr;
+	data.config.UserPointer = dataPtr.get();
 
 	data.windowClass.ClassId = GetImGuiSubsystem().GetNextWindowClassId();
 	data.windowClass.DockingAllowUnclassed = false;
 	data.windowClass.DockingAlwaysTabBar = true;
 	// todo: call ned::DestroyEditor() somewhere
-	data.context = ned::CreateEditor();
+	data.context = ned::CreateEditor(&data.config);
 
 	// temp
 	SpawnRootNode(data);
@@ -112,9 +117,9 @@ auto ImGuiNodeEditorManager::OpenEditor(const Path& path) -> void
 
 auto ImGuiNodeEditorManager::DrawOpenEditors() -> void
 {
-	for (NodeEditorData& data : openEditors)
+	for (auto& data : openEditors)
 	{
-		DrawNodeEditorWindow(data);
+		DrawNodeEditorWindow(*data);
 
 		// todo:
 		/*ImGui::SetNextWindowClass(&behaviorTreeEditorClass);

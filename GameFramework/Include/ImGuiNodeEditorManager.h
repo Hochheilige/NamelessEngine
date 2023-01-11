@@ -8,6 +8,8 @@ using Path = std::filesystem::path;
 #include "ImGuiNodeEditorInclude.h"
 #include "imgui_internal.h"
 
+#include <memory>
+
 class ImGuiSubsystem;
 
 enum class PinType
@@ -96,7 +98,9 @@ struct NodeEditorData
 
 	ImGuiWindowClass windowClass;
 
-	// should the following be here?
+	ned::Config config;
+
+	// todo: should the following be here? - prolly yes
 	bool createNewNode = false;
 	Pin* newNodeLinkPin = nullptr;
 	Pin* newLinkPin = nullptr;
@@ -124,7 +128,7 @@ public:
 
 private:
 
-	std::vector<NodeEditorData> openEditors;
+	std::vector<std::unique_ptr<NodeEditorData>> openEditors;
 
 	// todo: should each node editor have its own id generator? To combat possible overflow?
 	int nextId = 1;
