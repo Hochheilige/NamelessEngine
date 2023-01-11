@@ -598,7 +598,11 @@ auto ImGuiNodeEditorManager::TryDeleteNodesAndLinks(NodeEditorData& nodeEditorDa
 		ned::NodeId nodeId = 0;
 		while (ned::QueryDeletedNode(&nodeId))
 		{
-			if (ned::AcceptDeletedItem())
+			if (FindNode(nodeEditorData, nodeId)->Kind == NodeKind::Root)
+			{
+				ned::RejectDeletedItem();
+			}
+			else if (ned::AcceptDeletedItem())
 			{
 				std::vector<Node>& nodes = nodeEditorData.nodes;
 				auto iter = std::find_if(nodes.begin(), nodes.end(), [nodeId](auto& node) { return node.ID == nodeId; });
