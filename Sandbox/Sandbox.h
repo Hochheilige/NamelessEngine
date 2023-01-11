@@ -34,9 +34,7 @@ public:
 	Actor* CreateBun(Transform transform);
 
 	auto CreateHierarcyTestActor() ->Actor*;
-	void LoadGameFacade();
 
-	char* GetTasksJson();
 private:
 	
 

@@ -268,29 +268,6 @@ auto Sandbox::CreateHierarcyTestActor() -> Actor*
 	return nullptr;
 }
 
-void Sandbox::LoadGameFacade() {
-	auto mono = MonoSystem::GetInstance();
-	const auto mLoader_Boot = mono->GetMethod("Scripts.Internal", "Loader", "Boot()");
-	csGameInstance = mono_gchandle_new(mono->InvokeStaticMethod(mLoader_Boot, nullptr, nullptr), TRUE);
-	
-	//TODO
-	/*const auto mGame_OnSpecifyEngineSettings = mono->GetVirtualMethod("Scripts", "Game", "OnSpecifyEngineSettings(Scripts.EngineSettings.Builder)", csGameInstance);
-	mono->InvokeMethod(mGame_OnSpecifyEngineSettings, csGameInstance, nullptr, nullptr);*/
-
-	const auto mGame_Load = mono->GetVirtualMethod("Scripts", "Game", "OnLoad()", csGameInstance);
-	mono->InvokeInstanceMethod(mGame_Load, csGameInstance, nullptr, nullptr);
-}
-
-char* Sandbox::GetTasksJson()
-{
-	auto mono = MonoSystem::GetInstance();
-	const auto mGame_GetInheritors = mono->GetVirtualMethod("Scripts", "Game", "GetTasks()", csGameInstance);
-	auto res = mono->InvokeInstanceMethod(mGame_GetInheritors, csGameInstance, nullptr, nullptr);
-	auto str = mono_string_to_utf8(mono_object_to_string(res, nullptr));
-
-	return str;
-}
-
 void Sandbox::PrepareResources()
 {
 	Game::PrepareResources();
@@ -302,8 +279,6 @@ void Sandbox::PrepareResources()
 	circleMeshProxy = circleMesh->CreateRenderingPrimitiveProxy();
 	sphereMesh = new SphereMesh();
 	sphereMeshProxy = sphereMesh->CreateRenderingPrimitiveProxy();
-
-	LoadGameFacade();
 
 	/*auto obj = new ScriptObject("Cargo", mono);
 	auto m = obj->GetTransform();

@@ -278,5 +278,9 @@ public:
 	auto UpdateCamerasAspectRatio(float NewAspectRatio) -> void;
 
 	auto GetRecastNavigationManager() const -> RecastNavigationManager* { return recastNavigationManager.get(); }
+
+	auto LoadGameFacade() -> void;
+
+	auto GetTasksJson() const -> json;
 };
 
