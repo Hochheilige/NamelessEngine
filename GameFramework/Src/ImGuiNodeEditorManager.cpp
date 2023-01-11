@@ -102,6 +102,15 @@ auto ImGuiNodeEditorManager::OpenEditor(const Path& path) -> void
 	// todo: initialize it somewhere else?
 	taskTypes = Game::GetInstance()->GetTasksJson();
 
+	for (const auto& data : openEditors)
+	{
+		if (data->path == path)
+		{
+			ImGui::SetWindowFocus(GenerateWindowName(*data).c_str());
+			return;
+		}
+	}
+
 	std::unique_ptr<NodeEditorData>& dataPtr = openEditors.emplace_back();
 	dataPtr.reset(new NodeEditorData());
 	NodeEditorData& data = *dataPtr;
@@ -109,6 +118,7 @@ auto ImGuiNodeEditorManager::OpenEditor(const Path& path) -> void
 	data.config.SettingsFile = nullptr;
 	data.config.UserPointer = dataPtr.get();
 
+	data.path = path;
 	data.windowClass.ClassId = GetImGuiSubsystem().GetNextWindowClassId();
 	data.windowClass.DockingAllowUnclassed = false;
 	data.windowClass.DockingAlwaysTabBar = true;
@@ -123,31 +133,34 @@ auto ImGuiNodeEditorManager::DrawOpenEditors() -> void
 {
 	for (auto& data : openEditors)
 	{
-		DrawNodeEditorWindow(*data);
-
-		// todo:
-		/*ImGui::SetNextWindowClass(&behaviorTreeEditorClass);
-		if (ImGui::Begin("Toolbar##NodeEditor"))
-		{
-			if (ImGui::Button("Save"))
-			{
-
-			}
-		}
-		ImGui::End();
-
-		ImGui::SetNextWindowClass(&behaviorTreeEditorClass);
-		if (ImGui::Begin("Details"))
-		{
-
-		}
-		ImGui::End();*/
+		if (!DrawBehaviorTreeEditorWindow(*data))
+			break;
 	}
 }
 
 auto ImGuiNodeEditorManager::GetImGuiSubsystem() -> ImGuiSubsystem&
 {
 	return *(ImGuiSubsystem::GetInstance());
+}
+
+auto ImGuiNodeEditorManager::GenerateWindowName(NodeEditorData& nodeEditorData) const -> std::string
+{
+	return nodeEditorData.path.filename().string() + "##BTEditor" + std::to_string(nodeEditorData.windowClass.ClassId);
+}
+
+auto ImGuiNodeEditorManager::GenerateNodeEditorWindowName(NodeEditorData& nodeEditorData) const -> std::string
+{
+	return "TreeEditor##BTEditor" + std::to_string(nodeEditorData.windowClass.ClassId);
+}
+
+auto ImGuiNodeEditorManager::GenerateDetailsWindowName(NodeEditorData& nodeEditorData) const -> std::string
+{
+	return "Details##BTEditor" + std::to_string(nodeEditorData.windowClass.ClassId);
+}
+
+auto ImGuiNodeEditorManager::GenerateToolbarWindowName(NodeEditorData& nodeEditorData) const -> std::string
+{
+	return "Toolbar##BTEditor" + std::to_string(nodeEditorData.windowClass.ClassId);
 }
 
 auto ImGuiNodeEditorManager::SpawnRootNode(NodeEditorData& nodeEditorData) -> Node&
@@ -202,27 +215,103 @@ auto ImGuiNodeEditorManager::SpawnTaskNode(NodeEditorData& nodeEditorData, json&
 	return node;
 }
 
-auto ImGuiNodeEditorManager::DrawNodeEditorWindow(NodeEditorData& nodeEditorData) -> void
+// returns false if caused a deletion
+auto ImGuiNodeEditorManager::DrawBehaviorTreeEditorWindow(NodeEditorData& nodeEditorData) -> bool
 {
 	ImGui::SetNextWindowClass(GetImGuiSubsystem().GetTopLevelWindowClass());
-	bool editorWindowOpen = ImGui::Begin("BT Editor");
-	// todo: need a unique dockspace id
-	ImGuiID btEditorDockspaceId = ImGui::GetID(("BehaviorTreeEditorDockspace" + std::to_string(nodeEditorData.windowClass.ClassId)).c_str());
-	//ImGuiID btEditorDockspaceId = nodeEditorData.windowClass.ClassId;
-	ImGui::DockSpace(btEditorDockspaceId, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None, &nodeEditorData.windowClass);
+	ImGui::SetNextWindowSize(ImVec2(1000, 800));
+	bool editorWindowOpen = ImGui::Begin(GenerateWindowName(nodeEditorData).c_str(), &nodeEditorData.shouldRemainOpen);
+	DrawDockspace(nodeEditorData);
 	ImGui::End();
+
+	if (nodeEditorData.shouldRemainOpen == false)
+	{
+		// check for saves and close
+		bool closing = false;;
+		if (nodeEditorData.isDirty)
+			ImGui::OpenPopup("Close?");
+
+		ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+		ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+		if (ImGui::BeginPopupModal("Close?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text("All unsaved changes will be lost");
+			ImGui::Separator();
+
+			if (ImGui::Button("OK", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); closing = true; }
+			ImGui::SetItemDefaultFocus();
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); nodeEditorData.shouldRemainOpen = true; }
+			ImGui::EndPopup();
+		}
+
+		if (closing)
+		{
+			openEditors.erase(
+				std::remove_if(openEditors.begin(), openEditors.end(), [&nodeEditorData](const std::unique_ptr<NodeEditorData>& elem) 
+					{ 
+						return elem.get() == &nodeEditorData; 
+					}), 
+				openEditors.end());
+			return false;
+		}
+	}
 
 	if (!editorWindowOpen)
 	{
-		return;
+		return true;
 	}
 
+
+	DrawNodeEditorWindow(nodeEditorData);
+	DrawDetailsWindow(nodeEditorData);
+	DrawToolbarWindow(nodeEditorData);
+
+	return true;
+}
+
+
+auto ImGuiNodeEditorManager::DrawDockspace(NodeEditorData& nodeEditorData) -> void
+{
+	ImGuiID dockSpaceId = ImGui::GetID(("BehaviorTreeEditorDockspace" + std::to_string(nodeEditorData.windowClass.ClassId)).c_str());
+
+	if (!ImGui::DockBuilderGetNode(dockSpaceId) == NULL)
+	{
+		ImGui::DockSpace(dockSpaceId, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None, &nodeEditorData.windowClass);
+	}
+	else
+	{
+		// Apply default layout
+
+		ImGui::DockBuilderRemoveNode(dockSpaceId);
+		ImGui::DockBuilderAddNode(dockSpaceId, ImGuiDockNodeFlags_DockSpace); // Add empty node
+		ImGui::DockBuilderSetNodeSize(dockSpaceId, ImVec2(1000, 800));
+
+		ImGuiID dock_main_id = dockSpaceId;
+		ImGuiID dockRightId = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.30f, NULL, &dock_main_id);
+		ImGuiID dockTopId = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.05f, NULL, &dock_main_id);
+
+		ImGui::DockBuilderGetNode(dockTopId)->WantHiddenTabBarUpdate = true;
+		ImGui::DockBuilderGetNode(dockTopId)->WantHiddenTabBarToggle = true;
+
+		ImGui::DockBuilderGetNode(dock_main_id)->WantHiddenTabBarUpdate = true;
+		ImGui::DockBuilderGetNode(dock_main_id)->WantHiddenTabBarToggle = true;
+
+		ImGui::DockBuilderDockWindow(GenerateNodeEditorWindowName(nodeEditorData).c_str(), dock_main_id);
+		ImGui::DockBuilderDockWindow(GenerateDetailsWindowName(nodeEditorData).c_str(), dockRightId);
+		ImGui::DockBuilderDockWindow(GenerateToolbarWindowName(nodeEditorData).c_str(), dockTopId);
+
+		ImGui::DockBuilderFinish(dockSpaceId);
+	}
+}
+
+auto ImGuiNodeEditorManager::DrawNodeEditorWindow(NodeEditorData& nodeEditorData) -> void
+{
 	// Should I have a different class for each window?
 	// probably yes, becuase otherwise i would be able to move a window from one editor window to another
 	ImGui::SetNextWindowClass(&nodeEditorData.windowClass);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2());
-	// todo: need unique window id's
-	const bool drawingNodeCanvas = ImGui::Begin("Node Canvas");
+	const bool drawingNodeCanvas = ImGui::Begin(GenerateNodeEditorWindowName(nodeEditorData).c_str());
 	ImGui::PopStyleVar();
 	if (drawingNodeCanvas)
 	{
@@ -322,6 +411,26 @@ auto ImGuiNodeEditorManager::DrawNodeEditorWindow(NodeEditorData& nodeEditorData
 			drawList->PopClipRect();
 		}
 		ned::SetCurrentEditor(nullptr);
+	}
+	ImGui::End();
+}
+
+auto ImGuiNodeEditorManager::DrawDetailsWindow(NodeEditorData& nodeEditorData) -> void
+{
+	ImGui::SetNextWindowClass(&nodeEditorData.windowClass);
+	if (ImGui::Begin(GenerateDetailsWindowName(nodeEditorData).c_str()))
+	{
+
+	}
+	ImGui::End();
+}
+
+auto ImGuiNodeEditorManager::DrawToolbarWindow(NodeEditorData& nodeEditorData) -> void
+{
+	ImGui::SetNextWindowClass(&nodeEditorData.windowClass);
+	if (ImGui::Begin(GenerateToolbarWindowName(nodeEditorData).c_str()))
+	{
+
 	}
 	ImGui::End();
 }
@@ -836,5 +945,13 @@ auto ImGuiNodeEditorManager::UpdateNodeOrdinals_Exec(NodeEditorData& data, Node*
 	for (Node* node : directChildNodes)
 	{
 		UpdateNodeOrdinals_Exec(data, node, curOrdinal);
+	}
+}
+
+NodeEditorData::~NodeEditorData()
+{
+	if (context != nullptr)
+	{
+		ned::DestroyEditor(context);
 	}
 }

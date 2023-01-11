@@ -57,7 +57,7 @@ auto DirectoryTreeNode::AddChildNode(DirectoryTreeNode* node)->void
 	node->parent = this;
 }
 
-auto DirectoryTree::AddNodeByPath(const Path& path, DirectoryTreeNodeType nodeType) -> DirectoryTreeNode* {
+auto DirectoryTree::AddNodeByPath(const Path& path, DirectoryTreeNodeType nodeType, AssetType assetType) -> DirectoryTreeNode* {
 
 	DirectoryTreeNode* node = root;
 
@@ -76,9 +76,16 @@ auto DirectoryTree::AddNodeByPath(const Path& path, DirectoryTreeNodeType nodeTy
 			}
 		}
 		if (!isFound) {
-			DirectoryTreeNode* newNode = new DirectoryTreeNode(*current, nodeType);
+			auto temp = current;
+			++temp;
+			DirectoryTreeNodeType nt = temp == end ? nodeType : DirectoryTreeNodeType::Directory;
+			DirectoryTreeNode* newNode = new DirectoryTreeNode(*current, nt);
 			node->AddChildNode(newNode);
 			node = newNode;
+			if (nt == DirectoryTreeNodeType::File)
+			{
+				newNode->assetType = assetType;
+			}
 		}
 		++current;
 	}

@@ -96,8 +96,6 @@ auto ImGuiSubsystem::Initialize(Game* const InGame) -> void
 	levelEditorClass.DockingAllowUnclassed = true;
 	// do i want this?
 	//levelEditorClass.DockingAlwaysTabBar = true;
-
-	nodeEditorManager.OpenEditor(Path());
 }
 
 auto ImGuiSubsystem::OnSceneLoaded() -> void
@@ -1238,7 +1236,43 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 						if (next_button_x2 < window_visible_x2)
 							ImGui::SameLine(0.0f, 0.0f);
 					}
+
+					if (ImGui::BeginPopupContextWindow("Create File"))
+					{
+						if (ImGui::BeginMenu("AI"))
+						{
+							if (ImGui::MenuItem("Behavior Tree"))
+							{
+								const Path basePath = MyGame->GetAssetManager()->GetProjectRootPath()/selectedDirectory->GetPathFromTreeRoot()/Path(L"BehaviorTree");
+								int i = 0;
+								Path path;
+								while (true)
+								{
+									path = basePath;
+									path += Path(std::to_wstring(i));
+									path += Path(L".json");
+									if (!std::filesystem::exists(path))
+									{
+										break;
+									}
+									++i;
+								}
+								std::ofstream file(path);
+								json j;
+								j["AssetType"] = AssetType::BehaviorTree;
+								j["TreeData"] = {};
+								j["EditorSettings"] = {};
+								file << std::setw(4) << j.dump() << std::endl;
+								MyGame->GetAssetManager()->Initialize();
+							}
+							ImGui::EndMenu();
+						}
+
+						ImGui::EndPopup();
+					}
 				}
+
+				
 
 				ImGui::EndChild();
 			}
@@ -1277,7 +1311,7 @@ auto ImGuiSubsystem::DrawAsset(const DirectoryTreeNode* file, const Vector2& ite
 
 		ImGui::Text(nameAsString.c_str());
 
-ImGui::EndDragDropSource();
+		ImGui::EndDragDropSource();
 	}
 
 	if (file->IsAssetFromCollection() && ImGui::BeginDragDropSource())
@@ -1313,6 +1347,14 @@ ImGui::EndDragDropSource();
 		// or pass a callback to this function?
 		//ImGui::EndGroup();
 		//break;
+	}
+
+	if (bItemDoubleClicked && !isDirectory)
+	{
+		if (file->GetAssetType() == AssetType::BehaviorTree)
+		{
+			nodeEditorManager.OpenEditor(GetAssetManager()->GetProjectRootPath() / file->GetPathFromTreeRoot());
+		}
 	}
 
 	if (ImGui::IsItemHovered())

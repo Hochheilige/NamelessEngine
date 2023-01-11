@@ -5,8 +5,20 @@
 
 #include <iterator>
 
+#include "JsonInclude.h"
+
 using Path = std::filesystem::path;
 
+enum class AssetType
+{
+	Unspecified,
+	BehaviorTree
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(AssetType, {
+	{AssetType::Unspecified, "Unspecified"},
+	{AssetType::BehaviorTree, "BehaviorTree"}
+})
 
 enum class DirectoryTreeNodeType
 {
@@ -23,6 +35,7 @@ class DirectoryTreeNode{
 private:
 	Path name;
 	DirectoryTreeNodeType nodeType = DirectoryTreeNodeType::File;
+	AssetType assetType = AssetType::Unspecified;
 
 	DirectoryTreeNode* parent = nullptr;
 	std::vector<DirectoryTreeNode*> children = {};
@@ -37,6 +50,7 @@ public:
 	//auto GetDirectoryType() const -> DirectoryTreeNodeType { return nodeType; }
 	auto AddFile(DirectoryTreeNode* leaf)->void;
 
+	auto GetAssetType() const -> AssetType { return assetType; }
 public:
 	
 	auto GetChildren() const -> const std::vector<DirectoryTreeNode*>& { return children; }
@@ -64,7 +78,7 @@ class DirectoryTree
 private:
 
 	DirectoryTreeNode* root;
-	auto AddNodeByPath(const Path& path, DirectoryTreeNodeType nodeType) -> DirectoryTreeNode*;
+	auto AddNodeByPath(const Path& path, DirectoryTreeNodeType nodeType, AssetType assetType = AssetType::Unspecified) -> DirectoryTreeNode*;
 	
 public:
 

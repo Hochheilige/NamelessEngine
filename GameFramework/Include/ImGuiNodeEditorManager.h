@@ -102,6 +102,9 @@ struct NodeEditorData
 
 	ned::Config config;
 
+	bool isDirty = false;
+	bool shouldRemainOpen = true;
+
 	// todo: should the following be here? - prolly yes
 	bool createNewNode = false;
 	Pin* newNodeLinkPin = nullptr;
@@ -110,6 +113,7 @@ struct NodeEditorData
 	ned::LinkId contextLinkId = 0;
 	ned::PinId  contextPinId = 0;
 
+	~NodeEditorData();
 };
 
 static inline ImRect ImGui_GetItemRect()
@@ -141,6 +145,11 @@ protected:
 
 	auto GetImGuiSubsystem() -> ImGuiSubsystem&;
 
+	auto GenerateWindowName(NodeEditorData& nodeEditorData) const->std::string;
+	auto GenerateNodeEditorWindowName(NodeEditorData& nodeEditorData) const->std::string;
+	auto GenerateDetailsWindowName(NodeEditorData& nodeEditorData) const->std::string;
+	auto GenerateToolbarWindowName(NodeEditorData& nodeEditorData) const->std::string;
+
 protected:
 
 	auto SpawnRootNode(NodeEditorData& nodeEditorData) -> Node&;
@@ -151,7 +160,11 @@ protected:
 
 	auto GetNextId() -> int { return nextId++; }
 
+	auto DrawBehaviorTreeEditorWindow(NodeEditorData& nodeEditorData) -> bool;
 	auto DrawNodeEditorWindow(NodeEditorData& nodeEditorData) -> void;
+	auto DrawDetailsWindow(NodeEditorData& nodeEditorData) -> void;
+	auto DrawToolbarWindow(NodeEditorData& nodeEditorData) -> void;
+	auto DrawDockspace(NodeEditorData& nodeEditorData) -> void;
 
 	auto DrawNode(NodeEditorData& nodeEditorData, Node& node) -> void;
 

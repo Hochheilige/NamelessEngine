@@ -36,6 +36,8 @@ public:
 
 	auto GetAssetDirectoryTree() -> DirectoryTree* { return directoryTree.get(); };
 
+	auto GetAssetsPath() const -> const Path& { return assetsPath; }
+	auto GetProjectRootPath() const -> const Path& { return projectPath; }
 private:
 
 	std::unique_ptr<DirectoryTree> directoryTree;

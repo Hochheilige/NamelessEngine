@@ -10,6 +10,9 @@
 #include "NormalTexture.h"
 #include <EngineContentRegistry.h>
 
+#include "JsonInclude.h"
+#include <fstream>
+
 
 auto AssetManager::Initialize() -> void
 {
@@ -58,7 +61,14 @@ auto AssetManager::FillDirectoryTree() -> void
 			}
 			else
 			{
-				directoryTree->AddNodeByPath(path, DirectoryTreeNodeType::File);
+				AssetType assetType = AssetType::Unspecified;
+				if (dir_entry.path().extension().native() == L".json")
+				{
+					std::ifstream in(dir_entry.path());
+					const json data = json::parse(in);
+					assetType = data["AssetType"].get<AssetType>();
+				}
+				directoryTree->AddNodeByPath(path, DirectoryTreeNodeType::File, assetType);
 			}
 		}
 	}
