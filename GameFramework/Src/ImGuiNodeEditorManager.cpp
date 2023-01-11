@@ -641,7 +641,7 @@ auto ImGuiNodeEditorManager::DrawNodeContextMenuPopup(NodeEditorData& nodeEditor
 		else
 			ImGui::Text("Unknown node: %p", nodeEditorData.contextNodeId.AsPointer());
 		ImGui::Separator();
-		if (ImGui::MenuItem("Delete"))
+		if (ImGui::MenuItem("Delete", nullptr, nullptr, node->Kind != NodeKind::Root))
 			ned::DeleteNode(nodeEditorData.contextNodeId);
 		ImGui::EndPopup();
 	}
