@@ -127,7 +127,7 @@ private:
 	std::vector<NodeEditorData> openEditors;
 
 	// todo: should each node editor have its own id generator? To combat possible overflow?
-	int nextId = 0;
+	int nextId = 1;
 
 protected:
 
