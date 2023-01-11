@@ -113,6 +113,8 @@ struct NodeEditorData
 	ned::LinkId contextLinkId = 0;
 	ned::PinId  contextPinId = 0;
 
+	uintptr_t nextId = 1;
+
 	~NodeEditorData();
 };
 
@@ -136,9 +138,6 @@ private:
 
 	std::vector<std::unique_ptr<NodeEditorData>> openEditors;
 
-	// todo: should each node editor have its own id generator? To combat possible overflow?
-	int nextId = 1;
-
 	json taskTypes;
 
 protected:
@@ -158,7 +157,7 @@ protected:
 	auto SpawnSelectorNode(NodeEditorData& nodeEditorData) -> Node&;
 protected:
 
-	auto GetNextId() -> int { return nextId++; }
+	auto GetNextId(NodeEditorData& data) -> int { return data.nextId++; }
 
 	auto DrawBehaviorTreeEditorWindow(NodeEditorData& nodeEditorData) -> bool;
 	auto DrawNodeEditorWindow(NodeEditorData& nodeEditorData) -> void;

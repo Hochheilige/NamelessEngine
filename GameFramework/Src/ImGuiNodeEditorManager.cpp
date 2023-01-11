@@ -165,9 +165,9 @@ auto ImGuiNodeEditorManager::GenerateToolbarWindowName(NodeEditorData& nodeEdito
 
 auto ImGuiNodeEditorManager::SpawnRootNode(NodeEditorData& nodeEditorData) -> Node&
 {
-	Node& node = nodeEditorData.nodes.emplace_back(GetNextId(), "Root");
+	Node& node = nodeEditorData.nodes.emplace_back(GetNextId(nodeEditorData), "Root");
 	node.Type = NodeType::Tree;
-	node.Outputs.emplace_back(GetNextId(), "", PinType::Flow);
+	node.Outputs.emplace_back(GetNextId(nodeEditorData), "", PinType::Flow);
 	node.Kind = NodeKind::Root;
 
 	BuildNode(&node);
@@ -177,10 +177,10 @@ auto ImGuiNodeEditorManager::SpawnRootNode(NodeEditorData& nodeEditorData) -> No
 
 auto ImGuiNodeEditorManager::SpawnSequenceNode(NodeEditorData& nodeEditorData) -> Node&
 {
-	Node& node = nodeEditorData.nodes.emplace_back(GetNextId(), "Sequence");
+	Node& node = nodeEditorData.nodes.emplace_back(GetNextId(nodeEditorData), "Sequence");
 	node.Type = NodeType::Tree;
-	node.Inputs.emplace_back(GetNextId(), "", PinType::Flow);
-	node.Outputs.emplace_back(GetNextId(), "", PinType::Flow);
+	node.Inputs.emplace_back(GetNextId(nodeEditorData), "", PinType::Flow);
+	node.Outputs.emplace_back(GetNextId(nodeEditorData), "", PinType::Flow);
 	node.Kind = NodeKind::Sequence;
 
 	BuildNode(&node);
@@ -190,10 +190,10 @@ auto ImGuiNodeEditorManager::SpawnSequenceNode(NodeEditorData& nodeEditorData) -
 
 auto ImGuiNodeEditorManager::SpawnSelectorNode(NodeEditorData& nodeEditorData) -> Node&
 {
-	Node& node = nodeEditorData.nodes.emplace_back(GetNextId(), "Selector");
+	Node& node = nodeEditorData.nodes.emplace_back(GetNextId(nodeEditorData), "Selector");
 	node.Type = NodeType::Tree;
-	node.Inputs.emplace_back(GetNextId(), "", PinType::Flow);
-	node.Outputs.emplace_back(GetNextId(), "", PinType::Flow);
+	node.Inputs.emplace_back(GetNextId(nodeEditorData), "", PinType::Flow);
+	node.Outputs.emplace_back(GetNextId(nodeEditorData), "", PinType::Flow);
 	node.Kind = NodeKind::Selector;
 
 	BuildNode(&node);
@@ -203,9 +203,9 @@ auto ImGuiNodeEditorManager::SpawnSelectorNode(NodeEditorData& nodeEditorData) -
 
 auto ImGuiNodeEditorManager::SpawnTaskNode(NodeEditorData& nodeEditorData, json& taskType) -> Node&
 {
-	Node& node = nodeEditorData.nodes.emplace_back(GetNextId(), taskType["Name"].get<std::string>().c_str(), ImColor(255, 0, 255));
+	Node& node = nodeEditorData.nodes.emplace_back(GetNextId(nodeEditorData), taskType["Name"].get<std::string>().c_str(), ImColor(255, 0, 255));
 	node.Type = NodeType::Tree;
-	node.Inputs.emplace_back(GetNextId(), "", PinType::Flow);
+	node.Inputs.emplace_back(GetNextId(nodeEditorData), "", PinType::Flow);
 	node.Kind = NodeKind::Task;
 
 	node.taskData = taskType;
@@ -678,7 +678,7 @@ auto ImGuiNodeEditorManager::TryCreateNewLink(NodeEditorData& nodeEditorData) ->
 							iterToExistingStartIdLink = std::find_if(nodeEditorData.links.begin(), nodeEditorData.links.end(), [startPin](const Link& link) {return link.StartPinID == startPin->ID; });
 							if (iterToExistingStartIdLink != nodeEditorData.links.end()) nodeEditorData.links.erase(iterToExistingStartIdLink);
 						}
-						Link& link = nodeEditorData.links.emplace_back(Link(GetNextId(), startPinId, endPinId));
+						Link& link = nodeEditorData.links.emplace_back(Link(GetNextId(nodeEditorData), startPinId, endPinId));
 						link.Color = GetIconColor(startPin->Type);
 					}
 				}
@@ -885,7 +885,7 @@ auto ImGuiNodeEditorManager::DrawCreateNodeContextMenuPopup(NodeEditorData& node
 						}
 						////////////////////////////
 
-						Link newLink = nodeEditorData.links.emplace_back(Link(GetNextId(), startPin->ID, endPin->ID));
+						Link newLink = nodeEditorData.links.emplace_back(Link(GetNextId(nodeEditorData), startPin->ID, endPin->ID));
 						newLink.Color = GetIconColor(startPin->Type);
 
 						break;
