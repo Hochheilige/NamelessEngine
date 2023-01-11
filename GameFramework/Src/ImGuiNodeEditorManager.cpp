@@ -11,6 +11,15 @@ Node* FindNode(NodeEditorData& data, ned::NodeId id)
 	return nullptr;
 }
 
+Node* FindRootNode(NodeEditorData& data)
+{
+	for (auto& node : data.nodes)
+		if (node.Kind == NodeKind::Root)
+			return &node;
+
+	return nullptr;
+}
+
 Pin* FindPin(NodeEditorData& data, ned::PinId id)
 {
 	if (!id)
@@ -37,6 +46,16 @@ Link* FindLink(NodeEditorData& data, ned::LinkId id)
 			return &link;
 
 	return nullptr;
+}
+
+std::vector<Link*> FindLinksByStartPinId(NodeEditorData& data, ned::PinId starPinId)
+{
+	std::vector<Link*> links;
+	for (auto& link : data.links)
+		if (link.StartPinID == starPinId)
+			links.push_back(&link);
+
+	return links;
 }
 
 static bool CanCreateLink(NodeEditorData& data, Pin* a, Pin* b)
@@ -257,18 +276,18 @@ auto ImGuiNodeEditorManager::DrawNodeEditorWindow(NodeEditorData& nodeEditorData
 
 		if (true)
 		{
-			int nodeCount = ned::GetNodeCount();
-			std::vector<ned::NodeId> orderedNodeIds;
-			orderedNodeIds.resize(static_cast<size_t>(nodeCount));
-			ned::GetOrderedNodeIds(orderedNodeIds.data(), nodeCount);
-
+			UpdateNodeOrdinals(nodeEditorData);
 
 			auto drawList = ImGui::GetWindowDrawList();
 			drawList->PushClipRect(editorMin, editorMax);
 
-			int ordinal = 0;
-			for (auto& nodeId : orderedNodeIds)
+			for (auto& node : nodeEditorData.nodes)
 			{
+				if (node.Kind == NodeKind::Root)
+				{
+					continue;
+				}
+				ned::NodeId nodeId = node.ID;
 				auto p0 = ned::GetNodePosition(nodeId);
 				auto p1 = p0 + ned::GetNodeSize(nodeId);
 				p0 = ned::CanvasToScreen(p0);
@@ -276,7 +295,7 @@ auto ImGuiNodeEditorManager::DrawNodeEditorWindow(NodeEditorData& nodeEditorData
 
 
 				ImGuiTextBuffer builder;
-				builder.appendf("#%d", ordinal++);
+				builder.appendf("#%d", node.Ordinal);
 
 				auto textSize = ImGui::CalcTextSize(builder.c_str());
 				auto padding = ImVec2(2.0f, 2.0f);
@@ -750,5 +769,51 @@ auto ImGuiNodeEditorManager::DrawCreateNodeContextMenuPopup(NodeEditorData& node
 	else
 	{
 		nodeEditorData.createNewNode = false;
+	}
+}
+
+auto ImGuiNodeEditorManager::UpdateNodeOrdinals(NodeEditorData& data) -> void
+{
+	// todo: this would be faster if I didn't store everything as id, but as a smart pointer
+	Node* root = FindRootNode(data);
+
+	// reset ordinals (this is for unconnected nodes)
+	for (Node& node : data.nodes)
+	{
+		node.Ordinal = -1;
+	}
+
+	assert(root != nullptr && "Root node was not found");
+
+	int curOrdinal = -1;
+	UpdateNodeOrdinals_Exec(data, root, curOrdinal);
+}
+
+auto ImGuiNodeEditorManager::UpdateNodeOrdinals_Exec(NodeEditorData& data, Node* curNode, int& curOrdinal) -> void
+{
+	curNode->Ordinal = curOrdinal++;
+	
+	if (curNode->Outputs.size() == 0)
+	{
+		return;
+	}
+	std::vector<Link*> outputLinks = FindLinksByStartPinId(data, curNode->Outputs[0].ID);
+
+	std::vector<Node*> directChildNodes;
+	directChildNodes.reserve(outputLinks.size());
+	for (Link* link : outputLinks)
+	{
+		Node* node = FindPin(data, link->EndPinID)->Node;
+		assert(node != nullptr && "A pin doesn't have a valid node pointer");
+		directChildNodes.push_back(node);
+	}
+
+	// todo: this should probably be called inside ned::begin() ned::end()
+	std::sort(directChildNodes.begin(), directChildNodes.end(),
+		[](Node* const & l, Node* const& r) { return ned::GetNodePosition(l->ID).x < ned::GetNodePosition(r->ID).x; });
+
+	for (Node* node : directChildNodes)
+	{
+		UpdateNodeOrdinals_Exec(data, node, curOrdinal);
 	}
 }

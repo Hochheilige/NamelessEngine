@@ -58,6 +58,7 @@ struct Node {
 	NodeType Type;
 	NodeKind Kind;
 	ImVec2 Size;
+	int Ordinal = -1;
 	// need to add stuff that will allow to find out what type of node it is : root, sequence, selector, task (for task we need to remember what task it is
 	// mb just a json object?
 
@@ -65,7 +66,7 @@ struct Node {
 	std::vector<Pin> Outputs;
 
 	Node(int id, const char* name, ImColor color = ImColor(255, 255, 255)) :
-		ID(id), Name(name), Color(color), Type(NodeType::Tree), Size(0, 0), Kind(NodeKind::Selector)
+		ID(id), Name(name), Color(color), Type(NodeType::Tree), Size(0, 0), Kind(NodeKind::Selector), Ordinal(-1)
 	{
 	}
 };
@@ -102,6 +103,7 @@ struct NodeEditorData
 	ned::NodeId contextNodeId = 0;
 	ned::LinkId contextLinkId = 0;
 	ned::PinId  contextPinId = 0;
+
 };
 
 static inline ImRect ImGui_GetItemRect()
@@ -124,6 +126,7 @@ private:
 
 	std::vector<NodeEditorData> openEditors;
 
+	// todo: should each node editor have its own id generator? To combat possible overflow?
 	int nextId = 0;
 
 protected:
@@ -152,4 +155,7 @@ protected:
 	auto DrawPinContextMenuPopup(NodeEditorData& nodeEditorData) -> void;
 	auto DrawLinkContextMenuPopup(NodeEditorData& nodeEditorData) -> void;
 	auto DrawCreateNodeContextMenuPopup(NodeEditorData& nodeEditorData, const ImVec2& newNodePosition) -> void;
+
+	auto UpdateNodeOrdinals(NodeEditorData& data) -> void;
+	auto UpdateNodeOrdinals_Exec(NodeEditorData& data, Node* curNode, int& curOrdinal) -> void;
 };
