@@ -1257,12 +1257,12 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 									}
 									++i;
 								}
-								std::ofstream file(path);
 								json j;
 								j["AssetType"] = AssetType::BehaviorTree;
-								j["TreeData"] = {};
-								j["EditorSettings"] = {};
-								file << std::setw(4) << j.dump() << std::endl;
+								j["TreeData"] = json();
+								j["EditorData"] = json();
+								std::ofstream file(path);
+								file << j.dump(4) << std::endl;
 								MyGame->GetAssetManager()->Initialize();
 							}
 							ImGui::EndMenu();

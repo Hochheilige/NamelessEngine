@@ -2,6 +2,9 @@
 #include "MathInclude.h"
 #include "ImGuiSubsystem.h"
 #include "Game.h"
+#include <DirectoryTree.h>
+#include <fstream>
+#include "imgui_node_editor.h"
 
 Node* FindNode(NodeEditorData& data, ned::NodeId id)
 {
@@ -97,6 +100,31 @@ void BuildNodes(NodeEditorData& data)
 		BuildNode(&node);
 }
 
+auto HandleSaveConfigSettings(const char* data, size_t size, ax::NodeEditor::SaveReasonFlags reason, void* userPointer) -> bool
+{
+	NodeEditorData* edData = reinterpret_cast<NodeEditorData*>(userPointer);
+	edData->isDirty |= bool(reason & ax::NodeEditor::SaveReasonFlags::AddNode | reason & ax::NodeEditor::SaveReasonFlags::RemoveNode);
+
+	edData->editorData = std::string(data, size);
+
+	return true;
+}
+
+auto HandleLoadConfigSettings(char* data, void* userPointer) -> size_t
+{
+	NodeEditorData* edData = reinterpret_cast<NodeEditorData*>(userPointer);
+	std::string& str = edData->editorData;
+	size_t strSize = str.length() * sizeof(std::string::value_type);
+	if (data == nullptr)
+	{
+		return strSize;
+	}
+
+	strcpy_s(data, strSize + 1, str.c_str());
+
+	return strSize;
+}
+
 auto ImGuiNodeEditorManager::OpenEditor(const Path& path) -> void
 {
 	// todo: initialize it somewhere else?
@@ -117,16 +145,19 @@ auto ImGuiNodeEditorManager::OpenEditor(const Path& path) -> void
 
 	data.config.SettingsFile = nullptr;
 	data.config.UserPointer = dataPtr.get();
+	data.config.SaveSettings = HandleSaveConfigSettings;
+	data.config.LoadSettings = HandleLoadConfigSettings;
 
 	data.path = path;
 	data.windowClass.ClassId = GetImGuiSubsystem().GetNextWindowClassId();
 	data.windowClass.DockingAllowUnclassed = false;
 	data.windowClass.DockingAlwaysTabBar = true;
-	// todo: call ned::DestroyEditor() somewhere
 	data.context = ned::CreateEditor(&data.config);
 
-	// temp
-	SpawnRootNode(data);
+	if (!Load(data))
+	{
+		SpawnRootNode(data);
+	}
 }
 
 auto ImGuiNodeEditorManager::DrawOpenEditors() -> void
@@ -163,11 +194,14 @@ auto ImGuiNodeEditorManager::GenerateToolbarWindowName(NodeEditorData& nodeEdito
 	return "Toolbar##BTEditor" + std::to_string(nodeEditorData.windowClass.ClassId);
 }
 
-auto ImGuiNodeEditorManager::SpawnRootNode(NodeEditorData& nodeEditorData) -> Node&
+auto ImGuiNodeEditorManager::SpawnRootNode(NodeEditorData& nodeEditorData, ned::NodeId nodeId, ned::PinId outPinId) -> Node&
 {
-	Node& node = nodeEditorData.nodes.emplace_back(GetNextId(nodeEditorData), "Root");
+	if (nodeId.Get() == 0) nodeId = GetNextId(nodeEditorData);
+	if (outPinId.Get() == 0) outPinId = GetNextId(nodeEditorData);
+
+	Node& node = nodeEditorData.nodes.emplace_back(nodeId, "Root");
 	node.Type = NodeType::Tree;
-	node.Outputs.emplace_back(GetNextId(nodeEditorData), "", PinType::Flow);
+	node.Outputs.emplace_back(outPinId, "", PinType::Flow);
 	node.Kind = NodeKind::Root;
 
 	BuildNode(&node);
@@ -175,12 +209,16 @@ auto ImGuiNodeEditorManager::SpawnRootNode(NodeEditorData& nodeEditorData) -> No
 	return node;
 }
 
-auto ImGuiNodeEditorManager::SpawnSequenceNode(NodeEditorData& nodeEditorData) -> Node&
+auto ImGuiNodeEditorManager::SpawnSequenceNode(NodeEditorData& nodeEditorData, ned::NodeId nodeId, ned::PinId inPinId, ned::PinId outPinId) -> Node&
 {
-	Node& node = nodeEditorData.nodes.emplace_back(GetNextId(nodeEditorData), "Sequence");
+	if (nodeId.Get() == 0) nodeId = GetNextId(nodeEditorData);
+	if (inPinId.Get() == 0) inPinId = GetNextId(nodeEditorData);
+	if (outPinId.Get() == 0) outPinId = GetNextId(nodeEditorData);
+
+	Node& node = nodeEditorData.nodes.emplace_back(nodeId, "Sequence");
 	node.Type = NodeType::Tree;
-	node.Inputs.emplace_back(GetNextId(nodeEditorData), "", PinType::Flow);
-	node.Outputs.emplace_back(GetNextId(nodeEditorData), "", PinType::Flow);
+	node.Inputs.emplace_back(inPinId, "", PinType::Flow);
+	node.Outputs.emplace_back(outPinId, "", PinType::Flow);
 	node.Kind = NodeKind::Sequence;
 
 	BuildNode(&node);
@@ -188,12 +226,16 @@ auto ImGuiNodeEditorManager::SpawnSequenceNode(NodeEditorData& nodeEditorData) -
 	return node;
 }
 
-auto ImGuiNodeEditorManager::SpawnSelectorNode(NodeEditorData& nodeEditorData) -> Node&
+auto ImGuiNodeEditorManager::SpawnSelectorNode(NodeEditorData& nodeEditorData, ned::NodeId nodeId, ned::PinId inPinId, ned::PinId outPinId) -> Node&
 {
-	Node& node = nodeEditorData.nodes.emplace_back(GetNextId(nodeEditorData), "Selector");
+	if (nodeId.Get() == 0) nodeId = GetNextId(nodeEditorData);
+	if (inPinId.Get() == 0) inPinId = GetNextId(nodeEditorData);
+	if (outPinId.Get() == 0) outPinId = GetNextId(nodeEditorData);
+
+	Node& node = nodeEditorData.nodes.emplace_back(nodeId, "Selector");
 	node.Type = NodeType::Tree;
-	node.Inputs.emplace_back(GetNextId(nodeEditorData), "", PinType::Flow);
-	node.Outputs.emplace_back(GetNextId(nodeEditorData), "", PinType::Flow);
+	node.Inputs.emplace_back(inPinId, "", PinType::Flow);
+	node.Outputs.emplace_back(outPinId, "", PinType::Flow);
 	node.Kind = NodeKind::Selector;
 
 	BuildNode(&node);
@@ -201,14 +243,17 @@ auto ImGuiNodeEditorManager::SpawnSelectorNode(NodeEditorData& nodeEditorData) -
 	return node;
 }
 
-auto ImGuiNodeEditorManager::SpawnTaskNode(NodeEditorData& nodeEditorData, json& taskType) -> Node&
+auto ImGuiNodeEditorManager::SpawnTaskNode(NodeEditorData& nodeEditorData, const json& taskData, ned::NodeId nodeId, ned::PinId inPinId) -> Node&
 {
-	Node& node = nodeEditorData.nodes.emplace_back(GetNextId(nodeEditorData), taskType["Name"].get<std::string>().c_str(), ImColor(255, 0, 255));
+	if (nodeId.Get() == 0) nodeId = GetNextId(nodeEditorData);
+	if (inPinId.Get() == 0) inPinId = GetNextId(nodeEditorData);
+
+	Node& node = nodeEditorData.nodes.emplace_back(nodeId, taskData["Name"].get<std::string>().c_str(), ImColor(255, 0, 255));
 	node.Type = NodeType::Tree;
-	node.Inputs.emplace_back(GetNextId(nodeEditorData), "", PinType::Flow);
+	node.Inputs.emplace_back(inPinId, "", PinType::Flow);
 	node.Kind = NodeKind::Task;
 
-	node.taskData = taskType;
+	node.taskData = taskData;
 
 	BuildNode(&node);
 
@@ -220,16 +265,22 @@ auto ImGuiNodeEditorManager::DrawBehaviorTreeEditorWindow(NodeEditorData& nodeEd
 {
 	ImGui::SetNextWindowClass(GetImGuiSubsystem().GetTopLevelWindowClass());
 	ImGui::SetNextWindowSize(ImVec2(1000, 800));
-	bool editorWindowOpen = ImGui::Begin(GenerateWindowName(nodeEditorData).c_str(), &nodeEditorData.shouldRemainOpen);
+	bool editorWindowOpen = ImGui::Begin(GenerateWindowName(nodeEditorData).c_str(), &nodeEditorData.shouldRemainOpen, 
+		nodeEditorData.isDirty ? ImGuiWindowFlags_UnsavedDocument : ImGuiWindowFlags_None);
 	DrawDockspace(nodeEditorData);
 	ImGui::End();
 
 	if (nodeEditorData.shouldRemainOpen == false)
 	{
 		// check for saves and close
-		bool closing = false;;
+		bool closing = false;
+
 		if (nodeEditorData.isDirty)
 			ImGui::OpenPopup("Close?");
+		else
+		{
+			closing = true;
+		}
 
 		ImVec2 center = ImGui::GetMainViewport()->GetCenter();
 		ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
@@ -430,7 +481,10 @@ auto ImGuiNodeEditorManager::DrawToolbarWindow(NodeEditorData& nodeEditorData) -
 	ImGui::SetNextWindowClass(&nodeEditorData.windowClass);
 	if (ImGui::Begin(GenerateToolbarWindowName(nodeEditorData).c_str()))
 	{
-
+		if (ImGui::Button("Save"))
+		{
+			Save(nodeEditorData);
+		}
 	}
 	ImGui::End();
 }
@@ -679,6 +733,7 @@ auto ImGuiNodeEditorManager::TryCreateNewLink(NodeEditorData& nodeEditorData) ->
 							if (iterToExistingStartIdLink != nodeEditorData.links.end()) nodeEditorData.links.erase(iterToExistingStartIdLink);
 						}
 						Link& link = nodeEditorData.links.emplace_back(Link(GetNextId(nodeEditorData), startPinId, endPinId));
+						nodeEditorData.isDirty = true;
 						link.Color = GetIconColor(startPin->Type);
 					}
 				}
@@ -886,6 +941,7 @@ auto ImGuiNodeEditorManager::DrawCreateNodeContextMenuPopup(NodeEditorData& node
 						////////////////////////////
 
 						Link newLink = nodeEditorData.links.emplace_back(Link(GetNextId(nodeEditorData), startPin->ID, endPin->ID));
+						nodeEditorData.isDirty = true;
 						newLink.Color = GetIconColor(startPin->Type);
 
 						break;
@@ -946,6 +1002,136 @@ auto ImGuiNodeEditorManager::UpdateNodeOrdinals_Exec(NodeEditorData& data, Node*
 	{
 		UpdateNodeOrdinals_Exec(data, node, curOrdinal);
 	}
+}
+
+auto ImGuiNodeEditorManager::Load(NodeEditorData& data) -> bool
+{
+	std::ifstream file(data.path);
+	json save = json::parse(file);
+
+	uintptr_t maxId = 1;
+
+	if (save["TreeData"].empty())
+	{
+		return false;
+	}
+
+	json& nodes = save["TreeData"]["Nodes"];
+	data.nodes.reserve(nodes.size());
+	for (const json& jn : nodes)
+	{
+		uintptr_t id = jn["ID"];
+		if (id > maxId) maxId = id;
+		NodeKind nodeKind = jn["Kind"].get<NodeKind>();
+		Node* node = nullptr;
+		switch (nodeKind)
+		{
+		case NodeKind::Root:
+		{
+			uintptr_t outPinId = jn["Outputs"][0]["ID"];
+			if (outPinId > maxId) maxId = outPinId;
+			node = &SpawnRootNode(data, id, outPinId);
+			break;
+		}
+		case NodeKind::Selector:
+		{
+			uintptr_t outPinId = jn["Outputs"][0]["ID"];
+			if (outPinId > maxId) maxId = outPinId;
+			uintptr_t inPinId = jn["Inputs"][0]["ID"];
+			if (inPinId > maxId) maxId = inPinId;
+			node = &SpawnSelectorNode(data, id, inPinId, outPinId);
+			break;
+		}
+		case NodeKind::Sequence:
+		{
+			uintptr_t outPinId = jn["Outputs"][0]["ID"];
+			if (outPinId > maxId) maxId = outPinId;
+			uintptr_t inPinId = jn["Inputs"][0]["ID"];
+			if (inPinId > maxId) maxId = inPinId;
+			node = &SpawnSequenceNode(data, id, inPinId, outPinId);
+			break;
+		}
+		case NodeKind::Task:
+		{
+			uintptr_t inPinId = jn["Inputs"][0]["ID"];
+			if (inPinId > maxId) maxId = inPinId;
+			node = &SpawnTaskNode(data, jn["taskData"], id, inPinId);
+			break;
+		}
+		}
+	}
+
+	data.nextId = maxId + 1;
+
+	json& links = save["TreeData"]["Links"];
+	data.links.reserve(links.size());
+	for (const json& jl : links)
+	{
+		uintptr_t StartPinID = jl["StartPinID"];
+		uintptr_t EndPinID = jl["EndPinID"];
+		Link& link = data.links.emplace_back(Link(GetNextId(data), StartPinID, EndPinID));
+		// todo:
+		//link.Color = GetIconColor(startPin->Type);
+
+	}
+
+
+	data.editorData = save["EditorData"];
+
+	data.isDirty = false;
+
+	return true;
+}
+
+auto ImGuiNodeEditorManager::Save(NodeEditorData& data) -> void
+{
+	json save;
+
+	save["AssetType"] = AssetType::BehaviorTree;
+	save["TreeData"] = json();
+	save["EditorData"] = json();
+
+	json& nodes = save["TreeData"]["Nodes"];
+	int i = 0;
+	for (const Node& node : data.nodes)
+	{
+		json& jn = nodes[i++];
+		jn["ID"] = node.ID.Get();
+		jn["Type"] = node.Type;
+		jn["Kind"] = node.Kind;
+		jn["Ordinal"] = node.Ordinal;
+		jn["taskData"] = node.taskData;
+		json& inputs = jn["Inputs"];
+		size_t j = 0;
+		for (const Pin& input : node.Inputs)
+		{
+			inputs[j++]["ID"] = input.ID.Get();
+		}
+		json& outputs = jn["Outputs"];
+		j = 0;
+		for (const Pin& output : node.Outputs)
+		{
+			outputs[j++]["ID"] = output.ID.Get();
+		}
+	}
+
+	json& links = save["TreeData"]["Links"];
+	i = 0;
+	for (const Link& link : data.links)
+	{
+		json& jl = links[i++];
+		jl["StartPinID"] = link.StartPinID.Get();
+		jl["EndPinID"] = link.EndPinID.Get();
+	}
+
+	// todo: subtract the min id from all ids to combat limited number of long long numbers? -lot's of saving/loading might at some point break the saves
+
+	save["EditorData"] = data.editorData;
+
+	std::ofstream file(data.path);
+	file << save.dump(4) << std::endl;
+
+	data.isDirty = false;
 }
 
 NodeEditorData::~NodeEditorData()

@@ -30,6 +30,11 @@ enum class NodeType
 	Comment
 };
 
+NLOHMANN_JSON_SERIALIZE_ENUM(NodeType, {
+	{NodeType::Tree, "Tree"},
+	{NodeType::Comment, "Comment"}
+})
+
 enum class NodeKind
 {
 	Root,
@@ -37,6 +42,13 @@ enum class NodeKind
 	Selector,
 	Task
 };
+
+NLOHMANN_JSON_SERIALIZE_ENUM(NodeKind, {
+	{NodeKind::Root, "Root"},
+	{NodeKind::Sequence, "Sequence"},
+	{NodeKind::Selector, "Selector"},
+	{NodeKind::Task, "Task"}
+	})
 
 struct Node;
 
@@ -48,7 +60,7 @@ struct Pin
 	PinKind     Kind;
 	Node* Node;
 
-	Pin(int id, const char* name, PinType type) :
+	Pin(ned::PinId id, const char* name, PinType type) :
 		ID(id), Node(nullptr), Name(name), Type(type), Kind(PinKind::Input)
 	{
 	}
@@ -69,7 +81,7 @@ struct Node {
 	std::vector<Pin> Inputs;
 	std::vector<Pin> Outputs;
 
-	Node(int id, const char* name, ImColor color = ImColor(255, 255, 255)) :
+	Node(ned::NodeId id, const char* name, ImColor color = ImColor(255, 255, 255)) :
 		ID(id), Name(name), Color(color), Type(NodeType::Tree), Size(0, 0), Kind(NodeKind::Selector), Ordinal(-1)
 	{
 	}
@@ -104,6 +116,8 @@ struct NodeEditorData
 
 	bool isDirty = false;
 	bool shouldRemainOpen = true;
+
+	std::string editorData;
 
 	// todo: should the following be here? - prolly yes
 	bool createNewNode = false;
@@ -151,10 +165,10 @@ protected:
 
 protected:
 
-	auto SpawnRootNode(NodeEditorData& nodeEditorData) -> Node&;
-	auto SpawnSequenceNode(NodeEditorData& nodeEditorData) -> Node&;
-	auto SpawnTaskNode(NodeEditorData& nodeEditorData, json& taskType) -> Node&;
-	auto SpawnSelectorNode(NodeEditorData& nodeEditorData) -> Node&;
+	auto SpawnRootNode(NodeEditorData& nodeEditorData, ned::NodeId nodeId = 0, ned::PinId outPinId = 0) -> Node&;
+	auto SpawnSequenceNode(NodeEditorData& nodeEditorData, ned::NodeId nodeId = 0, ned::PinId inPinId = 0, ned::PinId outPinId = 0) -> Node&;
+	auto SpawnSelectorNode(NodeEditorData& nodeEditorData, ned::NodeId nodeId = 0, ned::PinId inPinId = 0, ned::PinId outPinId = 0) -> Node&;
+	auto SpawnTaskNode(NodeEditorData& nodeEditorData, const json& taskData, ned::NodeId nodeId = 0, ned::PinId inPinId = 0) -> Node&;
 protected:
 
 	auto GetNextId(NodeEditorData& data) -> int { return data.nextId++; }
@@ -178,4 +192,7 @@ protected:
 
 	auto UpdateNodeOrdinals(NodeEditorData& data) -> void;
 	auto UpdateNodeOrdinals_Exec(NodeEditorData& data, Node* curNode, int& curOrdinal) -> void;
+
+	auto Load(NodeEditorData& data) -> bool;
+	auto Save(NodeEditorData& data) -> void;
 };
