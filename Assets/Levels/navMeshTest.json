@@ -1,4 +1,5 @@
 {
+    "AssetType": "Level",
     "actors": [
         {
             "components": [
@@ -12,125 +13,25 @@
                         "transform": {
                             "pos": [
                                 5.0,
-                                -0.5,
+                                -1.3943467140197754,
                                 0.0
                             ],
                             "rot": [
-                                -0.0,
+                                0.0,
                                 0.0,
                                 -0.0,
                                 1.0
                             ],
                             "scale": [
-                                49.52495574951172,
-                                0.5,
-                                59.70805740356445
+                                32.590972900390625,
+                                0.49999985098838806,
+                                44.48611068725586
                             ]
                         },
                         "type": 0,
                         "usage": 2
                     },
-                    "id": "88599dc5-1b05-405f-b66f-91a763d1dad5",
-                    "name": "RigidBodyCubeComponent"
-                },
-                {
-                    "data": {
-                        "mat_ambient": 0.10000000149011612,
-                        "mat_diffuse": 0.5659999847412109,
-                        "mat_specular": 0.42100000381469727,
-                        "mat_specular_exp": 2.364000082015991,
-                        "mesh_path": "../Assets/box.fbx/Cube",
-                        "name": "",
-                        "normal_path": "",
-                        "texture_path": "..\\Assets\\Normal_map_example_-_Map.png",
-                        "transform": {
-                            "pos": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            "rot": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                1.0
-                            ],
-                            "scale": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
-                        }
-                    },
-                    "id": "df7b9560-e417-49ad-b8bb-9e8d547ca87f",
-                    "name": "StaticMeshRenderer",
-                    "parent": "88599dc5-1b05-405f-b66f-91a763d1dad5"
-                },
-                {
-                    "data": {
-                        "channel_id": -1,
-                        "is_3d": false,
-                        "loop": false,
-                        "name": "",
-                        "stream": false,
-                        "transform": {
-                            "pos": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            "rot": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                1.0
-                            ],
-                            "scale": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
-                        }
-                    },
-                    "id": "41f32267-7810-401a-9b1a-5428da365cae",
-                    "name": "AudioComponent",
-                    "parent": "88599dc5-1b05-405f-b66f-91a763d1dad5"
-                }
-            ],
-            "id": "fd837f39-5a05-4a9a-acdb-89d97da25344",
-            "name": "Plane"
-        },
-        {
-            "components": [
-                {
-                    "data": {
-                        "mass": 0.10000000149011612,
-                        "name": "",
-                        "need_physics": false,
-                        "physics_simulation": true,
-                        "shape_type": 0,
-                        "transform": {
-                            "pos": [
-                                0.0,
-                                40.0,
-                                0.0
-                            ],
-                            "rot": [
-                                0.3535533845424652,
-                                0.3535533845424652,
-                                -0.1464466005563736,
-                                0.8535533547401428
-                            ],
-                            "scale": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
-                        },
-                        "type": 1,
-                        "usage": 2
-                    },
-                    "id": "12eb0c02-f16e-477d-985e-b145f9cf1755",
+                    "id": "c6589360-a62c-4957-aff5-18bcf114f7be",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -162,12 +63,112 @@
                             ]
                         }
                     },
-                    "id": "3275a40a-fe68-465c-948b-80284cfe913b",
+                    "id": "b7cbaf43-dd40-479a-b9a8-f1068aee1877",
                     "name": "StaticMeshRenderer",
-                    "parent": "12eb0c02-f16e-477d-985e-b145f9cf1755"
+                    "parent": "c6589360-a62c-4957-aff5-18bcf114f7be"
+                },
+                {
+                    "data": {
+                        "channel_id": -1,
+                        "is_3d": true,
+                        "loop": true,
+                        "name": "../Assets/test.wav",
+                        "stream": false,
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "b4df2df8-0971-4c41-a6af-ca5854a234e1",
+                    "name": "AudioComponent",
+                    "parent": "c6589360-a62c-4957-aff5-18bcf114f7be"
                 }
             ],
-            "id": "57627087-994d-436f-a631-3c0555fdf12d",
+            "id": "463dc743-528c-4e73-9224-26e0c02eb00a",
+            "name": "Actor0"
+        },
+        {
+            "components": [
+                {
+                    "data": {
+                        "mass": 0.10000000149011612,
+                        "name": "",
+                        "need_physics": false,
+                        "physics_simulation": true,
+                        "shape_type": 0,
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                40.0,
+                                0.0
+                            ],
+                            "rot": [
+                                0.3535533845424652,
+                                0.3535533845424652,
+                                -0.1464466005563736,
+                                0.8535533547401428
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        "type": 1,
+                        "usage": 2
+                    },
+                    "id": "675bf09b-f75b-4c2d-a154-2be7130bfbc0",
+                    "name": "RigidBodyCubeComponent"
+                },
+                {
+                    "data": {
+                        "mat_ambient": 0.10000000149011612,
+                        "mat_diffuse": 0.800000011920929,
+                        "mat_specular": 0.5,
+                        "mat_specular_exp": 1.0,
+                        "mesh_path": "../Assets/box.fbx/Cube",
+                        "name": "",
+                        "normal_path": "",
+                        "texture_path": "",
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "fb711fdc-e537-40a7-9a4f-55afc5fae3d9",
+                    "name": "StaticMeshRenderer",
+                    "parent": "675bf09b-f75b-4c2d-a154-2be7130bfbc0"
+                }
+            ],
+            "id": "e0797c80-a0d1-48c6-86c1-8a49e7d9e640",
             "name": "Actor1"
         },
         {
@@ -200,7 +201,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "a3f20964-64f9-4fd0-9346-b67f66fcb4b5",
+                    "id": "441fdea8-9390-4677-887f-08bf63959849",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -232,12 +233,12 @@
                             ]
                         }
                     },
-                    "id": "454aa97b-15fc-4565-8f74-2f4f466989df",
+                    "id": "600e42d8-b614-4f56-a73f-333f5a2db0d1",
                     "name": "StaticMeshRenderer",
-                    "parent": "a3f20964-64f9-4fd0-9346-b67f66fcb4b5"
+                    "parent": "441fdea8-9390-4677-887f-08bf63959849"
                 }
             ],
-            "id": "1e49216f-e2a0-4ea9-828c-0f243af07b0e",
+            "id": "4979c2a9-6633-4e78-8cb1-ee12fde348b1",
             "name": "Actor2"
         },
         {
@@ -270,7 +271,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "710305d3-512e-43ae-93ad-7892f551d1cb",
+                    "id": "a72ba30a-331a-4cec-aaff-beba97e3b976",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -302,12 +303,12 @@
                             ]
                         }
                     },
-                    "id": "6c3d1754-f36d-4c9c-ae92-6773ae75ef07",
+                    "id": "1be5248f-a689-40da-bcac-5f8064267ca9",
                     "name": "StaticMeshRenderer",
-                    "parent": "710305d3-512e-43ae-93ad-7892f551d1cb"
+                    "parent": "a72ba30a-331a-4cec-aaff-beba97e3b976"
                 }
             ],
-            "id": "9463c87c-3a87-4888-a32b-a53dce46336e",
+            "id": "b541b75a-ecaf-43e3-b3f0-8fe25c157cc0",
             "name": "Actor3"
         },
         {
@@ -340,7 +341,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "642ba78a-34d5-401b-b695-a6a1b60c07ba",
+                    "id": "1eab8cf2-10fd-4eb1-9fa8-2a6edb401efa",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -372,12 +373,12 @@
                             ]
                         }
                     },
-                    "id": "2711ac54-9625-4066-8572-1f2cf98d0622",
+                    "id": "46234688-e239-470f-8503-4f9ab2580872",
                     "name": "StaticMeshRenderer",
-                    "parent": "642ba78a-34d5-401b-b695-a6a1b60c07ba"
+                    "parent": "1eab8cf2-10fd-4eb1-9fa8-2a6edb401efa"
                 }
             ],
-            "id": "a4d21696-4e72-4f20-b3d8-1e277eee2c51",
+            "id": "a4f409f4-11c0-41cc-a74e-fdddc520e685",
             "name": "Actor4"
         },
         {
@@ -410,7 +411,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "80f0e532-5d90-452d-a90c-9a871b9d65d7",
+                    "id": "d58a7c7e-213d-437c-b6f4-294d05cc064f",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -442,12 +443,12 @@
                             ]
                         }
                     },
-                    "id": "1d51a840-1779-4163-8e29-cc84e5c742a0",
+                    "id": "8f1f4e88-b1d0-4059-a5c7-e73dcdb92fc9",
                     "name": "StaticMeshRenderer",
-                    "parent": "80f0e532-5d90-452d-a90c-9a871b9d65d7"
+                    "parent": "d58a7c7e-213d-437c-b6f4-294d05cc064f"
                 }
             ],
-            "id": "a5e45d1b-c3be-4be1-bc8e-ea23d37df4e8",
+            "id": "504b52c6-d0ea-4ab7-8f73-b8e8b7921110",
             "name": "Actor5"
         },
         {
@@ -480,7 +481,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "a03fd4e7-1a01-446b-b3bc-66d0a63834c0",
+                    "id": "ec81f40d-d212-4549-a0da-941d5002b8f7",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -512,12 +513,12 @@
                             ]
                         }
                     },
-                    "id": "65e29054-3ba6-4033-95a5-89d8628f869f",
+                    "id": "6a9a292c-e059-411e-96ed-1ee9361d86a5",
                     "name": "StaticMeshRenderer",
-                    "parent": "a03fd4e7-1a01-446b-b3bc-66d0a63834c0"
+                    "parent": "ec81f40d-d212-4549-a0da-941d5002b8f7"
                 }
             ],
-            "id": "1732c1a7-b259-4076-b259-72ea1e46ec3a",
+            "id": "9b017481-dc97-4d50-9348-bf1f3ae18ae9",
             "name": "Actor6"
         },
         {
@@ -550,7 +551,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "5c8c28b9-539d-4128-a4b6-89d93462f5e7",
+                    "id": "388a1a38-d58b-4572-826f-2714d9e1253a",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -582,12 +583,12 @@
                             ]
                         }
                     },
-                    "id": "306aa395-b921-4e02-ab0b-4c0d89d28635",
+                    "id": "97b1c51e-7aca-4d6a-acc9-9746c58bea96",
                     "name": "StaticMeshRenderer",
-                    "parent": "5c8c28b9-539d-4128-a4b6-89d93462f5e7"
+                    "parent": "388a1a38-d58b-4572-826f-2714d9e1253a"
                 }
             ],
-            "id": "e78a0f6a-0b28-40ff-8603-337cad6ba54c",
+            "id": "08ff6f19-c5af-48d5-941d-753ad50acddb",
             "name": "Actor7"
         },
         {
@@ -620,7 +621,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "93eb1f01-3e84-4a78-b4c9-0d28e8d8739c",
+                    "id": "f6f28183-a14e-4674-90e5-d4707a3dafcd",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -652,12 +653,12 @@
                             ]
                         }
                     },
-                    "id": "7e67cf8e-b93d-4c74-be1f-bff4012b0972",
+                    "id": "e6ece0d1-ec66-4984-a8f8-085d04e82922",
                     "name": "StaticMeshRenderer",
-                    "parent": "93eb1f01-3e84-4a78-b4c9-0d28e8d8739c"
+                    "parent": "f6f28183-a14e-4674-90e5-d4707a3dafcd"
                 }
             ],
-            "id": "f2336e26-473b-41b8-af53-b37ad5b7ec71",
+            "id": "f18429bf-303e-4985-86c7-8f9c494851cb",
             "name": "Actor8"
         },
         {
@@ -690,7 +691,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "132e74c5-5a96-4843-8ab6-65e537f9ee58",
+                    "id": "ecd8e869-b288-47b4-b2b5-e9065ff6fb0c",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -722,12 +723,12 @@
                             ]
                         }
                     },
-                    "id": "9ff7db40-f2ed-48b3-b991-c73e675a901c",
+                    "id": "e60ed27f-c195-457d-b690-bdfe2bf41a69",
                     "name": "StaticMeshRenderer",
-                    "parent": "132e74c5-5a96-4843-8ab6-65e537f9ee58"
+                    "parent": "ecd8e869-b288-47b4-b2b5-e9065ff6fb0c"
                 }
             ],
-            "id": "b8ca7cde-a238-4c00-a03e-3e23a383393d",
+            "id": "8ed25869-3e7c-493f-bbd7-195ae729b078",
             "name": "Actor9"
         },
         {
@@ -760,7 +761,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "75761ad6-8593-4991-b24a-cc2d1011b91c",
+                    "id": "ee68e22a-a35b-431a-9056-e2b055e99107",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -792,12 +793,12 @@
                             ]
                         }
                     },
-                    "id": "795e30b0-6ec6-42e9-99f0-fec1c37629e1",
+                    "id": "7800328a-028e-45ce-ac3b-317530b48775",
                     "name": "StaticMeshRenderer",
-                    "parent": "75761ad6-8593-4991-b24a-cc2d1011b91c"
+                    "parent": "ee68e22a-a35b-431a-9056-e2b055e99107"
                 }
             ],
-            "id": "34922b05-776d-47a1-bbe2-fabaff4b29a0",
+            "id": "91e5b9f9-c6ba-49c3-b55b-c20523201ec5",
             "name": "Actor10"
         },
         {
@@ -830,7 +831,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "e6102e39-544d-422b-9bd0-821f2d6598d1",
+                    "id": "c8879cc6-e2d9-458c-a0bd-dcfe9018f4cf",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -862,12 +863,12 @@
                             ]
                         }
                     },
-                    "id": "a88c91df-43bb-486f-a367-64902773403a",
+                    "id": "71e09842-a153-400a-ac11-2899720eccc7",
                     "name": "StaticMeshRenderer",
-                    "parent": "e6102e39-544d-422b-9bd0-821f2d6598d1"
+                    "parent": "c8879cc6-e2d9-458c-a0bd-dcfe9018f4cf"
                 }
             ],
-            "id": "0146bf8c-35d1-4019-8cbc-e23fba5c7674",
+            "id": "4b05fda8-37e8-4293-9556-8f78ea2057ac",
             "name": "Actor11"
         },
         {
@@ -900,7 +901,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "0a280a5b-df86-4617-9672-56a5c1bd8eb1",
+                    "id": "0635978f-f839-43d6-aa98-ca8ff7abc8c9",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -932,12 +933,12 @@
                             ]
                         }
                     },
-                    "id": "8370192e-b882-4970-be55-23657837edb0",
+                    "id": "1566cb50-0190-415f-83d9-ffb8569f40e5",
                     "name": "StaticMeshRenderer",
-                    "parent": "0a280a5b-df86-4617-9672-56a5c1bd8eb1"
+                    "parent": "0635978f-f839-43d6-aa98-ca8ff7abc8c9"
                 }
             ],
-            "id": "7d2c2454-4823-4dff-9214-85b52826caf2",
+            "id": "d8b7de81-70d3-42c7-a981-0df5b47461d1",
             "name": "Actor12"
         },
         {
@@ -970,7 +971,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "37674359-454a-4a45-95ac-1a6e42e2ed1f",
+                    "id": "0f86d54d-e28e-49ed-8535-2260b441d746",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -1002,12 +1003,12 @@
                             ]
                         }
                     },
-                    "id": "7ac64be2-f63e-47f4-b3f4-d8b18a90f760",
+                    "id": "f90395b6-f2e5-4bbb-931c-7ce3cef066f9",
                     "name": "StaticMeshRenderer",
-                    "parent": "37674359-454a-4a45-95ac-1a6e42e2ed1f"
+                    "parent": "0f86d54d-e28e-49ed-8535-2260b441d746"
                 }
             ],
-            "id": "c2b0dcfd-09e8-430b-990a-441ea62a0254",
+            "id": "a3e418da-61a0-4101-bd5b-74712fa60d43",
             "name": "Actor13"
         },
         {
@@ -1040,7 +1041,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "ff410b8a-13a9-4f9c-b5bd-ca8dbf6aa3b7",
+                    "id": "ee324c0d-a480-49f2-91a0-3ede21030fbe",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -1072,12 +1073,12 @@
                             ]
                         }
                     },
-                    "id": "f8b8449e-fee3-4fee-9285-18d222bd6380",
+                    "id": "95e5367b-f57f-47dd-98cf-3afc21d65e11",
                     "name": "StaticMeshRenderer",
-                    "parent": "ff410b8a-13a9-4f9c-b5bd-ca8dbf6aa3b7"
+                    "parent": "ee324c0d-a480-49f2-91a0-3ede21030fbe"
                 }
             ],
-            "id": "4726225f-3627-4939-aaf7-ca435a387959",
+            "id": "9c907bcb-2d1f-4627-b907-7b147359e8bb",
             "name": "Actor14"
         },
         {
@@ -1110,7 +1111,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "3c39b144-c74d-4385-8416-527d12c50d85",
+                    "id": "159b66d6-44bc-44c0-8307-e58d4434442c",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -1142,12 +1143,12 @@
                             ]
                         }
                     },
-                    "id": "37ac543d-8ade-445d-b85f-8d9d367d7b06",
+                    "id": "1605b28e-855c-458e-9f0e-873eccafadb9",
                     "name": "StaticMeshRenderer",
-                    "parent": "3c39b144-c74d-4385-8416-527d12c50d85"
+                    "parent": "159b66d6-44bc-44c0-8307-e58d4434442c"
                 }
             ],
-            "id": "5dc4a342-b092-44e5-b6f4-0af0e423c574",
+            "id": "fd3d7cb2-2d43-411e-ba28-7de9a8fed006",
             "name": "Actor15"
         },
         {
@@ -1180,7 +1181,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "eeef61cd-4092-4113-999d-4ae4d83dd0f2",
+                    "id": "ff07dcb2-f680-4cfb-8d8f-6b042dd3c8c9",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -1212,12 +1213,12 @@
                             ]
                         }
                     },
-                    "id": "80b5628f-519c-4c3a-99c7-15adf5865c2b",
+                    "id": "ef597739-30ef-417c-ac78-3a7de12c30c8",
                     "name": "StaticMeshRenderer",
-                    "parent": "eeef61cd-4092-4113-999d-4ae4d83dd0f2"
+                    "parent": "ff07dcb2-f680-4cfb-8d8f-6b042dd3c8c9"
                 }
             ],
-            "id": "ccc24e2a-eed0-43b5-bd74-e7afc17e7135",
+            "id": "33790ff1-942e-436d-a4a9-977134649854",
             "name": "Actor16"
         },
         {
@@ -1250,7 +1251,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "c1258104-ec05-4702-abf1-1c02c76a5e71",
+                    "id": "cb60add1-1ff2-44bc-ac58-daca03fca804",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -1282,12 +1283,12 @@
                             ]
                         }
                     },
-                    "id": "fc5e0c57-7d38-4fbf-a61c-6e8f13a46ba3",
+                    "id": "50794fc4-3c9a-480b-bf31-3df7ba91b21f",
                     "name": "StaticMeshRenderer",
-                    "parent": "c1258104-ec05-4702-abf1-1c02c76a5e71"
+                    "parent": "cb60add1-1ff2-44bc-ac58-daca03fca804"
                 }
             ],
-            "id": "f6622ef9-07f1-4f57-8ffc-554f4bbed1da",
+            "id": "9921d547-c51a-4035-b532-b7fe0551751b",
             "name": "Actor17"
         },
         {
@@ -1320,7 +1321,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "458e42e1-ec7d-48ae-8a66-a53faaa43daa",
+                    "id": "9995e7d0-8075-477b-b115-d5f61584fdfb",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -1352,12 +1353,12 @@
                             ]
                         }
                     },
-                    "id": "323220c5-7c93-400f-90ee-73da5b8d20d6",
+                    "id": "130a11e2-6a55-409a-b51f-7f5645ff073b",
                     "name": "StaticMeshRenderer",
-                    "parent": "458e42e1-ec7d-48ae-8a66-a53faaa43daa"
+                    "parent": "9995e7d0-8075-477b-b115-d5f61584fdfb"
                 }
             ],
-            "id": "df90ab87-ce40-4055-84d2-393c2d5c3e1d",
+            "id": "b6111bef-bd1d-4135-9353-bd1f7b99a171",
             "name": "Actor18"
         },
         {
@@ -1390,7 +1391,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "25442a2a-a6f7-4663-ad93-66021c3996dd",
+                    "id": "8c9607ef-bf22-47ed-a240-b79f927a2d2c",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -1422,12 +1423,12 @@
                             ]
                         }
                     },
-                    "id": "895cb4c6-0eff-43aa-be64-13a2595371a2",
+                    "id": "bd704870-0e40-4ff5-89b4-7c8211e06a1d",
                     "name": "StaticMeshRenderer",
-                    "parent": "25442a2a-a6f7-4663-ad93-66021c3996dd"
+                    "parent": "8c9607ef-bf22-47ed-a240-b79f927a2d2c"
                 }
             ],
-            "id": "9343e0f9-7cc0-43aa-ba42-93c93003f912",
+            "id": "6b56e32e-5b9d-4721-87cb-dc8912abe2b1",
             "name": "Actor19"
         },
         {
@@ -1460,7 +1461,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "3da8ba97-8a0e-4356-afcc-5f2f8614feee",
+                    "id": "65a21283-640e-482f-a19d-3e36f8832916",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -1492,12 +1493,12 @@
                             ]
                         }
                     },
-                    "id": "149e9905-2eb5-4c02-9d17-2ae9dd134051",
+                    "id": "34201634-e436-4bb1-a05b-7bc459b0c65a",
                     "name": "StaticMeshRenderer",
-                    "parent": "3da8ba97-8a0e-4356-afcc-5f2f8614feee"
+                    "parent": "65a21283-640e-482f-a19d-3e36f8832916"
                 }
             ],
-            "id": "97207c14-e0cf-4e2d-affd-b64d31f1d479",
+            "id": "a084e54f-87f3-41e8-af6a-4b64f2676ade",
             "name": "Actor20"
         },
         {
@@ -1530,7 +1531,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "e33cabb5-06ad-48f3-a378-f3b2327d9378",
+                    "id": "6fed7d6e-1435-419a-b75a-f1356b0ef8c4",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -1562,12 +1563,12 @@
                             ]
                         }
                     },
-                    "id": "451a58d2-8630-417d-88b0-aa1624ed9c8c",
+                    "id": "4154953e-7824-4d21-8578-fda7f0f77959",
                     "name": "StaticMeshRenderer",
-                    "parent": "e33cabb5-06ad-48f3-a378-f3b2327d9378"
+                    "parent": "6fed7d6e-1435-419a-b75a-f1356b0ef8c4"
                 }
             ],
-            "id": "15f06e99-2216-4e67-847f-14f6dd03dc24",
+            "id": "9ab63466-a0a7-41f4-acaa-0b2666fdec0a",
             "name": "Actor21"
         },
         {
@@ -1600,7 +1601,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "a9520bac-334e-4b1c-8161-95ed8f7fdc45",
+                    "id": "5135f1cf-2e52-41d5-8851-17d42e473a9d",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -1632,12 +1633,12 @@
                             ]
                         }
                     },
-                    "id": "9f2177b5-51e8-4983-b31a-1618ddf19979",
+                    "id": "25e1aeaa-bcab-4133-bc3d-cb2d628aec42",
                     "name": "StaticMeshRenderer",
-                    "parent": "a9520bac-334e-4b1c-8161-95ed8f7fdc45"
+                    "parent": "5135f1cf-2e52-41d5-8851-17d42e473a9d"
                 }
             ],
-            "id": "edd86f25-70b6-4d91-b1d7-6d945cc36ad5",
+            "id": "1458f2ad-2477-46ea-b497-33aca4996dbe",
             "name": "Actor22"
         },
         {
@@ -1670,7 +1671,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "0b35585b-a1e7-4bc6-9566-f6f7e304a29f",
+                    "id": "b7b7fcf0-1ff5-4bc6-850b-2a1b96b98f8b",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -1702,12 +1703,12 @@
                             ]
                         }
                     },
-                    "id": "a6665d07-e43f-4e6e-b472-66e2d09842fd",
+                    "id": "066d1cb8-136b-48a8-9891-397f55587e16",
                     "name": "StaticMeshRenderer",
-                    "parent": "0b35585b-a1e7-4bc6-9566-f6f7e304a29f"
+                    "parent": "b7b7fcf0-1ff5-4bc6-850b-2a1b96b98f8b"
                 }
             ],
-            "id": "43148974-42c3-4a2d-afe2-e1a162dca011",
+            "id": "492464cd-3134-4737-b21a-67cb12b46f96",
             "name": "Actor23"
         },
         {
@@ -1740,7 +1741,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "d4f4184e-227f-44ff-80f8-7f7086392c44",
+                    "id": "61fb4b0a-4371-48c1-94a8-689bea40e6b7",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -1772,12 +1773,12 @@
                             ]
                         }
                     },
-                    "id": "1b53c310-5815-4d59-8613-9d5a2922b5de",
+                    "id": "54782df9-8629-42a9-b1c4-6d277ae19358",
                     "name": "StaticMeshRenderer",
-                    "parent": "d4f4184e-227f-44ff-80f8-7f7086392c44"
+                    "parent": "61fb4b0a-4371-48c1-94a8-689bea40e6b7"
                 }
             ],
-            "id": "6ad44b02-4e25-4721-ba42-3bcca58d04f8",
+            "id": "67ac4205-8b5d-4d11-bb94-4c04d029261a",
             "name": "Actor24"
         },
         {
@@ -1810,7 +1811,7 @@
                         "type": 1,
                         "usage": 2
                     },
-                    "id": "02fd6b6a-1758-4ec9-9309-6ae1629817d0",
+                    "id": "5fc0f0a5-0f6b-4504-a875-4c89b4150972",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
@@ -1842,12 +1843,12 @@
                             ]
                         }
                     },
-                    "id": "a26a3575-c372-4ad8-b7ed-4fe710250ee0",
+                    "id": "8ea61e37-499e-4161-977e-63c638e0e072",
                     "name": "StaticMeshRenderer",
-                    "parent": "02fd6b6a-1758-4ec9-9309-6ae1629817d0"
+                    "parent": "5fc0f0a5-0f6b-4504-a875-4c89b4150972"
                 }
             ],
-            "id": "1b0f8e5a-d226-4c38-8e9a-be22c29f14c8",
+            "id": "34ee57ca-d464-4e2d-8869-b3bf6d346a8b",
             "name": "Actor25"
         },
         {
@@ -1855,20 +1856,20 @@
                 {
                     "data": {
                         "mass": 0.0,
-                        "name": "-1855707824",
+                        "name": "1694145759360",
                         "need_physics": false,
                         "physics_simulation": false,
                         "shape_type": 0,
                         "transform": {
                             "pos": [
-                                0.258645236492157,
-                                6.21028448222205e-05,
-                                -0.22349470853805542
+                                0.0,
+                                0.0,
+                                0.0
                             ],
                             "rot": [
-                                -0.0,
                                 0.0,
-                                -0.0,
+                                0.0,
+                                0.0,
                                 1.0
                             ],
                             "scale": [
@@ -1880,19 +1881,19 @@
                         "type": 0,
                         "usage": 0
                     },
-                    "id": "fc8ea7c1-e310-4900-9098-17c7602e05aa",
+                    "id": "a2ec5726-892e-40dc-a9fc-72ae82ae496e",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
                     "data": {
                         "mat_ambient": 0.10000000149011612,
                         "mat_diffuse": 0.800000011920929,
-                        "mat_specular": 0.3499999940395355,
-                        "mat_specular_exp": 8.272000312805176,
+                        "mat_specular": 0.5,
+                        "mat_specular_exp": 1.0,
                         "mesh_path": "../Assets/box.fbx/Cube",
                         "name": "",
-                        "normal_path": "..\\Assets\\tjciddjqx_2K_Normal_LOD0.jpg",
-                        "texture_path": "..\\Assets\\Normal_map_example_-_Map.png",
+                        "normal_path": "",
+                        "texture_path": "../Assets/white.png",
                         "transform": {
                             "pos": [
                                 16.0,
@@ -1912,12 +1913,12 @@
                             ]
                         }
                     },
-                    "id": "bf13b211-2da6-4b92-ad90-f05537d2117b",
+                    "id": "beb384ac-2c5c-45e2-b50e-2ff23216a820",
                     "name": "StaticMeshRenderer",
-                    "parent": "fc8ea7c1-e310-4900-9098-17c7602e05aa"
+                    "parent": "a2ec5726-892e-40dc-a9fc-72ae82ae496e"
                 }
             ],
-            "id": "bd940ea6-e958-424a-a799-7f7e593c8ceb",
+            "id": "18c5634b-41d0-4ef0-969e-283f030b429b",
             "mono": {
                 "class": "CustomActor",
                 "namespace": "Scripts.Tests"
@@ -1928,6 +1929,18 @@
             "components": [
                 {
                     "data": {
+                        "Intensity": 1.0,
+                        "color": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "direction": [
+                            0.0,
+                            -1.0,
+                            0.0
+                        ],
                         "name": "",
                         "transform": {
                             "pos": [
@@ -1948,11 +1961,11 @@
                             ]
                         }
                     },
-                    "id": "ed9d9800-af77-4045-a9b5-1ef89740c1a0",
-                    "name": "SceneComponent"
+                    "id": "8e710599-bf22-4fd8-94ff-17dc434455ee",
+                    "name": "PointLight"
                 }
             ],
-            "id": "56a5906f-b2d6-47ba-9fce-d51718911028",
+            "id": "260e6de2-7930-4a6c-9855-86a20bf4bf35",
             "name": "Actor27"
         },
         {
@@ -1960,23 +1973,23 @@
                 {
                     "data": {
                         "mat_ambient": 0.10000000149011612,
-                        "mat_diffuse": 0.8330000042915344,
-                        "mat_specular": 0.28200000524520874,
-                        "mat_specular_exp": 34.180999755859375,
+                        "mat_diffuse": 0.800000011920929,
+                        "mat_specular": 0.5410000085830688,
+                        "mat_specular_exp": 25.656999588012695,
                         "mesh_path": "../Assets/tjciddjqx_LOD0.fbx/Aset_edible_baked_goods_S_tjciddjqx_LOD0",
                         "name": "",
-                        "normal_path": "..\\Assets\\tjciddjqx_2K_Normal_LOD0.jpg",
-                        "texture_path": "..\\Assets\\Normal_map_example_-_Map.png",
+                        "normal_path": "../Assets/tjciddjqx_2K_Normal_LOD0.jpg",
+                        "texture_path": "../Assets/tjciddjqx_2K_Albedo.jpg",
                         "transform": {
                             "pos": [
-                                9.095768928527832,
-                                0.843062698841095,
-                                -6.60275411605835
+                                11.435999870300293,
+                                0.8429999947547913,
+                                -2.502000093460083
                             ],
                             "rot": [
-                                -0.0,
                                 0.0,
-                                -0.0,
+                                0.0,
+                                0.0,
                                 1.0
                             ],
                             "scale": [
@@ -1986,11 +1999,11 @@
                             ]
                         }
                     },
-                    "id": "a6d3ddc1-a691-4bf1-9789-764d3ea94c01",
+                    "id": "303dd32e-04b4-4fb7-b504-8493888fc46a",
                     "name": "StaticMeshRenderer"
                 }
             ],
-            "id": "c25047d2-41f8-48aa-9f6c-11c6beb058dc",
+            "id": "dd9a3281-998d-48f9-b0e6-1c1adcbe7acd",
             "name": "Actor28"
         },
         {
@@ -2000,14 +2013,14 @@
                         "name": "MovementComponent",
                         "transform": {
                             "pos": [
-                                -0.9447338581085205,
-                                3.0001220703125,
-                                -2.306398868560791
+                                0.0,
+                                3.0,
+                                0.0
                             ],
                             "rot": [
-                                -0.0,
                                 0.0,
-                                -0.0,
+                                0.0,
+                                0.0,
                                 1.0
                             ],
                             "scale": [
@@ -2017,7 +2030,7 @@
                             ]
                         }
                     },
-                    "id": "5478e872-388c-4ae5-b141-90bc962f468b",
+                    "id": "c4ab0a7d-ee54-4040-a18f-0d9adb82faf4",
                     "name": "MovementComponent"
                 },
                 {
@@ -2042,14 +2055,14 @@
                             ]
                         }
                     },
-                    "id": "b49c3ec4-e605-4cdc-ab5a-83f9675a81ea",
+                    "id": "84904fb5-3272-4b2f-8dee-0c76ca91e631",
                     "name": "CameraComponent",
-                    "parent": "5478e872-388c-4ae5-b141-90bc962f468b"
+                    "parent": "c4ab0a7d-ee54-4040-a18f-0d9adb82faf4"
                 },
                 {
                     "data": {
                         "mat_ambient": 0.10000000149011612,
-                        "mat_diffuse": 0.7770000100135803,
+                        "mat_diffuse": 0.800000011920929,
                         "mat_specular": 0.5,
                         "mat_specular_exp": 1.0,
                         "mesh_path": "../Assets/box.fbx/Cube",
@@ -2075,17 +2088,17 @@
                             ]
                         }
                     },
-                    "id": "4c4b5066-1593-42fd-84ad-7638478bf809",
+                    "id": "7f0e484c-59a2-4bdf-a31a-46e27ecbdfb4",
                     "name": "StaticMeshRenderer",
-                    "parent": "5478e872-388c-4ae5-b141-90bc962f468b"
+                    "parent": "c4ab0a7d-ee54-4040-a18f-0d9adb82faf4"
                 }
             ],
-            "id": "2317389e-cc6d-4bcd-b724-bd23e88a4cad",
+            "id": "dc5fc55d-95d4-4d25-af16-df4e04a3c33b",
             "mono": {
                 "class": "PlayahActor",
                 "namespace": "Scripts.Tests"
             },
-            "name": "Player"
+            "name": "Actor29"
         },
         {
             "components": [
@@ -2094,14 +2107,14 @@
                         "name": "",
                         "transform": {
                             "pos": [
-                                0.3418435752391815,
-                                0.5832215547561646,
-                                -6.795285701751709
+                                0.0,
+                                0.0,
+                                0.0
                             ],
                             "rot": [
-                                -0.0,
                                 0.0,
-                                -0.0,
+                                0.0,
+                                0.0,
                                 1.0
                             ],
                             "scale": [
@@ -2111,15 +2124,15 @@
                             ]
                         }
                     },
-                    "id": "6da9046e-03a3-440b-98d5-66ebf63ea379",
+                    "id": "01a561fb-517f-40e7-a8af-e0f7030db53b",
                     "name": "SceneComponent"
                 },
                 {
                     "data": {
                         "mat_ambient": 0.10000000149011612,
-                        "mat_diffuse": 0.6600000262260437,
-                        "mat_specular": 0.3089999854564667,
-                        "mat_specular_exp": 8.27299976348877,
+                        "mat_diffuse": 0.800000011920929,
+                        "mat_specular": 0.5,
+                        "mat_specular_exp": 1.0,
                         "mesh_path": "../Assets/tjciddjqx_LOD0.fbx/Aset_edible_baked_goods_S_tjciddjqx_LOD0",
                         "name": "",
                         "normal_path": "../Assets/tjciddjqx_2K_Normal_LOD0.jpg",
@@ -2143,9 +2156,9 @@
                             ]
                         }
                     },
-                    "id": "898a6d87-b85e-4e26-a419-bad06a4060f9",
+                    "id": "c041355e-4b2e-43c9-a8dd-22404597115b",
                     "name": "StaticMeshRenderer",
-                    "parent": "6da9046e-03a3-440b-98d5-66ebf63ea379"
+                    "parent": "01a561fb-517f-40e7-a8af-e0f7030db53b"
                 },
                 {
                     "data": {
@@ -2169,20 +2182,20 @@
                             ]
                         }
                     },
-                    "id": "eb1c00d3-2a90-4b50-b9d4-bcccfb1c015c",
+                    "id": "04a79267-585e-4a51-b920-18f7da07cbd3",
                     "name": "SceneComponent",
-                    "parent": "6da9046e-03a3-440b-98d5-66ebf63ea379"
+                    "parent": "01a561fb-517f-40e7-a8af-e0f7030db53b"
                 },
                 {
                     "data": {
                         "mat_ambient": 0.10000000149011612,
                         "mat_diffuse": 0.800000011920929,
-                        "mat_specular": 0.41600000858306885,
-                        "mat_specular_exp": 11.454000473022461,
+                        "mat_specular": 0.5,
+                        "mat_specular_exp": 1.0,
                         "mesh_path": "../Assets/stanford-bunny.fbx/Stanford Bunny-mesh",
                         "name": "",
                         "normal_path": "",
-                        "texture_path": "..\\Assets\\generic_file_thumb.png",
+                        "texture_path": "",
                         "transform": {
                             "pos": [
                                 0.0,
@@ -2202,536 +2215,62 @@
                             ]
                         }
                     },
-                    "id": "3e1200e0-673d-4c16-99b5-ab196f4d8bcb",
+                    "id": "2e2692b2-1f33-4fec-a4f5-085ca68c6057",
                     "name": "StaticMeshRenderer",
-                    "parent": "eb1c00d3-2a90-4b50-b9d4-bcccfb1c015c"
+                    "parent": "04a79267-585e-4a51-b920-18f7da07cbd3"
                 }
             ],
-            "id": "409ce1e0-eb04-41f3-8293-1ef17dfe5433",
-            "name": "BunnyOnABun"
+            "id": "be3b4663-1ada-43d0-b36b-d31001aaf088",
+            "name": "Actor30"
         },
         {
             "components": [
                 {
                     "data": {
                         "mass": 0.0,
-                        "name": "",
+                        "name": "RigidBodyCube",
                         "need_physics": false,
                         "physics_simulation": true,
                         "shape_type": 0,
                         "transform": {
                             "pos": [
-                                12.404895782470703,
-                                -0.5,
-                                7.543536186218262
+                                1.8215528726577759,
+                                1.8485107421875,
+                                -4.015689849853516
                             ],
                             "rot": [
+                                0.438963919878006,
+                                0.0,
                                 -0.0,
-                                0.0,
-                                0.66572505235672,
-                                0.7461971044540405
+                                0.8985047340393066
                             ],
                             "scale": [
-                                19.999923706054688,
-                                0.49999764561653137,
-                                20.0
+                                1.2626845836639404,
+                                1.1969012022018433,
+                                7.657593727111816
                             ]
                         },
                         "type": 0,
                         "usage": 2
                     },
-                    "id": "88599dc5-1b05-405f-b66f-91a763d1dad5",
+                    "id": "59419a29-9c47-48ca-97fe-929f95e3a623",
                     "name": "RigidBodyCubeComponent"
                 },
                 {
                     "data": {
                         "mat_ambient": 0.10000000149011612,
-                        "mat_diffuse": 0.5659999847412109,
-                        "mat_specular": 0.42100000381469727,
-                        "mat_specular_exp": 2.364000082015991,
+                        "mat_diffuse": 0.800000011920929,
+                        "mat_specular": 0.5,
+                        "mat_specular_exp": 1.0,
                         "mesh_path": "../Assets/box.fbx/Cube",
-                        "name": "",
+                        "name": "StaticMeshRender",
                         "normal_path": "",
-                        "texture_path": "..\\Assets\\Normal_map_example_-_Map.png",
+                        "texture_path": "",
                         "transform": {
                             "pos": [
                                 0.0,
                                 0.0,
                                 0.0
-                            ],
-                            "rot": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                1.0
-                            ],
-                            "scale": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
-                        }
-                    },
-                    "id": "df7b9560-e417-49ad-b8bb-9e8d547ca87f",
-                    "name": "StaticMeshRenderer",
-                    "parent": "88599dc5-1b05-405f-b66f-91a763d1dad5"
-                },
-                {
-                    "data": {
-                        "channel_id": -1,
-                        "is_3d": false,
-                        "loop": false,
-                        "name": "",
-                        "stream": false,
-                        "transform": {
-                            "pos": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            "rot": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                1.0
-                            ],
-                            "scale": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
-                        }
-                    },
-                    "id": "41f32267-7810-401a-9b1a-5428da365cae",
-                    "name": "AudioComponent",
-                    "parent": "88599dc5-1b05-405f-b66f-91a763d1dad5"
-                }
-            ],
-            "id": "7e0fdc34-1fd6-439d-a3f7-ee2e582d8b69",
-            "name": "Copy of Plane"
-        },
-        {
-            "components": [
-                {
-                    "data": {
-                        "mass": 0.0,
-                        "name": "",
-                        "need_physics": false,
-                        "physics_simulation": true,
-                        "shape_type": 0,
-                        "transform": {
-                            "pos": [
-                                2.6063547134399414,
-                                1.2408679723739624,
-                                3.6483442783355713
-                            ],
-                            "rot": [
-                                -0.0,
-                                0.0,
-                                0.28349047899246216,
-                                0.9589750170707703
-                            ],
-                            "scale": [
-                                6.700001239776611,
-                                0.4999999701976776,
-                                5.800000190734863
-                            ]
-                        },
-                        "type": 0,
-                        "usage": 2
-                    },
-                    "id": "88599dc5-1b05-405f-b66f-91a763d1dad5",
-                    "name": "RigidBodyCubeComponent"
-                },
-                {
-                    "data": {
-                        "mat_ambient": 0.10000000149011612,
-                        "mat_diffuse": 0.5659999847412109,
-                        "mat_specular": 0.42100000381469727,
-                        "mat_specular_exp": 2.364000082015991,
-                        "mesh_path": "../Assets/box.fbx/Cube",
-                        "name": "",
-                        "normal_path": "",
-                        "texture_path": "..\\Assets\\Normal_map_example_-_Map.png",
-                        "transform": {
-                            "pos": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            "rot": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                1.0
-                            ],
-                            "scale": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
-                        }
-                    },
-                    "id": "df7b9560-e417-49ad-b8bb-9e8d547ca87f",
-                    "name": "StaticMeshRenderer",
-                    "parent": "88599dc5-1b05-405f-b66f-91a763d1dad5"
-                },
-                {
-                    "data": {
-                        "channel_id": -1,
-                        "is_3d": false,
-                        "loop": false,
-                        "name": "",
-                        "stream": false,
-                        "transform": {
-                            "pos": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            "rot": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                1.0
-                            ],
-                            "scale": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
-                        }
-                    },
-                    "id": "41f32267-7810-401a-9b1a-5428da365cae",
-                    "name": "AudioComponent",
-                    "parent": "88599dc5-1b05-405f-b66f-91a763d1dad5"
-                }
-            ],
-            "id": "37fbf773-1262-4b18-872c-748818d28c2f",
-            "name": "plane 3"
-        },
-        {
-            "components": [
-                {
-                    "data": {
-                        "mass": 0.0,
-                        "name": "",
-                        "need_physics": false,
-                        "physics_simulation": true,
-                        "shape_type": 0,
-                        "transform": {
-                            "pos": [
-                                -6.19964599609375,
-                                -0.5,
-                                7.543536186218262
-                            ],
-                            "rot": [
-                                0.539561927318573,
-                                -0.48137426376342773,
-                                0.459857702255249,
-                                0.5154440999031067
-                            ],
-                            "scale": [
-                                19.999942779541016,
-                                0.4999975860118866,
-                                19.99999237060547
-                            ]
-                        },
-                        "type": 0,
-                        "usage": 2
-                    },
-                    "id": "88599dc5-1b05-405f-b66f-91a763d1dad5",
-                    "name": "RigidBodyCubeComponent"
-                },
-                {
-                    "data": {
-                        "mat_ambient": 0.10000000149011612,
-                        "mat_diffuse": 0.5659999847412109,
-                        "mat_specular": 0.42100000381469727,
-                        "mat_specular_exp": 2.364000082015991,
-                        "mesh_path": "../Assets/box.fbx/Cube",
-                        "name": "",
-                        "normal_path": "",
-                        "texture_path": "..\\Assets\\Normal_map_example_-_Map.png",
-                        "transform": {
-                            "pos": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            "rot": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                1.0
-                            ],
-                            "scale": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
-                        }
-                    },
-                    "id": "df7b9560-e417-49ad-b8bb-9e8d547ca87f",
-                    "name": "StaticMeshRenderer",
-                    "parent": "88599dc5-1b05-405f-b66f-91a763d1dad5"
-                },
-                {
-                    "data": {
-                        "channel_id": -1,
-                        "is_3d": false,
-                        "loop": false,
-                        "name": "",
-                        "stream": false,
-                        "transform": {
-                            "pos": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            "rot": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                1.0
-                            ],
-                            "scale": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
-                        }
-                    },
-                    "id": "41f32267-7810-401a-9b1a-5428da365cae",
-                    "name": "AudioComponent",
-                    "parent": "88599dc5-1b05-405f-b66f-91a763d1dad5"
-                }
-            ],
-            "id": "6bc212c8-f9fe-4354-8d6b-611903c9fc20",
-            "name": "plane 51"
-        },
-        {
-            "components": [
-                {
-                    "data": {
-                        "mass": 0.0,
-                        "name": "",
-                        "need_physics": false,
-                        "physics_simulation": true,
-                        "shape_type": 0,
-                        "transform": {
-                            "pos": [
-                                4.252486228942871,
-                                -0.5,
-                                9.191096305847168
-                            ],
-                            "rot": [
-                                -0.4634583294391632,
-                                -0.5194810032844543,
-                                0.4779081642627716,
-                                0.5356768369674683
-                            ],
-                            "scale": [
-                                19.999923706054688,
-                                0.49999770522117615,
-                                19.999996185302734
-                            ]
-                        },
-                        "type": 0,
-                        "usage": 2
-                    },
-                    "id": "88599dc5-1b05-405f-b66f-91a763d1dad5",
-                    "name": "RigidBodyCubeComponent"
-                },
-                {
-                    "data": {
-                        "mat_ambient": 0.10000000149011612,
-                        "mat_diffuse": 0.5659999847412109,
-                        "mat_specular": 0.42100000381469727,
-                        "mat_specular_exp": 2.364000082015991,
-                        "mesh_path": "../Assets/box.fbx/Cube",
-                        "name": "",
-                        "normal_path": "",
-                        "texture_path": "..\\Assets\\Normal_map_example_-_Map.png",
-                        "transform": {
-                            "pos": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            "rot": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                1.0
-                            ],
-                            "scale": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
-                        }
-                    },
-                    "id": "df7b9560-e417-49ad-b8bb-9e8d547ca87f",
-                    "name": "StaticMeshRenderer",
-                    "parent": "88599dc5-1b05-405f-b66f-91a763d1dad5"
-                },
-                {
-                    "data": {
-                        "channel_id": -1,
-                        "is_3d": false,
-                        "loop": false,
-                        "name": "",
-                        "stream": false,
-                        "transform": {
-                            "pos": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            "rot": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                1.0
-                            ],
-                            "scale": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
-                        }
-                    },
-                    "id": "41f32267-7810-401a-9b1a-5428da365cae",
-                    "name": "AudioComponent",
-                    "parent": "88599dc5-1b05-405f-b66f-91a763d1dad5"
-                }
-            ],
-            "id": "eaa560ca-3a65-4fe8-aa50-eee7de06fd84",
-            "name": "plane 5"
-        },
-        {
-            "components": [
-                {
-                    "data": {
-                        "mass": 0.0,
-                        "name": "",
-                        "need_physics": false,
-                        "physics_simulation": true,
-                        "shape_type": 0,
-                        "transform": {
-                            "pos": [
-                                8.547430038452148,
-                                2.582003355026245,
-                                3.6483442783355713
-                            ],
-                            "rot": [
-                                0.04123368114233017,
-                                -0.6703799366950989,
-                                -0.04548351466655731,
-                                0.7394739985466003
-                            ],
-                            "scale": [
-                                6.699991226196289,
-                                0.49999943375587463,
-                                5.799990653991699
-                            ]
-                        },
-                        "type": 0,
-                        "usage": 2
-                    },
-                    "id": "88599dc5-1b05-405f-b66f-91a763d1dad5",
-                    "name": "RigidBodyCubeComponent"
-                },
-                {
-                    "data": {
-                        "mat_ambient": 0.10000000149011612,
-                        "mat_diffuse": 0.5659999847412109,
-                        "mat_specular": 0.42100000381469727,
-                        "mat_specular_exp": 2.364000082015991,
-                        "mesh_path": "../Assets/box.fbx/Cube",
-                        "name": "",
-                        "normal_path": "",
-                        "texture_path": "..\\Assets\\Normal_map_example_-_Map.png",
-                        "transform": {
-                            "pos": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            "rot": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                1.0
-                            ],
-                            "scale": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
-                        }
-                    },
-                    "id": "df7b9560-e417-49ad-b8bb-9e8d547ca87f",
-                    "name": "StaticMeshRenderer",
-                    "parent": "88599dc5-1b05-405f-b66f-91a763d1dad5"
-                },
-                {
-                    "data": {
-                        "channel_id": -1,
-                        "is_3d": false,
-                        "loop": false,
-                        "name": "",
-                        "stream": false,
-                        "transform": {
-                            "pos": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            "rot": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                1.0
-                            ],
-                            "scale": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
-                        }
-                    },
-                    "id": "41f32267-7810-401a-9b1a-5428da365cae",
-                    "name": "AudioComponent",
-                    "parent": "88599dc5-1b05-405f-b66f-91a763d1dad5"
-                }
-            ],
-            "id": "4bedb375-3a27-49e1-a59a-6e1b62fe5bff",
-            "name": "awwwwwwwwwwwplane 6"
-        },
-        {
-            "components": [
-                {
-                    "data": {
-                        "Intensity": 13.0,
-                        "color": [
-                            1.0,
-                            0.7255813479423523,
-                            0.0,
-                            1.0
-                        ],
-                        "direction": [
-                            0.0,
-                            -1.0,
-                            0.0
-                        ],
-                        "name": "",
-                        "transform": {
-                            "pos": [
-                                8.975303649902344,
-                                7.989430904388428,
-                                6.582033634185791
                             ],
                             "rot": [
                                 -0.0,
@@ -2746,20 +2285,395 @@
                             ]
                         }
                     },
-                    "id": "7a837502-2de0-4702-820f-f68bf8be0c8e",
-                    "name": "PointLight"
+                    "id": "510ece85-a29b-462e-be67-f000f55b9b5f",
+                    "name": "StaticMeshRenderer",
+                    "parent": "59419a29-9c47-48ca-97fe-929f95e3a623"
                 }
             ],
-            "id": "2006c663-fe37-4c74-966b-97ab0e5c5e0b",
-            "name": "Actor36"
+            "id": "b539dd6f-2f9e-4416-88d0-347b6b910667",
+            "mono": {
+                "class": "Floor",
+                "namespace": "Scripts.BasicScene"
+            },
+            "name": "Actor31"
+        },
+        {
+            "components": [
+                {
+                    "data": {
+                        "mass": 1.0,
+                        "name": "RigidBodyCube",
+                        "need_physics": false,
+                        "physics_simulation": true,
+                        "shape_type": 0,
+                        "transform": {
+                            "pos": [
+                                -0.2507188320159912,
+                                2.646416187286377,
+                                -6.213188171386719
+                            ],
+                            "rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                5.629462718963623,
+                                7.669681549072266,
+                                1.0
+                            ]
+                        },
+                        "type": 0,
+                        "usage": 2
+                    },
+                    "id": "6e84f64c-61d7-4e4e-9082-b6c7e4ac9353",
+                    "name": "RigidBodyCubeComponent"
+                },
+                {
+                    "data": {
+                        "mat_ambient": 0.10000000149011612,
+                        "mat_diffuse": 0.800000011920929,
+                        "mat_specular": 0.5,
+                        "mat_specular_exp": 1.0,
+                        "mesh_path": "../Assets/box.fbx/Cube",
+                        "name": "StaticMeshRender",
+                        "normal_path": "",
+                        "texture_path": "",
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "f273e1d4-c828-4df5-a469-2523fa3eb70e",
+                    "name": "StaticMeshRenderer",
+                    "parent": "6e84f64c-61d7-4e4e-9082-b6c7e4ac9353"
+                }
+            ],
+            "id": "da2f8767-5d17-4b95-8870-4b03ef8130f9",
+            "mono": {
+                "class": "Floor",
+                "namespace": "Scripts.BasicScene"
+            },
+            "name": "Actor32"
+        },
+        {
+            "components": [
+                {
+                    "data": {
+                        "mass": 0.0,
+                        "name": "RigidBodyCube",
+                        "need_physics": false,
+                        "physics_simulation": true,
+                        "shape_type": 0,
+                        "transform": {
+                            "pos": [
+                                -2.3862831592559814,
+                                1.482122778892517,
+                                -3.851616382598877
+                            ],
+                            "rot": [
+                                0.438963919878006,
+                                0.0,
+                                -0.0,
+                                0.8985047340393066
+                            ],
+                            "scale": [
+                                1.2626845836639404,
+                                1.1969012022018433,
+                                7.657593727111816
+                            ]
+                        },
+                        "type": 0,
+                        "usage": 2
+                    },
+                    "id": "59419a29-9c47-48ca-97fe-929f95e3a623",
+                    "name": "RigidBodyCubeComponent"
+                },
+                {
+                    "data": {
+                        "mat_ambient": 0.10000000149011612,
+                        "mat_diffuse": 0.800000011920929,
+                        "mat_specular": 0.5,
+                        "mat_specular_exp": 1.0,
+                        "mesh_path": "../Assets/box.fbx/Cube",
+                        "name": "StaticMeshRender",
+                        "normal_path": "",
+                        "texture_path": "",
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "510ece85-a29b-462e-be67-f000f55b9b5f",
+                    "name": "StaticMeshRenderer",
+                    "parent": "59419a29-9c47-48ca-97fe-929f95e3a623"
+                }
+            ],
+            "id": "9123ad49-5629-4436-b7e9-10fd164ef909",
+            "mono": {
+                "class": "Floor",
+                "namespace": "Scripts.BasicScene"
+            },
+            "name": "Copy of Actor31"
+        },
+        {
+            "components": [
+                {
+                    "data": {
+                        "mass": 0.0,
+                        "name": "RigidBodyCube",
+                        "need_physics": false,
+                        "physics_simulation": true,
+                        "shape_type": 0,
+                        "transform": {
+                            "pos": [
+                                4.868879318237305,
+                                -1.7089766263961792,
+                                9.246808052062988
+                            ],
+                            "rot": [
+                                0.9956156015396118,
+                                -1.0753582557754271e-07,
+                                -1.298370051472375e-07,
+                                -0.09353875368833542
+                            ],
+                            "scale": [
+                                8.762725830078125,
+                                3.1628684997558594,
+                                6.782642841339111
+                            ]
+                        },
+                        "type": 0,
+                        "usage": 2
+                    },
+                    "id": "59419a29-9c47-48ca-97fe-929f95e3a623",
+                    "name": "RigidBodyCubeComponent"
+                },
+                {
+                    "data": {
+                        "mat_ambient": 0.10000000149011612,
+                        "mat_diffuse": 0.800000011920929,
+                        "mat_specular": 0.5,
+                        "mat_specular_exp": 1.0,
+                        "mesh_path": "../Assets/box.fbx/Cube",
+                        "name": "StaticMeshRender",
+                        "normal_path": "",
+                        "texture_path": "",
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "510ece85-a29b-462e-be67-f000f55b9b5f",
+                    "name": "StaticMeshRenderer",
+                    "parent": "59419a29-9c47-48ca-97fe-929f95e3a623"
+                }
+            ],
+            "id": "6a40512e-a27c-4aab-a8f0-f34572c5f2ca",
+            "mono": {
+                "class": "Floor",
+                "namespace": "Scripts.BasicScene"
+            },
+            "name": "Copy of Copy of Actor31"
+        },
+        {
+            "components": [
+                {
+                    "data": {
+                        "mass": 1.0,
+                        "name": "RigidBodyCube",
+                        "need_physics": false,
+                        "physics_simulation": true,
+                        "shape_type": 0,
+                        "transform": {
+                            "pos": [
+                                -6.638323783874512,
+                                0.018329262733459473,
+                                0.501869797706604
+                            ],
+                            "rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                6.21999454498291,
+                                5.838266849517822,
+                                5.822465419769287
+                            ]
+                        },
+                        "type": 0,
+                        "usage": 2
+                    },
+                    "id": "e6c4b8f3-4b67-4e01-8075-9cd88bd835ac",
+                    "name": "RigidBodyCubeComponent"
+                },
+                {
+                    "data": {
+                        "mat_ambient": 0.10000000149011612,
+                        "mat_diffuse": 0.800000011920929,
+                        "mat_specular": 0.5,
+                        "mat_specular_exp": 1.0,
+                        "mesh_path": "../Assets/box.fbx/Cube",
+                        "name": "StaticMeshRender",
+                        "normal_path": "",
+                        "texture_path": "",
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "b12277e3-59df-4503-9a27-f15e3b9efc20",
+                    "name": "StaticMeshRenderer",
+                    "parent": "e6c4b8f3-4b67-4e01-8075-9cd88bd835ac"
+                }
+            ],
+            "id": "7e9d223b-4f7e-45b6-8366-8a52622dd20a",
+            "mono": {
+                "class": "Floor",
+                "namespace": "Scripts.BasicScene"
+            },
+            "name": ""
+        },
+        {
+            "components": [
+                {
+                    "data": {
+                        "mass": 1.0,
+                        "name": "RigidBodyCube",
+                        "need_physics": false,
+                        "physics_simulation": true,
+                        "shape_type": 0,
+                        "transform": {
+                            "pos": [
+                                -6.637206554412842,
+                                2.0023088455200195,
+                                5.4586052894592285
+                            ],
+                            "rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                4.9226250648498535,
+                                0.6509968638420105,
+                                4.808526992797852
+                            ]
+                        },
+                        "type": 0,
+                        "usage": 2
+                    },
+                    "id": "8063c56a-e646-4639-b8e7-054b94b5c11c",
+                    "name": "RigidBodyCubeComponent"
+                },
+                {
+                    "data": {
+                        "mat_ambient": 0.10000000149011612,
+                        "mat_diffuse": 0.800000011920929,
+                        "mat_specular": 0.5,
+                        "mat_specular_exp": 1.0,
+                        "mesh_path": "../Assets/box.fbx/Cube",
+                        "name": "StaticMeshRender",
+                        "normal_path": "",
+                        "texture_path": "",
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "7ffdae3d-b3c8-4c7d-be7f-17f0dfc99ef2",
+                    "name": "StaticMeshRenderer",
+                    "parent": "8063c56a-e646-4639-b8e7-054b94b5c11c"
+                }
+            ],
+            "id": "cb466509-ab42-4491-96d5-b75c6b10ab38",
+            "mono": {
+                "class": "Floor",
+                "namespace": "Scripts.BasicScene"
+            },
+            "name": ""
         }
     ],
     "dirlight": {
         "Intensity": 1.0,
         "color": [
-            0.4558139443397522,
-            0.6127419471740723,
             1.0,
+            0.0,
+            0.0,
             0.0
         ],
         "direction": [

@@ -12,12 +12,14 @@ using Path = std::filesystem::path;
 enum class AssetType
 {
 	Unspecified,
-	BehaviorTree
+	BehaviorTree,
+	Level
 };
 
 NLOHMANN_JSON_SERIALIZE_ENUM(AssetType, {
 	{AssetType::Unspecified, "Unspecified"},
-	{AssetType::BehaviorTree, "BehaviorTree"}
+	{AssetType::BehaviorTree, "BehaviorTree"},
+	{AssetType::Level, "Level"}
 })
 
 enum class DirectoryTreeNodeType

@@ -83,6 +83,7 @@ json Game::Serialize() const
 	}
 	out["actors"] = actorsArr;
 	out["dirlight"] = dr->Serialize();
+	out["AssetType"] = AssetType::Level;
 	return out;
 }
 

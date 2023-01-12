@@ -1,0 +1,112 @@
+{
+    "AssetType": "Level",
+    "actors": [
+        {
+            "components": [
+                {
+                    "data": {
+                        "mass": 1.0,
+                        "name": "RigidBodyCube",
+                        "need_physics": false,
+                        "physics_simulation": true,
+                        "shape_type": 0,
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                13.560815811157227,
+                                3.421860694885254,
+                                8.21596622467041
+                            ]
+                        },
+                        "type": 0,
+                        "usage": 2
+                    },
+                    "id": "15880237-c063-4649-bb00-4ce8ac7f0d03",
+                    "name": "RigidBodyCubeComponent"
+                },
+                {
+                    "data": {
+                        "mat_ambient": 0.10000000149011612,
+                        "mat_diffuse": 0.800000011920929,
+                        "mat_specular": 0.5,
+                        "mat_specular_exp": 1.0,
+                        "mesh_path": "../Assets/box.fbx/Cube",
+                        "name": "StaticMeshRender",
+                        "normal_path": "",
+                        "texture_path": "",
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "63b1ca0b-8728-4d15-879e-a0d734fe54a5",
+                    "name": "StaticMeshRenderer",
+                    "parent": "15880237-c063-4649-bb00-4ce8ac7f0d03"
+                }
+            ],
+            "id": "f3f2b65f-8b02-4633-b946-f4fc1599f881",
+            "mono": {
+                "class": "Floor",
+                "namespace": "Scripts.BasicScene"
+            },
+            "name": ""
+        }
+    ],
+    "dirlight": {
+        "Intensity": 1.0,
+        "color": [
+            1.0,
+            1.0,
+            1.0,
+            0.0
+        ],
+        "direction": [
+            0.0,
+            -0.9999999403953552,
+            -5.066394805908203e-07
+        ],
+        "name": "",
+        "transform": {
+            "pos": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rot": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        }
+    }
+}

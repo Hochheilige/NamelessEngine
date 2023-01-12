@@ -149,7 +149,7 @@ private:
 
 	std::vector<Path> OpenedFbxInspectorWindows;
 
-	char savepath[512]{"../Saves/game.json"};
+	Path currentLevel;
 	char tempsavepath[512]{"../Saves/gameTemp.json"};
 
 	bool isViewportFocused;

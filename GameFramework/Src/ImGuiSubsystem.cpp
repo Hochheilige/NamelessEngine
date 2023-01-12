@@ -253,29 +253,10 @@ auto ImGuiSubsystem::DrawToolbar() -> void
 
 			ImGui::SameLine();
 
-			if (ImGui::Button("Save"))
+			if (ImGui::Button("Save") && std::filesystem::exists(currentLevel))
 			{
-				Serializer::SaveToFile(savepath, Game::GetInstance());
+				Serializer::SaveToFile(currentLevel, Game::GetInstance());
 			}
-
-			/*ImGui::SameLine();
-
-			if (ImGui::Button("Load"))
-			{
-				Serializer::ReadFromFile(savepath, Game::GetInstance());
-			}*/
-
-			ImGui::SameLine();
-
-			if (ImGui::Button("Force Load"))
-			{
-				GetEditorContext().SetSelectedActor(nullptr);
-				Serializer::ReadFromFile(savepath, Game::GetInstance(), true);
-			}
-
-			ImGui::SameLine();
-
-			ImGui::InputTextWithHint("SaveFile", "Enter save file path", savepath, sizeof(savepath));
 
 			break;
 		case PlayState::Playing:
@@ -1265,6 +1246,29 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 								file << j.dump(4) << std::endl;
 								MyGame->GetAssetManager()->Initialize();
 							}
+							if (ImGui::MenuItem("Level"))
+							{
+								const Path basePath = MyGame->GetAssetManager()->GetProjectRootPath() / selectedDirectory->GetPathFromTreeRoot() / Path(L"Level");
+								int i = 0;
+								Path path;
+								while (true)
+								{
+									path = basePath;
+									path += Path(std::to_wstring(i));
+									path += Path(L".json");
+									if (!std::filesystem::exists(path))
+									{
+										break;
+									}
+									++i;
+								}
+								json j;
+								j["AssetType"] = AssetType::Level;
+								j["actors"] = json::array();
+								std::ofstream file(path);
+								file << j.dump(4) << std::endl;
+								MyGame->GetAssetManager()->Initialize();
+							}
 							ImGui::EndMenu();
 						}
 
@@ -1354,6 +1358,12 @@ auto ImGuiSubsystem::DrawAsset(const DirectoryTreeNode* file, const Vector2& ite
 		if (file->GetAssetType() == AssetType::BehaviorTree)
 		{
 			nodeEditorManager.OpenEditor(GetAssetManager()->GetProjectRootPath() / file->GetPathFromTreeRoot());
+		}
+		else if (file->GetAssetType() == AssetType::Level && MyGame->GetPlayState() == PlayState::Editor)
+		{
+			currentLevel = GetAssetManager()->GetProjectRootPath() / file->GetPathFromTreeRoot();
+			Serializer::ReadFromFile(currentLevel, Game::GetInstance(), true);
+			GetEditorContext().SetSelectedActor(nullptr);
 		}
 	}
 
