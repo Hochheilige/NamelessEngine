@@ -1246,30 +1246,30 @@ auto ImGuiSubsystem::DrawAssetBrowser() -> void
 								file << j.dump(4) << std::endl;
 								MyGame->GetAssetManager()->Initialize();
 							}
-							if (ImGui::MenuItem("Level"))
-							{
-								const Path basePath = MyGame->GetAssetManager()->GetProjectRootPath() / selectedDirectory->GetPathFromTreeRoot() / Path(L"Level");
-								int i = 0;
-								Path path;
-								while (true)
-								{
-									path = basePath;
-									path += Path(std::to_wstring(i));
-									path += Path(L".json");
-									if (!std::filesystem::exists(path))
-									{
-										break;
-									}
-									++i;
-								}
-								json j;
-								j["AssetType"] = AssetType::Level;
-								j["actors"] = json::array();
-								std::ofstream file(path);
-								file << j.dump(4) << std::endl;
-								MyGame->GetAssetManager()->Initialize();
-							}
 							ImGui::EndMenu();
+						}
+						if (ImGui::MenuItem("Level"))
+						{
+							const Path basePath = MyGame->GetAssetManager()->GetProjectRootPath() / selectedDirectory->GetPathFromTreeRoot() / Path(L"Level");
+							int i = 0;
+							Path path;
+							while (true)
+							{
+								path = basePath;
+								path += Path(std::to_wstring(i));
+								path += Path(L".json");
+								if (!std::filesystem::exists(path))
+								{
+									break;
+								}
+								++i;
+							}
+							json j;
+							j["AssetType"] = AssetType::Level;
+							j["actors"] = json::array();
+							std::ofstream file(path);
+							file << j.dump(4) << std::endl;
+							MyGame->GetAssetManager()->Initialize();
 						}
 
 						ImGui::EndPopup();
