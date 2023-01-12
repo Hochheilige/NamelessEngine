@@ -76,7 +76,7 @@ namespace Scripts.BehaviorTree
 
             if (comp == null) 
             {
-                comp = tree.GetRootComposite();
+                comp = tree.GetRootNode();
                 // starting from root - clear node data
                 perNodeData.Clear();
             }

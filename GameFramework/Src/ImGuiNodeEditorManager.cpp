@@ -1075,6 +1075,7 @@ auto ImGuiNodeEditorManager::Load(NodeEditorData& data) -> bool
 
 	}
 
+	BuildNodes(data);
 
 	data.editorData = save["EditorData"];
 

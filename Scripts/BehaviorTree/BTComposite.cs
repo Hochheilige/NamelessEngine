@@ -30,6 +30,12 @@ namespace Scripts.BehaviorTree
             child.isTaskNode = node is BTTask;
             children.Add(child);
         }
+
+        // for internal use only
+        public void SortChildren(Dictionary<BTNode, int> ordinals)
+        {
+            children = children.OrderBy(child => ordinals[child.childNode]).ToList();
+        }
     }
 
     public enum SpecialIndexValues

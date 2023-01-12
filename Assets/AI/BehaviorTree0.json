@@ -1,6 +1,6 @@
 {
     "AssetType": "BehaviorTree",
-    "EditorData": "{\"nodes\":{\"node:1\":{\"location\":{\"x\":4,\"y\":0}},\"node:11\":{\"location\":{\"x\":-188,\"y\":218}},\"node:15\":{\"location\":{\"x\":-284,\"y\":314}},\"node:18\":{\"location\":{\"x\":228,\"y\":218}},\"node:21\":{\"location\":{\"x\":20,\"y\":218}},\"node:3\":{\"location\":{\"x\":4,\"y\":96}}},\"selection\":null,\"view\":{\"scroll\":{\"x\":-487.20843505859375,\"y\":-84.916015625},\"visible_rect\":{\"max\":{\"x\":584.63323974609375,\"y\":495.267181396484375},\"min\":{\"x\":-389.766754150390625,\"y\":-67.9328155517578125}},\"zoom\":1.25}}",
+    "EditorData": "{\"nodes\":{\"node:1\":{\"location\":{\"x\":4,\"y\":0}},\"node:28\":{\"location\":{\"x\":-124,\"y\":218}},\"node:3\":{\"location\":{\"x\":4,\"y\":96}},\"node:31\":{\"location\":{\"x\":132,\"y\":218}}},\"selection\":null,\"view\":{\"scroll\":{\"x\":-401.92767333984375,\"y\":-43.0966453552246094},\"visible_rect\":{\"max\":{\"x\":536.7666015625,\"y\":737.8348388671875},\"min\":{\"x\":-449.3934326171875,\"y\":-48.1861572265625}},\"zoom\":0.894378125667572021}}",
     "TreeData": {
         "Links": [
             {
@@ -8,19 +8,11 @@
                 "StartPinID": 2
             },
             {
-                "EndPinID": 12,
+                "EndPinID": 29,
                 "StartPinID": 5
             },
             {
-                "EndPinID": 16,
-                "StartPinID": 13
-            },
-            {
-                "EndPinID": 19,
-                "StartPinID": 5
-            },
-            {
-                "EndPinID": 22,
+                "EndPinID": 32,
                 "StartPinID": 5
             }
         ],
@@ -56,27 +48,27 @@
                 "taskData": null
             },
             {
-                "ID": 11,
+                "ID": 28,
                 "Inputs": [
                     {
-                        "ID": 12
+                        "ID": 29
                     }
                 ],
-                "Kind": "Selector",
+                "Kind": "Task",
                 "Ordinal": 1,
-                "Outputs": [
-                    {
-                        "ID": 13
-                    }
-                ],
+                "Outputs": null,
                 "Type": "Tree",
-                "taskData": null
+                "taskData": {
+                    "Name": "BTTask_Wait",
+                    "Namespace": "Scripts.BehaviorTree",
+                    "Properties": []
+                }
             },
             {
-                "ID": 15,
+                "ID": 31,
                 "Inputs": [
                     {
-                        "ID": 16
+                        "ID": 32
                     }
                 ],
                 "Kind": "Task",
@@ -84,41 +76,7 @@
                 "Outputs": null,
                 "Type": "Tree",
                 "taskData": {
-                    "Name": "BTTask_Wait",
-                    "Namespace": "Scripts.BehaviorTree",
-                    "Properties": []
-                }
-            },
-            {
-                "ID": 18,
-                "Inputs": [
-                    {
-                        "ID": 19
-                    }
-                ],
-                "Kind": "Task",
-                "Ordinal": 4,
-                "Outputs": null,
-                "Type": "Tree",
-                "taskData": {
                     "Name": "BTTask_RandomMove",
-                    "Namespace": "Scripts.BehaviorTree",
-                    "Properties": []
-                }
-            },
-            {
-                "ID": 21,
-                "Inputs": [
-                    {
-                        "ID": 22
-                    }
-                ],
-                "Kind": "Task",
-                "Ordinal": 3,
-                "Outputs": null,
-                "Type": "Tree",
-                "taskData": {
-                    "Name": "BTTask_Wait",
                     "Namespace": "Scripts.BehaviorTree",
                     "Properties": []
                 }

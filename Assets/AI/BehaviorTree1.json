@@ -1,0 +1,149 @@
+{
+    "AssetType": "BehaviorTree",
+    "EditorData": "{\"nodes\":{\"node:1\":{\"location\":{\"x\":0,\"y\":0}},\"node:11\":{\"location\":{\"x\":-300,\"y\":314}},\"node:14\":{\"location\":{\"x\":-99,\"y\":314}},\"node:17\":{\"location\":{\"x\":68,\"y\":218}},\"node:20\":{\"location\":{\"x\":276,\"y\":218}},\"node:3\":{\"location\":{\"x\":4,\"y\":112}},\"node:7\":{\"location\":{\"x\":-140,\"y\":218}}},\"selection\":null,\"view\":{\"scroll\":{\"x\":-533.3497314453125,\"y\":-56.9705619812011719},\"visible_rect\":{\"max\":{\"x\":684.6502685546875,\"y\":647.0294189453125},\"min\":{\"x\":-533.3497314453125,\"y\":-56.9705619812011719}},\"zoom\":1}}",
+    "TreeData": {
+        "Links": [
+            {
+                "EndPinID": 4,
+                "StartPinID": 2
+            },
+            {
+                "EndPinID": 8,
+                "StartPinID": 5
+            },
+            {
+                "EndPinID": 12,
+                "StartPinID": 9
+            },
+            {
+                "EndPinID": 15,
+                "StartPinID": 9
+            },
+            {
+                "EndPinID": 18,
+                "StartPinID": 5
+            },
+            {
+                "EndPinID": 21,
+                "StartPinID": 5
+            }
+        ],
+        "Nodes": [
+            {
+                "ID": 1,
+                "Inputs": null,
+                "Kind": "Root",
+                "Ordinal": -1,
+                "Outputs": [
+                    {
+                        "ID": 2
+                    }
+                ],
+                "Type": "Tree",
+                "taskData": null
+            },
+            {
+                "ID": 3,
+                "Inputs": [
+                    {
+                        "ID": 4
+                    }
+                ],
+                "Kind": "Sequence",
+                "Ordinal": 0,
+                "Outputs": [
+                    {
+                        "ID": 5
+                    }
+                ],
+                "Type": "Tree",
+                "taskData": null
+            },
+            {
+                "ID": 7,
+                "Inputs": [
+                    {
+                        "ID": 8
+                    }
+                ],
+                "Kind": "Selector",
+                "Ordinal": 1,
+                "Outputs": [
+                    {
+                        "ID": 9
+                    }
+                ],
+                "Type": "Tree",
+                "taskData": null
+            },
+            {
+                "ID": 11,
+                "Inputs": [
+                    {
+                        "ID": 12
+                    }
+                ],
+                "Kind": "Task",
+                "Ordinal": 2,
+                "Outputs": null,
+                "Type": "Tree",
+                "taskData": {
+                    "Name": "BTTask_IsFarFromPlayer",
+                    "Namespace": "Scripts.BehaviorTree",
+                    "Properties": []
+                }
+            },
+            {
+                "ID": 14,
+                "Inputs": [
+                    {
+                        "ID": 15
+                    }
+                ],
+                "Kind": "Task",
+                "Ordinal": 3,
+                "Outputs": null,
+                "Type": "Tree",
+                "taskData": {
+                    "Name": "BTTask_MoveAwayFromPlayer",
+                    "Namespace": "Scripts.BehaviorTree",
+                    "Properties": []
+                }
+            },
+            {
+                "ID": 17,
+                "Inputs": [
+                    {
+                        "ID": 18
+                    }
+                ],
+                "Kind": "Task",
+                "Ordinal": 4,
+                "Outputs": null,
+                "Type": "Tree",
+                "taskData": {
+                    "Name": "BTTask_Wait",
+                    "Namespace": "Scripts.BehaviorTree",
+                    "Properties": []
+                }
+            },
+            {
+                "ID": 20,
+                "Inputs": [
+                    {
+                        "ID": 21
+                    }
+                ],
+                "Kind": "Task",
+                "Ordinal": 5,
+                "Outputs": null,
+                "Type": "Tree",
+                "taskData": {
+                    "Name": "BTTask_RandomMove",
+                    "Namespace": "Scripts.BehaviorTree",
+                    "Properties": []
+                }
+            }
+        ]
+    }
+}

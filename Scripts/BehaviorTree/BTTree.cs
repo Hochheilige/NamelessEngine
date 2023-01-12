@@ -1,6 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,17 +12,123 @@ namespace Scripts.BehaviorTree
 {
     public class BTTree
     {
-        // not the root node per se, but the only child that a root node might have
-        private BTComposite root = null;
+        public BTTree()
+        {
 
-        public BTComposite GetRootComposite()
+        }
+
+        public BTTree(string path)
+        {
+            if (!File.Exists(path))
+                return;
+
+            JObject data = JObject.Parse(File.ReadAllText(path));
+
+            JObject treeData = data["TreeData"] as JObject;
+
+            JArray nodes = treeData["Nodes"] as JArray;
+            JArray links = treeData["Links"] as JArray;
+
+            List<KeyValuePair<JObject, BTNode>> nodeDatas = new List<KeyValuePair<JObject, BTNode>>();
+
+            Dictionary<BTNode, int> nodeTOrdinalMap = new Dictionary<BTNode, int>();
+
+            // Create all nodes
+            foreach (JObject jnode in nodes)
+            {
+                string nodeKind = (string)jnode["Kind"];
+                int ordinal = (int) jnode["Ordinal"];
+                // skip unconnected nodes
+                if (ordinal == -1 && nodeKind != "Root")
+                    continue;
+                BTNode newNode = null;
+                if (nodeKind == "Root")
+                {
+                    newNode = this.root;
+                }
+                else if (nodeKind == "Sequence")
+                {
+                    newNode = new BTSequence();
+                }
+                else if (nodeKind == "Selector")
+                {
+                    newNode = new BTSelector();
+                }
+                else if (nodeKind == "Task")
+                {
+                    string objectToInstantiate = (string)jnode["taskData"]["Namespace"] + "." + (string)jnode["taskData"]["Name"] + ", " + Assembly.GetAssembly(typeof(BTNode));
+                    var objectType = Type.GetType(objectToInstantiate);
+                    newNode = Activator.CreateInstance(objectType) as BTNode;
+                }
+                    
+                KeyValuePair<JObject, BTNode> nodeData = new KeyValuePair<JObject, BTNode>(jnode, newNode);
+                nodeDatas.Add(nodeData);
+
+                nodeTOrdinalMap.Add(newNode, ordinal);
+            }
+
+            // Connect the nodes using links data
+            foreach (JObject link in links)
+            {
+                ulong startPinId = (ulong)link["StartPinID"];
+                ulong endPinId = (ulong)link["EndPinID"];
+
+                // find node with start pin id
+                KeyValuePair<JObject, BTNode> startNode =  nodeDatas.Find( nd => {
+                    JArray outputs = nd.Key["Outputs"] as JArray;
+                    if (outputs == null)
+                        return false;
+                    foreach (JObject outPin in outputs)
+                    {
+                        if ((ulong)outPin["ID"] == startPinId)
+                            return true;
+                    }
+                    return false;
+                });
+                // find node with end pin id
+                 KeyValuePair<JObject, BTNode> endNode =  nodeDatas.Find( nd => {
+                    JArray inputs = nd.Key["Inputs"] as JArray;
+                    if (inputs == null)
+                        return false;
+                    foreach (JObject inPin in inputs)
+                    {
+                        if((ulong)inPin["ID"] == endPinId)
+                            return true;
+                    }
+                    return false;
+                });
+                // if a start node is not composite then smth is wrong
+                (startNode.Value as BTComposite).AddChild(endNode.Value);
+            }
+
+            // sort each node's children by ordinals
+            foreach (var nd in nodeDatas)
+            {
+                BTComposite comp = nd.Value as BTComposite;
+                if (comp != null)
+                {
+                    comp.SortChildren(nodeTOrdinalMap);
+                }
+            }
+        }
+
+        // hack: use a sequence with one child as root
+        private BTSequence root = new BTSequence();
+
+        public BTNode GetChildOfRoot()
+        {
+            return root.GetChildCount() > 0 ? root.GetChildAt(0).childNode : null;
+        }
+
+        // for internal use only!!!!
+        public BTComposite GetRootNode()
         {
             return root;
         }
 
         public void SetRoot(BTComposite root)
         {
-            this.root = root;
+            this.root.AddChild(root);
         }
     }
 }
