@@ -1079,7 +1079,14 @@ auto ImGuiNodeEditorManager::Load(NodeEditorData& data) -> bool
 		{
 			uintptr_t inPinId = jn["Inputs"][0]["ID"];
 			if (inPinId > maxId) maxId = inPinId;
-			node = &SpawnTaskNode(data, jn["taskData"], id, inPinId);
+			json taskData = jn["taskData"];
+			std::string taskName = taskData["Name"];
+			auto iter = std::find_if(taskTypes.begin(), taskTypes.end(), [&taskName](const json& td) { return td["Name"] == taskName; });
+			if (iter != taskTypes.end())
+			{
+				taskData.update(*iter, true);
+			}
+			node = &SpawnTaskNode(data, taskData, id, inPinId);
 			break;
 		}
 		}
