@@ -264,16 +264,15 @@ auto ImGuiNodeEditorManager::SpawnTaskNode(NodeEditorData& nodeEditorData, const
 auto ImGuiNodeEditorManager::DrawBehaviorTreeEditorWindow(NodeEditorData& nodeEditorData) -> bool
 {
 	ImGui::SetNextWindowClass(GetImGuiSubsystem().GetTopLevelWindowClass());
-	ImGui::SetNextWindowSize(ImVec2(1000, 800));
+	ImGui::SetNextWindowSize(ImVec2(1000, 800), ImGuiCond_Once);
 	bool editorWindowOpen = ImGui::Begin(GenerateWindowName(nodeEditorData).c_str(), &nodeEditorData.shouldRemainOpen, 
 		nodeEditorData.isDirty ? ImGuiWindowFlags_UnsavedDocument : ImGuiWindowFlags_None);
 	DrawDockspace(nodeEditorData);
-	ImGui::End();
 
+	bool closing = false;
 	if (nodeEditorData.shouldRemainOpen == false)
 	{
 		// check for saves and close
-		bool closing = false;
 
 		if (nodeEditorData.isDirty)
 			ImGui::OpenPopup("Close?");
@@ -282,7 +281,7 @@ auto ImGuiNodeEditorManager::DrawBehaviorTreeEditorWindow(NodeEditorData& nodeEd
 			closing = true;
 		}
 
-		ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+		ImVec2 center = ImGui::GetWindowViewport()->GetCenter();
 		ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
 		if (ImGui::BeginPopupModal("Close?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 		{
@@ -295,17 +294,19 @@ auto ImGuiNodeEditorManager::DrawBehaviorTreeEditorWindow(NodeEditorData& nodeEd
 			if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); nodeEditorData.shouldRemainOpen = true; }
 			ImGui::EndPopup();
 		}
+	}
 
-		if (closing)
-		{
-			openEditors.erase(
-				std::remove_if(openEditors.begin(), openEditors.end(), [&nodeEditorData](const std::unique_ptr<NodeEditorData>& elem) 
-					{ 
-						return elem.get() == &nodeEditorData; 
-					}), 
-				openEditors.end());
-			return false;
-		}
+	ImGui::End();
+
+	if (closing)
+	{
+		openEditors.erase(
+			std::remove_if(openEditors.begin(), openEditors.end(), [&nodeEditorData](const std::unique_ptr<NodeEditorData>& elem)
+				{
+					return elem.get() == &nodeEditorData;
+				}),
+			openEditors.end());
+		return false;
 	}
 
 	if (!editorWindowOpen)
