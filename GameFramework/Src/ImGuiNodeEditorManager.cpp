@@ -462,7 +462,6 @@ auto ImGuiNodeEditorManager::DrawNodeEditorWindow(NodeEditorData& nodeEditorData
 
 			drawList->PopClipRect();
 		}
-		ned::SetCurrentEditor(nullptr);
 	}
 	ImGui::End();
 }
@@ -472,9 +471,33 @@ auto ImGuiNodeEditorManager::DrawDetailsWindow(NodeEditorData& nodeEditorData) -
 	ImGui::SetNextWindowClass(&nodeEditorData.windowClass);
 	if (ImGui::Begin(GenerateDetailsWindowName(nodeEditorData).c_str()))
 	{
+		ned::NodeId selectedNodeId;
+		if (ned::GetSelectedNodes(&selectedNodeId, 1) != 1)
+		{
+			goto end;
+		}
+		Node* node = FindNode(nodeEditorData, selectedNodeId);
+		if (node != nullptr && node->Kind == NodeKind::Task)
+		{
+			for (json& prop : node->taskData["Properties"])
+			{
+				std::string name = prop["Name"];
+				std::string type = prop["TypeName"];
 
+				if (type == "System.Single")
+				{
+					if (prop["Value"].empty())
+						prop["Value"] = 1.0f;
+					float value = prop["Value"];
+					if (ImGui::InputFloat(name.c_str(), &value))
+					{
+						prop["Value"] = value;
+					}
+				}
+			}
+		}
 	}
-	ImGui::End();
+	end:ImGui::End();
 }
 
 auto ImGuiNodeEditorManager::DrawToolbarWindow(NodeEditorData& nodeEditorData) -> void

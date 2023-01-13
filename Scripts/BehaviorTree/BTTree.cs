@@ -56,9 +56,19 @@ namespace Scripts.BehaviorTree
                 }
                 else if (nodeKind == "Task")
                 {
-                    string objectToInstantiate = (string)jnode["taskData"]["Namespace"] + "." + (string)jnode["taskData"]["Name"] + ", " + Assembly.GetAssembly(typeof(BTNode));
+                    string objectToInstantiate = (string)jnode["taskData"]["Namespace"] + "." + (string)jnode["taskData"]["Name"] + ", " + Assembly.GetAssembly(typeof(BTTask));
                     var objectType = Type.GetType(objectToInstantiate);
                     newNode = Activator.CreateInstance(objectType) as BTNode;
+
+                    foreach (JObject prop in jnode["taskData"]["Properties"])
+                    {
+                        PropertyInfo pi = newNode.GetType().GetProperty((string)prop["Name"]);
+                        if (pi != null)
+                        {
+                            var getJsonValue = typeof(JToken).GetMethod("Value").MakeGenericMethod(pi.PropertyType);
+                            pi.SetValue(newNode, getJsonValue.Invoke(prop, new object[]{"Value"}));
+                        }
+                    }
                 }
                     
                 KeyValuePair<JObject, BTNode> nodeData = new KeyValuePair<JObject, BTNode>(jnode, newNode);

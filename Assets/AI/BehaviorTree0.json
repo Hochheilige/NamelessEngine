@@ -1,6 +1,6 @@
 {
     "AssetType": "BehaviorTree",
-    "EditorData": "{\"nodes\":{\"node:1\":{\"location\":{\"x\":4,\"y\":0}},\"node:28\":{\"location\":{\"x\":-124,\"y\":218}},\"node:3\":{\"location\":{\"x\":4,\"y\":96}},\"node:31\":{\"location\":{\"x\":132,\"y\":218}}},\"selection\":null,\"view\":{\"scroll\":{\"x\":-401.92767333984375,\"y\":-43.0966453552246094},\"visible_rect\":{\"max\":{\"x\":536.7666015625,\"y\":737.8348388671875},\"min\":{\"x\":-449.3934326171875,\"y\":-48.1861572265625}},\"zoom\":0.894378125667572021}}",
+    "EditorData": "{\"nodes\":{\"node:1\":{\"location\":{\"x\":4,\"y\":0}},\"node:3\":{\"location\":{\"x\":4,\"y\":96}},\"node:31\":{\"location\":{\"x\":132,\"y\":218}},\"node:36\":{\"location\":{\"x\":-124,\"y\":218}}},\"selection\":[\"node:36\"],\"view\":{\"scroll\":{\"x\":-405.060394287109375,\"y\":-67.8236236572265625},\"visible_rect\":{\"max\":{\"x\":579.74639892578125,\"y\":772.09197998046875},\"min\":{\"x\":-492.373260498046875,\"y\":-82.443359375}},\"zoom\":0.822669327259063721}}",
     "TreeData": {
         "Links": [
             {
@@ -8,11 +8,11 @@
                 "StartPinID": 2
             },
             {
-                "EndPinID": 29,
+                "EndPinID": 32,
                 "StartPinID": 5
             },
             {
-                "EndPinID": 32,
+                "EndPinID": 37,
                 "StartPinID": 5
             }
         ],
@@ -48,23 +48,6 @@
                 "taskData": null
             },
             {
-                "ID": 28,
-                "Inputs": [
-                    {
-                        "ID": 29
-                    }
-                ],
-                "Kind": "Task",
-                "Ordinal": 1,
-                "Outputs": null,
-                "Type": "Tree",
-                "taskData": {
-                    "Name": "BTTask_Wait",
-                    "Namespace": "Scripts.BehaviorTree",
-                    "Properties": []
-                }
-            },
-            {
                 "ID": 31,
                 "Inputs": [
                     {
@@ -79,6 +62,29 @@
                     "Name": "BTTask_RandomMove",
                     "Namespace": "Scripts.BehaviorTree",
                     "Properties": []
+                }
+            },
+            {
+                "ID": 36,
+                "Inputs": [
+                    {
+                        "ID": 37
+                    }
+                ],
+                "Kind": "Task",
+                "Ordinal": 1,
+                "Outputs": null,
+                "Type": "Tree",
+                "taskData": {
+                    "Name": "BTTask_Wait",
+                    "Namespace": "Scripts.BehaviorTree",
+                    "Properties": [
+                        {
+                            "Name": "WaitTime",
+                            "TypeName": "System.Single",
+                            "Value": 2.0
+                        }
+                    ]
                 }
             }
         ]
