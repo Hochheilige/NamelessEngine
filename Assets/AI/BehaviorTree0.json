@@ -1,6 +1,6 @@
 {
     "AssetType": "BehaviorTree",
-    "EditorData": "{\"nodes\":{\"node:1\":{\"location\":{\"x\":4,\"y\":0}},\"node:3\":{\"location\":{\"x\":4,\"y\":96}},\"node:31\":{\"location\":{\"x\":132,\"y\":218}},\"node:36\":{\"location\":{\"x\":-124,\"y\":218}}},\"selection\":[\"node:36\"],\"view\":{\"scroll\":{\"x\":-405.060394287109375,\"y\":-67.8236236572265625},\"visible_rect\":{\"max\":{\"x\":579.74639892578125,\"y\":772.09197998046875},\"min\":{\"x\":-492.373260498046875,\"y\":-82.443359375}},\"zoom\":0.822669327259063721}}",
+    "EditorData": "{\"nodes\":{\"node:1\":{\"location\":{\"x\":4,\"y\":0}},\"node:3\":{\"location\":{\"x\":4,\"y\":96}},\"node:31\":{\"location\":{\"x\":132,\"y\":218}},\"node:36\":{\"location\":{\"x\":-124,\"y\":218}}},\"selection\":[\"node:31\"],\"view\":{\"scroll\":{\"x\":-405.06036376953125,\"y\":-67.8236236572265625},\"visible_rect\":{\"max\":{\"x\":579.7464599609375,\"y\":772.09197998046875},\"min\":{\"x\":-492.37322998046875,\"y\":-82.443359375}},\"zoom\":0.822669327259063721}}",
     "TreeData": {
         "Links": [
             {
@@ -61,7 +61,18 @@
                 "taskData": {
                     "Name": "BTTask_RandomMove",
                     "Namespace": "Scripts.BehaviorTree",
-                    "Properties": []
+                    "Properties": [
+                        {
+                            "Name": "moveTime",
+                            "TypeName": "System.Single",
+                            "Value": 1.0
+                        },
+                        {
+                            "Name": "radius",
+                            "TypeName": "System.Single",
+                            "Value": 1.0
+                        }
+                    ]
                 }
             },
             {
@@ -82,7 +93,7 @@
                         {
                             "Name": "WaitTime",
                             "TypeName": "System.Single",
-                            "Value": 2.0
+                            "Value": 1.0
                         }
                     ]
                 }

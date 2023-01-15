@@ -4,6 +4,20 @@
 #include <memory>
 #include "RecastInputMesh.h"
 #include "Recast.h"
+#include "MathInclude.h"
+#include "DetourNavMesh.h"
+
+static const int MAX_POLYS = 256;
+static const int MAX_SMOOTH = 2048;
+
+struct NavPath
+{
+	dtPolyRef m_polys[MAX_POLYS];
+	int m_npolys = 0;
+	float m_smoothPath[MAX_SMOOTH * 3];
+	int m_nsmoothPath = 0;
+
+};
 
 class RecastInputMesh;
 
@@ -23,6 +37,8 @@ public:
 	auto DrawDebugInputMesh() const -> void;
 
 	auto DrawDebugNavMesh() const -> void;
+
+	auto FindPath(const Vector3& startPos, const Vector3& endPos, NavPath& outPath) -> bool;
 
 	// settings that should be modified by gui
 public:
@@ -72,8 +88,4 @@ protected:
 	rcPolyMeshDetail* m_dmesh;
 	class dtNavMesh* m_navMesh;
 	class dtNavMeshQuery* m_navQuery = nullptr;
-
-
-
-
 };

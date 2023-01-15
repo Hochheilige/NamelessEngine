@@ -283,7 +283,6 @@
     <ClInclude Include="Include\Keyboard.h" />
     <ClInclude Include="Include\UUIDGenerator.h" />
     <ClInclude Include="Include\JsonSerializers.h" />
-    <ClInclude Include="MonoMovementComponentModule.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\imgui\backends\imgui_impl_dx11.cpp" />

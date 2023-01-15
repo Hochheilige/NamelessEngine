@@ -2456,20 +2456,20 @@
                         "shape_type": 0,
                         "transform": {
                             "pos": [
-                                4.868879318237305,
-                                -1.7089766263961792,
-                                9.246808052062988
+                                -6.841080188751221,
+                                -1.4290870428085327,
+                                12.594443321228027
                             ],
                             "rot": [
-                                0.9956156015396118,
-                                -1.0753582557754271e-07,
-                                -1.298370051472375e-07,
-                                -0.09353875368833542
+                                0.9795916676521301,
+                                -9.281552593165543e-08,
+                                -1.407365886052503e-07,
+                                -0.20099790394306183
                             ],
                             "scale": [
-                                8.762725830078125,
-                                3.1628684997558594,
-                                6.782642841339111
+                                4.684990406036377,
+                                3.1628692150115967,
+                                11.418929100036621
                             ]
                         },
                         "type": 0,
@@ -2666,6 +2666,228 @@
                 "namespace": "Scripts.BasicScene"
             },
             "name": ""
+        },
+        {
+            "components": [
+                {
+                    "data": {
+                        "mass": 1.0,
+                        "name": "RigidBodyCube",
+                        "need_physics": false,
+                        "physics_simulation": true,
+                        "shape_type": 0,
+                        "transform": {
+                            "pos": [
+                                8.370538711547852,
+                                0.10234951972961426,
+                                -1.281794548034668
+                            ],
+                            "rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                6.722878932952881,
+                                6.547868251800537,
+                                1.0
+                            ]
+                        },
+                        "type": 0,
+                        "usage": 2
+                    },
+                    "id": "0e13cf8e-5794-4940-a20f-9f39e0740bf0",
+                    "name": "RigidBodyCubeComponent"
+                },
+                {
+                    "data": {
+                        "mat_ambient": 0.10000000149011612,
+                        "mat_diffuse": 0.800000011920929,
+                        "mat_specular": 0.5,
+                        "mat_specular_exp": 1.0,
+                        "mesh_path": "../Assets/box.fbx/Cube",
+                        "name": "StaticMeshRender",
+                        "normal_path": "",
+                        "texture_path": "",
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "2e3453a5-2f70-48fd-a685-0df3f6d58881",
+                    "name": "StaticMeshRenderer",
+                    "parent": "0e13cf8e-5794-4940-a20f-9f39e0740bf0"
+                }
+            ],
+            "id": "3efc103d-694e-4563-aeaa-1cbd0bc41767",
+            "mono": {
+                "class": "Floor",
+                "namespace": "Scripts.BasicScene"
+            },
+            "name": ""
+        },
+        {
+            "components": [
+                {
+                    "data": {
+                        "mass": 1.0,
+                        "name": "RigidBodyCube",
+                        "need_physics": false,
+                        "physics_simulation": true,
+                        "shape_type": 0,
+                        "transform": {
+                            "pos": [
+                                9.173055648803711,
+                                0.10234951972961426,
+                                3.0201151371002197
+                            ],
+                            "rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                0.7224785685539246,
+                                6.547868251800537,
+                                6.603947639465332
+                            ]
+                        },
+                        "type": 0,
+                        "usage": 2
+                    },
+                    "id": "0e13cf8e-5794-4940-a20f-9f39e0740bf0",
+                    "name": "RigidBodyCubeComponent"
+                },
+                {
+                    "data": {
+                        "mat_ambient": 0.10000000149011612,
+                        "mat_diffuse": 0.800000011920929,
+                        "mat_specular": 0.5,
+                        "mat_specular_exp": 1.0,
+                        "mesh_path": "../Assets/box.fbx/Cube",
+                        "name": "StaticMeshRender",
+                        "normal_path": "",
+                        "texture_path": "",
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "2e3453a5-2f70-48fd-a685-0df3f6d58881",
+                    "name": "StaticMeshRenderer",
+                    "parent": "0e13cf8e-5794-4940-a20f-9f39e0740bf0"
+                }
+            ],
+            "id": "ecf8f5a3-242e-496e-bfe9-09adaaeda006",
+            "mono": {
+                "class": "Floor",
+                "namespace": "Scripts.BasicScene"
+            },
+            "name": "Copy of "
+        },
+        {
+            "components": [
+                {
+                    "data": {
+                        "mass": 1.0,
+                        "name": "RigidBodyCube",
+                        "need_physics": false,
+                        "physics_simulation": true,
+                        "shape_type": 0,
+                        "transform": {
+                            "pos": [
+                                -0.7826536893844604,
+                                -1.680509328842163,
+                                3.0201151371002197
+                            ],
+                            "rot": [
+                                -0.0,
+                                0.4082469940185547,
+                                -0.0,
+                                0.9128715395927429
+                            ],
+                            "scale": [
+                                0.7224786281585693,
+                                6.547868251800537,
+                                6.603949069976807
+                            ]
+                        },
+                        "type": 0,
+                        "usage": 2
+                    },
+                    "id": "0e13cf8e-5794-4940-a20f-9f39e0740bf0",
+                    "name": "RigidBodyCubeComponent"
+                },
+                {
+                    "data": {
+                        "mat_ambient": 0.10000000149011612,
+                        "mat_diffuse": 0.800000011920929,
+                        "mat_specular": 0.5,
+                        "mat_specular_exp": 1.0,
+                        "mesh_path": "../Assets/box.fbx/Cube",
+                        "name": "StaticMeshRender",
+                        "normal_path": "",
+                        "texture_path": "",
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "2e3453a5-2f70-48fd-a685-0df3f6d58881",
+                    "name": "StaticMeshRenderer",
+                    "parent": "0e13cf8e-5794-4940-a20f-9f39e0740bf0"
+                }
+            ],
+            "id": "f54e797f-7b4b-4df7-af08-a121a777cbd2",
+            "mono": {
+                "class": "Floor",
+                "namespace": "Scripts.BasicScene"
+            },
+            "name": "Copy of Copy of "
         }
     ],
     "dirlight": {

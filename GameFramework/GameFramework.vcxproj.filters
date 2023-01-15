@@ -165,9 +165,6 @@
     <ClInclude Include="Include\ComponentRegistry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MonoMovementComponentModule.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Include\MovementComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>

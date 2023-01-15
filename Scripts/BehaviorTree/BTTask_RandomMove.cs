@@ -11,7 +11,11 @@ namespace Scripts.BehaviorTree
     public class BTTask_RandomMove : BTTask
     {
 
-        public BTTask_RandomMove() { }
+        public BTTask_RandomMove() 
+        {
+            moveTime = 1.0f;
+            radius = 2.0f;
+        }
 
         public BTTask_RandomMove(float moveTime, float radius)
         {
@@ -19,8 +23,8 @@ namespace Scripts.BehaviorTree
             this.radius = radius;
         }
 
-        private float moveTime = 1.0f;
-        private float radius = 2.0f;
+        public float moveTime { get; private set; }
+        public float radius { get; private set; }
         public override object CreateMemoryObject()
         {
             return new BTTask_RandomMove_Memory();

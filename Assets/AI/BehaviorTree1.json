@@ -1,6 +1,6 @@
 {
     "AssetType": "BehaviorTree",
-    "EditorData": "{\"nodes\":{\"node:1\":{\"location\":{\"x\":0,\"y\":0}},\"node:11\":{\"location\":{\"x\":-300,\"y\":314}},\"node:14\":{\"location\":{\"x\":-99,\"y\":314}},\"node:17\":{\"location\":{\"x\":68,\"y\":218}},\"node:20\":{\"location\":{\"x\":276,\"y\":218}},\"node:3\":{\"location\":{\"x\":4,\"y\":112}},\"node:7\":{\"location\":{\"x\":-140,\"y\":218}}},\"selection\":null,\"view\":{\"scroll\":{\"x\":-533.3497314453125,\"y\":-56.9705619812011719},\"visible_rect\":{\"max\":{\"x\":684.6502685546875,\"y\":647.0294189453125},\"min\":{\"x\":-533.3497314453125,\"y\":-56.9705619812011719}},\"zoom\":1}}",
+    "EditorData": "{\"nodes\":{\"node:1\":{\"location\":{\"x\":0,\"y\":0}},\"node:11\":{\"location\":{\"x\":-300,\"y\":314}},\"node:14\":{\"location\":{\"x\":-99,\"y\":314}},\"node:17\":{\"location\":{\"x\":68,\"y\":218}},\"node:20\":{\"location\":{\"x\":276,\"y\":218}},\"node:3\":{\"location\":{\"x\":4,\"y\":112}},\"node:7\":{\"location\":{\"x\":-140,\"y\":218}}},\"selection\":null,\"view\":{\"scroll\":{\"x\":-306.663330078125,\"y\":-134.942123413085938},\"visible_rect\":{\"max\":{\"x\":505.32794189453125,\"y\":769.17901611328125},\"min\":{\"x\":-401.11529541015625,\"y\":-176.504150390625}},\"zoom\":0.764526605606079102}}",
     "TreeData": {
         "Links": [
             {
@@ -90,7 +90,13 @@
                 "taskData": {
                     "Name": "BTTask_IsFarFromPlayer",
                     "Namespace": "Scripts.BehaviorTree",
-                    "Properties": []
+                    "Properties": [
+                        {
+                            "Name": "FarEnoughDistance",
+                            "TypeName": "System.Single",
+                            "Value": 1.0
+                        }
+                    ]
                 }
             },
             {
@@ -124,7 +130,12 @@
                 "taskData": {
                     "Name": "BTTask_Wait",
                     "Namespace": "Scripts.BehaviorTree",
-                    "Properties": []
+                    "Properties": [
+                        {
+                            "Name": "WaitTime",
+                            "TypeName": "System.Single"
+                        }
+                    ]
                 }
             },
             {
@@ -141,7 +152,18 @@
                 "taskData": {
                     "Name": "BTTask_RandomMove",
                     "Namespace": "Scripts.BehaviorTree",
-                    "Properties": []
+                    "Properties": [
+                        {
+                            "Name": "moveTime",
+                            "TypeName": "System.Single",
+                            "Value": 1.0
+                        },
+                        {
+                            "Name": "radius",
+                            "TypeName": "System.Single",
+                            "Value": 2.5
+                        }
+                    ]
                 }
             }
         ]

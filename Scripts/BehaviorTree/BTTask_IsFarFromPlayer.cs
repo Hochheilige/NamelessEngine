@@ -11,14 +11,17 @@ namespace Scripts.BehaviorTree
 {
     public class BTTask_IsFarFromPlayer : BTTask
     {
-        public BTTask_IsFarFromPlayer() { }
+        public BTTask_IsFarFromPlayer()
+        {
+            FarEnoughDistance = 5.0f;
+        }
 
         public BTTask_IsFarFromPlayer(float farEnoughDistance)
         {
-            this.farEnoughDistance = farEnoughDistance;
+            FarEnoughDistance = farEnoughDistance;
         }
 
-        private float farEnoughDistance = 5.0f;
+        public float FarEnoughDistance { get; set; }
 
         public override TaskStateEnum Execute(BehaviorTreeComponent btComponent, object nodeMemory)
         {
@@ -28,7 +31,7 @@ namespace Scripts.BehaviorTree
 
             float dist = (playah.GetTransform().Position - myPos).Length();
 
-            return dist > farEnoughDistance ? TaskStateEnum.Succeded : TaskStateEnum.Failed;
+            return dist > FarEnoughDistance ? TaskStateEnum.Succeded : TaskStateEnum.Failed;
         }
     }
 }
