@@ -1,12 +1,10 @@
 #pragma once
 
-#include "Transform.h"
+#include "AssetManager.h"
 #include "../Actor.h"
 #include "../MonoSystem.h"
-#include "../RigidBodyComponent.h"
-#include "MovementComponent.h"
-#include "ComponentRegistry.h"
 #include "InputDevice.h"
+#include "Serializer.h"
 
 class MonoMasterModule
 {
@@ -14,6 +12,7 @@ public:
     MonoMasterModule()
     {
         mono_add_internal_call("Scripts.Internal.ExternalApi::IsMouseDown", &IsMouseDown);
+        mono_add_internal_call("Scripts.Engine.LevelLoader::LoadLevelInternal", &LoadLevel);
     }
 
 private:
@@ -21,5 +20,15 @@ private:
     {
         return Game::GetInstance()->GetInputDevice()->GetMouse()->IsDown(static_cast<Button>(button));
 
+    }
+    
+    static void LoadLevel(MonoObject* name)
+    {
+        auto filename = mono_string_to_utf8(mono_object_to_string(name, nullptr));
+        auto game = Game::GetInstance();
+        auto currentLevel = game->GetAssetManager()->GetProjectRootPath() / filename;
+        auto test = currentLevel.parent_path();
+        Serializer::ReadFromFile(currentLevel, game, true);
+        Game::GetInstance()->MyEditorContext.SetSelectedActor(nullptr);
     }
 };

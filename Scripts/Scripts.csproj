@@ -77,6 +77,7 @@
     <Compile Include="Engine\Meta\Meta.cs" />
     <Compile Include="Engine\Meta\MetaInfo.cs" />
     <Compile Include="Engine\Meta\MetaObject.cs" />
+    <Compile Include="Engine\LevelLoader.cs" />
     <Compile Include="Engine\Transform.cs" />
     <Compile Include="Extensions\ComponentHelper.cs" />
     <Compile Include="Tests\AITestActor.cs" />

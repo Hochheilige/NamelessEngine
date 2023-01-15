@@ -54,6 +54,11 @@ namespace Scripts
             return _instance;
         }
 
+        public void RemoveActor(Actor actor)
+        {
+            actors.Remove(actor);
+        }
+
         public IEnumerable<T> GetActorsOfClass<T>()
         {
             var objs = actors.Where(x => x.GetType() == typeof(T)).ToList();
@@ -104,10 +109,7 @@ namespace Scripts
         /**
          * Called upon each tick
          */
-        internal virtual void OnUpdate()
-        {
-           
-        }
+        internal virtual void OnUpdate() { }
 
         private string GetActorInheritors()
         {

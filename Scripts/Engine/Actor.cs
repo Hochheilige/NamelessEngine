@@ -139,6 +139,7 @@ namespace Scripts
 
         public void Dispose()
         {
+            Game.GetInstance().RemoveActor(this);
             //Components.ForEach(x => x.Dispose());
         }
 
