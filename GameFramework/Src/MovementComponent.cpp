@@ -49,11 +49,93 @@ auto MovementComponent::Init() -> void
 }
 
 auto MovementComponent::Update(float deltaTime) -> void {
-	btTransform bttr = ghostObject->getWorldTransform();
-	Transform tr = GetTransform();
-	tr.Position = { bttr.getOrigin().x(),bttr.getOrigin().y(), bttr.getOrigin().z() };
-	tr.Rotation = Quaternion(bttr.getRotation());
-	SceneComponent::SetTransform(tr);
+	// attempt to move along the NavPath
+	if (bIsFollowingNavPath)
+	{
+		float distanceMoved = 0.0f;
+		const float shouldMoveDistance = navPathMovementSpeed * deltaTime;
+		
+		Transform t = GetTransform();
+		while (distanceMoved < shouldMoveDistance && floor(curSmoothPathPosIndex) < navPath.m_nsmoothPath - 1)
+		{
+			size_t currIndex = static_cast<size_t>(floor(curSmoothPathPosIndex));
+			size_t nextIndex = static_cast<size_t>(ceil(curSmoothPathPosIndex));
+			if (nextIndex == currIndex) ++nextIndex;
+			double alpha = curSmoothPathPosIndex - currIndex;
+
+			float* currPathPosPtr = navPath.m_smoothPath + currIndex * 3;
+			float* nextPathPosPtr = navPath.m_smoothPath + nextIndex * 3;
+
+			Vector3 cpp{ currPathPosPtr[0], currPathPosPtr[1], currPathPosPtr[2] };
+			Vector3 npp{ nextPathPosPtr[0], nextPathPosPtr[1], nextPathPosPtr[2] };
+
+			Vector3 currentPos = Vector3::Lerp(cpp, npp, alpha);
+
+			const float segmentLength = (npp - cpp).Length();
+			if (segmentLength == 0.0f)
+			{
+				curSmoothPathPosIndex = nextIndex;
+				continue;
+			}
+			const float segmentTravelledDist = segmentLength * alpha;
+			const float segmentLeftDist = segmentLength - segmentTravelledDist;
+
+			float distToMoveThisStep = segmentLeftDist;
+			if (distToMoveThisStep > shouldMoveDistance - distanceMoved)
+			{
+				distToMoveThisStep = shouldMoveDistance - distanceMoved;
+			}
+
+			distanceMoved += distToMoveThisStep;
+			alpha = (segmentTravelledDist + distToMoveThisStep) / segmentLength;
+			t.Position = Vector3::Lerp(cpp, npp, alpha) + Vector3(0.0f, halfHeight, 0.0f);
+
+			if (abs(alpha - 1.0f) <= 0.01f)
+			{
+				curSmoothPathPosIndex = nextIndex;
+			}
+			else
+			{
+				curSmoothPathPosIndex = currIndex + alpha;
+			}
+		}
+
+		auto q = t.Rotation.GetQuaterion();
+
+		btController->getGhostObject()->setWorldTransform(btTransform(btQuaternion(q.x, q.y, q.z, q.w),
+			btVector3(t.Position.x, t.Position.y, t.Position.z)));
+
+		SceneComponent::SetTransform(t);
+
+		if (curSmoothPathPosIndex >= navPath.m_nsmoothPath - 1)
+		{
+			bIsFollowingNavPath = false;
+		}
+	}
+	else
+	{
+		btTransform bttr = ghostObject->getWorldTransform();
+		Transform tr = GetTransform();
+		tr.Position = { bttr.getOrigin().x(),bttr.getOrigin().y(), bttr.getOrigin().z() };
+		tr.Rotation = Quaternion(bttr.getRotation());
+		SceneComponent::SetTransform(tr);
+	}
+}
+
+auto MovementComponent::TryMoveTo(const Vector3& Position) -> bool
+{
+	if (RecastNavigationManager::GetInstance()->FindPath(GetTransform().Position, Position, navPath))
+	{
+		bIsFollowingNavPath = true;
+		curSmoothPathPosIndex = 0.0;
+		return true;
+	}
+	return false;
+}
+
+auto MovementComponent::StopMoveTo() -> void
+{
+	bIsFollowingNavPath = false;
 }
 
 ///btActionInterface interface

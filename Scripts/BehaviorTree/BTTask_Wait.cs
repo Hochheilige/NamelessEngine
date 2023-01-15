@@ -10,15 +10,16 @@ namespace Scripts.BehaviorTree
     public class BTTask_Wait : BTTask
     {
 
-        public BTTask_Wait() { }
+        public BTTask_Wait() {
+            WaitTime = 5.0f;
+        }
 
         public BTTask_Wait(float waitTime)
         {
-            this.waitTime = waitTime;
+            WaitTime = waitTime;
         }
 
-        private float waitTime = 5.0f;
-
+        public float WaitTime { get; set; }
         public override object CreateMemoryObject()
         {
             return new BTWait_Task_Memory();
@@ -26,7 +27,7 @@ namespace Scripts.BehaviorTree
 
         public override TaskStateEnum Execute(BehaviorTreeComponent btComponent, object nodeMemory)
         {
-            (nodeMemory as BTWait_Task_Memory).timeRemaining = waitTime;
+            (nodeMemory as BTWait_Task_Memory).timeRemaining = WaitTime;
 
             return TaskStateEnum.InProgress;
         }

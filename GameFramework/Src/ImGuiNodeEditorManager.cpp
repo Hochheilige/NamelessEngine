@@ -264,16 +264,15 @@ auto ImGuiNodeEditorManager::SpawnTaskNode(NodeEditorData& nodeEditorData, const
 auto ImGuiNodeEditorManager::DrawBehaviorTreeEditorWindow(NodeEditorData& nodeEditorData) -> bool
 {
 	ImGui::SetNextWindowClass(GetImGuiSubsystem().GetTopLevelWindowClass());
-	ImGui::SetNextWindowSize(ImVec2(1000, 800));
+	ImGui::SetNextWindowSize(ImVec2(1000, 800), ImGuiCond_Once);
 	bool editorWindowOpen = ImGui::Begin(GenerateWindowName(nodeEditorData).c_str(), &nodeEditorData.shouldRemainOpen, 
 		nodeEditorData.isDirty ? ImGuiWindowFlags_UnsavedDocument : ImGuiWindowFlags_None);
 	DrawDockspace(nodeEditorData);
-	ImGui::End();
 
+	bool closing = false;
 	if (nodeEditorData.shouldRemainOpen == false)
 	{
 		// check for saves and close
-		bool closing = false;
 
 		if (nodeEditorData.isDirty)
 			ImGui::OpenPopup("Close?");
@@ -282,7 +281,7 @@ auto ImGuiNodeEditorManager::DrawBehaviorTreeEditorWindow(NodeEditorData& nodeEd
 			closing = true;
 		}
 
-		ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+		ImVec2 center = ImGui::GetWindowViewport()->GetCenter();
 		ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
 		if (ImGui::BeginPopupModal("Close?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 		{
@@ -295,17 +294,19 @@ auto ImGuiNodeEditorManager::DrawBehaviorTreeEditorWindow(NodeEditorData& nodeEd
 			if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); nodeEditorData.shouldRemainOpen = true; }
 			ImGui::EndPopup();
 		}
+	}
 
-		if (closing)
-		{
-			openEditors.erase(
-				std::remove_if(openEditors.begin(), openEditors.end(), [&nodeEditorData](const std::unique_ptr<NodeEditorData>& elem) 
-					{ 
-						return elem.get() == &nodeEditorData; 
-					}), 
-				openEditors.end());
-			return false;
-		}
+	ImGui::End();
+
+	if (closing)
+	{
+		openEditors.erase(
+			std::remove_if(openEditors.begin(), openEditors.end(), [&nodeEditorData](const std::unique_ptr<NodeEditorData>& elem)
+				{
+					return elem.get() == &nodeEditorData;
+				}),
+			openEditors.end());
+		return false;
 	}
 
 	if (!editorWindowOpen)
@@ -461,7 +462,6 @@ auto ImGuiNodeEditorManager::DrawNodeEditorWindow(NodeEditorData& nodeEditorData
 
 			drawList->PopClipRect();
 		}
-		ned::SetCurrentEditor(nullptr);
 	}
 	ImGui::End();
 }
@@ -471,9 +471,75 @@ auto ImGuiNodeEditorManager::DrawDetailsWindow(NodeEditorData& nodeEditorData) -
 	ImGui::SetNextWindowClass(&nodeEditorData.windowClass);
 	if (ImGui::Begin(GenerateDetailsWindowName(nodeEditorData).c_str()))
 	{
+		ned::NodeId selectedNodeId;
+		if (ned::GetSelectedNodes(&selectedNodeId, 1) != 1)
+		{
+			goto end;
+		}
+		Node* node = FindNode(nodeEditorData, selectedNodeId);
+		if (node != nullptr && node->Kind == NodeKind::Task)
+		{
+			for (json& prop : node->taskData["Properties"])
+			{
+				std::string name = prop["Name"];
+				std::string type = prop["TypeName"];
 
+				if (type == "System.Single")
+				{
+					if (prop["Value"].empty())
+						prop["Value"] = 1.0f;
+					float value = prop["Value"];
+					if (ImGui::InputFloat(name.c_str(), &value))
+					{
+						prop["Value"] = value;
+					}
+				}
+				else if (type == "SharpDX.Vector3")
+				{
+					if (prop["Value"].empty())
+					{
+						prop["Value"]["X"] = 0.0f;
+						prop["Value"]["Y"] = 0.0f;
+						prop["Value"]["Z"] = 0.0f;
+					}
+					float value[3];
+					value[0] = prop["Value"]["X"];
+					value[1] = prop["Value"]["Y"];
+					value[2] = prop["Value"]["Z"];
+					if (ImGui::InputFloat3(name.c_str(), value))
+					{
+						prop["Value"]["X"] = value[0];
+						prop["Value"]["Y"] = value[1];
+						prop["Value"]["Z"] = value[2];
+					}
+				}
+				else if (type == "System.Boolean")
+				{
+					if (prop["Value"].empty())
+						prop["Value"] = false;
+					bool value = prop["Value"];
+					if (ImGui::Checkbox(name.c_str(), &value))
+					{
+						prop["Value"] = value;
+					}
+				}
+				else if (type == "System.String")
+				{
+					if (prop["Value"].empty())
+						prop["Value"] = "";
+					std::string val = prop["Value"];
+					char buffer[128];
+					strcpy_s<128>(buffer, val.c_str());
+					if (ImGui::InputText(name.c_str(), buffer, 127))
+					{
+						val = buffer;
+						prop["Value"] = val;
+					}
+				}
+			}
+		}
 	}
-	ImGui::End();
+	end:ImGui::End();
 }
 
 auto ImGuiNodeEditorManager::DrawToolbarWindow(NodeEditorData& nodeEditorData) -> void
@@ -1055,7 +1121,16 @@ auto ImGuiNodeEditorManager::Load(NodeEditorData& data) -> bool
 		{
 			uintptr_t inPinId = jn["Inputs"][0]["ID"];
 			if (inPinId > maxId) maxId = inPinId;
-			node = &SpawnTaskNode(data, jn["taskData"], id, inPinId);
+			json taskData = jn["taskData"];
+			std::string taskName = taskData["Name"];
+			auto iter = std::find_if(taskTypes.begin(), taskTypes.end(), [&taskName](const json& td) { return td["Name"] == taskName; });
+			/*if (iter != taskTypes.end())
+			{
+				std::string test = taskData.dump();
+				taskData.update(*iter, true);
+				std::string test2 = taskData.dump();
+			}*/
+			node = &SpawnTaskNode(data, taskData, id, inPinId);
 			break;
 		}
 		}

@@ -205,6 +205,10 @@ namespace Scripts
         private void ChangeState(bool isPlaying)
         {
             IsInPlayState = isPlaying;
+            if (isPlaying)
+            {
+                BehaviorTreeManager.Instance.ReloadOpenedTrees();
+            }
         }
     }
 }

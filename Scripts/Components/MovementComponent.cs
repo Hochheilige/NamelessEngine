@@ -34,6 +34,12 @@ namespace Scripts.Components
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern Vector3 InternalGetLinearVelocity(IntPtr handle);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern bool InternalMoveTo(IntPtr handle, Vector3 position);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void InternalStopMoveTo(IntPtr handle);
+
         public void Jump(Vector3 direction)
         {
             InternalJump(CppInstance, direction);
@@ -64,5 +70,14 @@ namespace Scripts.Components
             return InternalGetLinearVelocity(CppInstance);
         }
 
+        public bool MoveTo(Vector3 position)
+        {
+            return InternalMoveTo(CppInstance, position);
+        }
+
+        public void StopMoveTo()
+        {
+            InternalStopMoveTo(CppInstance);
+        }
     }
 }

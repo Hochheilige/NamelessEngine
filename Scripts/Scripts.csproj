@@ -42,8 +42,10 @@
   <ItemGroup>
     <Compile Include="BasicScene\Floor.cs" />
     <Compile Include="BehaviorTree\Action.cs" />
+    <Compile Include="BehaviorTree\BehaviorTreeManager.cs" />
     <Compile Include="BehaviorTree\BTTask_IsFarFromPlayer.cs" />
     <Compile Include="BehaviorTree\BTTask_MoveAwayFromPlayer.cs" />
+    <Compile Include="BehaviorTree\BTTask_MoveTo.cs" />
     <Compile Include="BehaviorTree\BTTask_RandomMove.cs" />
     <Compile Include="BehaviorTree\BTTask_Wait.cs" />
     <Compile Include="BehaviorTree\BTTree.cs" />

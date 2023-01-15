@@ -4,6 +4,8 @@
 #include "btBulletDynamicsCommon.h"
 #include "MonoMovementComponent.h"
 
+#include "RecastNavigationManager.h"
+
 class btGhostObject;
 class btPairCachingGhostObject;
 
@@ -122,6 +124,10 @@ public:
 
 	virtual void OnDeserializationCompleted() override;
 
+	auto TryMoveTo(const Vector3& Position) -> bool;
+
+	auto StopMoveTo() -> void;
+
 private:
 	//character capsule shape ??
 	btScalar capsuleRadius = .6f;
@@ -134,5 +140,13 @@ private:
 	Vector3 up = { 0.0f, 1.0f, 0.0f };
 
 	MonoMovementComponent* mMonoComponent = new MonoMovementComponent;
+
+	NavPath navPath;
+
+
+	float navPathMovementSpeed = 8.0f;
+	auto GetNextNavPathPosition(float deltaTime) -> Vector3;
+	double curSmoothPathPosIndex = 0.0;
+	bool bIsFollowingNavPath = false;
 };
 

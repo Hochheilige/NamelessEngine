@@ -585,6 +585,7 @@ auto Game::StartPlay() -> void
 		tempGameSave = Serializer::Serialize(this);
 		mPlayState = PlayState::Playing;
 		OnBeginPlay();
+		recastNavigationManager->GenerateNavMesh();
 		SetUseEditorCamera(false);
 	}
 }

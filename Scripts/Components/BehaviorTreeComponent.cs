@@ -34,5 +34,7 @@ namespace Scripts.Components
         {
             executor.StopInProgressTask(task, result);
         }
+
+        public Dictionary<string, object> blackboard = new Dictionary<string, object>();
     }
 }

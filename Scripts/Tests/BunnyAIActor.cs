@@ -19,8 +19,7 @@ namespace Scripts.Tests
 
             btComp = new BehaviorTreeComponent(this);
 
-            BTTree tree = new BTTree("../Assets/AI/BehaviorTree1.json");
-            btComp.SetBTTree(tree);
+            btComp.SetBTTree(BehaviorTreeManager.Instance.GetTree("../Assets/AI/BehaviorTree1.json"));
 
             //BTSequence sequence = new BTSequence();
             //tree.SetRoot(sequence);
