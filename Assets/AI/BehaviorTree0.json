@@ -1,6 +1,6 @@
 {
     "AssetType": "BehaviorTree",
-    "EditorData": "{\"nodes\":{\"node:1\":{\"location\":{\"x\":4,\"y\":0}},\"node:3\":{\"location\":{\"x\":4,\"y\":96}},\"node:31\":{\"location\":{\"x\":132,\"y\":218}},\"node:36\":{\"location\":{\"x\":-124,\"y\":218}}},\"selection\":[\"node:31\"],\"view\":{\"scroll\":{\"x\":-405.06036376953125,\"y\":-67.8236236572265625},\"visible_rect\":{\"max\":{\"x\":579.7464599609375,\"y\":772.09197998046875},\"min\":{\"x\":-492.37322998046875,\"y\":-82.443359375}},\"zoom\":0.822669327259063721}}",
+    "EditorData": "{\"nodes\":{\"node:1\":{\"location\":{\"x\":4,\"y\":0}},\"node:3\":{\"location\":{\"x\":4,\"y\":96}},\"node:31\":{\"location\":{\"x\":4,\"y\":218}},\"node:36\":{\"location\":{\"x\":-220,\"y\":202}},\"node:41\":{\"location\":{\"x\":212,\"y\":218}}},\"selection\":[\"node:31\"],\"view\":{\"scroll\":{\"x\":-136.9998779296875,\"y\":-34.3938407897949219},\"visible_rect\":{\"max\":{\"x\":539.95941162109375,\"y\":484.590789794921875},\"min\":{\"x\":-99.2944488525390625,\"y\":-24.927886962890625}},\"zoom\":1.37973356246948242}}",
     "TreeData": {
         "Links": [
             {
@@ -13,6 +13,10 @@
             },
             {
                 "EndPinID": 37,
+                "StartPinID": 5
+            },
+            {
+                "EndPinID": 42,
                 "StartPinID": 5
             }
         ],
@@ -65,12 +69,12 @@
                         {
                             "Name": "moveTime",
                             "TypeName": "System.Single",
-                            "Value": 1.0
+                            "Value": 2.4000000953674316
                         },
                         {
                             "Name": "radius",
                             "TypeName": "System.Single",
-                            "Value": 1.0
+                            "Value": 5.0
                         }
                     ]
                 }
@@ -94,6 +98,50 @@
                             "Name": "WaitTime",
                             "TypeName": "System.Single",
                             "Value": 1.0
+                        }
+                    ]
+                }
+            },
+            {
+                "ID": 41,
+                "Inputs": [
+                    {
+                        "ID": 42
+                    }
+                ],
+                "Kind": "Task",
+                "Ordinal": 3,
+                "Outputs": null,
+                "Type": "Tree",
+                "taskData": {
+                    "Name": "BTTask_MoveTo",
+                    "Namespace": "Scripts.BehaviorTree",
+                    "Properties": [
+                        {
+                            "Name": "Position",
+                            "TypeName": "SharpDX.Vector3",
+                            "Value": {
+                                "IsNormalized": false,
+                                "IsZero": false,
+                                "X": 0.0,
+                                "Y": 1.0,
+                                "Z": 0.0
+                            }
+                        },
+                        {
+                            "Name": "UseBlackboardValue",
+                            "TypeName": "System.Boolean",
+                            "Value": false
+                        },
+                        {
+                            "Name": "BlackboardKey",
+                            "TypeName": "System.String",
+                            "Value": ""
+                        },
+                        {
+                            "Name": "AcceptanceRadius",
+                            "TypeName": "System.Single",
+                            "Value": 0.10000000149011612
                         }
                     ]
                 }

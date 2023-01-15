@@ -494,6 +494,48 @@ auto ImGuiNodeEditorManager::DrawDetailsWindow(NodeEditorData& nodeEditorData) -
 						prop["Value"] = value;
 					}
 				}
+				else if (type == "SharpDX.Vector3")
+				{
+					if (prop["Value"].empty())
+					{
+						prop["Value"]["X"] = 0.0f;
+						prop["Value"]["Y"] = 0.0f;
+						prop["Value"]["Z"] = 0.0f;
+					}
+					float value[3];
+					value[0] = prop["Value"]["X"];
+					value[1] = prop["Value"]["Y"];
+					value[2] = prop["Value"]["Z"];
+					if (ImGui::InputFloat3(name.c_str(), value))
+					{
+						prop["Value"]["X"] = value[0];
+						prop["Value"]["Y"] = value[1];
+						prop["Value"]["Z"] = value[2];
+					}
+				}
+				else if (type == "System.Boolean")
+				{
+					if (prop["Value"].empty())
+						prop["Value"] = false;
+					bool value = prop["Value"];
+					if (ImGui::Checkbox(name.c_str(), &value))
+					{
+						prop["Value"] = value;
+					}
+				}
+				else if (type == "System.String")
+				{
+					if (prop["Value"].empty())
+						prop["Value"] = "";
+					std::string val = prop["Value"];
+					char buffer[128];
+					strcpy_s<128>(buffer, val.c_str());
+					if (ImGui::InputText(name.c_str(), buffer, 127))
+					{
+						val = buffer;
+						prop["Value"] = val;
+					}
+				}
 			}
 		}
 	}
@@ -1082,10 +1124,12 @@ auto ImGuiNodeEditorManager::Load(NodeEditorData& data) -> bool
 			json taskData = jn["taskData"];
 			std::string taskName = taskData["Name"];
 			auto iter = std::find_if(taskTypes.begin(), taskTypes.end(), [&taskName](const json& td) { return td["Name"] == taskName; });
-			if (iter != taskTypes.end())
+			/*if (iter != taskTypes.end())
 			{
+				std::string test = taskData.dump();
 				taskData.update(*iter, true);
-			}
+				std::string test2 = taskData.dump();
+			}*/
 			node = &SpawnTaskNode(data, taskData, id, inPinId);
 			break;
 		}

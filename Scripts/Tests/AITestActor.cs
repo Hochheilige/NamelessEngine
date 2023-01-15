@@ -16,11 +16,12 @@ namespace Scripts.Tests
         RigidBodyComponent rigidbody;
         protected internal override void Init()
         {
-            rigidbody = AddComponent<RigidBodySphereComponent>("RigidBody");
-            rigidbody.SetType(RigidBodyType.Dynamic);
-            rigidbody.SetUsage(RigidBodyUsage.CollisionsAndPhysics);
-            rigidbody.SetCollisionShape(CollisionShape.Sphere);
-            rigidbody.SetMass(1);
+            AddComponent<MovementComponent>();
+            //rigidbody = AddComponent<RigidBodySphereComponent>("RigidBody");
+            //rigidbody.SetType(RigidBodyType.Dynamic);
+            //rigidbody.SetUsage(RigidBodyUsage.CollisionsAndPhysics);
+            //rigidbody.SetCollisionShape(CollisionShape.Sphere);
+            //rigidbody.SetMass(1);
             //rigidbody.EnablePhysicsSimulation();
 
             meshRenderer = AddComponent<StaticMeshRenderer>("Mesh Renderer");

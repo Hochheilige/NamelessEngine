@@ -124,7 +124,9 @@ public:
 
 	virtual void OnDeserializationCompleted() override;
 
-	auto TryMoveTo(const Vector3& Position) -> void;
+	auto TryMoveTo(const Vector3& Position) -> bool;
+
+	auto StopMoveTo() -> void;
 
 private:
 	//character capsule shape ??

@@ -122,13 +122,20 @@ auto MovementComponent::Update(float deltaTime) -> void {
 	}
 }
 
-auto MovementComponent::TryMoveTo(const Vector3& Position) -> void
+auto MovementComponent::TryMoveTo(const Vector3& Position) -> bool
 {
 	if (RecastNavigationManager::GetInstance()->FindPath(GetTransform().Position, Position, navPath))
 	{
 		bIsFollowingNavPath = true;
 		curSmoothPathPosIndex = 0.0;
+		return true;
 	}
+	return false;
+}
+
+auto MovementComponent::StopMoveTo() -> void
+{
+	bIsFollowingNavPath = false;
 }
 
 ///btActionInterface interface

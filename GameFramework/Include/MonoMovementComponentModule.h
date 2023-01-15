@@ -14,6 +14,7 @@ public:
         mono_add_internal_call("Scripts.Components.MovementComponent::InternalGetLinearVelocity", &GetLinearVelocity);
         mono_add_internal_call("Scripts.Components.MovementComponent::InternalCanJump", &CanJump);
         mono_add_internal_call("Scripts.Components.MovementComponent::InternalMoveTo", &MoveTo);
+        mono_add_internal_call("Scripts.Components.MovementComponent::InternalStopMoveTo", &StopMoveTo);
         
     }
 
@@ -30,5 +31,6 @@ private:
     static void setGravity(MovementComponent* component, Vector3 gravity) { component->setGravity(gravity); }
     static Vector3 GetLinearVelocity(MovementComponent* component) { return component->getLinearVelocity(); }
 
-	static void MoveTo(MovementComponent* component, Vector3 moveToPosition) { component->TryMoveTo(moveToPosition); }
+	static bool MoveTo(MovementComponent* component, Vector3 moveToPosition) { return component->TryMoveTo(moveToPosition); }
+	static void StopMoveTo(MovementComponent* component) { component->StopMoveTo(); }
 };

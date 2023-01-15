@@ -65,8 +65,18 @@ namespace Scripts.BehaviorTree
                         PropertyInfo pi = newNode.GetType().GetProperty((string)prop["Name"]);
                         if (pi != null)
                         {
-                            var getJsonValue = typeof(JToken).GetMethod("Value").MakeGenericMethod(pi.PropertyType);
-                            pi.SetValue(newNode, getJsonValue.Invoke(prop, new object[]{"Value"}));
+                            // todo: fixe this hack
+                            if (pi.PropertyType == typeof(SharpDX.Vector3))
+                            {
+                                string test = JsonConvert.SerializeObject(new SharpDX.Vector3(0.0f, 0.0f, 0.0f));
+                                SharpDX.Vector3 val = new SharpDX.Vector3((float)prop["Value"]["X"], (float)prop["Value"]["Y"], (float)prop["Value"]["Z"]);
+                                pi.SetValue(newNode, val);
+                            }
+                            else
+                            {
+                                var getJsonValue = typeof(JToken).GetMethod("Value").MakeGenericMethod(pi.PropertyType);
+                                pi.SetValue(newNode, getJsonValue.Invoke(prop, new object[]{"Value"}));
+                            }
                         }
                     }
                 }
