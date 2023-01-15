@@ -28,14 +28,13 @@ namespace Scripts.Tests
             meshRenderer.SetMeshPath("../Assets/box.fbx/Cube");
             btComp = new BehaviorTreeComponent(this);
 
-            BTTree tree = new BTTree("../Assets/AI/BehaviorTree0.json");
             //BTSequence sequence = new BTSequence();
             //tree.SetRoot(sequence);
             //BTTask_Wait wait = new BTTask_Wait();
             //sequence.AddChild(wait);
             //BTTask_RandomMove move = new BTTask_RandomMove();
             //sequence.AddChild(move);
-            btComp.SetBTTree(tree);
+            btComp.SetBTTree(BehaviorTreeManager.Instance.GetTree("../Assets/AI/BehaviorTree0.json"));
         }
 
         public override void Update(float deltaTime)

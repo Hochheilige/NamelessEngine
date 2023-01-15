@@ -19,8 +19,15 @@ namespace Scripts.BehaviorTree
 
         public BTTree(string path)
         {
+            InitWithPath(path);
+        }
+
+        public void InitWithPath(string path)
+        {
             if (!File.Exists(path))
                 return;
+
+            root = new BTSequence();
 
             JObject data = JObject.Parse(File.ReadAllText(path));
 
@@ -37,7 +44,7 @@ namespace Scripts.BehaviorTree
             foreach (JObject jnode in nodes)
             {
                 string nodeKind = (string)jnode["Kind"];
-                int ordinal = (int) jnode["Ordinal"];
+                int ordinal = (int)jnode["Ordinal"];
                 // skip unconnected nodes
                 if (ordinal == -1 && nodeKind != "Root")
                     continue;
@@ -75,12 +82,12 @@ namespace Scripts.BehaviorTree
                             else
                             {
                                 var getJsonValue = typeof(JToken).GetMethod("Value").MakeGenericMethod(pi.PropertyType);
-                                pi.SetValue(newNode, getJsonValue.Invoke(prop, new object[]{"Value"}));
+                                pi.SetValue(newNode, getJsonValue.Invoke(prop, new object[] { "Value" }));
                             }
                         }
                     }
                 }
-                    
+
                 KeyValuePair<JObject, BTNode> nodeData = new KeyValuePair<JObject, BTNode>(jnode, newNode);
                 nodeDatas.Add(nodeData);
 
@@ -94,7 +101,7 @@ namespace Scripts.BehaviorTree
                 ulong endPinId = (ulong)link["EndPinID"];
 
                 // find node with start pin id
-                KeyValuePair<JObject, BTNode> startNode =  nodeDatas.Find( nd => {
+                KeyValuePair<JObject, BTNode> startNode = nodeDatas.Find(nd => {
                     JArray outputs = nd.Key["Outputs"] as JArray;
                     if (outputs == null)
                         return false;
@@ -106,13 +113,13 @@ namespace Scripts.BehaviorTree
                     return false;
                 });
                 // find node with end pin id
-                 KeyValuePair<JObject, BTNode> endNode =  nodeDatas.Find( nd => {
+                KeyValuePair<JObject, BTNode> endNode = nodeDatas.Find(nd => {
                     JArray inputs = nd.Key["Inputs"] as JArray;
                     if (inputs == null)
                         return false;
                     foreach (JObject inPin in inputs)
                     {
-                        if((ulong)inPin["ID"] == endPinId)
+                        if ((ulong)inPin["ID"] == endPinId)
                             return true;
                     }
                     return false;
