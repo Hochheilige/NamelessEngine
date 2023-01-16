@@ -137,6 +137,11 @@ UUIDGenerator* Game::GetUuidGenerator() const
 	return this->uuidGenerator;
 }
 
+void Game::AddPendingFunction(std::function<void()>&& func)
+{
+	pendingFunctions.push_back(std::move(func));
+}
+
 void Game::Initialize()
 {
 	
@@ -375,6 +380,14 @@ ComPtr<ID3D11Buffer> Game::GetPerObjectConstantBuffer()
 
 void Game::UpdateInternal(float DeltaTime)
 {
+	std::vector<std::function<void()>> localPendingFunctions;
+	std::swap(localPendingFunctions, pendingFunctions);
+	
+	for(auto &func : localPendingFunctions)
+	{
+		func();
+	}
+	
 	for (GameComponent* gc : GameComponents)
 	{
 		if (gc != nullptr && gc->bShouldUpdate)

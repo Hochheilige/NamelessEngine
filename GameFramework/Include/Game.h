@@ -62,6 +62,8 @@ public:
 	template<class T>
 	friend auto CreateActor()->T*;
 
+	void AddPendingFunction(std::function<void()>&& func);
+	
 	// Called after the base sysyems have been initialized
 	virtual void Initialize();
 
@@ -242,7 +244,7 @@ private:
 
 	bool ExitRequested = false;
 
-	
+	std::vector<std::function<void()>> pendingFunctions; 
 
 	static Game* Instance;
 
