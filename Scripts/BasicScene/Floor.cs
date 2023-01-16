@@ -14,8 +14,7 @@ namespace Scripts.BasicScene
             cubeComponent.SetUsage(RigidBodyUsage.CollisionsAndPhysics);
             cubeComponent.SetCollisionShape(CollisionShape.Box);
             cubeComponent.SetType(RigidBodyType.Static);
-            cubeComponent.SetMass(1);
-            cubeComponent.SetGravity(0);
+            cubeComponent.SetMass(0);
             cubeComponent.EnablePhysicsSimulation();
             
             renderer = AddComponent<StaticMeshRenderer>("StaticMeshRender");
