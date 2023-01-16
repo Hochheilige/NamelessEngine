@@ -7,10 +7,9 @@ namespace Scripts.Engine
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void LoadLevelInternal(string levelName);
         
-        public static void LoadLevel(string levelName)
+        public static void LoadLevel(string levelPath)
         {
-            LoadLevelInternal(@"Assets\Levels\" + levelName);
-            //LoadLevelInternal(levelName);
+            LoadLevelInternal(levelPath);
         }
     }
 }
