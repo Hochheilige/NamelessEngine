@@ -47,6 +47,7 @@
     <Compile Include="BehaviorTree\BTTask_MoveAwayFromPlayer.cs" />
     <Compile Include="BehaviorTree\BTTask_MoveTo.cs" />
     <Compile Include="BehaviorTree\BTTask_RandomMove.cs" />
+    <Compile Include="BehaviorTree\BTTask_UpdateBlackboardWithPlayerPosition.cs" />
     <Compile Include="BehaviorTree\BTTask_Wait.cs" />
     <Compile Include="BehaviorTree\BTTree.cs" />
     <Compile Include="BehaviorTree\BehaviorTreeEditor.cs" />

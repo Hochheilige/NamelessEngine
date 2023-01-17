@@ -128,6 +128,8 @@ public:
 
 	auto StopMoveTo() -> void;
 
+	auto IsFollowingNavPath() const -> bool { return bIsFollowingNavPath; }
+
 private:
 	//character capsule shape ??
 	btScalar capsuleRadius = .6f;
@@ -148,5 +150,6 @@ private:
 	auto GetNextNavPathPosition(float deltaTime) -> Vector3;
 	double curSmoothPathPosIndex = 0.0;
 	bool bIsFollowingNavPath = false;
+	float yDelta = 0.0f;
 };
 

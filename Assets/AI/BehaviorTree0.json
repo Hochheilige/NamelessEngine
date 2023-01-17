@@ -1,6 +1,6 @@
 {
     "AssetType": "BehaviorTree",
-    "EditorData": "{\"nodes\":{\"node:1\":{\"location\":{\"x\":4,\"y\":0}},\"node:3\":{\"location\":{\"x\":4,\"y\":96}},\"node:31\":{\"location\":{\"x\":4,\"y\":218}},\"node:36\":{\"location\":{\"x\":-220,\"y\":202}},\"node:41\":{\"location\":{\"x\":212,\"y\":218}}},\"selection\":[\"node:36\"],\"view\":{\"scroll\":{\"x\":-263.403717041015625,\"y\":-41.2002105712890625},\"visible_rect\":{\"max\":{\"x\":448.344818115234375,\"y\":479.657745361328125},\"min\":{\"x\":-190.909133911132812,\"y\":-29.8609943389892578}},\"zoom\":1.37973344326019287}}",
+    "EditorData": "{\"nodes\":{\"node:1\":{\"location\":{\"x\":4,\"y\":0}},\"node:3\":{\"location\":{\"x\":4,\"y\":96}},\"node:36\":{\"location\":{\"x\":-236,\"y\":202}},\"node:41\":{\"location\":{\"x\":276,\"y\":202}},\"node:46\":{\"location\":{\"x\":-28,\"y\":202}}},\"selection\":[\"node:41\"],\"view\":{\"scroll\":{\"x\":-207.768463134765625,\"y\":-76.997802734375},\"visible_rect\":{\"max\":{\"x\":632.30877685546875,\"y\":861.33636474609375},\"min\":{\"x\":-277.024658203125,\"y\":-102.663749694824219}},\"zoom\":0.749999880790710449}}",
     "TreeData": {
         "Links": [
             {
@@ -8,15 +8,15 @@
                 "StartPinID": 2
             },
             {
-                "EndPinID": 32,
-                "StartPinID": 5
-            },
-            {
                 "EndPinID": 37,
                 "StartPinID": 5
             },
             {
                 "EndPinID": 42,
+                "StartPinID": 5
+            },
+            {
+                "EndPinID": 47,
                 "StartPinID": 5
             }
         ],
@@ -50,34 +50,6 @@
                 ],
                 "Type": "Tree",
                 "taskData": null
-            },
-            {
-                "ID": 31,
-                "Inputs": [
-                    {
-                        "ID": 32
-                    }
-                ],
-                "Kind": "Task",
-                "Ordinal": 2,
-                "Outputs": null,
-                "Type": "Tree",
-                "taskData": {
-                    "Name": "BTTask_RandomMove",
-                    "Namespace": "Scripts.BehaviorTree",
-                    "Properties": [
-                        {
-                            "Name": "moveTime",
-                            "TypeName": "System.Single",
-                            "Value": 2.4000000953674316
-                        },
-                        {
-                            "Name": "radius",
-                            "TypeName": "System.Single",
-                            "Value": 5.0
-                        }
-                    ]
-                }
             },
             {
                 "ID": 36,
@@ -131,17 +103,40 @@
                         {
                             "Name": "UseBlackboardValue",
                             "TypeName": "System.Boolean",
-                            "Value": false
+                            "Value": true
                         },
                         {
                             "Name": "BlackboardKey",
                             "TypeName": "System.String",
-                            "Value": ""
+                            "Value": "MoveToPos"
                         },
                         {
                             "Name": "AcceptanceRadius",
                             "TypeName": "System.Single",
-                            "Value": 0.10000000149011612
+                            "Value": 1.0
+                        }
+                    ]
+                }
+            },
+            {
+                "ID": 46,
+                "Inputs": [
+                    {
+                        "ID": 47
+                    }
+                ],
+                "Kind": "Task",
+                "Ordinal": 2,
+                "Outputs": null,
+                "Type": "Tree",
+                "taskData": {
+                    "Name": "BTTask_UpdateBlackboardWithPlayerPosition",
+                    "Namespace": "Scripts.BehaviorTree",
+                    "Properties": [
+                        {
+                            "Name": "BlackboardKey",
+                            "TypeName": "System.String",
+                            "Value": "MoveToPos"
                         }
                     ]
                 }

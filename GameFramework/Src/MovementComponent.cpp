@@ -88,7 +88,7 @@ auto MovementComponent::Update(float deltaTime) -> void {
 
 			distanceMoved += distToMoveThisStep;
 			alpha = (segmentTravelledDist + distToMoveThisStep) / segmentLength;
-			t.Position = Vector3::Lerp(cpp, npp, alpha) + Vector3(0.0f, halfHeight, 0.0f);
+			t.Position = Vector3::Lerp(cpp, npp, alpha) + Vector3(0.0f, yDelta, 0.0f);
 
 			if (abs(alpha - 1.0f) <= 0.01f)
 			{
@@ -128,6 +128,9 @@ auto MovementComponent::TryMoveTo(const Vector3& Position) -> bool
 	{
 		bIsFollowingNavPath = true;
 		curSmoothPathPosIndex = 0.0;
+		yDelta = abs(GetTransform().Position.y - navPath.m_smoothPath[1]);
+		if (yDelta > halfHeight)
+			yDelta = halfHeight;
 		return true;
 	}
 	return false;

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Scripts.BehaviorTree;
+using SharpDX;
 
 namespace Scripts.Tests
 {
@@ -13,33 +14,28 @@ namespace Scripts.Tests
 
         StaticMeshRenderer meshRenderer;
         BehaviorTreeComponent btComp;
-        RigidBodyComponent rigidbody;
+
         protected internal override void Init()
         {
             AddComponent<MovementComponent>();
-            //rigidbody = AddComponent<RigidBodySphereComponent>("RigidBody");
-            //rigidbody.SetType(RigidBodyType.Dynamic);
-            //rigidbody.SetUsage(RigidBodyUsage.CollisionsAndPhysics);
-            //rigidbody.SetCollisionShape(CollisionShape.Sphere);
-            //rigidbody.SetMass(1);
-            //rigidbody.EnablePhysicsSimulation();
 
             meshRenderer = AddComponent<StaticMeshRenderer>("Mesh Renderer");
             meshRenderer.SetMeshPath("../Assets/box.fbx/Cube");
-            btComp = new BehaviorTreeComponent(this);
 
-            //BTSequence sequence = new BTSequence();
-            //tree.SetRoot(sequence);
-            //BTTask_Wait wait = new BTTask_Wait();
-            //sequence.AddChild(wait);
-            //BTTask_RandomMove move = new BTTask_RandomMove();
-            //sequence.AddChild(move);
+            // Right now we need to create a component manually like this
+            btComp = new BehaviorTreeComponent(this);
             btComp.SetBTTree(BehaviorTreeManager.Instance.GetTree("../Assets/AI/BehaviorTree0.json"));
+
+            // we can set a blackboard value like this
+            // this values can be used by task nodes (like BTTask_MoveTo)
+            // some tasks may add/or update these blackboard values (like BTTask_UpdateBlackboardWithPlayerPosition)
+            btComp.blackboard["MoveToPos"] = new Vector3(0.0f, 0.0f, 0.0f);
         }
 
         public override void Update(float deltaTime)
         {
-            btComp.GetExecutor().Execute(deltaTime);
+            // Right now we need to call execute on btComponent maually to make it run the behavior tree
+            btComp.Execute(deltaTime);
         }
     }
 }
