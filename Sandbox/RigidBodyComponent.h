@@ -84,7 +84,7 @@ public:
 	json Serialize() const override;
 	void Deserialize(const json* in) override;
 
-	auto EnablePhysicsSimulation() -> void;
+	auto EnablePhysicsSimulation(const bool force = false) -> void;
 	auto DisablePhysicsSimulation() -> void;
 
 	static Component* Create()
@@ -112,14 +112,11 @@ protected:
 	RigidBodyType rbType;
 
 	bool isPhysicsSimulationEnabled = false;
-	bool simulationNeedsEnabling = false;
 
 public:
 	// todo: do we need this?
 	bool is_kinematic = false;
 
-
-	auto SetPhysicsSimulation() -> void;
 	auto applyCentralImpulse(const Vector3& impulse) -> void {
 		rigidBody.Body->applyCentralImpulse(btVector3(impulse.x, impulse.y, impulse.z));
 	}

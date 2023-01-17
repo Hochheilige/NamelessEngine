@@ -377,8 +377,7 @@ json RigidBodyComponent::Serialize() const
 
     json["mass"] = Mass;
     json["type"] = rbType;
-    json["physics_simulation"] = isPhysicsSimulationEnabled;
-    json["need_physics"] = simulationNeedsEnabling;
+	json["physics_simulation"] = isPhysicsSimulationEnabled;
     json["usage"] = Usage;
     json["shape_type"] = ShapeType;
 
@@ -387,6 +386,7 @@ json RigidBodyComponent::Serialize() const
 
 void RigidBodyComponent::Deserialize(const json* in)
 {
+	// todo: deinit here to allow an object to be overritten from json properly and not just initialized after creation as it's used now
     SetMass(in->at("mass").get<float>());
     SetRigidBodyType(in->at("type").get<RigidBodyType>());
     SetRigidBodyUsage(in->at("usage").get<RigidBodyUsage>());
@@ -396,20 +396,22 @@ void RigidBodyComponent::Deserialize(const json* in)
 
     Init();
 
-    simulationNeedsEnabling = in->at("need_physics");
-    isPhysicsSimulationEnabled = in->at("physics_simulation");
+	isPhysicsSimulationEnabled = in->at("physics_simulation");
 
-    
-     SetPhysicsSimulation();
-    
-    
+	if (isPhysicsSimulationEnabled) 
+	{
+		EnablePhysicsSimulation(true);
+	}
+	else
+	{
+		DisablePhysicsSimulation();
+	}
 }
 
-auto RigidBodyComponent::EnablePhysicsSimulation() -> void
+auto RigidBodyComponent::EnablePhysicsSimulation(const bool force) -> void
 {   
-
     if (!rigidBody.Body) Init();
-
+	if (!isPhysicsSimulationEnabled || force && rigidBody.Body != nullptr)
     {
         int before = PhysicsModuleData::GetInstance()->GetDynamicsWorld()->getNumCollisionObjects();
         PhysicsModuleData::GetInstance()->GetDynamicsWorld()->addRigidBody(rigidBody.Body);
@@ -431,14 +433,4 @@ auto RigidBodyComponent::DisablePhysicsSimulation() -> void
         int after = PhysicsModuleData::GetInstance()->GetDynamicsWorld()->getNumCollisionObjects();
         bool WasNOTDeleted = after == before;
     }
-}
-
-auto RigidBodyComponent::SetPhysicsSimulation() -> void
-{
-    if (isPhysicsSimulationEnabled) {
-        EnablePhysicsSimulation();
-    }
-        
-    else
-        DisablePhysicsSimulation();
 }
