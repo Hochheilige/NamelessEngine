@@ -834,6 +834,7 @@ auto ImGuiNodeEditorManager::TryCreateNewLink(NodeEditorData& nodeEditorData) ->
 
 auto ImGuiNodeEditorManager::TryDeleteNodesAndLinks(NodeEditorData& nodeEditorData) -> void
 {
+	bool deletedNode = false;
 	if (ned::BeginDelete())
 	{
 		ned::NodeId nodeId = 0;
@@ -849,6 +850,7 @@ auto ImGuiNodeEditorManager::TryDeleteNodesAndLinks(NodeEditorData& nodeEditorDa
 				auto iter = std::find_if(nodes.begin(), nodes.end(), [nodeId](auto& node) { return node.ID == nodeId; });
 				if (iter != nodes.end())
 					nodes.erase(iter);
+				deletedNode = true;
 			}
 		}
 
@@ -865,6 +867,10 @@ auto ImGuiNodeEditorManager::TryDeleteNodesAndLinks(NodeEditorData& nodeEditorDa
 		}
 	}
 	ned::EndDelete();
+	if (deletedNode)
+	{
+		BuildNodes(nodeEditorData);
+	}
 }
 
 auto ImGuiNodeEditorManager::DrawNodeContextMenuPopup(NodeEditorData& nodeEditorData) -> void
