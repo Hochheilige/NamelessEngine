@@ -8,6 +8,8 @@
 
 #include "MonoObjects/MonoPhysicsComponent.h"
 
+#include <memory>
+
 enum class RigidBodyType
 {
 	STATIC,
@@ -61,7 +63,7 @@ public:
 
 	void SetCollisionShapeType(CollisionShapeType type);
 
-	void SetCollisionShape(CollisionShapeType type, Vector3 scale);
+	void SetCollisionShape(CollisionShapeType type);
 
 	void SetLinearVelocity(btVector3 velocity);
 
@@ -93,7 +95,7 @@ public:
 	}
 
 protected:
-	btCollisionShape* Shape;
+	std::unique_ptr<btCollisionShape> Shape{};
 	btScalar Mass;
 	btTransform PhysicsTransform;
 
@@ -120,6 +122,12 @@ public:
 	auto applyCentralImpulse(const Vector3& impulse) -> void {
 		rigidBody.Body->applyCentralImpulse(btVector3(impulse.x, impulse.y, impulse.z));
 	}
+
+	auto Reinit() -> void;
+
+private:
+
+	auto Deinit() -> void;
 };
 
 

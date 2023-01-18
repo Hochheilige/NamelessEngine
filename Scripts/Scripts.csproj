@@ -67,8 +67,6 @@
     <Compile Include="Components\MeshRendererComponent.cs" />
     <Compile Include="Components\MovementComponent.cs" />
     <Compile Include="Components\RigidBodyComponent.cs" />
-    <Compile Include="Components\RigidBodyCubeComponent.cs" />
-    <Compile Include="Components\RigidBodySphereComponent.cs" />
     <Compile Include="Components\StaticMeshRenderer.cs" />
     <Compile Include="Engine\Actor.cs" />
     <Compile Include="Engine\ComponentsEnum.cs" />

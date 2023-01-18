@@ -8,7 +8,18 @@ RigidBodyComponent::RigidBodyComponent()
 
 RigidBodyComponent::~RigidBodyComponent()
 {
-    auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
+	Deinit();
+}
+
+auto RigidBodyComponent::Reinit() -> void
+{
+	Deinit();
+	Init();
+}
+
+auto RigidBodyComponent::Deinit() -> void
+{
+	auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
 	if (rigidBody.Collision != nullptr)
 	{
 		PhysicsModuleData::GetInstance()->RemoveGhostObject(rigidBody.Collision);
@@ -18,7 +29,6 @@ RigidBodyComponent::~RigidBodyComponent()
 	if (rigidBody.Body != nullptr)
 	{
 		world->removeRigidBody(rigidBody.Body);
-		delete rigidBody.Body->getCollisionShape();
 		delete rigidBody.Body->getMotionState();
 		delete rigidBody.Body;
 	}
@@ -38,13 +48,13 @@ void RigidBodyComponent::Init()
     {
     case RigidBodyUsage::PHYSICS:
     {
-        Shape = new btEmptyShape();
+        Shape.reset(new btEmptyShape());
         //physics->AddCollisionShape(Shape);
 
         btVector3 localInertia = btVector3(0, 0, 0);
 
         btDefaultMotionState* myMotionState = new btDefaultMotionState(PhysicsTransform);
-        btRigidBody::btRigidBodyConstructionInfo rbInfo(Mass, myMotionState, Shape, localInertia);
+        btRigidBody::btRigidBodyConstructionInfo rbInfo(Mass, myMotionState, Shape.get(), localInertia);
         rigidBody.Body = new btRigidBody(rbInfo);
         rigidBody.Body->setUserPointer(this);
 
@@ -57,7 +67,7 @@ void RigidBodyComponent::Init()
         rigidBody.Collision = new btGhostObject();
         CreateShape(transform.Scale);
 
-        rigidBody.Collision->setCollisionShape(Shape);
+        rigidBody.Collision->setCollisionShape(Shape.get());
         rigidBody.Collision->setWorldTransform(PhysicsTransform);
         rigidBody.Collision->setUserPointer(this);
         world->addCollisionObject(rigidBody.Collision);
@@ -77,7 +87,7 @@ void RigidBodyComponent::Init()
             Shape->calculateLocalInertia(Mass, localInertia);
 
         btDefaultMotionState* myMotionState = new btDefaultMotionState(PhysicsTransform);
-        btRigidBody::btRigidBodyConstructionInfo rbInfo(Mass, myMotionState, Shape, localInertia);
+        btRigidBody::btRigidBodyConstructionInfo rbInfo(Mass, myMotionState, Shape.get(), localInertia);
         rigidBody.Body = new btRigidBody(rbInfo);
         rigidBody.Body->setUserPointer(this);
 
@@ -96,7 +106,7 @@ btRigidBody* RigidBodyComponent::GetRigidBody()
 
 btCollisionShape* RigidBodyComponent::GetCollisionShape()
 {
-    return Shape;
+    return Shape.get();
 }
 
 btScalar RigidBodyComponent::GetMass()
@@ -175,27 +185,27 @@ void RigidBodyComponent::CreateShape(Vector3 scale)
     {
     case CollisionShapeType::BOX:
     {
-        Shape = new btBoxShape(btVector3(scale.x / 2, scale.y / 2, scale.z / 2));
+        Shape.reset(new btBoxShape(btVector3(scale.x / 2, scale.y / 2, scale.z / 2)));
         break;
     }
         
     case CollisionShapeType::SPHERE:
     {
-        Shape = new btSphereShape(scale.x);
+        Shape.reset(new btSphereShape(scale.x));
         break;
     }
     case CollisionShapeType::CAPSULE:
     {
-        Shape = new btCapsuleShape(scale.x, scale.y);
+        Shape.reset(new btCapsuleShape(scale.x, scale.y));
         break;
     }
     default:
-        Shape = new btEmptyShape();
+        Shape.reset(new btEmptyShape());
         break;
     }
 }
 
-void RigidBodyComponent::SetCollisionShape(CollisionShapeType type, Vector3 scale)
+void RigidBodyComponent::SetCollisionShape(CollisionShapeType type)
 {
     if (rigidBody.Body && Shape)
     {
@@ -203,13 +213,13 @@ void RigidBodyComponent::SetCollisionShape(CollisionShapeType type, Vector3 scal
             Usage = RigidBodyUsage::COLLISIONS_AND_PHYSICS;
 
         ShapeType = type;
-        CreateShape(scale);
+        CreateShape(GetTransform().Scale);
 
         auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
         if (isPhysicsSimulationEnabled)
             world->removeRigidBody(rigidBody.Body);
         btVector3 inertia;
-        rigidBody.Body->setCollisionShape(Shape);
+        rigidBody.Body->setCollisionShape(Shape.get());
         rigidBody.Body->getCollisionShape()->calculateLocalInertia(Mass, inertia);
         rigidBody.Body->setActivationState(DISABLE_DEACTIVATION);
         rigidBody.Body->setMassProps(Mass, inertia);
@@ -329,7 +339,7 @@ auto RigidBodyComponent::SetTransform(const Transform& InTransform, TeleportType
 
 		if (ShapeType == CollisionShapeType::BOX || ShapeType == CollisionShapeType::SPHERE || ShapeType == CollisionShapeType::CAPSULE)
 		{
-			btConvexInternalShape* castedShape = static_cast<btConvexInternalShape*>(Shape);
+			btConvexInternalShape* castedShape = static_cast<btConvexInternalShape*>(Shape.get());
 			Vector3 scale = InTransform.Scale;
 			if (ShapeType == CollisionShapeType::BOX)
 				scale /= 2;
@@ -356,18 +366,11 @@ ComponentType RigidBodyComponent::GetComponentType()
     switch (ShapeType)
     {
     case CollisionShapeType::BOX:
-        return RigidBodyCubeType;
-        break;
     case CollisionShapeType::SPHERE:
-        return RigidBodySphereType;
-        break;
     case CollisionShapeType::CAPSULE:
-        return Undefined;
-        break;
-    default:
-        break;
+        return RigidBodyComponentType;
     }
-	
+	return Undefined;
 }
 
 json RigidBodyComponent::Serialize() const
@@ -434,3 +437,5 @@ auto RigidBodyComponent::DisablePhysicsSimulation() -> void
         bool WasNOTDeleted = after == before;
     }
 }
+
+

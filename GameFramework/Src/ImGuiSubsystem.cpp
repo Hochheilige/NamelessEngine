@@ -742,8 +742,7 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 				DrawStaticMeshProperties();
 			}
 				break;
-			case RigidBodyCubeType:
-			case RigidBodySphereType:
+			case RigidBodyComponentType:
 				DrawRigidBodyProperties(actor);
 				break;
 			case LightPointType:

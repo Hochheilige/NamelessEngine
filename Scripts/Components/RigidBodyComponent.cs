@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using Scripts.Engine;
 using SharpDX;
 
 namespace Scripts.Components
@@ -55,7 +56,13 @@ namespace Scripts.Components
         private static extern void InternalSetCollisionShape(IntPtr handle, CollisionShape shape);
 
 
-        protected RigidBodyComponent(Actor owner, bool internalCreate = true) : base(owner) { }
+        public RigidBodyComponent(Actor owner, bool internalCreate = true) : base(owner) 
+        {
+            if (internalCreate)
+            {
+                this.CppInstance = InternalCreateComponent(owner.CppInstance, (int)ComponentType.RigidBodyType);
+            }
+        }
 
         public void SetMass(float mass)
         {

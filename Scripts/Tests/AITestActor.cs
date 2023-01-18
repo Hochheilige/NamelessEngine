@@ -17,7 +17,7 @@ namespace Scripts.Tests
 
         protected internal override void Init()
         {
-            AddComponent<MovementComponent>();
+            AddComponent<MovementComponent>("MovementComponent");
 
             meshRenderer = AddComponent<StaticMeshRenderer>("Mesh Renderer");
             meshRenderer.SetMeshPath("../Assets/box.fbx/Cube");

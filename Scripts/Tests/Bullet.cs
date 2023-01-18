@@ -29,7 +29,7 @@ namespace Scripts
         protected internal override void Init()
         {
             //rigidbody = (RigidBodyComponent)AddComponent(ComponentType.RigidBodyCubeType);
-            rigidbody = AddComponent<RigidBodySphereComponent>("RigidBodyComponent");
+            rigidbody = AddComponent<RigidBodyComponent>("RigidBodyComponent");
             rigidbody.SetType(RigidBodyType.Dynamic);
             rigidbody.SetUsage(RigidBodyUsage.CollisionsAndPhysics);
             rigidbody.SetCollisionShape(CollisionShape.Sphere);

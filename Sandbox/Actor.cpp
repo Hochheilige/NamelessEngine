@@ -242,6 +242,9 @@ void Actor::Deserialize(const json* in, bool destructive)
 
 		if(!exists) {
 			auto name = wrapper.at("name").get<std::string>();
+			// todo: remove this later
+			if (name == "RigidBodyCubeComponent" || name == "RigidBodySphereComponent")
+				name = "RigidBodyComponent";
 			Component* component = ComponentRegistry::CreateByName(name);
 
 			assert(component != nullptr && "Component was not registered");

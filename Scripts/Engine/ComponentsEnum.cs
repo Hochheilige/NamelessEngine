@@ -13,11 +13,8 @@ namespace Scripts.Engine
         [ComponentType(typeof(StaticMeshRenderer))]
         StaticMeshRendererType,
 
-        [ComponentType(typeof(RigidBodyCubeComponent))]
-        RigidBodyCubeType,
-
-        [ComponentType(typeof(RigidBodySphereComponent))]
-        RigidBodySphereType,
+        [ComponentType(typeof(RigidBodyComponent))]
+        RigidBodyType,
 
         LightPointType,
 

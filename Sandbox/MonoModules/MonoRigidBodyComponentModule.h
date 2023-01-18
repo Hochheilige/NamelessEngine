@@ -38,5 +38,5 @@ private:
 
     static void SetType(RigidBodyComponent* component, RigidBodyType type) { component->SetRigidBodyType(type); }
     static void SetUsage(RigidBodyComponent* component, RigidBodyUsage usage) { component->SetRigidBodyUsage(usage); }
-    static void SetCollisionShape(RigidBodyComponent* component, CollisionShapeType type) { component->SetCollisionShapeType(type); }
+    static void SetCollisionShape(RigidBodyComponent* component, CollisionShapeType type) { component->SetCollisionShape(type); }
 };
