@@ -25,6 +25,9 @@ namespace Scripts
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void InternalDestroy(IntPtr cppInstance);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void InternalSetShowMouseCursor(IntPtr cppInstance, bool InShow);
+
         public Actor()
         {
         }
@@ -161,5 +164,11 @@ namespace Scripts
         {
             Init();
         }
+
+        public void SetShowMouseCursor(bool InShow)
+        {
+            InternalSetShowMouseCursor(CppInstance, InShow);
+        }
+
     }
 }

@@ -11,6 +11,7 @@ public:
         mono_add_internal_call("Scripts.Actor::InternalGetTransform", &ActorGetTransform);
         mono_add_internal_call("Scripts.Actor::InternalSetTransform", &ActorSetTransform);
         mono_add_internal_call("Scripts.Actor::InternalDestroy", &ActorDestroy);
+        mono_add_internal_call("Scripts.Actor::InternalSetShowMouseCursor", &SetShowMouseCursor);
         mono_add_internal_call("Scripts.Engine.Instantiator::InstantiateActorInternal", &InstantiateActor);
     }
 
@@ -30,4 +31,9 @@ private:
         auto csActor = actor->GetMonoActor();
         return csActor->GetCsInstance();
     }
+
+	static auto SetShowMouseCursor(Actor* actor, bool InShowMouseCursor) -> void
+	{
+		Game::GetInstance()->SetShowMouseCursor(InShowMouseCursor);
+	}
 };
