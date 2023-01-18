@@ -207,12 +207,12 @@ void RigidBodyComponent::CreateShape(Vector3 scale)
 
 void RigidBodyComponent::SetCollisionShape(CollisionShapeType type)
 {
+	ShapeType = type;
     if (rigidBody.Body && Shape)
     {
         if (Usage == RigidBodyUsage::PHYSICS)
             Usage = RigidBodyUsage::COLLISIONS_AND_PHYSICS;
 
-        ShapeType = type;
         CreateShape(GetTransform().Scale);
 
         auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
