@@ -62,19 +62,19 @@ LRESULT InputDevice::HandleMessage(HWND hwnd, UINT umessage, WPARAM wparam, LPAR
 		}
 		return 0;
 	}
-	case WM_SETCURSOR:
-	{
-		// work in progress
-		/*if (LOWORD(lparam) == HTCLIENT)
-		{
-			if (!Game::GetInstance()->GetShowMouseCursor())
-			{
-				SetCursor(NULL);
-				return TRUE;
-			}
-		}*/
-		return FALSE;
-	}
+	// work in progress
+	//case WM_SETCURSOR:
+	//{
+	//	if (LOWORD(lparam) == HTCLIENT)
+	//	{
+	//		if (!Game::GetInstance()->GetShowMouseCursor())
+	//		{
+	//			SetCursor(NULL);
+	//			return TRUE;
+	//		}
+	//	}
+	//	return FALSE;
+	//}
 	default:
 		return DefWindowProc(hwnd, umessage, wparam, lparam);
 	}

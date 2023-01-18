@@ -63,7 +63,7 @@ public:
 
 	auto GetNextWindowClassId() -> int { return nextClassId++; }
 
-	auto GetViewportCenter() -> Vector2 { return ViewportStart + ViewportSize / 2.0f; }
+	auto GetViewportScreenCenter() -> Vector2 { return ViewportStart + ViewportSize / 2.0f; }
 
 private:
 	auto LayOutMainMenuBar() -> void;

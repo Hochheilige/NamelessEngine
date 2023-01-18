@@ -56,12 +56,12 @@ void Mouse::ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		else 
 		{
-			Vector2 vc = ImGuiSubsystem::GetInstance()->GetViewportCenter();
-			prevX = static_cast<int>(vc.x);
-			prevY = static_cast<int>(vc.y);
-			POINT p{ prevX, prevY };
-			ClientToScreen(disp->GetWindowHandle(), &p);
+			Vector2 vc = ImGuiSubsystem::GetInstance()->GetViewportScreenCenter();
+			POINT p{ static_cast<int>(vc.x), static_cast<int>(vc.y) };
 			SetCursorPos(p.x, p.y);
+			ScreenToClient(disp->GetWindowHandle(), &p);
+			prevX = p.x;
+			prevY = p.y;
 		}
         return;
     }
