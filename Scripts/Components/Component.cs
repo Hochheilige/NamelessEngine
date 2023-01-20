@@ -30,7 +30,7 @@ namespace Scripts
         private static extern Transform InternalGetRelativeTransform(IntPtr handle);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern Transform InternalSetAttachmentParent(IntPtr handle, IntPtr parent);
+        private static extern void InternalSetAttachmentParent(IntPtr handle, IntPtr parent);
 
         private Actor Owner { get; set; }
         
