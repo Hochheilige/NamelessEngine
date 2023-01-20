@@ -84,6 +84,7 @@ json Game::Serialize() const
 	out["actors"] = actorsArr;
 	out["dirlight"] = dr->Serialize();
 	out["AssetType"] = AssetType::Level;
+	out["recastNavMesh"] = RecastNavigationManager::GetInstance()->Serialize();
 	return out;
 }
 
@@ -127,6 +128,10 @@ void Game::Deserialize(const json* in, bool destructive)
 	{
 		const json& dirlight = in->at("dirlight");
 		dr->Deserialize(&dirlight);
+	}
+	if (in->contains("recastNavMesh"))
+	{
+		RecastNavigationManager::GetInstance()->Deserialize((*in)["recastNavMesh"]);
 	}
 
 	mImGuiSubsystem->OnSceneLoaded();

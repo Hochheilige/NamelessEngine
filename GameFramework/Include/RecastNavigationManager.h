@@ -6,6 +6,7 @@
 #include "Recast.h"
 #include "MathInclude.h"
 #include "DetourNavMesh.h"
+#include "JsonInclude.h"
 
 static const int MAX_POLYS = 256;
 static const int MAX_SMOOTH = 2048;
@@ -39,6 +40,10 @@ public:
 	auto DrawDebugNavMesh() const -> void;
 
 	auto FindPath(const Vector3& startPos, const Vector3& endPos, NavPath& outPath) -> bool;
+
+	auto Serialize() -> json;
+
+	auto Deserialize(const json& inJson) -> void;
 
 	// settings that should be modified by gui
 public:

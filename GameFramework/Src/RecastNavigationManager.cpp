@@ -860,3 +860,24 @@ auto RecastNavigationManager::FindPath(const Vector3& startPos, const Vector3& e
 
 	return false;
 }
+
+auto RecastNavigationManager::Serialize() -> json
+{
+	json res;
+	Vector3 navMeshBoundsMin = { navMeshBMin[0], navMeshBMin[1], navMeshBMin[2] };
+	Vector3 navMeshBoundsMax = { navMeshBMax[0], navMeshBMax[1], navMeshBMax[2] };
+	res["navMeshBoundsMin"] = navMeshBoundsMin;
+	res["navMeshBoundsMax"] = navMeshBoundsMax;
+	return res;
+}
+
+auto RecastNavigationManager::Deserialize(const json& inJson) -> void
+{
+	if (inJson.contains("navMeshBoundsMin") && inJson.contains("navMeshBoundsMax"))
+	{
+		Vector3 navMeshBoundsMin = inJson["navMeshBoundsMin"];
+		Vector3 navMeshBoundsMax = inJson["navMeshBoundsMax"];
+		memcpy(navMeshBMin, &navMeshBoundsMin.x, sizeof(navMeshBoundsMin));
+		memcpy(navMeshBMax, &navMeshBoundsMax.x, sizeof(navMeshBoundsMax));
+	}
+}
