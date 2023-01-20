@@ -49,12 +49,12 @@ namespace Scripts.Components
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void InternalSetGenerateOverlapEvents(IntPtr handle, bool generate);
 
-        public void SetGenerateHitEvents(bool generate)
+        public void GenerateHitEvents(bool generate)
         {
             InternalSetGenerateHitEvents(CppInstance, generate);
         }
 
-        public void SetGenerateOverlapEvents(bool generate)
+        public void GenerateOverlapEvents(bool generate)
         {
             InternalSetGenerateOverlapEvents(CppInstance, generate);
         }

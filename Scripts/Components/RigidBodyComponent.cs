@@ -73,12 +73,12 @@ namespace Scripts.Components
             }
         }
 
-        public void SetGenerateHitEvents(bool generate)
+        public void GenerateHitEvents(bool generate)
         {
             InternalSetGenerateHitEvents(CppInstance, generate);
         }
 
-        public void SetGenerateOverlapEvents(bool generate)
+        public void GenerateOverlapEvents(bool generate)
         {
             InternalSetGenerateOverlapEvents(CppInstance, generate);
         }

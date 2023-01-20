@@ -34,8 +34,8 @@ namespace Scripts
             rigidbody.SetUsage(RigidBodyUsage.CollisionsAndPhysics);
             rigidbody.SetCollisionShape(CollisionShape.Sphere);
             rigidbody.SetMass(1);
-            rigidbody.SetGenerateHitEvents(true);
-            rigidbody.SetGenerateOverlapEvents(true);
+            rigidbody.GenerateHitEvents(true);
+            rigidbody.GenerateOverlapEvents(true);
             rigidbody.EnablePhysicsSimulation();
             //mv_cmp = (MovementComponent)AddComponent((int)ComponentsEnum.MovementComponentType);
             // add a simple rigid body instead and activate physics after a slight offset to avoid collision with playah

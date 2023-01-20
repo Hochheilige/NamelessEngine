@@ -22,7 +22,7 @@ namespace Scripts.Tests
         protected internal override void Init()
         {
             mv_cmp = AddComponent<MovementComponent>("MovementComponent");
-            mv_cmp.SetGenerateOverlapEvents(true);
+            mv_cmp.GenerateOverlapEvents(true);
             camComp = AddComponent<CameraComponent>("CameraComponent");
         }
 
