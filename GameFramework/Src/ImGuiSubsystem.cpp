@@ -335,9 +335,6 @@ auto ImGuiSubsystem::DrawViewport() -> void
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(CustomActorDragDropSourceType)) {
 				const std::string str = static_cast<const char*>(payload->Data);
 
-				Transform t;
-				t.Position = MyGame->MyRenderingSystem->GetWorldPositionUnerScreenPosition(ViewportMousePos);
-
 				json j = json::parse(str);
 
 				Actor* actor = MyGame->CreateCustomActor(j.at("Namespace").get<std::string>().c_str(), j.at("Name").get<std::string>().c_str());
@@ -348,6 +345,8 @@ auto ImGuiSubsystem::DrawViewport() -> void
 				}
 				else
 				{
+					Transform t = actor->GetTransform();
+					t.Position = MyGame->MyRenderingSystem->GetWorldPositionUnerScreenPosition(ViewportMousePos);
 					actor->SetTransform(t, TeleportType::ResetPhysics);
 					GetEditorContext().SetSelectedActor(actor);
 				}
