@@ -698,7 +698,7 @@ auto RecastNavigationManager::FindPath(const Vector3& startPos, const Vector3& e
 	const float* m_epos = &endPos.x;
 
 	// how big should this be?
-	Vector3 m_polyPickExt = Vector3(2.0f, 4.0f, 2.0f);
+	
 
 	// should this be here? do i need to set any values here?
 	dtQueryFilter m_filter;
@@ -868,6 +868,7 @@ auto RecastNavigationManager::Serialize() -> json
 	Vector3 navMeshBoundsMax = { navMeshBMax[0], navMeshBMax[1], navMeshBMax[2] };
 	res["navMeshBoundsMin"] = navMeshBoundsMin;
 	res["navMeshBoundsMax"] = navMeshBoundsMax;
+	res["m_polyPickExt"] = m_polyPickExt;
 	return res;
 }
 
@@ -879,5 +880,9 @@ auto RecastNavigationManager::Deserialize(const json& inJson) -> void
 		Vector3 navMeshBoundsMax = inJson["navMeshBoundsMax"];
 		memcpy(navMeshBMin, &navMeshBoundsMin.x, sizeof(navMeshBoundsMin));
 		memcpy(navMeshBMax, &navMeshBoundsMax.x, sizeof(navMeshBoundsMax));
+	}
+	if (inJson.contains("m_polyPickExt"))
+	{
+		m_polyPickExt = inJson["m_polyPickExt"];
 	}
 }

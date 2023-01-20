@@ -76,6 +76,8 @@ public:
 	bool bDrawNavMeshDebug = false;
 	bool bDrawInputMeshDebug = false;
 
+	Vector3 m_polyPickExt = Vector3(2.0f, 4.0f, 2.0f);
+
 protected:
 
 	auto Cleanup() -> void;

@@ -1440,6 +1440,7 @@ auto ImGuiSubsystem::DrawNavMeshSettings() -> void
 		BoldText("Area");
 		ImGui::DragFloat3("Bounds Min", rnm->navMeshBMin, 1.0f, -1000.0f, 0.0f);
 		ImGui::DragFloat3("Bounds Max", rnm->navMeshBMax, 1.0f,  0.0f, 1000.0f);
+		ImGui::DragFloat3("Polygon Pick Extension", &rnm->m_polyPickExt.x, 1.0f,  1.0f, 100.0f);
 
 		BoldText("Rasterezation");
 		ImGui::SliderFloat("Cell Size", &rnm->m_cellSize, 0.1f, 1.0f);
