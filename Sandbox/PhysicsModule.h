@@ -40,4 +40,5 @@ private:
     std::vector<btGhostObject*> ghostObjects;
 public:
     std::queue<RigidBodyComponent*> removedObjects;
+    RigidBodyComponent* comp = nullptr;
 };
