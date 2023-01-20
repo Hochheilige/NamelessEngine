@@ -441,6 +441,7 @@ auto RigidBodyComponent::EnablePhysicsSimulation(const bool force) -> void
     {
         if (rigidBody.Body)
         {
+            PhysicsModuleData::GetInstance()->GetDynamicsWorld()->removeCollisionObject(rigidBody.Collision);
             int before = PhysicsModuleData::GetInstance()->GetDynamicsWorld()->getNumCollisionObjects();
             PhysicsModuleData::GetInstance()->GetDynamicsWorld()->addRigidBody(rigidBody.Body);
             isPhysicsSimulationEnabled = true;
@@ -453,6 +454,7 @@ auto RigidBodyComponent::EnablePhysicsSimulation(const bool force) -> void
 auto RigidBodyComponent::DisablePhysicsSimulation() -> void
 {   
     if (isPhysicsSimulationEnabled) {
+        PhysicsModuleData::GetInstance()->GetDynamicsWorld()->addCollisionObject(rigidBody.Collision);
         PhysicsModuleData::GetInstance()->GetDynamicsWorld()->removeRigidBody(rigidBody.Body);
         isPhysicsSimulationEnabled = false;
     }
