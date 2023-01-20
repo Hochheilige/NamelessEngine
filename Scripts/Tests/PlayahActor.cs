@@ -3,6 +3,7 @@ using Scripts.Components;
 using Scripts.Engine;
 using Scripts.Extensions;
 using SharpDX;
+using ImGuiNET;
 
 namespace Scripts.Tests
 {
@@ -208,5 +209,10 @@ namespace Scripts.Tests
             Console.WriteLine("PlayahActor EndOverlap event with {0}", otherActor.ToString());
         }
 
+        internal override void OnGUI()
+        {
+            //ImGui.SetCursorPos(new System.Numerics.Vector2(50, 50));
+            //ImGui.Text("I am a player text that came from C#!!!");
+        }
     }
 }

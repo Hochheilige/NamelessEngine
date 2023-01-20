@@ -17,6 +17,7 @@ public:
     void AddComponent(Component* component);
     void RemoveComponent(Component* component);
     void Update(float deltaTime);
+	void OnGui();
     void OnBeginPlay();
 
     void Hit(Actor* otherActor);

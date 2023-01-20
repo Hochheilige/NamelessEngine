@@ -316,6 +316,13 @@ void Actor::EndOverlap(Actor* otherActor)
 	mMonoActor->EndOverlap(otherActor);
 }
 
+auto Actor::OnGui() -> void
+{
+	if (mMonoActor != nullptr)
+	{
+		mMonoActor->OnGui();
+	}
+}
 
 void callback(btDynamicsWorld* world, btScalar timeSleep)
 {

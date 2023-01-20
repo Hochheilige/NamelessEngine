@@ -297,9 +297,11 @@ auto ImGuiSubsystem::DrawViewport() -> void
 		//some hotkeys
 		PollHotkeys();
 
+		ImVec2 viewportLocalStart = ImGui::GetCursorPos() + ImVec2(1, 1);
 		ViewportStart = ImGui::GetCursorScreenPos();
 		ViewportSize = ImGui::GetContentRegionAvail();
 		ViewportMousePos = Vector2(ImGui::GetMousePos()) - ViewportStart;
+		MyGame->MyRenderingSystem->HandleScreenResize({ ViewportSize.x, ViewportSize.y });
 		MyGame->MyRenderingSystem->HandleScreenResize({ ViewportSize.x, ViewportSize.y });
 		ImGui::Image(MyGame->MyRenderingSystem->GetViewportTextureID(), ViewportSize);
 
@@ -361,8 +363,6 @@ auto ImGuiSubsystem::DrawViewport() -> void
 		//}
 		//if (ActorBrowserContextMenu(GetEditorContext().GetSelectedActor(), "ActorContextMenu")) {}
 
-		
-
 		// Draw gizmos in the viewport
 		{
 			ImGuizmo::SetDrawlist(ImGui::GetWindowDrawList());
@@ -373,6 +373,17 @@ auto ImGuiSubsystem::DrawViewport() -> void
 			if (ImGui::IsItemClicked() && !ImGuizmo::IsUsing())
 			{
 				GetEditorContext().SetSelectedActor(MyGame->MyRenderingSystem->GetActorUnderPosition(ViewportMousePos));
+			}
+		}
+
+		
+		// this has to be the last here because we don't restor the cursor position since it ads a scrollbar
+		{
+			ImGui::SetCursorPos(viewportLocalStart);
+
+			for (Actor* actor : MyGame->Actors)
+			{
+				actor->OnGui();
 			}
 		}
 	}

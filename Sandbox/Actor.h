@@ -110,6 +110,8 @@ public:
 	void BeginOverlap(Actor* otherActor);
 	void EndOverlap(Actor* otherActor);
 
+	auto OnGui() -> void;
+
 private:
 	void OnComponentAdded(Component* component);
 	void AddOrphanComponent(Component* component);

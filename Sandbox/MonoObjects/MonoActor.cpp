@@ -82,6 +82,17 @@ void MonoActor::Update(float deltaTime)
     
 }
 
+void MonoActor::OnGui()
+{
+	auto mono = MonoSystem::GetInstance();
+	MonoMethod* onGui = mono->GetMethod(NameSpace.c_str(), ClassName.c_str(), "OnGUI");
+
+	if (onGui)
+	{
+		mono->InvokeInstanceMethod(onGui, Handle, nullptr, nullptr);
+	}
+}
+
 void MonoActor::OnBeginPlay()
 {
     auto mono = MonoSystem::GetInstance();
@@ -93,12 +104,7 @@ void MonoActor::OnBeginPlay()
         MonoObject* result = mono->InvokeInstanceMethod(onBeginPlay, Handle, nullptr, nullptr);
     }
 
-    MonoMethod* onGui = mono->GetMethod(NameSpace.c_str(), ClassName.c_str(), "OnGUI");
-
-    if(onGui)
-    {
-        mono->InvokeInstanceMethod(onGui, Handle, nullptr, nullptr);
-    }
+   
 }
 
 const char* MonoActor::GetInheritors()
