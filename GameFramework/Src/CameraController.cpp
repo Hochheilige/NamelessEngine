@@ -98,7 +98,7 @@ void CameraController::Update(float DeltaTime)
 
 	Cam->Transform.Rotation.SetEulerAngles(Pitch, Yaw, 0.0f);
 
-	float scrollDelta = mouse->GetScrollDelta() / 250.0f;
+	float scrollDelta = mouse->GetScrollDelta() / 15.0f;
 	Speed += scrollDelta;
 	if (Speed > MaxSpeed)
 		Speed = MaxSpeed;

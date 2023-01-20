@@ -112,4 +112,5 @@ void Mouse::Prepare()
 {
     deltaX = 0.0F;
     deltaY = 0.0F;
+	scrollDelta = 0;
 }
