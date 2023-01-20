@@ -19,9 +19,9 @@ enum class RigidBodyType
 
 enum class RigidBodyUsage
 {
-	PHYSICS,
-	COLLISIONS,
-	COLLISIONS_AND_PHYSICS
+	PHYSICS, // NO COLLISIONs
+	COLLISIONS, // OVERLAP ALL
+	COLLISIONS_AND_PHYSICS // BLOCK ALL
 };
 
 enum class CollisionShapeType
@@ -29,6 +29,28 @@ enum class CollisionShapeType
 	BOX,
 	SPHERE,
 	CAPSULE
+};
+
+struct SimulationContactResultCallback : public btCollisionWorld::ContactResultCallback
+{
+
+	bool bCollision;
+	SimulationContactResultCallback() : bCollision(false) {
+		m_closestDistanceThreshold = 1;
+	}
+	
+	btScalar addSingleResult(btManifoldPoint& cp,
+	const btCollisionObjectWrapper* colObj0Wrap,
+	int partId0,
+	int index0,
+	const btCollisionObjectWrapper* colObj1Wrap,
+	int partId1,
+	int index1)
+	{
+	//If cp distance less than threshold
+		bCollision = cp.getDistance() < m_closestDistanceThreshold ? true : false;
+		return bCollision;
+	}
 };
 
 class RigidBodyComponent : public SceneComponent
@@ -45,11 +67,15 @@ public:
 
 	btRigidBody* GetRigidBody();
 
+	btGhostObject* GetGhostObject() { return rigidBody.Collision; }
+
 	btCollisionShape* GetCollisionShape();
 
 	btScalar GetMass();
 
 	RigidBodyType GetType();
+
+	RigidBodyUsage GetUsage() { return Usage; }
 
 	MonoComponent* GetMonoComponent() override { return mMonoComponent; }
 
@@ -124,6 +150,8 @@ public:
 	}
 
 	auto Reinit() -> void;
+
+	bool in_world = true;
 
 private:
 

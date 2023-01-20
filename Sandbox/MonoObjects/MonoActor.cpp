@@ -126,7 +126,7 @@ const std::string& MonoActor::GetClassname() const
     return ClassName;
 }
 
-void MonoActor::Overlap(Actor* otherActor)
+void MonoActor::Hit(Actor* otherActor)
 {
     auto mono = MonoSystem::GetInstance();
     void* args[1];
@@ -138,7 +138,45 @@ void MonoActor::Overlap(Actor* otherActor)
 	}
 	args[0] = otherMonoActor->GetCsInstance();
 
-    MonoMethod* method = mono->GetMethod(NameSpace.c_str(), ClassName.c_str(), "Overlap");
+    MonoMethod* method = mono->GetMethod(NameSpace.c_str(), ClassName.c_str(), "Hit");
+    if(method)
+    {
+        MonoObject* result = mono->InvokeInstanceMethod(method, Handle, args, nullptr);
+    }
+}
+
+void MonoActor::BeginOverlap(Actor* otherActor)
+{
+    auto mono = MonoSystem::GetInstance();
+    void* args[1];
+	MonoActor* otherMonoActor = otherActor->GetMonoActor();
+	if (!otherMonoActor)
+	{
+		// avoid calling anything if other actor doesn't have a mono actor
+		return;
+	}
+	args[0] = otherMonoActor->GetCsInstance();
+
+    MonoMethod* method = mono->GetMethod(NameSpace.c_str(), ClassName.c_str(), "BeginOverlap");
+    if(method)
+    {
+        MonoObject* result = mono->InvokeInstanceMethod(method, Handle, args, nullptr);
+    }
+}
+
+void MonoActor::EndOverlap(Actor* otherActor)
+{
+    auto mono = MonoSystem::GetInstance();
+    void* args[1];
+	MonoActor* otherMonoActor = otherActor->GetMonoActor();
+	if (!otherMonoActor)
+	{
+		// avoid calling anything if other actor doesn't have a mono actor
+		return;
+	}
+	args[0] = otherMonoActor->GetCsInstance();
+
+    MonoMethod* method = mono->GetMethod(NameSpace.c_str(), ClassName.c_str(), "EndOverlap");
     if(method)
     {
         MonoObject* result = mono->InvokeInstanceMethod(method, Handle, args, nullptr);

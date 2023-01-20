@@ -143,7 +143,9 @@ namespace Scripts
             //Components.ForEach(x => x.Dispose());
         }
 
-        protected virtual void Overlap(Actor otherActor) { }
+        protected virtual void BeginOverlap(Actor otherActor) { }
+        protected virtual void EndOverlap(Actor otherActor) { }
+        protected virtual void Hit(Actor otherActor) { }
 
         internal virtual void OnGUI()
         {

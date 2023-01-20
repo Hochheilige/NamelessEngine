@@ -86,11 +86,20 @@ void RigidBodyComponent::Init()
         if (Mass != 0.0f)
             Shape->calculateLocalInertia(Mass, localInertia);
 
+        btEmptyShape* s = new btEmptyShape();
+
         btDefaultMotionState* myMotionState = new btDefaultMotionState(PhysicsTransform);
         btRigidBody::btRigidBodyConstructionInfo rbInfo(Mass, myMotionState, Shape.get(), localInertia);
         rigidBody.Body = new btRigidBody(rbInfo);
         rigidBody.Body->setUserPointer(this);
 
+        rigidBody.Collision = new btGhostObject();
+        rigidBody.Collision->setCollisionShape(Shape.get());
+        rigidBody.Collision->setWorldTransform(PhysicsTransform);
+        rigidBody.Collision->setUserPointer(this);
+        world->addCollisionObject(rigidBody.Collision);
+        world->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback);
+        PhysicsModuleData::GetInstance()->AddGhostObject(rigidBody.Collision);
         RegisterRigidBodyType();
         break;
     }
@@ -230,6 +239,10 @@ void RigidBodyComponent::SetCollisionShape(CollisionShapeType type)
 
         if (isPhysicsSimulationEnabled)
             world->addRigidBody(rigidBody.Body);
+    }
+    else if (rigidBody.Collision && Shape)
+    {
+        CreateShape(GetTransform().Scale);
     }
 }
 
@@ -416,11 +429,14 @@ auto RigidBodyComponent::EnablePhysicsSimulation(const bool force) -> void
     if (!rigidBody.Body) Init();
 	if (!isPhysicsSimulationEnabled || force && rigidBody.Body != nullptr)
     {
-        int before = PhysicsModuleData::GetInstance()->GetDynamicsWorld()->getNumCollisionObjects();
-        PhysicsModuleData::GetInstance()->GetDynamicsWorld()->addRigidBody(rigidBody.Body);
-        isPhysicsSimulationEnabled = true;
-        int after = PhysicsModuleData::GetInstance()->GetDynamicsWorld()->getNumCollisionObjects();
-        bool WasAddedOnce = after == before + 1;
+        if (rigidBody.Body)
+        {
+            int before = PhysicsModuleData::GetInstance()->GetDynamicsWorld()->getNumCollisionObjects();
+            PhysicsModuleData::GetInstance()->GetDynamicsWorld()->addRigidBody(rigidBody.Body);
+            isPhysicsSimulationEnabled = true;
+            int after = PhysicsModuleData::GetInstance()->GetDynamicsWorld()->getNumCollisionObjects();
+            bool WasAddedOnce = after == before + 1;
+        }
     }
 }
 

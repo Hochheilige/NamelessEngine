@@ -19,7 +19,9 @@ public:
     void Update(float deltaTime);
     void OnBeginPlay();
 
-    void Overlap(Actor* otherActor);
+    void Hit(Actor* otherActor);
+    void BeginOverlap(Actor* otherActor);
+    void EndOverlap(Actor* otherActor);
     
     const char* GetInheritors();
     MonoObject* GetCsInstance();

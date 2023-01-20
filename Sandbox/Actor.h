@@ -106,7 +106,9 @@ public:
 	json Serialize() const;
 	void Deserialize(const json* in, bool destructive = false);
 	uuid GetId() const;
-	void Overlap(Actor* otherActor);
+	void Hit(Actor* otherActor);
+	void BeginOverlap(Actor* otherActor);
+	void EndOverlap(Actor* otherActor);
 
 private:
 	void OnComponentAdded(Component* component);

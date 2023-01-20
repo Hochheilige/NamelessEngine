@@ -55,6 +55,9 @@ namespace Scripts.Components
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void InternalSetCollisionShape(IntPtr handle, CollisionShape shape);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void InternalInit(IntPtr handle);
+
 
         public RigidBodyComponent(Actor owner, bool internalCreate = true) : base(owner) 
         {
@@ -62,6 +65,11 @@ namespace Scripts.Components
             {
                 this.CppInstance = InternalCreateComponent(owner.CppInstance, (int)ComponentType.RigidBodyType);
             }
+        }
+
+        public void Init()
+        {
+            InternalInit(CppInstance);
         }
 
         public void SetMass(float mass)

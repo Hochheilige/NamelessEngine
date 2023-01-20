@@ -191,10 +191,20 @@ namespace Scripts.Tests
 
         }
 
-        protected override void Overlap(Actor otherActor)
+        protected override void Hit(Actor otherActor)
         {
             //otherActor.Components.GetComponent<StaticMeshRenderer>().SetMeshPath("../Assets/Meshes/test.fbx/Torus");
-            Console.WriteLine("PlayahActor Overlap event");
+            Console.WriteLine("PlayahActor Hit event ");
+        }   
+        protected override void BeginOverlap(Actor otherActor)
+        {
+            //otherActor.Components.GetComponent<StaticMeshRenderer>().SetMeshPath("../Assets/Meshes/test.fbx/Torus");
+            Console.WriteLine("PlayahActor BeginOverlap event ");
+        }
+        protected override void EndOverlap (Actor otherActor)
+        {
+            //otherActor.Components.GetComponent<StaticMeshRenderer>().SetMeshPath("../Assets/Meshes/test.fbx/Torus");
+            Console.WriteLine("PlayahActor EndOverlap event ");
         }
 
     }

@@ -301,9 +301,19 @@ uuid Actor::GetId() const
 	return id;
 }
 
-void Actor::Overlap(Actor* otherActor)
+void Actor::Hit(Actor* otherActor)
 {
-	mMonoActor->Overlap(otherActor);
+	mMonoActor->Hit(otherActor);
+}
+
+void Actor::BeginOverlap(Actor* otherActor)
+{
+	mMonoActor->BeginOverlap(otherActor);
+}
+
+void Actor::EndOverlap(Actor* otherActor)
+{
+	mMonoActor->EndOverlap(otherActor);
 }
 
 
@@ -318,23 +328,85 @@ void callback(btDynamicsWorld* world, btScalar timeSleep)
 		{
 			continue;
 		}
+		
 		btGhostObject* ghost = static_cast<btGhostObject*>(arr[i]);
 		if (ghost->getNumOverlappingObjects() && ghost->getUserPointer())
 		{
+
 			auto actor = reinterpret_cast<SceneComponent*>(ghost->getUserPointer())->GetOwner();
 
-			for (int i = 0; i < ghost->getNumOverlappingObjects(); ++i)
-			{
-				// We can get object that this object overlapp with
-				// I think that we should find somehow Actors of this objects
-				// and do something that we need on this callback
-				btCollisionObject* rb = ghost->getOverlappingObject(i);
+			if (actor->GetMonoActor()) {
 
-				if (rb->getUserPointer())
+				if (ghost->getUserIndex() > 0)
 				{
-					auto otherActor = reinterpret_cast<SceneComponent*>(rb->getUserPointer())->GetOwner();
+					auto physics = PhysicsModuleData::GetInstance();
+					SimulationContactResultCallback crc;
+					auto comp = physics->removedObjects.back();
+					world->contactPairTest(ghost, comp->GetGhostObject(), crc);
 
-					actor->Overlap(otherActor);
+					if (!crc.bCollision)
+					{
+						world->addCollisionObject(comp->GetGhostObject());
+						auto otherActor = reinterpret_cast<SceneComponent*>(comp->GetGhostObject()->getUserPointer())->GetOwner();
+						physics->removedObjects.pop();
+						actor->EndOverlap(otherActor);
+						ghost->setUserIndex(-1);
+						comp->in_world = true;
+					}
+				}
+
+				for (int i = 0; i < ghost->getNumOverlappingObjects(); ++i)
+				{
+					// We can get object that this object overlapp with
+					// I think that we should find somehow Actors of this objects
+					// and do something that we need on this callback
+					btCollisionObject* rb = ghost->getOverlappingObject(i);
+
+					if (rb->getUserPointer())
+					{
+
+						auto otherActor = reinterpret_cast<SceneComponent*>(rb->getUserPointer())->GetOwner();
+						auto rb_comp = otherActor->GetComponentOfClass<RigidBodyComponent>();
+						if (rb_comp) {
+							switch (rb_comp->GetUsage())
+							{
+							case RigidBodyUsage::COLLISIONS_AND_PHYSICS:
+							{
+								actor->Hit(otherActor);
+								break;
+							}
+							case RigidBodyUsage::COLLISIONS:
+							{
+								auto physics = PhysicsModuleData::GetInstance();
+								if (rb_comp->in_world)
+								{
+									world->removeCollisionObject(rb_comp->GetGhostObject());
+									rb_comp->in_world = false;
+									physics->removedObjects.push(rb_comp);
+									ghost->setUserIndex(1);
+									actor->BeginOverlap(otherActor);
+								}
+
+							}
+							default:
+								break;
+							}
+						}
+						//auto rb_comp = otherActor->GetComponentOfClass<RigidBodyComponent>();
+						//if (rb_comp->GetUsage() == RigidBodyUsage::COLLISIONS) {
+						//	auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
+						//	if (rb_comp->in_world)
+						//	{
+						//		world->removeCollisionObject(rb_comp->GetGhostObject());
+						//		rb_comp->in_world = false;
+						//	}
+						//	SimulationContactResultCallback crc;
+
+						//	
+						//	world->contactPairTest(ghost, rb_comp->GetGhostObject(), crc);
+						//}
+						
+					}
 				}
 			}
 		}

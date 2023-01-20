@@ -19,6 +19,7 @@ public:
         mono_add_internal_call("Scripts.Components.RigidBodyComponent::InternalSetType", &SetType);
         mono_add_internal_call("Scripts.Components.RigidBodyComponent::InternalSetUsage", &SetUsage);
         mono_add_internal_call("Scripts.Components.RigidBodyComponent::InternalSetCollisionShape", &SetCollisionShape);
+        mono_add_internal_call("Scripts.Components.RigidBodyComponent::InternalInit", &Init);
     }
 
 private:
@@ -39,4 +40,5 @@ private:
     static void SetType(RigidBodyComponent* component, RigidBodyType type) { component->SetRigidBodyType(type); }
     static void SetUsage(RigidBodyComponent* component, RigidBodyUsage usage) { component->SetRigidBodyUsage(usage); }
     static void SetCollisionShape(RigidBodyComponent* component, CollisionShapeType type) { component->SetCollisionShape(type); }
+    static void Init(RigidBodyComponent* component) { component->Init(); }
 };

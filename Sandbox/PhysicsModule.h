@@ -3,6 +3,9 @@
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision/CollisionDispatch/btGhostObject.h"
 #include <vector>
+#include <queue>
+
+class RigidBodyComponent;
 
 class PhysicsModuleData
 {
@@ -34,4 +37,6 @@ private:
 
     btAlignedObjectArray<btCollisionShape*> collisionShapes;
     std::vector<btGhostObject*> ghostObjects;
+public:
+    std::queue<RigidBodyComponent*> removedObjects;
 };
