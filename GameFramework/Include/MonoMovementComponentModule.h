@@ -18,6 +18,8 @@ public:
 		mono_add_internal_call("Scripts.Components.MovementComponent::InternalIsFollowingNavPath", &IsFollowingNavPath);
         mono_add_internal_call("Scripts.Components.MovementComponent::InternalSetGenerateHitEvents", &SetGenerateHitEvents);
         mono_add_internal_call("Scripts.Components.MovementComponent::InternalSetGenerateOverlapEvents", &SetGenerateOverlapEvents);
+		mono_add_internal_call("Scripts.Components.MovementComponent::InternalSetNavPathFollowSpeed", &SetNavPathFollowSpeed);
+
         
     }
 
@@ -39,5 +41,6 @@ private:
 	static bool IsFollowingNavPath(MovementComponent* component) { return component->IsFollowingNavPath(); }
     static void SetGenerateHitEvents(MovementComponent* component, bool generate) { component->SetGenerateHitEvents(generate); }
     static void SetGenerateOverlapEvents(MovementComponent* component, bool generate) { component->SetGenerateOverlapEvents(generate); }
+	static void SetNavPathFollowSpeed(MovementComponent* component, float InSpeed) { component->SetNavPathFollowSpeed(InSpeed); }
 
 };

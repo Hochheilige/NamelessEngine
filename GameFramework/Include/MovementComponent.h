@@ -138,6 +138,8 @@ public:
 
 	bool GetGenerateOverlapEvents() { return generateOverlapEvents; }
 
+	auto SetNavPathFollowSpeed(float InSpeed) { navPathMovementSpeed = InSpeed; }
+
 private:
 	//character capsule shape ??
 	btScalar capsuleRadius = .6f;

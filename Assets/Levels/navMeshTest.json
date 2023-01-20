@@ -31,7 +31,7 @@
                         "usage": 2
                     },
                     "id": "c6589360-a62c-4957-aff5-18bcf114f7be",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -130,7 +130,7 @@
                         "usage": 2
                     },
                     "id": "675bf09b-f75b-4c2d-a154-2be7130bfbc0",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -199,7 +199,7 @@
                         "usage": 2
                     },
                     "id": "441fdea8-9390-4677-887f-08bf63959849",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -268,7 +268,7 @@
                         "usage": 2
                     },
                     "id": "a72ba30a-331a-4cec-aaff-beba97e3b976",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -337,7 +337,7 @@
                         "usage": 2
                     },
                     "id": "1eab8cf2-10fd-4eb1-9fa8-2a6edb401efa",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -406,7 +406,7 @@
                         "usage": 2
                     },
                     "id": "d58a7c7e-213d-437c-b6f4-294d05cc064f",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -475,7 +475,7 @@
                         "usage": 2
                     },
                     "id": "ec81f40d-d212-4549-a0da-941d5002b8f7",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -544,7 +544,7 @@
                         "usage": 2
                     },
                     "id": "388a1a38-d58b-4572-826f-2714d9e1253a",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -613,7 +613,7 @@
                         "usage": 2
                     },
                     "id": "f6f28183-a14e-4674-90e5-d4707a3dafcd",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -682,7 +682,7 @@
                         "usage": 2
                     },
                     "id": "ecd8e869-b288-47b4-b2b5-e9065ff6fb0c",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -751,7 +751,7 @@
                         "usage": 2
                     },
                     "id": "ee68e22a-a35b-431a-9056-e2b055e99107",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -820,7 +820,7 @@
                         "usage": 2
                     },
                     "id": "c8879cc6-e2d9-458c-a0bd-dcfe9018f4cf",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -889,7 +889,7 @@
                         "usage": 2
                     },
                     "id": "0635978f-f839-43d6-aa98-ca8ff7abc8c9",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -958,7 +958,7 @@
                         "usage": 2
                     },
                     "id": "0f86d54d-e28e-49ed-8535-2260b441d746",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -1027,7 +1027,7 @@
                         "usage": 2
                     },
                     "id": "ee324c0d-a480-49f2-91a0-3ede21030fbe",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -1096,7 +1096,7 @@
                         "usage": 2
                     },
                     "id": "159b66d6-44bc-44c0-8307-e58d4434442c",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -1165,7 +1165,7 @@
                         "usage": 2
                     },
                     "id": "ff07dcb2-f680-4cfb-8d8f-6b042dd3c8c9",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -1234,7 +1234,7 @@
                         "usage": 2
                     },
                     "id": "cb60add1-1ff2-44bc-ac58-daca03fca804",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -1303,7 +1303,7 @@
                         "usage": 2
                     },
                     "id": "9995e7d0-8075-477b-b115-d5f61584fdfb",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -1372,7 +1372,7 @@
                         "usage": 2
                     },
                     "id": "8c9607ef-bf22-47ed-a240-b79f927a2d2c",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -1441,7 +1441,7 @@
                         "usage": 2
                     },
                     "id": "65a21283-640e-482f-a19d-3e36f8832916",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -1510,7 +1510,7 @@
                         "usage": 2
                     },
                     "id": "6fed7d6e-1435-419a-b75a-f1356b0ef8c4",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -1579,7 +1579,7 @@
                         "usage": 2
                     },
                     "id": "5135f1cf-2e52-41d5-8851-17d42e473a9d",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -1648,7 +1648,7 @@
                         "usage": 2
                     },
                     "id": "b7b7fcf0-1ff5-4bc6-850b-2a1b96b98f8b",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -1717,7 +1717,7 @@
                         "usage": 2
                     },
                     "id": "61fb4b0a-4371-48c1-94a8-689bea40e6b7",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -1786,7 +1786,7 @@
                         "usage": 2
                     },
                     "id": "5fc0f0a5-0f6b-4504-a875-4c89b4150972",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -1855,7 +1855,7 @@
                         "usage": 0
                     },
                     "id": "a2ec5726-892e-40dc-a9fc-72ae82ae496e",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -2064,6 +2064,39 @@
                     "id": "7f0e484c-59a2-4bdf-a31a-46e27ecbdfb4",
                     "name": "StaticMeshRenderer",
                     "parent": "c4ab0a7d-ee54-4040-a18f-0d9adb82faf4"
+                },
+                {
+                    "data": {
+                        "mat_ambient": 0.10000000149011612,
+                        "mat_diffuse": 0.800000011920929,
+                        "mat_specular": 0.5,
+                        "mat_specular_exp": 1.0,
+                        "mesh_path": "../Assets/box.fbx/Cube",
+                        "name": "StaticMeshRenderer",
+                        "normal_path": "",
+                        "texture_path": "",
+                        "transform": {
+                            "pos": [
+                                0.0,
+                                0.0,
+                                0.5
+                            ],
+                            "rot": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    "id": "8796a149-40ff-4990-9150-88016659007d",
+                    "name": "StaticMeshRenderer",
+                    "parent": "c4ab0a7d-ee54-4040-a18f-0d9adb82faf4"
                 }
             ],
             "id": "dc5fc55d-95d4-4d25-af16-df4e04a3c33b",
@@ -2226,7 +2259,7 @@
                         "usage": 2
                     },
                     "id": "59419a29-9c47-48ca-97fe-929f95e3a623",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -2240,9 +2273,9 @@
                         "texture_path": "",
                         "transform": {
                             "pos": [
+                                2.384185791015625e-07,
                                 0.0,
-                                0.0,
-                                0.0
+                                2.9802322387695313e-08
                             ],
                             "rot": [
                                 -0.0,
@@ -2252,8 +2285,8 @@
                             ],
                             "scale": [
                                 1.0,
-                                1.0,
-                                1.0
+                                0.9999998807907104,
+                                0.9999998807907104
                             ]
                         }
                     },
@@ -2273,7 +2306,7 @@
             "components": [
                 {
                     "data": {
-                        "mass": 1.0,
+                        "mass": 0.0,
                         "name": "RigidBodyCube",
                         "physics_simulation": true,
                         "shape_type": 0,
@@ -2299,7 +2332,7 @@
                         "usage": 2
                     },
                     "id": "6e84f64c-61d7-4e4e-9082-b6c7e4ac9353",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -2314,8 +2347,8 @@
                         "transform": {
                             "pos": [
                                 0.0,
-                                0.0,
-                                0.0
+                                -2.9802322387695313e-08,
+                                4.76837158203125e-07
                             ],
                             "rot": [
                                 -0.0,
@@ -2372,7 +2405,7 @@
                         "usage": 2
                     },
                     "id": "59419a29-9c47-48ca-97fe-929f95e3a623",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -2386,9 +2419,9 @@
                         "texture_path": "",
                         "transform": {
                             "pos": [
+                                -2.384185791015625e-07,
                                 0.0,
-                                0.0,
-                                0.0
+                                2.9802322387695313e-08
                             ],
                             "rot": [
                                 -0.0,
@@ -2398,8 +2431,8 @@
                             ],
                             "scale": [
                                 1.0,
-                                1.0,
-                                1.0
+                                0.9999998807907104,
+                                0.9999998807907104
                             ]
                         }
                     },
@@ -2445,7 +2478,7 @@
                         "usage": 2
                     },
                     "id": "59419a29-9c47-48ca-97fe-929f95e3a623",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -2459,19 +2492,19 @@
                         "texture_path": "",
                         "transform": {
                             "pos": [
+                                -1.1920928955078125e-07,
                                 0.0,
-                                0.0,
-                                0.0
+                                1.1920928955078125e-07
                             ],
                             "rot": [
-                                -0.0,
-                                0.0,
-                                -0.0,
+                                -1.8626449271863521e-09,
+                                3.019806626980426e-14,
+                                7.105427357601002e-15,
                                 1.0
                             ],
                             "scale": [
                                 1.0,
-                                1.0,
+                                1.0000001192092896,
                                 1.0
                             ]
                         }
@@ -2492,7 +2525,7 @@
             "components": [
                 {
                     "data": {
-                        "mass": 1.0,
+                        "mass": 0.0,
                         "name": "RigidBodyCube",
                         "physics_simulation": true,
                         "shape_type": 0,
@@ -2518,7 +2551,7 @@
                         "usage": 2
                     },
                     "id": "e6c4b8f3-4b67-4e01-8075-9cd88bd835ac",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -2533,7 +2566,7 @@
                         "transform": {
                             "pos": [
                                 0.0,
-                                0.0,
+                                -2.3283064365386963e-10,
                                 0.0
                             ],
                             "rot": [
@@ -2544,7 +2577,7 @@
                             ],
                             "scale": [
                                 1.0,
-                                1.0,
+                                0.9999998807907104,
                                 1.0
                             ]
                         }
@@ -2565,7 +2598,7 @@
             "components": [
                 {
                     "data": {
-                        "mass": 1.0,
+                        "mass": 0.0,
                         "name": "RigidBodyCube",
                         "physics_simulation": true,
                         "shape_type": 0,
@@ -2591,7 +2624,7 @@
                         "usage": 2
                     },
                     "id": "8063c56a-e646-4639-b8e7-054b94b5c11c",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -2617,8 +2650,8 @@
                             ],
                             "scale": [
                                 1.0,
-                                1.0,
-                                1.0
+                                0.9999999403953552,
+                                0.9999999403953552
                             ]
                         }
                     },
@@ -2638,7 +2671,7 @@
             "components": [
                 {
                     "data": {
-                        "mass": 1.0,
+                        "mass": 0.0,
                         "name": "RigidBodyCube",
                         "physics_simulation": true,
                         "shape_type": 0,
@@ -2664,7 +2697,7 @@
                         "usage": 2
                     },
                     "id": "0e13cf8e-5794-4940-a20f-9f39e0740bf0",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -2678,7 +2711,7 @@
                         "texture_path": "",
                         "transform": {
                             "pos": [
-                                0.0,
+                                -1.1920928955078125e-07,
                                 0.0,
                                 0.0
                             ],
@@ -2689,8 +2722,8 @@
                                 1.0
                             ],
                             "scale": [
-                                1.0,
-                                1.0,
+                                0.9999999403953552,
+                                0.9999999403953552,
                                 1.0
                             ]
                         }
@@ -2711,7 +2744,7 @@
             "components": [
                 {
                     "data": {
-                        "mass": 1.0,
+                        "mass": 0.0,
                         "name": "RigidBodyCube",
                         "physics_simulation": true,
                         "shape_type": 0,
@@ -2737,7 +2770,7 @@
                         "usage": 2
                     },
                     "id": "0e13cf8e-5794-4940-a20f-9f39e0740bf0",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -2753,7 +2786,7 @@
                             "pos": [
                                 0.0,
                                 0.0,
-                                0.0
+                                2.9802322387695313e-08
                             ],
                             "rot": [
                                 -0.0,
@@ -2762,9 +2795,9 @@
                                 1.0
                             ],
                             "scale": [
+                                0.9999999403953552,
                                 1.0,
-                                1.0,
-                                1.0
+                                0.9999999403953552
                             ]
                         }
                     },
@@ -2784,7 +2817,7 @@
             "components": [
                 {
                     "data": {
-                        "mass": 1.0,
+                        "mass": 0.0,
                         "name": "RigidBodyCube",
                         "physics_simulation": true,
                         "shape_type": 0,
@@ -2810,7 +2843,7 @@
                         "usage": 2
                     },
                     "id": "0e13cf8e-5794-4940-a20f-9f39e0740bf0",
-                    "name": "RigidBodyCubeComponent"
+                    "name": "RigidBodyComponent"
                 },
                 {
                     "data": {
@@ -2824,20 +2857,20 @@
                         "texture_path": "",
                         "transform": {
                             "pos": [
-                                0.0,
+                                2.384185791015625e-07,
                                 0.0,
                                 0.0
                             ],
                             "rot": [
                                 -0.0,
-                                0.0,
+                                9.31322685637781e-10,
                                 -0.0,
                                 1.0
                             ],
                             "scale": [
-                                1.0,
-                                1.0,
-                                1.0
+                                0.9999998807907104,
+                                0.9999999403953552,
+                                0.9999999403953552
                             ]
                         }
                     },
@@ -2857,17 +2890,17 @@
             "components": [
                 {
                     "data": {
-                        "name": "2515439370192",
+                        "name": "Movement Component",
                         "transform": {
                             "pos": [
-                                -7.1581220626831055,
-                                2.9477436542510986,
-                                0.8253735303878784
+                                -6.929683685302734,
+                                3.903440475463867,
+                                0.8035759925842285
                             ],
                             "rot": [
+                                -0.0,
                                 0.0,
-                                0.0,
-                                0.0,
+                                -0.0,
                                 1.0
                             ],
                             "scale": [
@@ -2877,7 +2910,7 @@
                             ]
                         }
                     },
-                    "id": "e6bc202f-4b49-4f73-aa9b-30d2f0ace521",
+                    "id": "1b7ebd13-3344-4656-8002-a6ad5aee8ca3",
                     "name": "MovementComponent"
                 },
                 {
@@ -2909,64 +2942,12 @@
                             ]
                         }
                     },
-                    "id": "534d8401-5590-462b-90ca-85d3af5cd2e2",
+                    "id": "34141a3c-a407-4a66-85f5-c566db062dbe",
                     "name": "StaticMeshRenderer",
-                    "parent": "e6bc202f-4b49-4f73-aa9b-30d2f0ace521"
-                },
-                {
-                    "data": {
-                        "name": "2345815932496",
-                        "transform": {
-                            "pos": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            "rot": [
-                                -0.0,
-                                0.0,
-                                -0.0,
-                                1.0
-                            ],
-                            "scale": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
-                        }
-                    },
-                    "id": "aea8ee1c-4c72-4ea3-b368-3b672df56680",
-                    "name": "MovementComponent",
-                    "parent": "e6bc202f-4b49-4f73-aa9b-30d2f0ace521"
-                },
-                {
-                    "data": {
-                        "name": "2345815932496",
-                        "transform": {
-                            "pos": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            "rot": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                1.0
-                            ],
-                            "scale": [
-                                1.0,
-                                1.0,
-                                1.0
-                            ]
-                        }
-                    },
-                    "id": "7b209f05-9dfe-4258-b33d-2f22ea1a5295",
-                    "name": "MovementComponent",
-                    "parent": "e6bc202f-4b49-4f73-aa9b-30d2f0ace521"
+                    "parent": "1b7ebd13-3344-4656-8002-a6ad5aee8ca3"
                 }
             ],
-            "id": "d7eed7b2-3271-4c59-b365-34d6f5c4f046",
+            "id": "c5a0aa38-b87b-47ed-84e7-5e36d0628ab1",
             "mono": {
                 "class": "AITestActor",
                 "namespace": "Scripts.Tests"
@@ -3006,5 +2987,22 @@
                 1.0
             ]
         }
+    },
+    "recastNavMesh": {
+        "m_polyPickExt": [
+            2.0,
+            4.0,
+            2.0
+        ],
+        "navMeshBoundsMax": [
+            20.0,
+            20.0,
+            20.0
+        ],
+        "navMeshBoundsMin": [
+            -20.0,
+            -20.0,
+            -20.0
+        ]
     }
 }

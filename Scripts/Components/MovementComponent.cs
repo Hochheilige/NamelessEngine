@@ -49,6 +49,9 @@ namespace Scripts.Components
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void InternalSetGenerateOverlapEvents(IntPtr handle, bool generate);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void InternalSetNavPathFollowSpeed(IntPtr handle, float InSpeed);
+
         public void GenerateHitEvents(bool generate)
         {
             InternalSetGenerateHitEvents(CppInstance, generate);
@@ -102,6 +105,11 @@ namespace Scripts.Components
         public bool IsFollowingNavPath()
         {
             return InternalIsFollowingNavPath(CppInstance);
+        }
+
+        public void SetNavPathFollowSpeed(float InSpeed)
+        {
+            InternalSetNavPathFollowSpeed(CppInstance, InSpeed);
         }
     }
 }
