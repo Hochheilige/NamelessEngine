@@ -99,9 +99,13 @@ void RigidBodyComponent::Init()
         rigidBody.Collision->setCollisionShape(Shape.get());
         rigidBody.Collision->setWorldTransform(PhysicsTransform);
         rigidBody.Collision->setUserPointer(this);
+        rigidBody.Collision->setIgnoreCollisionCheck(rigidBody.Body, true);
+        rigidBody.Body->setIgnoreCollisionCheck(rigidBody.Collision, true);
+
         world->addCollisionObject(rigidBody.Collision);
         world->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback);
         PhysicsModuleData::GetInstance()->AddGhostObject(rigidBody.Collision);
+
         RegisterRigidBodyType();
         break;
     }
@@ -330,7 +334,8 @@ void RigidBodyComponent::Update(float DeltaTime)
 		break;
 	}
 
-   SceneComponent::SetTransform(t);
+    SetTransform(t, TeleportType::TeleportPhysics);
+   //SceneComponent::SetTransform(t);
 }
 
 auto RigidBodyComponent::SetTransform(const Transform& InTransform, TeleportType InTeleportType) -> void
@@ -373,7 +378,7 @@ auto RigidBodyComponent::SetTransform(const Transform& InTransform, TeleportType
             // todo: make sure everything is cleared
         }
     }
-    else if (rigidBody.Collision)
+    if (rigidBody.Collision)
     {
         rigidBody.Collision->setWorldTransform(PhysicsTransform);
     }

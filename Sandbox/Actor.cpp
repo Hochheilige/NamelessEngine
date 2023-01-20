@@ -328,7 +328,7 @@ void callback(btDynamicsWorld* world, btScalar timeSleep)
 		{
 			continue;
 		}
-		
+
 		btGhostObject* ghost = static_cast<btGhostObject*>(arr[i]);
 		if (ghost->getNumOverlappingObjects() && ghost->getUserPointer())
 		{
@@ -375,53 +375,57 @@ void callback(btDynamicsWorld* world, btScalar timeSleep)
 					{
 
 						auto otherActor = reinterpret_cast<SceneComponent*>(rb->getUserPointer())->GetOwner();
-						auto rb_comp = otherActor->GetComponentOfClass<RigidBodyComponent>();
-						if (rb_comp) {
-							switch (rb_comp->GetUsage())
-							{
-							case RigidBodyUsage::COLLISIONS_AND_PHYSICS:
-							{
-								auto not_player = actor->GetComponentOfClass<RigidBodyComponent>();
-								if (!not_player && actor->GetComponentOfClass<MovementComponent>()->GetGenerateHitEvents())
-									actor->Hit(otherActor);
-								if (not_player && actor->GetComponentOfClass<RigidBodyComponent>()->GetGenerateHitEvents())
-									actor->Hit(otherActor);
 
-								if (rb_comp->GetGenerateHitEvents() && otherActor->GetMonoActor())
-									otherActor->Hit(actor);
-								break;
-							}
-							case RigidBodyUsage::COLLISIONS:
-							{
-								auto physics = PhysicsModuleData::GetInstance();
-								if (rb_comp->in_world)
+						if (actor != otherActor) {
+
+							auto rb_comp = otherActor->GetComponentOfClass<RigidBodyComponent>();
+							if (rb_comp) {
+								switch (rb_comp->GetUsage())
 								{
-									world->removeCollisionObject(rb_comp->GetGhostObject());
-									rb_comp->in_world = false;
-									physics->removedObjects.push(rb_comp);
-									ghost->setUserIndex(1);
-								}
-
-								auto not_player = actor->GetComponentOfClass<RigidBodyComponent>();
-								if (!not_player && actor->GetComponentOfClass<MovementComponent>()->GetGenerateOverlapEvents())
+								case RigidBodyUsage::COLLISIONS_AND_PHYSICS:
 								{
-									actor->BeginOverlap(otherActor);
-									ghost->setUserIndex2(1);
+									auto not_player = actor->GetComponentOfClass<RigidBodyComponent>() ? true : false;
+									if (!not_player && actor->GetComponentOfClass<MovementComponent>()->GetGenerateHitEvents())
+										actor->Hit(otherActor);
+									if (not_player && actor->GetComponentOfClass<RigidBodyComponent>()->GetGenerateHitEvents())
+										actor->Hit(otherActor);
+
+									if (rb_comp->GetGenerateHitEvents() && otherActor->GetMonoActor())
+										otherActor->Hit(actor);
+									break;
 								}
-								if (not_player && actor->GetComponentOfClass<RigidBodyComponent>()->GetGenerateOverlapEvents())
+								case RigidBodyUsage::COLLISIONS:
 								{
-									actor->BeginOverlap(otherActor);
-									ghost->setUserIndex2(1);
-								}
+									auto physics = PhysicsModuleData::GetInstance();
+									if (rb_comp->in_world)
+									{
+										world->removeCollisionObject(rb_comp->GetGhostObject());
+										rb_comp->in_world = false;
+										physics->removedObjects.push(rb_comp);
+										ghost->setUserIndex(1);
+									}
 
-								if (rb_comp->GetGenerateOverlapEvents() && otherActor->GetMonoActor()) {
-									otherActor->BeginOverlap(actor);
-									ghost->setUserIndex3(1);
-								}
+									auto not_player = actor->GetComponentOfClass<RigidBodyComponent>();
+									if (!not_player && actor->GetComponentOfClass<MovementComponent>()->GetGenerateOverlapEvents())
+									{
+										actor->BeginOverlap(otherActor);
+										ghost->setUserIndex2(1);
+									}
+									if (not_player && actor->GetComponentOfClass<RigidBodyComponent>()->GetGenerateOverlapEvents())
+									{
+										actor->BeginOverlap(otherActor);
+										ghost->setUserIndex2(1);
+									}
 
-							}
-							default:
-								break;
+									if (rb_comp->GetGenerateOverlapEvents() && otherActor->GetMonoActor()) {
+										otherActor->BeginOverlap(actor);
+										ghost->setUserIndex3(1);
+									}
+
+								}
+								default:
+									break;
+								}
 							}
 						}
 						
