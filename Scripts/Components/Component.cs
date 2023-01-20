@@ -16,14 +16,21 @@ namespace Scripts
         [MethodImpl(MethodImplOptions.InternalCall)]
         protected static extern string InternalGetName(IntPtr actor);
 
-
-
         
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern Transform InternalGetTransform(IntPtr handle);
         
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void InternalSetTransform(IntPtr handle, Transform transform);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void InternalSetRelativeTransform(IntPtr handle, Transform transform);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern Transform InternalGetRelativeTransform(IntPtr handle);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern Transform InternalSetAttachmentParent(IntPtr handle, IntPtr parent);
 
         private Actor Owner { get; set; }
         
@@ -52,9 +59,24 @@ namespace Scripts
             return InternalGetName(CppInstance);
         }
 
+        public Transform GetTransform()
+        {
+            return InternalGetTransform(CppInstance);
+        }
+
         public void SetTransform(Transform transform)
         {
             InternalSetTransform(CppInstance, transform);
+        }
+
+        public void SetRelativeTransform(Transform transform)
+        {
+            InternalSetRelativeTransform(CppInstance, transform);
+        }
+
+        public Transform GetRelativeTransform()
+        {
+            return InternalGetRelativeTransform(CppInstance);
         }
 
         public void Dispose()
@@ -66,6 +88,11 @@ namespace Scripts
         public string GetIdentifier()
         {
             return CppInstance.ToString();
+        }
+
+        public void SetAttachmentParent(Component parent)
+        {
+            InternalSetAttachmentParent(CppInstance, parent.CppInstance);
         }
     }
 }

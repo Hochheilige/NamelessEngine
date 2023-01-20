@@ -17,6 +17,9 @@ public:
         mono_add_internal_call("Scripts.Component::InternalGetName", &GetName);
         mono_add_internal_call("Scripts.Component::InternalGetTransform", &ComponentGetTransform);
         mono_add_internal_call("Scripts.Component::InternalSetTransform", &ComponentSetTransform);
+        mono_add_internal_call("Scripts.Component::InternalSetRelativeTransform", &ComponentSetRelativeTransform);
+        mono_add_internal_call("Scripts.Component::InternalGetRelativeTransform", &ComponentGetRelativeTransform);
+		mono_add_internal_call("Scripts.Component::InternalSetAttachmentParent", &ComponentSetAttachmentParent);
     }
 
 private:
@@ -41,5 +44,16 @@ private:
     {
         component->SetTransform(transform);
     }
+
+	static Transform ComponentGetRelativeTransform(SceneComponent* component) { return component->GetRelativeTransform(); }
+	static void ComponentSetRelativeTransform(SceneComponent* component, Transform transform)
+	{
+		component->SetRelativeTransform(transform);
+	}
+
+	static void ComponentSetAttachmentParent(SceneComponent* component, SceneComponent* parent)
+	{
+		component->SetAttachmentParent(parent);
+	}
 
 };
