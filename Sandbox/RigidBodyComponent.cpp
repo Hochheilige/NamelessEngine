@@ -25,17 +25,21 @@ auto RigidBodyComponent::Deinit() -> void
 		PhysicsModuleData::GetInstance()->RemoveGhostObject(rigidBody.Collision);
 		world->removeCollisionObject(rigidBody.Collision);
 		delete rigidBody.Collision;
+		rigidBody.Collision = nullptr;
 	}
 	if (rigidBody.Body != nullptr)
 	{
 		world->removeRigidBody(rigidBody.Body);
 		delete rigidBody.Body->getMotionState();
 		delete rigidBody.Body;
+		rigidBody.Body = nullptr;
 	}
 }
 
 void RigidBodyComponent::Init()
 {
+	// deinit to make sure everything is removed from physisc world
+	Deinit();
     auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
     const Transform& transform = GetTransform();
 
@@ -48,7 +52,7 @@ void RigidBodyComponent::Init()
     {
     case RigidBodyUsage::PHYSICS:
     {
-        Shape.reset(new btEmptyShape());
+		CreateShape(transform.Scale);
         //physics->AddCollisionShape(Shape);
 
         btVector3 localInertia = btVector3(0, 0, 0);
@@ -85,8 +89,6 @@ void RigidBodyComponent::Init()
         btVector3 localInertia = btVector3(0, 0, 0);
         if (Mass != 0.0f)
             Shape->calculateLocalInertia(Mass, localInertia);
-
-        btEmptyShape* s = new btEmptyShape();
 
         btDefaultMotionState* myMotionState = new btDefaultMotionState(PhysicsTransform);
         btRigidBody::btRigidBodyConstructionInfo rbInfo(Mass, myMotionState, Shape.get(), localInertia);
@@ -217,32 +219,35 @@ void RigidBodyComponent::CreateShape(Vector3 scale)
 void RigidBodyComponent::SetCollisionShape(CollisionShapeType type)
 {
 	ShapeType = type;
-    if (rigidBody.Body && Shape)
-    {
-        if (Usage == RigidBodyUsage::PHYSICS)
-            Usage = RigidBodyUsage::COLLISIONS_AND_PHYSICS;
-
-        CreateShape(GetTransform().Scale);
-
-        auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
-        if (isPhysicsSimulationEnabled)
-            world->removeRigidBody(rigidBody.Body);
-        btVector3 inertia;
-        rigidBody.Body->setCollisionShape(Shape.get());
-        rigidBody.Body->getCollisionShape()->calculateLocalInertia(Mass, inertia);
-        rigidBody.Body->setActivationState(DISABLE_DEACTIVATION);
-        rigidBody.Body->setMassProps(Mass, inertia);
-        rigidBody.Body->setLinearFactor(btVector3(1, 1, 1));
-        rigidBody.Body->setAngularFactor(btVector3(1, 1, 1));
-        rigidBody.Body->updateInertiaTensor();
-        rigidBody.Body->clearForces();
-
-        if (isPhysicsSimulationEnabled)
-            world->addRigidBody(rigidBody.Body);
-    }
-    else if (rigidBody.Collision && Shape)
+    if ((rigidBody.Body || rigidBody.Collision) && Shape)
     {
         CreateShape(GetTransform().Scale);
+		if (rigidBody.Body)
+		{
+			if (Usage == RigidBodyUsage::PHYSICS)
+				Usage = RigidBodyUsage::COLLISIONS_AND_PHYSICS;
+
+
+			auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
+			if (isPhysicsSimulationEnabled)
+				world->removeRigidBody(rigidBody.Body);
+			btVector3 inertia;
+			rigidBody.Body->setCollisionShape(Shape.get());
+			rigidBody.Body->getCollisionShape()->calculateLocalInertia(Mass, inertia);
+			rigidBody.Body->setActivationState(DISABLE_DEACTIVATION);
+			rigidBody.Body->setMassProps(Mass, inertia);
+			rigidBody.Body->setLinearFactor(btVector3(1, 1, 1));
+			rigidBody.Body->setAngularFactor(btVector3(1, 1, 1));
+			rigidBody.Body->updateInertiaTensor();
+			rigidBody.Body->clearForces();
+
+			if (isPhysicsSimulationEnabled)
+				world->addRigidBody(rigidBody.Body);
+		}
+		if (rigidBody.Collision)
+		{
+			rigidBody.Collision->setCollisionShape(Shape.get());
+		}
     }
 }
 
@@ -443,14 +448,8 @@ auto RigidBodyComponent::EnablePhysicsSimulation(const bool force) -> void
 auto RigidBodyComponent::DisablePhysicsSimulation() -> void
 {   
     if (isPhysicsSimulationEnabled) {
-
-        int before = PhysicsModuleData::GetInstance()->GetDynamicsWorld()->getNumCollisionObjects();
-
         PhysicsModuleData::GetInstance()->GetDynamicsWorld()->removeRigidBody(rigidBody.Body);
         isPhysicsSimulationEnabled = false;
-
-        int after = PhysicsModuleData::GetInstance()->GetDynamicsWorld()->getNumCollisionObjects();
-        bool WasNOTDeleted = after == before;
     }
 }
 

@@ -127,8 +127,8 @@ protected:
 
 	struct RigidBody
 	{
-		btRigidBody* Body;
-		btGhostObject* Collision;
+		btRigidBody* Body = nullptr;
+		btGhostObject* Collision = nullptr;
 	} rigidBody;
 	
 	RigidBodyUsage Usage;

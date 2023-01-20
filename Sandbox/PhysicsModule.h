@@ -20,6 +20,7 @@ public:
     void AddCollisionShape(btCollisionShape* shape);
     btDiscreteDynamicsWorld* GetDynamicsWorld();
 
+	// todo: delete ghostObjects array and related methods - they are not used anywhere anymore
     void AddGhostObject(btGhostObject* obj);
     std::vector<btGhostObject*> GetGhostObjects();
 	void RemoveGhostObject(btGhostObject* obj);
