@@ -16,6 +16,7 @@ class Mouse
 public:
 	bool IsDown(Button button) const;
 	void GetDeltas(float& outX, float& outY);
+	auto GetScrollDelta() const -> int { return scrollDelta; }
 private:
 	void Prepare();
 	void ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam);

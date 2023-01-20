@@ -13,7 +13,9 @@ public:
 
 	void SetPitchYaw(float NewPitch, float NewYaw) { Pitch = NewPitch; Yaw = NewYaw; }
 
-	float Speed = 3.0f;
+	float Speed = 15.0f;
+	float MinSpeed = 3.0f;
+	float MaxSpeed = 100.0f;
 private:
 
 	class Camera* Cam;

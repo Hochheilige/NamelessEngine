@@ -5,6 +5,7 @@
 #include "InputDevice.h"
 #include "Keyboard.h"
 #include "ImGuiSubsystem.h"
+#include "Actor.h"
 
 CameraController::CameraController()
 {
@@ -23,7 +24,7 @@ void CameraController::SetCameraToControl(Camera* InCamera)
 
 void CameraController::Update(float DeltaTime)
 {
-	if (Cam == nullptr || 
+	if (Cam == nullptr ||
 		// TODO: remove hack: disable editor camera movement when it's not in use
 		!Game::GetInstance()->GetUseEditorCamera())
 	{
@@ -34,9 +35,10 @@ void CameraController::Update(float DeltaTime)
 	Vector3 movementDelta = Vector3::Zero;
 
 	auto keyboard = input.GetKeyboard();
+	Mouse* mouse = input.GetMouse();
 
-	if (Game::GetInstance()->GetPlayState() != PlayState::Playing && 
-		Game::GetInstance()->GetImGuiSubsystem()->GetIsViewportFocused() && 
+	if (Game::GetInstance()->GetPlayState() != PlayState::Playing &&
+		Game::GetInstance()->GetImGuiSubsystem()->GetIsViewportFocused() &&
 		input.GetMouse()->IsDown(RIGHT)) {
 
 		if (keyboard->IsDown(KEY_W))
@@ -64,7 +66,7 @@ void CameraController::Update(float DeltaTime)
 			movementDelta.z -= DeltaTime * Speed;
 		}
 	}
-	
+
 
 	if (keyboard->IsDown(KEY_C))
 	{
@@ -88,11 +90,24 @@ void CameraController::Update(float DeltaTime)
 	input.GetMouse()->GetDeltas(deltaX, deltaY);
 
 	if (input.GetMouse()->IsDown(RIGHT) &&
-		Game::GetInstance()->GetImGuiSubsystem()->GetIsViewportFocused()){
+		Game::GetInstance()->GetImGuiSubsystem()->GetIsViewportFocused()) {
 		Pitch += DeltaTime * deltaY * RotSpeedPitch;
 		Pitch = Pitch < -MaxPitch ? -MaxPitch : Pitch > MaxPitch ? MaxPitch : Pitch;
 		Yaw += DeltaTime * deltaX * RotSpeedYaw;
 	}
 
 	Cam->Transform.Rotation.SetEulerAngles(Pitch, Yaw, 0.0f);
+
+	float scrollDelta = mouse->GetScrollDelta() / 250.0f;
+	Speed += scrollDelta;
+	if (Speed > MaxSpeed)
+		Speed = MaxSpeed;
+	else if (Speed < MinSpeed)
+		Speed = MinSpeed;
+
+	EditorContext& ec = Game::GetInstance()->MyEditorContext;
+	if (keyboard->IsDown(KEY_F) && ec.GetSelectedActor() != nullptr)
+	{
+		Cam->Transform.Position = ec.GetSelectedActor()->GetTransform().Position;
+	}
 }
