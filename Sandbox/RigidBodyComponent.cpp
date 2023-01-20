@@ -334,8 +334,7 @@ void RigidBodyComponent::Update(float DeltaTime)
 		break;
 	}
 
-    SetTransform(t, TeleportType::TeleportPhysics);
-   //SceneComponent::SetTransform(t);
+   SceneComponent::SetTransform(t);
 }
 
 auto RigidBodyComponent::SetTransform(const Transform& InTransform, TeleportType InTeleportType) -> void
