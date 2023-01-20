@@ -22,6 +22,7 @@ namespace Scripts.Tests
         protected internal override void Init()
         {
             mv_cmp = AddComponent<MovementComponent>("MovementComponent");
+            mv_cmp.SetGenerateOverlapEvents(true);
             camComp = AddComponent<CameraComponent>("CameraComponent");
         }
 
@@ -194,17 +195,17 @@ namespace Scripts.Tests
         protected override void Hit(Actor otherActor)
         {
             //otherActor.Components.GetComponent<StaticMeshRenderer>().SetMeshPath("../Assets/Meshes/test.fbx/Torus");
-            Console.WriteLine("PlayahActor Hit event ");
+            Console.WriteLine("PlayahActor Hit event with {0}", otherActor.ToString());
         }   
         protected override void BeginOverlap(Actor otherActor)
         {
             //otherActor.Components.GetComponent<StaticMeshRenderer>().SetMeshPath("../Assets/Meshes/test.fbx/Torus");
-            Console.WriteLine("PlayahActor BeginOverlap event ");
+            Console.WriteLine("PlayahActor BeginOverlap event with {0}", otherActor.ToString());
         }
         protected override void EndOverlap (Actor otherActor)
         {
             //otherActor.Components.GetComponent<StaticMeshRenderer>().SetMeshPath("../Assets/Meshes/test.fbx/Torus");
-            Console.WriteLine("PlayahActor EndOverlap event ");
+            Console.WriteLine("PlayahActor EndOverlap event with {0}", otherActor.ToString());
         }
 
     }

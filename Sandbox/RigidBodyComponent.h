@@ -36,7 +36,7 @@ struct SimulationContactResultCallback : public btCollisionWorld::ContactResultC
 
 	bool bCollision;
 	SimulationContactResultCallback() : bCollision(false) {
-		m_closestDistanceThreshold = 1;
+		m_closestDistanceThreshold = 0.3;
 	}
 	
 	btScalar addSingleResult(btManifoldPoint& cp,
@@ -93,6 +93,14 @@ public:
 
 	void SetLinearVelocity(btVector3 velocity);
 
+	void SetGenerateHitEvents(bool generate) { generateHitEvents = generate; }
+
+	void SetGenerateOverlapEvents(bool generate) { generateOverlapEvents = generate; }
+
+	bool GetGenerateHitEvents() { return generateHitEvents; }
+
+	bool GetGenerateOverlapEvents() { return generateOverlapEvents; }
+
 	void RegisterRigidBodyType();
 
 	virtual void Update(float DeltaTime) override;
@@ -141,6 +149,10 @@ protected:
 
 	bool isPhysicsSimulationEnabled = false;
 
+	bool generateHitEvents = false;
+	bool generateOverlapEvents = false;
+
+
 public:
 	// todo: do we need this?
 	bool is_kinematic = false;
@@ -151,7 +163,7 @@ public:
 
 	auto Reinit() -> void;
 
-	bool in_world = true;
+	bool in_world = true;	
 
 private:
 

@@ -82,7 +82,7 @@
     <Compile Include="Engine\Transform.cs" />
     <Compile Include="Extensions\ComponentHelper.cs" />
     <Compile Include="Tests\AITestActor.cs" />
-    <Compile Include="Tests\Collision.cs" />
+    <Compile Include="Tests\CollisionPlace.cs" />
     <Compile Include="Tests\Bullet.cs" />
     <Compile Include="Tests\BunnyAIActor.cs" />
     <Compile Include="Tests\SimpleProjectile.cs" />

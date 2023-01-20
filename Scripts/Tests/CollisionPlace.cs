@@ -24,9 +24,11 @@ namespace Scripts
             //rigidbody = (RigidBodyComponent)AddComponent(ComponentType.RigidBodyCubeType);
             rigidbody = AddComponent<RigidBodyComponent>("RigidBodyComponent");
             rigidbody.SetType(RigidBodyType.Static);
-            rigidbody.SetUsage(RigidBodyUsage.Collisions);
+            rigidbody.SetUsage(RigidBodyUsage.OverlapAll);
             rigidbody.SetCollisionShape(CollisionShape.Sphere);
             rigidbody.SetMass(0);
+            //rigidbody.SetGenerateOverlapEvents(true);
+            rigidbody.SetGenerateHitEvents(true);
             rigidbody.EnablePhysicsSimulation();
             //mv_cmp = (MovementComponent)AddComponent((int)ComponentsEnum.MovementComponentType);
             // add a simple rigid body instead and activate physics after a slight offset to avoid collision with playah
@@ -58,14 +60,19 @@ namespace Scripts
         protected override void BeginOverlap(Actor otherActor)
         {
             //otherActor.Components.GetComponent<StaticMeshRenderer>().SetMeshPath("../Assets/Meshes/test.fbx/Torus");
-            Console.WriteLine("Collision place BeginOverlap event");
+            Console.WriteLine("Collision place BeginOverlap event with {0}", otherActor.ToString());
         }        
         protected override void EndOverlap(Actor otherActor)
         {
             //otherActor.Components.GetComponent<StaticMeshRenderer>().SetMeshPath("../Assets/Meshes/test.fbx/Torus");
-            Console.WriteLine("Collision place EndOverlap event");
+            Console.WriteLine("Collision place EndOverlap event with {0}", otherActor.ToString());
         }
 
+        protected override void Hit(Actor otherActor)
+        {
+
+            Console.WriteLine("Collision place Hit event with {0}", otherActor.ToString());
+        }
 
     }
 }

@@ -43,6 +43,22 @@ namespace Scripts.Components
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool InternalIsFollowingNavPath(IntPtr handle);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void InternalSetGenerateHitEvents(IntPtr handle, bool generate);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void InternalSetGenerateOverlapEvents(IntPtr handle, bool generate);
+
+        public void SetGenerateHitEvents(bool generate)
+        {
+            InternalSetGenerateHitEvents(CppInstance, generate);
+        }
+
+        public void SetGenerateOverlapEvents(bool generate)
+        {
+            InternalSetGenerateOverlapEvents(CppInstance, generate);
+        }
+
         public void Jump(Vector3 direction)
         {
             InternalJump(CppInstance, direction);

@@ -17,6 +17,9 @@ namespace Scripts.Components
         Physics = 0,
         Collisions = 1,
         CollisionsAndPhysics = 2,
+        NoCollisions = 0,
+        OverlapAll = 1,
+        BlockAll = 2,
     }
 
     public enum CollisionShape
@@ -53,10 +56,13 @@ namespace Scripts.Components
         private static extern void InternalSetUsage(IntPtr handle, RigidBodyUsage usage);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void InternalSetCollisionShape(IntPtr handle, CollisionShape shape);
-
+        private static extern void InternalSetCollisionShape(IntPtr handle, CollisionShape shape);     
+        
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void InternalInit(IntPtr handle);
+        private static extern void InternalSetGenerateHitEvents(IntPtr handle, bool generate);        
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void InternalSetGenerateOverlapEvents(IntPtr handle, bool generate);
 
 
         public RigidBodyComponent(Actor owner, bool internalCreate = true) : base(owner) 
@@ -67,9 +73,14 @@ namespace Scripts.Components
             }
         }
 
-        public void Init()
+        public void SetGenerateHitEvents(bool generate)
         {
-            InternalInit(CppInstance);
+            InternalSetGenerateHitEvents(CppInstance, generate);
+        }
+
+        public void SetGenerateOverlapEvents(bool generate)
+        {
+            InternalSetGenerateOverlapEvents(CppInstance, generate);
         }
 
         public void SetMass(float mass)

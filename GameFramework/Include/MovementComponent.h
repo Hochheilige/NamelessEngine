@@ -130,6 +130,14 @@ public:
 
 	auto IsFollowingNavPath() const -> bool { return bIsFollowingNavPath; }
 
+	void SetGenerateHitEvents(bool generate) { generateHitEvents = generate; }
+
+	void SetGenerateOverlapEvents(bool generate) { generateOverlapEvents = generate; }
+
+	bool GetGenerateHitEvents() { return generateHitEvents; }
+
+	bool GetGenerateOverlapEvents() { return generateOverlapEvents; }
+
 private:
 	//character capsule shape ??
 	btScalar capsuleRadius = .6f;
@@ -142,6 +150,9 @@ private:
 	Vector3 up = { 0.0f, 1.0f, 0.0f };
 
 	MonoMovementComponent* mMonoComponent = new MonoMovementComponent;
+
+	bool generateHitEvents = false;
+	bool generateOverlapEvents = false;
 
 	NavPath navPath;
 

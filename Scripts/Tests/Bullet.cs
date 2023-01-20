@@ -34,6 +34,8 @@ namespace Scripts
             rigidbody.SetUsage(RigidBodyUsage.CollisionsAndPhysics);
             rigidbody.SetCollisionShape(CollisionShape.Sphere);
             rigidbody.SetMass(1);
+            rigidbody.SetGenerateHitEvents(true);
+            rigidbody.SetGenerateOverlapEvents(true);
             rigidbody.EnablePhysicsSimulation();
             //mv_cmp = (MovementComponent)AddComponent((int)ComponentsEnum.MovementComponentType);
             // add a simple rigid body instead and activate physics after a slight offset to avoid collision with playah
@@ -91,6 +93,16 @@ namespace Scripts
             root.Position.X += 0.001f;
             root.Position.X += 0.001f;
             SetTransform(root);
+        }
+
+        protected override void BeginOverlap(Actor otherActor) {
+            Console.WriteLine("Bullet Begin overlap with{0}", otherActor.ToString());
+        }
+        protected override void EndOverlap(Actor otherActor) {
+            Console.WriteLine("Bullet End overlap with {0}", otherActor.ToString());
+        }
+        protected override void Hit(Actor otherActor) {
+            Console.WriteLine("Bullet hit with {0}", otherActor.ToString());
         }
     }
 }

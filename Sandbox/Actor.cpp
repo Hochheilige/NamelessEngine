@@ -349,9 +349,18 @@ void callback(btDynamicsWorld* world, btScalar timeSleep)
 						world->addCollisionObject(comp->GetGhostObject());
 						auto otherActor = reinterpret_cast<SceneComponent*>(comp->GetGhostObject()->getUserPointer())->GetOwner();
 						physics->removedObjects.pop();
-						actor->EndOverlap(otherActor);
 						ghost->setUserIndex(-1);
 						comp->in_world = true;
+
+						if (ghost->getUserIndex2() > 0) {
+							actor->EndOverlap(otherActor);
+							ghost->setUserIndex2(-1);
+						}
+						if (ghost->getUserIndex3() > 0)
+						{
+							otherActor->EndOverlap(actor);
+							ghost->setUserIndex3(-1);
+						}
 					}
 				}
 
@@ -372,7 +381,14 @@ void callback(btDynamicsWorld* world, btScalar timeSleep)
 							{
 							case RigidBodyUsage::COLLISIONS_AND_PHYSICS:
 							{
-								actor->Hit(otherActor);
+								auto not_player = actor->GetComponentOfClass<RigidBodyComponent>();
+								if (!not_player && actor->GetComponentOfClass<MovementComponent>()->GetGenerateHitEvents())
+									actor->Hit(otherActor);
+								if (not_player && actor->GetComponentOfClass<RigidBodyComponent>()->GetGenerateHitEvents())
+									actor->Hit(otherActor);
+
+								if (rb_comp->GetGenerateHitEvents() && otherActor->GetMonoActor())
+									otherActor->Hit(actor);
 								break;
 							}
 							case RigidBodyUsage::COLLISIONS:
@@ -384,7 +400,23 @@ void callback(btDynamicsWorld* world, btScalar timeSleep)
 									rb_comp->in_world = false;
 									physics->removedObjects.push(rb_comp);
 									ghost->setUserIndex(1);
+								}
+
+								auto not_player = actor->GetComponentOfClass<RigidBodyComponent>();
+								if (!not_player && actor->GetComponentOfClass<MovementComponent>()->GetGenerateOverlapEvents())
+								{
 									actor->BeginOverlap(otherActor);
+									ghost->setUserIndex2(1);
+								}
+								if (not_player && actor->GetComponentOfClass<RigidBodyComponent>()->GetGenerateOverlapEvents())
+								{
+									actor->BeginOverlap(otherActor);
+									ghost->setUserIndex2(1);
+								}
+
+								if (rb_comp->GetGenerateOverlapEvents() && otherActor->GetMonoActor()) {
+									otherActor->BeginOverlap(actor);
+									ghost->setUserIndex3(1);
 								}
 
 							}
@@ -392,19 +424,6 @@ void callback(btDynamicsWorld* world, btScalar timeSleep)
 								break;
 							}
 						}
-						//auto rb_comp = otherActor->GetComponentOfClass<RigidBodyComponent>();
-						//if (rb_comp->GetUsage() == RigidBodyUsage::COLLISIONS) {
-						//	auto world = PhysicsModuleData::GetInstance()->GetDynamicsWorld();
-						//	if (rb_comp->in_world)
-						//	{
-						//		world->removeCollisionObject(rb_comp->GetGhostObject());
-						//		rb_comp->in_world = false;
-						//	}
-						//	SimulationContactResultCallback crc;
-
-						//	
-						//	world->contactPairTest(ghost, rb_comp->GetGhostObject(), crc);
-						//}
 						
 					}
 				}
