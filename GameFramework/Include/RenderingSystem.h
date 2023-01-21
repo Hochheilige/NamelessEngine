@@ -40,7 +40,7 @@ public:
 	// TODO: add a delegate and subscribe to resize event
 	void HandleScreenResize(const Vector2& NewSize);
 
-	auto GetActorUnderPosition(const Vector2& Pos)->Actor*;
+	auto GetActorUnderPosition(const Vector2& Pos)->std::weak_ptr<Actor>;
 
 	auto GetWorldPositionUnerScreenPosition(const Vector2& Pos)->Vector3;
 

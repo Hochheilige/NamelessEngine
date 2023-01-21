@@ -30,7 +30,6 @@ private:
         game->AddPendingFunction([currentLevel]()
         {
             Serializer::ReadFromFile(currentLevel, Game::GetInstance(), true);
-            Game::GetInstance()->MyEditorContext.SetSelectedActor(nullptr);
         });
     }
 };

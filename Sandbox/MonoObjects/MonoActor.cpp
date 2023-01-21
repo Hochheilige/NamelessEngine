@@ -132,7 +132,7 @@ const std::string& MonoActor::GetClassname() const
     return ClassName;
 }
 
-void MonoActor::Hit(Actor* otherActor)
+void MonoActor::Hit(std::shared_ptr<Actor> otherActor)
 {
     auto mono = MonoSystem::GetInstance();
     void* args[1];
@@ -151,7 +151,7 @@ void MonoActor::Hit(Actor* otherActor)
     }
 }
 
-void MonoActor::BeginOverlap(Actor* otherActor)
+void MonoActor::BeginOverlap(std::shared_ptr<Actor> otherActor)
 {
     auto mono = MonoSystem::GetInstance();
     void* args[1];
@@ -170,7 +170,7 @@ void MonoActor::BeginOverlap(Actor* otherActor)
     }
 }
 
-void MonoActor::EndOverlap(Actor* otherActor)
+void MonoActor::EndOverlap(std::shared_ptr<Actor> otherActor)
 {
     auto mono = MonoSystem::GetInstance();
     void* args[1];

@@ -3,6 +3,7 @@
 #include <wrl/client.h>
 
 #include "MathInclude.h"
+#include <memory>
 
 class RenderingSystem;
 class Renderer;
@@ -27,7 +28,7 @@ public:
 	auto HandleScreenResize(const Vector2& NewSize) -> void;
 
 	auto GetRendererUnderPosition(const Vector2& Pos)->Renderer*;
-	auto GetActorUnderPosition(const Vector2& Pos)->Actor*;
+	auto GetActorUnderPosition(const Vector2& Pos)->std::weak_ptr<Actor>;
 
 	auto GetWorldPositionUnerScreenPosition(const Vector2& Pos)->Vector3;
 

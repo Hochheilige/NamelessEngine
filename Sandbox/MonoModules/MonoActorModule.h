@@ -18,15 +18,14 @@ public:
 private:
     static Transform ActorGetTransform(Actor* actor){return actor->GetTransform();}
     static void ActorSetTransform(Actor* actor, Transform transform){actor->SetTransform(transform);}
-    static void ActorDestroy(Actor* actor){ delete actor; }
+	static void ActorDestroy(Actor* actor) { Game::GetInstance()->DestroyActor(actor->AsSharedPtr()); }
     
     static MonoObject* InstantiateActor(MonoObject* ns, MonoObject* name)
     {
         auto nsStr = mono_string_to_utf8(mono_object_to_string(ns, nullptr));
         auto nameStr = mono_string_to_utf8(mono_object_to_string(name, nullptr));
         auto actor = CreateActor<Actor>();
-        actor->InitializeMonoActor(nsStr, nameStr, false);
-        //actor->GetMonoActor()->Init();
+        actor->InitializeMonoActor(nsStr, nameStr, true);
         
         auto csActor = actor->GetMonoActor();
         return csActor->GetCsInstance();

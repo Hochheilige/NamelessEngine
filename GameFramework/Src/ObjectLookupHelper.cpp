@@ -158,14 +158,14 @@ auto ObjectLookupHelper::GetRendererUnderPosition(const Vector2& Pos)->Renderer*
 	return nullptr;
 }
 
-auto ObjectLookupHelper::GetActorUnderPosition(const Vector2& Pos)->Actor*
+auto ObjectLookupHelper::GetActorUnderPosition(const Vector2& Pos)->std::weak_ptr<Actor>
 {
 	Renderer* renderer = GetRendererUnderPosition(Pos);
 	if (renderer != nullptr)
 	{
 		return renderer->GetOwner();
 	}
-	return nullptr;
+	return std::weak_ptr<Actor>();
 }
 
 auto ObjectLookupHelper::GetWorldPositionUnerScreenPosition(const Vector2& Pos) -> Vector3

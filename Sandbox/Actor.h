@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include "Game.h"
@@ -89,7 +90,7 @@ public:
 	void InitializeMonoActor(const char* className = "Actor");
 	void InitializeMonoActor(const char* nameSpace, const char* className, bool initComponents = true);
 
-	MonoActor* GetMonoActor() { return mMonoActor;}
+	MonoActor* GetMonoActor() { return mMonoActor.get();}
 
 	void OnBeginPlay();
 
@@ -106,11 +107,13 @@ public:
 	json Serialize() const;
 	void Deserialize(const json* in, bool destructive = false);
 	uuid GetId() const;
-	void Hit(Actor* otherActor);
-	void BeginOverlap(Actor* otherActor);
-	void EndOverlap(Actor* otherActor);
+	void Hit(std::shared_ptr<Actor> otherActor);
+	void BeginOverlap(std::shared_ptr<Actor> otherActor);
+	void EndOverlap(std::shared_ptr<Actor> otherActor);
 
 	auto OnGui() -> void;
+
+	auto AsSharedPtr() const -> std::shared_ptr<Actor> { return std::static_pointer_cast<Actor>(Object::AsSharedPtr()); }
 
 private:
 	void OnComponentAdded(Component* component);
@@ -122,7 +125,7 @@ private:
 	SceneComponent* RootComponent = nullptr;
 	std::vector<Component*> Components;
 
-	MonoActor* mMonoActor = nullptr;
+	std::unique_ptr<MonoActor> mMonoActor;
 	
 public:
 	bool is_physics_enabled = false;

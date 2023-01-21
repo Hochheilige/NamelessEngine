@@ -515,7 +515,7 @@ void RenderingSystem::HandleScreenResize(const Vector2& NewSize)
 	MyGame->UpdateCamerasAspectRatio(NewSize.x / NewSize.y);
 }
 
-auto RenderingSystem::GetActorUnderPosition(const Vector2& Pos) -> Actor*
+auto RenderingSystem::GetActorUnderPosition(const Vector2& Pos) ->std::weak_ptr <Actor>
 {
 	return MyObjectLookupHelper->GetActorUnderPosition(Pos);
 }

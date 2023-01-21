@@ -97,7 +97,7 @@ EngineContentRegistry::~EngineContentRegistry()
 	delete boxRenderer;
 }
 
-auto EngineContentRegistry::CreateBasicActor(const std::string& BaseActorName, const Transform& transform)->Actor*
+auto EngineContentRegistry::CreateBasicActor(const std::string& BaseActorName, const Transform& transform) -> std::shared_ptr<Actor>
 {
 	auto findRes = CreateActionsMap.find(BaseActorName);
 	if (findRes != CreateActionsMap.end())
@@ -105,12 +105,12 @@ auto EngineContentRegistry::CreateBasicActor(const std::string& BaseActorName, c
 		CreateFuncType f = findRes->second;
 		return (this->*f)(transform);
 	}
-	return nullptr;
+	return std::shared_ptr<Actor>();
 }
 
-auto EngineContentRegistry::CreateBox(const Transform& transform) -> Actor*
+auto EngineContentRegistry::CreateBox(const Transform& transform) -> std::shared_ptr<Actor>
 {
-	Actor* box = CreateActor<Actor>();
+	std::shared_ptr<Actor> box = CreateActor<Actor>();
 	auto box_rb = box->AddComponent<RigidBodyComponent>();
 	box->SetTransform(transform);
 	box_rb->SetRigidBodyType(RigidBodyType::DYNAMIC);
@@ -127,9 +127,9 @@ auto EngineContentRegistry::CreateBox(const Transform& transform) -> Actor*
 	return box;
 }
 
-auto EngineContentRegistry::CreatePointLight(const Transform& transform)->Actor*
+auto EngineContentRegistry::CreatePointLight(const Transform& transform) -> std::shared_ptr<Actor>
 {
-	Actor* actor = CreateActor<Actor>();
+	std::shared_ptr<Actor> actor = CreateActor<Actor>();
 
 	PointLight* pl = actor->AddComponent<PointLight>();
 	pl->SetRelativePosition(transform.Position);
@@ -149,9 +149,9 @@ auto EngineContentRegistry::CreatePointLight(const Transform& transform)->Actor*
 	return actor;
 }
 
-auto EngineContentRegistry::CreateSphere(const Transform& transform)->Actor*
+auto EngineContentRegistry::CreateSphere(const Transform& transform) -> std::shared_ptr<Actor>
 {
-	Actor* sphere = CreateActor<Actor>();
+	std::shared_ptr<Actor> sphere = CreateActor<Actor>();
 	auto sphere_rb = sphere->AddComponent<RigidBodyComponent>();
 	sphere->SetTransform(transform);
 	sphere_rb->SetRigidBodyType(RigidBodyType::DYNAMIC);

@@ -20,20 +20,20 @@ public:
 	virtual void Update(float DeltaTime) override;
 
 	// Base objects with mesh and rigidbody components
-	Actor* CreateNonPhysicsBox(Transform transform);
-	Actor* CreatePlayahActor(Transform transform);
-	Actor* CreateStaticBox(Transform transform);
-	Actor* CreateDynamicBox(Transform transform);
-	Actor* CreateKinematicBox(Transform transform);
-	Actor* CreateStaticSphere(Transform transform);
-	Actor* CreateDynamicSphere(Transform transform);
-	Actor* CreateKinematicSphere(Transform transform);
+	std::shared_ptr<Actor> CreateNonPhysicsBox(Transform transform);
+	std::shared_ptr<Actor> CreatePlayahActor(Transform transform);
+	std::shared_ptr<Actor> CreateStaticBox(Transform transform);
+	std::shared_ptr<Actor> CreateDynamicBox(Transform transform);
+	std::shared_ptr<Actor> CreateKinematicBox(Transform transform);
+	std::shared_ptr<Actor> CreateStaticSphere(Transform transform);
+	std::shared_ptr<Actor> CreateDynamicSphere(Transform transform);
+	std::shared_ptr<Actor> CreateKinematicSphere(Transform transform);
 
-	Actor* CreateBunny(Transform transform);
+	std::shared_ptr<Actor> CreateBunny(Transform transform);
 
-	Actor* CreateBun(Transform transform);
+	std::shared_ptr<Actor> CreateBun(Transform transform);
 
-	auto CreateHierarcyTestActor() ->Actor*;
+	auto CreateHierarcyTestActor() -> std::shared_ptr<Actor>;
 
 private:
 	
@@ -66,8 +66,8 @@ private:
 	std::vector<class MeshRenderer*> box;
 	class MeshRenderer* bunny;
 
-	Actor* platform;
-	Actor* staticBox;
+	std::weak_ptr<Actor> platform;
+	std::weak_ptr<Actor> staticBox;
 
 
 	// burger bun

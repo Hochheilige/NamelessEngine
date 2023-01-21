@@ -52,17 +52,10 @@ Actor::Actor()
 
 Actor::~Actor()
 {
-	delete(mMonoActor);
-
-	auto game = Game::GetInstance();
-	game->Actors.erase(std::remove(game->Actors.begin(), game->Actors.end(), this), game->Actors.end());
+	mMonoActor.reset();
 	
 	for (auto comp : Components) {
 		delete(comp);
-	}
-	if (game->MyEditorContext.GetSelectedActor() == this)
-	{
-		game->MyEditorContext.SetSelectedActor(nullptr);
 	}
 }
 
@@ -84,7 +77,7 @@ void Actor::OnComponentAdded(Component* component)
 		mMonoActor->AddComponent(component);
 	}
 
-	component->mOwner = this;
+	component->mOwner = AsSharedPtr();
 }
 
 void Actor::AddOrphanComponent(Component* component)
@@ -120,12 +113,12 @@ void Actor::SetUuid(uuid idIn)
 
 void Actor::InitializeMonoActor(const char* className)
 {
-	mMonoActor = new MonoActor(this, "Scripts", className);
+	mMonoActor.reset(new MonoActor(this, "Scripts", className));
 }
 
 void Actor::InitializeMonoActor(const char* nameSpace, const char* className, bool initComponents)
 {
-	mMonoActor = new MonoActor(this, nameSpace, className);
+	mMonoActor.reset(new MonoActor(this, nameSpace, className));
 
 	if(initComponents) {
 		mMonoActor->RegisterComponents();
@@ -305,17 +298,17 @@ uuid Actor::GetId() const
 	return id;
 }
 
-void Actor::Hit(Actor* otherActor)
+void Actor::Hit(std::shared_ptr<Actor> otherActor)
 {
 	mMonoActor->Hit(otherActor);
 }
 
-void Actor::BeginOverlap(Actor* otherActor)
+void Actor::BeginOverlap(std::shared_ptr<Actor> otherActor)
 {
 	mMonoActor->BeginOverlap(otherActor);
 }
 
-void Actor::EndOverlap(Actor* otherActor)
+void Actor::EndOverlap(std::shared_ptr<Actor> otherActor)
 {
 	mMonoActor->EndOverlap(otherActor);
 }
@@ -344,102 +337,103 @@ void callback(btDynamicsWorld* world, btScalar timeSleep)
 		if (ghost->getNumOverlappingObjects() && ghost->getUserPointer())
 		{
 
-			auto actor = reinterpret_cast<SceneComponent*>(ghost->getUserPointer())->GetOwner();
+			auto actor = reinterpret_cast<SceneComponent*>(ghost->getUserPointer())->GetOwner().lock();
 
-			if (actor->GetMonoActor()) {
+			if (!actor || !actor->GetMonoActor())
+			{
+				continue;
+			}
 
-				if (ghost->getUserIndex() > 0)
+			if (ghost->getUserIndex() > 0)
+			{
+				auto physics = PhysicsModuleData::GetInstance();
+				SimulationContactResultCallback crc;
+				auto comp = physics->removedObjects.back();
+				world->contactPairTest(ghost, comp->GetGhostObject(), crc);
+
+				if (!crc.bCollision)
 				{
-					auto physics = PhysicsModuleData::GetInstance();
-					SimulationContactResultCallback crc;
-					auto comp = physics->removedObjects.back();
-					world->contactPairTest(ghost, comp->GetGhostObject(), crc);
+					world->addCollisionObject(comp->GetGhostObject());
+					auto otherActor = reinterpret_cast<SceneComponent*>(comp->GetGhostObject()->getUserPointer())->GetOwner().lock();
+					physics->removedObjects.pop();
+					ghost->setUserIndex(-1);
+					comp->in_world = true;
 
-					if (!crc.bCollision)
+					if (ghost->getUserIndex2() > 0) {
+						actor->EndOverlap(otherActor);
+						ghost->setUserIndex2(-1);
+					}
+					if (ghost->getUserIndex3() > 0)
 					{
-						world->addCollisionObject(comp->GetGhostObject());
-						auto otherActor = reinterpret_cast<SceneComponent*>(comp->GetGhostObject()->getUserPointer())->GetOwner();
-						physics->removedObjects.pop();
-						ghost->setUserIndex(-1);
-						comp->in_world = true;
-
-						if (ghost->getUserIndex2() > 0) {
-							actor->EndOverlap(otherActor);
-							ghost->setUserIndex2(-1);
-						}
-						if (ghost->getUserIndex3() > 0)
-						{
-							otherActor->EndOverlap(actor);
-							ghost->setUserIndex3(-1);
-						}
+						otherActor->EndOverlap(actor);
+						ghost->setUserIndex3(-1);
 					}
 				}
+			}
 
-				for (int i = 0; i < ghost->getNumOverlappingObjects(); ++i)
+			for (int i = 0; i < ghost->getNumOverlappingObjects(); ++i)
+			{
+				// We can get object that this object overlapp with
+				// I think that we should find somehow Actors of this objects
+				// and do something that we need on this callback
+				btCollisionObject* rb = ghost->getOverlappingObject(i);
+
+				if (rb->getUserPointer())
 				{
-					// We can get object that this object overlapp with
-					// I think that we should find somehow Actors of this objects
-					// and do something that we need on this callback
-					btCollisionObject* rb = ghost->getOverlappingObject(i);
 
-					if (rb->getUserPointer())
-					{
+					auto otherActor = reinterpret_cast<SceneComponent*>(rb->getUserPointer())->GetOwner().lock();
 
-						auto otherActor = reinterpret_cast<SceneComponent*>(rb->getUserPointer())->GetOwner();
+					if (actor != otherActor) {
 
-						if (actor != otherActor) {
+						auto rb_comp = otherActor->GetComponentOfClass<RigidBodyComponent>();
+						if (rb_comp) {
+							switch (rb_comp->GetUsage())
+							{
+							case RigidBodyUsage::COLLISIONS_AND_PHYSICS:
+							{
+								auto not_player = actor->GetComponentOfClass<RigidBodyComponent>() ? true : false;
+								if (!not_player && actor->GetComponentOfClass<MovementComponent>()->GetGenerateHitEvents())
+									actor->Hit(otherActor);
+								if (not_player && actor->GetComponentOfClass<RigidBodyComponent>()->GetGenerateHitEvents())
+									actor->Hit(otherActor);
 
-							auto rb_comp = otherActor->GetComponentOfClass<RigidBodyComponent>();
-							if (rb_comp) {
-								switch (rb_comp->GetUsage())
+								if (rb_comp->GetGenerateHitEvents() && otherActor->GetMonoActor())
+									otherActor->Hit(actor);
+								break;
+							}
+							case RigidBodyUsage::COLLISIONS:
+							{
+								auto physics = PhysicsModuleData::GetInstance();
+								if (rb_comp->in_world)
 								{
-								case RigidBodyUsage::COLLISIONS_AND_PHYSICS:
+									world->removeCollisionObject(rb_comp->GetGhostObject());
+									rb_comp->in_world = false;
+									physics->removedObjects.push(rb_comp);
+									ghost->setUserIndex(1);
+								}
+
+								auto not_player = actor->GetComponentOfClass<RigidBodyComponent>();
+								if (!not_player && actor->GetComponentOfClass<MovementComponent>()->GetGenerateOverlapEvents())
 								{
-									auto not_player = actor->GetComponentOfClass<RigidBodyComponent>() ? true : false;
-									if (!not_player && actor->GetComponentOfClass<MovementComponent>()->GetGenerateHitEvents())
-										actor->Hit(otherActor);
-									if (not_player && actor->GetComponentOfClass<RigidBodyComponent>()->GetGenerateHitEvents())
-										actor->Hit(otherActor);
-
-									if (rb_comp->GetGenerateHitEvents() && otherActor->GetMonoActor())
-										otherActor->Hit(actor);
-									break;
+									actor->BeginOverlap(otherActor);
+									ghost->setUserIndex2(1);
 								}
-								case RigidBodyUsage::COLLISIONS:
+								if (not_player && actor->GetComponentOfClass<RigidBodyComponent>()->GetGenerateOverlapEvents())
 								{
-									auto physics = PhysicsModuleData::GetInstance();
-									if (rb_comp->in_world)
-									{
-										world->removeCollisionObject(rb_comp->GetGhostObject());
-										rb_comp->in_world = false;
-										physics->removedObjects.push(rb_comp);
-										ghost->setUserIndex(1);
-									}
-
-									auto not_player = actor->GetComponentOfClass<RigidBodyComponent>();
-									if (!not_player && actor->GetComponentOfClass<MovementComponent>()->GetGenerateOverlapEvents())
-									{
-										actor->BeginOverlap(otherActor);
-										ghost->setUserIndex2(1);
-									}
-									if (not_player && actor->GetComponentOfClass<RigidBodyComponent>()->GetGenerateOverlapEvents())
-									{
-										actor->BeginOverlap(otherActor);
-										ghost->setUserIndex2(1);
-									}
-
-									if (rb_comp->GetGenerateOverlapEvents() && otherActor->GetMonoActor()) {
-										otherActor->BeginOverlap(actor);
-										ghost->setUserIndex3(1);
-									}
-
+									actor->BeginOverlap(otherActor);
+									ghost->setUserIndex2(1);
 								}
-								default:
-									break;
+
+								if (rb_comp->GetGenerateOverlapEvents() && otherActor->GetMonoActor()) {
+									otherActor->BeginOverlap(actor);
+									ghost->setUserIndex3(1);
 								}
+								break;
+							}
+							default:
+								break;
 							}
 						}
-						
 					}
 				}
 			}

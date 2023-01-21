@@ -6,6 +6,7 @@
 #include "../External/assimp/code/AssetLib/FBX/FBXDocument.h"
 #include "JsonInclude.h"
 //#include "MonoObjects/MonoComponent.h"
+#include <memory>
 
 class Component;
 class MonoComponent;
@@ -56,7 +57,7 @@ public:
 		//throw std::exception("Not Defined");
 	}
 
-	Actor* GetOwner() const { return mOwner; }
+	std::weak_ptr<Actor> GetOwner() const { return mOwner; }
 	uuid GetId() const { return id; }
 	void SetId(uuid idIn)
 	{
@@ -81,7 +82,7 @@ private:
 	static std::unordered_map<std::string, ComponentType> TYPE_BY_NAME;
 	static std::unordered_map<ComponentType, std::string> NAME_BY_TYPE;
 
-	Actor* mOwner;
+	std::weak_ptr<Actor> mOwner;
 	uuid id;
 
 	std::string name;

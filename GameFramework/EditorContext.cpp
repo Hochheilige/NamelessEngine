@@ -13,7 +13,7 @@ auto EditorContext::UnbindFromSelectedComponentChanged(DelegateHandle& handle) -
 }
 
 
-auto EditorContext::SetSelectedActor(Actor* InActor) -> void
+auto EditorContext::SetSelectedActor(std::weak_ptr<Actor> InActor) -> void
 {
 	SelectedActor = InActor;
 	SelectedComponent = nullptr;

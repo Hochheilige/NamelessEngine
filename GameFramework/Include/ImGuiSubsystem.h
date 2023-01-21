@@ -18,7 +18,9 @@ class EditorContext;
 class SceneComponent;
 class DirectoryTreeNode;
 class AssetManager;
+class Actor;
 
+// todo: we probably don't need this anymore
 enum CONTEXT_MENU_VALUES {
 	NOTHING = -1,
 	RENAME = 0,
@@ -72,14 +74,14 @@ private:
 	auto DrawViewport() -> void;
 	auto DrawActorExplorer() -> void;
 	// begin inspector
-	auto DrawComponentSelector(class Actor* actor) -> void;
+	auto DrawComponentSelector(std::shared_ptr<Actor> actor) -> void;
 	auto CanChangeGuizmo() -> bool;
 	auto LayOutTransform() -> void;
 	auto DrawActorInspector() -> void;
-	auto DrawGeneralProperties(class Actor* actor) -> void;
-	auto DrawRigidBodyProperties(Actor* actor) -> void;
+	auto DrawGeneralProperties(std::shared_ptr<Actor> actor) -> void;
+	auto DrawRigidBodyProperties(std::shared_ptr<Actor> actor) -> void;
 	auto DrawStaticMeshProperties() -> void;
-	auto DrawLightPointProperties(Actor* actor) -> void;
+	auto DrawLightPointProperties(std::shared_ptr<Actor> actor) -> void;
 	// end instpector
 	auto DrawGizmos() -> void;
 	auto DrawMessagesWindow() -> void;
@@ -103,9 +105,9 @@ private:
 
 	auto InitStyle() -> void;
 
-	auto ActorBrowserContextMenu(Actor* actor) const -> CONTEXT_MENU_VALUES;
-	auto ActorBrowserContextMenu(Actor* actor, const char* str_id) const -> CONTEXT_MENU_VALUES;
-	auto ActorBrowserContextMenuPopUp(Actor* actor) const -> CONTEXT_MENU_VALUES;
+	auto ActorBrowserContextMenu(std::weak_ptr<Actor> actor) const -> CONTEXT_MENU_VALUES;
+	auto ActorBrowserContextMenu(std::weak_ptr<Actor> actor, const char* str_id) const -> CONTEXT_MENU_VALUES;
+	auto ActorBrowserContextMenuPopUp(std::weak_ptr<Actor> actor) const -> CONTEXT_MENU_VALUES;
 
 	// Helper style functions
 	auto BoldHeader(const char* label, ImGuiTreeNodeFlags flags) const -> bool;

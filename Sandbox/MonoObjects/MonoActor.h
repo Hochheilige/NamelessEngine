@@ -20,9 +20,9 @@ public:
 	void OnGui();
     void OnBeginPlay();
 
-    void Hit(Actor* otherActor);
-    void BeginOverlap(Actor* otherActor);
-    void EndOverlap(Actor* otherActor);
+    void Hit(std::shared_ptr<Actor> otherActor);
+    void BeginOverlap(std::shared_ptr<Actor> otherActor);
+    void EndOverlap(std::shared_ptr<Actor> otherActor);
     
     const char* GetInheritors();
     MonoObject* GetCsInstance();

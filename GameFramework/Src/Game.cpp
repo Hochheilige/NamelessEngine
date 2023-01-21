@@ -92,11 +92,6 @@ void Game::Deserialize(const json* in, bool destructive)
 {
 	if(destructive)
 	{
-		for(int i = Actors.size() - 1; i >= 0; i--)
-		{
-			delete Actors[i];
-		}
-		
 		Actors.clear();
 	}
 
@@ -119,7 +114,7 @@ void Game::Deserialize(const json* in, bool destructive)
 		}
 
 		if(!exists) {
-			Actor* actor = CreateActor<Actor>();
+			std::shared_ptr<Actor> actor = CreateActor<Actor>();
 			actor->SetUuid(id);
 			actor->Deserialize(&actorObj, destructive);
 		}
@@ -385,6 +380,9 @@ ComPtr<ID3D11Buffer> Game::GetPerObjectConstantBuffer()
 
 void Game::UpdateInternal(float DeltaTime)
 {
+	// clear actors array off of destroyed actors
+	Actors.erase(std::remove_if(Actors.begin(), Actors.end(), [](std::shared_ptr<Actor>& elem) { return !elem; }), Actors.end());
+
 	std::vector<std::function<void()>> localPendingFunctions;
 	std::swap(localPendingFunctions, pendingFunctions);
 	
@@ -471,9 +469,9 @@ Collider* Game::GetOverlapping(const Collider* Col)
 	return nullptr;
 }
 
-auto Game::CreateCustomActor(const char* nameSpace, const char* className) -> Actor*
+auto Game::CreateCustomActor(const char* nameSpace, const char* className) -> std::shared_ptr<Actor>
 {
-	Actor* actor = CreateActor<Actor>();
+	std::shared_ptr<Actor> actor = CreateActor<Actor>();
 	actor->InitializeMonoActor(nameSpace, className);
 	return actor;
 }
@@ -521,6 +519,19 @@ auto Game::SetPlayerCamera(CameraComponent* Cam) -> void
 	{
 		const Vector2& viewportSize = mImGuiSubsystem->GetViewportSize();
 		PlayerCamera->UpdateAspectRatio(viewportSize.x/viewportSize.y);
+	}
+}
+
+auto Game::DestroyActor(std::shared_ptr<Actor> actor) -> void
+{
+	// the actor array will be cleared of destroyed actors on next tick
+	for (auto& a : Actors)
+	{
+		if (a == actor)
+		{
+			a.reset();
+			break;
+		}
 	}
 }
 
@@ -633,7 +644,6 @@ auto Game::StopPlay() -> void
 {
 	if (mPlayState == PlayState::Playing || mPlayState == PlayState::Paused)
 	{
-		MyEditorContext.SetSelectedActor(nullptr);
 		mPlayState = PlayState::Editor;
 		Serializer::Deserialize(&tempGameSave, *this, true);
 		tempGameSave.clear();

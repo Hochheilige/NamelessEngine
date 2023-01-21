@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Delegates.h"
+#include <memory>
 
 class Actor;
 class Component;
@@ -20,8 +21,8 @@ public:
 	auto BindToOnSelectedComponentChanged(SelectedComponentChangedDelegate Delegate) -> DelegateHandle;
 	auto UnbindFromSelectedComponentChanged(DelegateHandle& handle) -> void;
 
-	auto SetSelectedActor(Actor* InActor) -> void;
-	auto GetSelectedActor() const->Actor* { return SelectedActor; }
+	auto SetSelectedActor(std::weak_ptr<Actor> IActor) -> void;
+	auto GetSelectedActor() const->std::weak_ptr<Actor> { return SelectedActor; }
 
 	auto SetSelectedComponent(Component* InComponent) -> void;
 	auto GetSelectedComponent() const ->Component*  { return SelectedComponent; }
@@ -30,7 +31,7 @@ public:
 	auto GetSelectedDirectory() const -> const Path& { return selectedDirectory; }
 
 private:
-	Actor* SelectedActor = nullptr;
+	std::weak_ptr<Actor> SelectedActor;
 	Component* SelectedComponent;
 
 	Path selectedDirectory;

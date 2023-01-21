@@ -33,6 +33,8 @@
 
 #include "imgui_internal.h"
 
+#include "CreateCommon.h"
+
 //temporary include
 //#include "../External/bullet3/src/"
 
@@ -242,7 +244,6 @@ auto ImGuiSubsystem::DrawToolbar() -> void
 
 			if (ImGui::Button("Hot Reload"))
 			{
-				GetEditorContext().SetSelectedActor(nullptr);
 				auto mono = MonoSystem::GetInstance();
 				Serializer::SaveToFile(tempsavepath, Game::GetInstance());
 				mono->RestartMono();
@@ -318,7 +319,7 @@ auto ImGuiSubsystem::DrawViewport() -> void
 
 				Transform t;
 				t.Position = MyGame->MyRenderingSystem->GetWorldPositionUnerScreenPosition(ViewportMousePos);
-				Actor* newActor = EngineContentRegistry::GetInstance()->CreateBasicActor(actorName, t);
+				std::shared_ptr<Actor> newActor = EngineContentRegistry::GetInstance()->CreateBasicActor(actorName, t);
 				GetEditorContext().SetSelectedActor(newActor);
 			}
 
@@ -337,11 +338,9 @@ auto ImGuiSubsystem::DrawViewport() -> void
 
 				json j = json::parse(str);
 
-				Actor* actor = MyGame->CreateCustomActor(j.at("Namespace").get<std::string>().c_str(), j.at("Name").get<std::string>().c_str());
+				std::shared_ptr<Actor> actor = MyGame->CreateCustomActor(j.at("Namespace").get<std::string>().c_str(), j.at("Name").get<std::string>().c_str());
 				if (actor->RootComponent == nullptr) {
-					std::vector<Actor*>& actors = MyGame->Actors;
-					actors.erase(std::remove(actors.begin(), actors.end(), actor), actors.end());
-					delete(actor);
+					MyGame->DestroyActor(actor);
 				}
 				else
 				{
@@ -371,25 +370,24 @@ auto ImGuiSubsystem::DrawViewport() -> void
 		{
 			if (ImGui::IsItemClicked() && !ImGuizmo::IsUsing())
 			{
-				GetEditorContext().SetSelectedActor(MyGame->MyRenderingSystem->GetActorUnderPosition(ViewportMousePos));
+				GetEditorContext().SetSelectedActor(MyGame->MyRenderingSystem->GetActorUnderPosition(ViewportMousePos).lock());
 			}
 		}
 
 		
-		// this has to be the last here because we don't restor the cursor position since it ads a scrollbar
+		// this has to be the last here because we don't restor the cursor position since it ads a scrollbar to viewport for some reason
 		{
 			ImGui::SetCursorPos(viewportLocalStart);
 
-			for (Actor* actor : MyGame->Actors)
+			for (std::shared_ptr<Actor>& actor : MyGame->Actors)
 			{
-				actor->OnGui();
+				if (actor)
+					actor->OnGui();
 			}
 		}
 	}
 	ImGui::End();
 	ImGui::PopStyleVar();
-
-	
 }
 
 auto ImGuiSubsystem::DrawActorExplorer() -> void
@@ -401,8 +399,12 @@ auto ImGuiSubsystem::DrawActorExplorer() -> void
 		auto size = actors.size();
 		for (int i = 0; i < size; ++i)
 		{
-			Actor* actor = actors[i];
-			const bool isSelectedActor = GetEditorContext().GetSelectedActor() == actor;
+			std::shared_ptr<Actor>& actor = actors[i];
+			if (!actor)
+			{
+				continue;
+			}
+			const bool isSelectedActor = GetEditorContext().GetSelectedActor().lock() == actor;
 
 			if (actor->GetName() == "") { actor->SetName(std::string("Actor") + std::to_string(i)); }
 			ImGui::Selectable(actor->GetName().c_str(), isSelectedActor);
@@ -412,17 +414,13 @@ auto ImGuiSubsystem::DrawActorExplorer() -> void
 			{
 				GetEditorContext().SetSelectedActor(actor);
 			}
-
-			if (ActorBrowserContextMenu(actor) == DELETE_) {
-				--size;
-			}
 		}
 	}
 
 	ImGui::End();
 }
 
-auto ImGuiSubsystem::DrawComponentSelector(class Actor* actor) -> void {
+auto ImGuiSubsystem::DrawComponentSelector(std::shared_ptr<Actor> actor) -> void {
 
 	if (BoldHeader("Components", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed)) {
 		const bool isActorSelected = GetEditorContext().GetSelectedComponent() == nullptr;
@@ -452,7 +450,7 @@ auto ImGuiSubsystem::DrawComponentSelector(class Actor* actor) -> void {
 			for (SceneComponent* child : comp->AttachedChildren)
 			{
 				// ignore attached components of other actors
-				if (child->GetOwner() == actor)
+				if (child->GetOwner().lock() == actor)
 				{
 					ownChildren.push_back(child);
 				}
@@ -560,7 +558,7 @@ auto ImGuiSubsystem::LayOutTransform() -> void
 	}
 }
 
-auto ImGuiSubsystem::DrawRigidBodyProperties(Actor* actor) -> void 
+auto ImGuiSubsystem::DrawRigidBodyProperties(std::shared_ptr<Actor> actor) -> void
 {	
 	if (auto* cmp = dynamic_cast<RigidBodyComponent*>(GetEditorContext().GetSelectedComponent())) {
 
@@ -713,7 +711,7 @@ auto ImGuiSubsystem::DrawStaticMeshProperties() -> void {
 
 }
 
-auto ImGuiSubsystem::DrawLightPointProperties(Actor* actor) -> void
+auto ImGuiSubsystem::DrawLightPointProperties(std::shared_ptr<Actor> actor) -> void
 {
 	if (auto* cmp = dynamic_cast<PointLight*>(GetEditorContext().GetSelectedComponent()))
 	{
@@ -738,7 +736,7 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 	if (ImGui::Begin("Actor Inspector"))
 	{
 
-		if (Actor* actor = GetEditorContext().GetSelectedActor())
+		if (std::shared_ptr<Actor> actor = GetEditorContext().GetSelectedActor().lock())
 		{
 			//General properties
 			DrawGeneralProperties(actor);
@@ -773,7 +771,7 @@ auto ImGuiSubsystem::DrawActorInspector() -> void
 	ImGui::End();
 }
 
-auto ImGuiSubsystem::DrawGeneralProperties(Actor* actor) -> void
+auto ImGuiSubsystem::DrawGeneralProperties(std::shared_ptr<Actor> actor) -> void
 {
 	static char tempName[128];
 	memcpy(tempName, actor->GetName().c_str(), actor->GetName().length() + 1);
@@ -904,8 +902,7 @@ auto ImGuiSubsystem::GetSelectedSceneComponent() const -> SceneComponent*
 
 	if (selectedSceneComponent == nullptr)
 	{
-		Actor* actor = GetEditorContext().GetSelectedActor();
-		if (actor)
+		if (std::shared_ptr<Actor> actor = GetEditorContext().GetSelectedActor().lock())
 		{
 			selectedSceneComponent = actor->RootComponent;
 		}
@@ -1005,7 +1002,7 @@ auto ImGuiSubsystem::InitStyle() -> void
 	//imguizmoStyle.TranslationLineThickness = 6.0f;
 }
 
-auto ImGuiSubsystem::ActorBrowserContextMenu(Actor* actor) const -> CONTEXT_MENU_VALUES
+auto ImGuiSubsystem::ActorBrowserContextMenu(std::weak_ptr<Actor> actor) const -> CONTEXT_MENU_VALUES
 {
 	CONTEXT_MENU_VALUES action = NOTHING;
 	
@@ -1018,43 +1015,47 @@ auto ImGuiSubsystem::ActorBrowserContextMenu(Actor* actor) const -> CONTEXT_MENU
 	}
 }
 
-auto ImGuiSubsystem::ActorBrowserContextMenu(Actor* actor, const char* str_id) const -> CONTEXT_MENU_VALUES
+auto ImGuiSubsystem::ActorBrowserContextMenu(std::weak_ptr<Actor> actor, const char* str_id) const -> CONTEXT_MENU_VALUES
 {
 
 	CONTEXT_MENU_VALUES action = NOTHING;
-	if (ImGui::BeginPopupContextItem(str_id))
+	if (!actor.expired() && ImGui::BeginPopupContextItem(str_id))
 	{
 		action = ActorBrowserContextMenuPopUp(actor);
 
 		ImGui::EndPopup();
-		return action;
 	}
+	return action;
 }
 
-auto ImGuiSubsystem::ActorBrowserContextMenuPopUp(Actor* actor) const -> CONTEXT_MENU_VALUES
+auto ImGuiSubsystem::ActorBrowserContextMenuPopUp(std::weak_ptr<Actor> actor) const -> CONTEXT_MENU_VALUES
 {
 	GetEditorContext().SetSelectedActor(actor);
-	std::vector<Actor*>& actors = Game::GetInstance()->Actors;
+	std::shared_ptr<Actor> selectedActor = GetEditorContext().GetSelectedActor().lock();
+	if (!selectedActor)
+	{
+		return NOTHING;
+	}
+
 	CONTEXT_MENU_VALUES action = NOTHING;
 	if (ImGui::Selectable("Rename")) {
 		action = RENAME;
 	}
 
 	if (ImGui::Selectable("Duplicate")) {
-		std::string ogName = GetEditorContext().GetSelectedActor()->GetName();
-		json ogActor = GetEditorContext().GetSelectedActor()->Serialize();
-		Actor* newActor = new Actor();
+		std::string ogName = selectedActor->GetName();
+		json ogActor = selectedActor->Serialize();
+		std::shared_ptr<Actor> newActor = CreateActor<Actor>();
 		newActor->Deserialize(&ogActor, true);
-		newActor->SetName("Copy of " + ogName);
-		actors.push_back(newActor);
+		newActor->SetName(ogName + " cpy");
 		GetEditorContext().SetSelectedActor(newActor);
 		action = DUPLICATE_;
 	}
 
 	if (ImGui::Selectable("Delete")) {
-		GetEditorContext().SetSelectedActor(nullptr);
-		actors.erase(std::remove(actors.begin(), actors.end(), actor), actors.end());
-		delete(actor);
+		MyGame->DestroyActor(selectedActor);
+		// todo: do i need this?
+		//GetEditorContext().SetSelectedActor(nullptr);
 		action = DELETE_;
 	}
 
@@ -1081,7 +1082,6 @@ auto ImGuiSubsystem::ToolBarStopButton(const char stopText[]) -> void
 {
 	if (ImGui::Button(stopText))
 	{
-		GetEditorContext().SetSelectedActor(nullptr);
 		MyGame->StopPlay();
 	}
 }
@@ -1372,7 +1372,6 @@ auto ImGuiSubsystem::DrawAsset(const DirectoryTreeNode* file, const Vector2& ite
 		{
 			currentLevel = GetAssetManager()->GetProjectRootPath() / file->GetPathFromTreeRoot();
 			Serializer::ReadFromFile(currentLevel, Game::GetInstance(), true);
-			GetEditorContext().SetSelectedActor(nullptr);
 		}
 	}
 
@@ -1487,23 +1486,19 @@ auto ImGuiSubsystem::DrawNavMeshSettings() -> void
 auto ImGuiSubsystem::PollHotkeys() -> void
 {
 	if (MyGame->GetPlayState() == PlayState::Editor) {
-		if (GetEditorContext().GetSelectedActor() && ImGui::IsKeyPressed(ImGuiKey_Delete, false)) {
-			auto actor = GetEditorContext().GetSelectedActor();
-			GetEditorContext().SetSelectedActor(nullptr);
-			delete(actor);
+		if (GetEditorContext().GetSelectedActor().lock() && ImGui::IsKeyPressed(ImGuiKey_Delete, false)) {
+			MyGame->DestroyActor(GetEditorContext().GetSelectedActor().lock());
 		}
 
 
-		if (MyGame->GetPlayState() == PlayState::Editor && GetEditorContext().GetSelectedActor()
+		if (MyGame->GetPlayState() == PlayState::Editor && GetEditorContext().GetSelectedActor().lock()
 			&& ImGui::IsKeyPressed(ImGuiKey_D, false) && ImGui::IsKeyDown(ImGuiKey_LeftCtrl)) {
-			// duplicate here
-			auto& actors = MyGame->Actors;
-			std::string ogName = GetEditorContext().GetSelectedActor()->GetName();
-			json ogActor = GetEditorContext().GetSelectedActor()->Serialize();
-			Actor* newActor = new Actor();
+			// todo: duplicate code here
+			std::string ogName = GetEditorContext().GetSelectedActor().lock()->GetName();
+			json ogActor = GetEditorContext().GetSelectedActor().lock()->Serialize();
+			std::shared_ptr<Actor> newActor = CreateActor<Actor>();
 			newActor->Deserialize(&ogActor, true);
-			newActor->SetName("Copy of " + ogName);
-			actors.push_back(newActor);
+			newActor->SetName(ogName + " cpy");
 			GetEditorContext().SetSelectedActor(newActor);
 		}
 

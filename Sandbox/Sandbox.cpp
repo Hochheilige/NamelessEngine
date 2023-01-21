@@ -28,8 +28,8 @@
 
 #include "CreateCommon.h"
 
-Actor* Sandbox::CreateNonPhysicsBox(Transform transform) {
-	Actor* box = CreateActor<Actor>();
+std::shared_ptr<Actor> Sandbox::CreateNonPhysicsBox(Transform transform) {
+	std::shared_ptr<Actor> box = CreateActor<Actor>();
 	Path path = "../Assets/box.fbx/Cube";
 	box->InitializeMonoActor("Scripts.Tests", "CustomActor");
 	auto mesh_component = box->AddComponent<StaticMeshRenderer>();
@@ -43,8 +43,8 @@ Actor* Sandbox::CreateNonPhysicsBox(Transform transform) {
 	return box;
 }
 
-Actor* Sandbox::CreatePlayahActor(Transform transform) {
-	Actor* box = CreateActor<Actor>();
+std::shared_ptr<Actor> Sandbox::CreatePlayahActor(Transform transform) {
+	std::shared_ptr<Actor> box = CreateActor<Actor>();
 	Path path = "../Assets/box.fbx/Cube";
 	box->InitializeMonoActor("Scripts.Tests", "PlayahActor");
 	auto mesh_component = box->AddComponent<StaticMeshRenderer>();
@@ -58,9 +58,9 @@ Actor* Sandbox::CreatePlayahActor(Transform transform) {
 	return box;
 }
 
-Actor* Sandbox::CreateStaticBox(Transform transform)
+std::shared_ptr<Actor> Sandbox::CreateStaticBox(Transform transform)
 {
-	Actor* box = CreateActor<Actor>();
+	std::shared_ptr<Actor> box = CreateActor<Actor>();
 	auto box_rb = box->AddComponent<RigidBodyComponent>();
 	box->SetTransform(transform);
 	box_rb->SetRigidBodyType(RigidBodyType::STATIC);
@@ -86,9 +86,9 @@ Actor* Sandbox::CreateStaticBox(Transform transform)
 	return box;
 }
 
-Actor* Sandbox::CreateDynamicBox(Transform transform)
+std::shared_ptr<Actor> Sandbox::CreateDynamicBox(Transform transform)
 {
-	Actor* box = CreateActor<Actor>();
+	std::shared_ptr<Actor> box = CreateActor<Actor>();
 	//box->InitializeMonoActor("CustomActor");
 	auto box_rb = box->AddComponent<RigidBodyComponent>();
 	box->SetTransform(transform);
@@ -109,9 +109,9 @@ Actor* Sandbox::CreateDynamicBox(Transform transform)
 	return box;
 }
 
-Actor* Sandbox::CreateKinematicBox(Transform transform)
+std::shared_ptr<Actor> Sandbox::CreateKinematicBox(Transform transform)
 {
-	Actor* box = CreateActor<Actor>();
+	std::shared_ptr<Actor> box = CreateActor<Actor>();
 	auto box_rb = box->AddComponent<RigidBodyComponent>();
 	box->SetTransform(transform);
 	box_rb->SetRigidBodyType(RigidBodyType::KINEMATIC);
@@ -131,9 +131,9 @@ Actor* Sandbox::CreateKinematicBox(Transform transform)
 	return box;
 }
 
-Actor* Sandbox::CreateStaticSphere(Transform transform)
+std::shared_ptr<Actor> Sandbox::CreateStaticSphere(Transform transform)
 {
-	Actor* sphere = CreateActor<Actor>();
+	std::shared_ptr<Actor> sphere = CreateActor<Actor>();
 	auto sphere_rb = sphere->AddComponent<RigidBodyComponent>();
 	sphere->SetTransform(transform);
 	sphere_rb->SetRigidBodyType(RigidBodyType::STATIC);	
@@ -152,9 +152,9 @@ Actor* Sandbox::CreateStaticSphere(Transform transform)
 	return sphere;
 }
 
-Actor* Sandbox::CreateDynamicSphere(Transform transform)
+std::shared_ptr<Actor> Sandbox::CreateDynamicSphere(Transform transform)
 {
-	Actor* sphere = CreateActor<Actor>();
+	std::shared_ptr<Actor> sphere = CreateActor<Actor>();
 	auto sphere_rb = sphere->AddComponent<RigidBodyComponent>();
 	sphere->SetTransform(transform);
 	sphere_rb->SetRigidBodyType(RigidBodyType::DYNAMIC);
@@ -173,9 +173,9 @@ Actor* Sandbox::CreateDynamicSphere(Transform transform)
 	return sphere;
 }
 
-Actor* Sandbox::CreateKinematicSphere(Transform transform)
+std::shared_ptr<Actor> Sandbox::CreateKinematicSphere(Transform transform)
 {
-	Actor* sphere = CreateActor<Actor>();
+	std::shared_ptr<Actor> sphere = CreateActor<Actor>();
 	//sphere->InitializeMonoActor("Scripts.Tests", "CustomActor");
 	auto sphere_rb = sphere->AddComponent<RigidBodyComponent>();
 	sphere->SetTransform(transform);
@@ -199,9 +199,9 @@ Actor* Sandbox::CreateKinematicSphere(Transform transform)
 	return sphere;
 }
 
-Actor* Sandbox::CreateBunny(Transform transform)
+std::shared_ptr<Actor> Sandbox::CreateBunny(Transform transform)
 {
-	Actor* bunny = CreateActor<Actor>();
+	std::shared_ptr<Actor> bunny = CreateActor<Actor>();
 	Path path = "../Assets/stanford-bunny.fbx/Stanford Bunny-mesh";
 	auto mesh_component = bunny->AddComponent<StaticMeshRenderer>();
 	transform.Scale = Vector3::One * 0.015f;
@@ -214,10 +214,10 @@ Actor* Sandbox::CreateBunny(Transform transform)
 	return bunny;
 }
 
-Actor* Sandbox::CreateBun(Transform transform)
+std::shared_ptr<Actor> Sandbox::CreateBun(Transform transform)
 {
 	Path path = "../Assets/tjciddjqx_LOD0.fbx/Aset_edible_baked_goods_S_tjciddjqx_LOD0";
-	Actor* actor = CreateActor<Actor>();
+	std::shared_ptr<Actor> actor = CreateActor<Actor>();
 	auto mesh_component = actor->AddComponent<StaticMeshRenderer>();
 	mesh_component->SetStaticMesh(GetAssetManager()->LoadStaticMesh(path));
 	actor->SetTransform(transform);
@@ -230,9 +230,9 @@ Actor* Sandbox::CreateBun(Transform transform)
 	return actor;
 }
 
-auto Sandbox::CreateHierarcyTestActor() -> Actor*
+auto Sandbox::CreateHierarcyTestActor() -> std::shared_ptr<Actor>
 {
-	Actor* actor = CreateActor<Actor>();
+	std::shared_ptr<Actor> actor = CreateActor<Actor>();
 	actor->AddComponent<SceneComponent>();
 	Path path = "../Assets/tjciddjqx_LOD0.fbx/Aset_edible_baked_goods_S_tjciddjqx_LOD0";
 	
@@ -417,7 +417,7 @@ void Sandbox::PrepareResources()
 	tr.Position = Vector3(0, 3, 0);
 	tr.Scale = { 1.0f, 1.0f, 1.0f};
 	tr.Rotation.SetEulerAngles(0, 0, 0);
-	Actor* playah = CreatePlayahActor(tr);
+	CreatePlayahActor(tr);
 
 	CreateHierarcyTestActor();
 }
@@ -463,11 +463,16 @@ void Sandbox::Update(float DeltaTime)
 		// Physics Simulation
 		auto physics = PhysicsModuleData::GetInstance();
 		physics->OnUpdate(DeltaTime);
-		// create a copy of the Actors array to avoid iterator invalidation
-		std::vector<Actor*> actors = Actors;
-		for (auto actor : actors)
+		// !IMPORTANT!
+		// don't use iterator here since new actors might be added in update
+		// instead store the size prematuarly and iterate over that size
+		// note: destroying actors in update won't break the iterator, because deleted actors are removed from the Actors array in the beginning of the tick
+		size_t numActors = Actors.size();
+		for (size_t i = 0; i < numActors; ++i)
 		{
-			actor->Update(DeltaTime);
+			auto& actor = Actors[i];
+			if (actor)
+				actor->Update(DeltaTime);
 		}
 	}
 	else

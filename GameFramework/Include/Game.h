@@ -19,6 +19,7 @@
 #include "UUIDGenerator.h"
 #include "JsonSerializers.h"
 
+#include <memory>
 
 
 using Path = std::filesystem::path;
@@ -60,7 +61,7 @@ public:
 	friend class Actor;
 	friend ImGuiSubsystem;
 	template<class T>
-	friend auto CreateActor()->T*;
+	friend auto CreateActor() -> std::shared_ptr<T>;
 
 	void AddPendingFunction(std::function<void()>&& func);
 	
@@ -132,7 +133,7 @@ public:
 	
 	*/
 
-	auto CreateCustomActor(const char* nameSpace, const char* className) -> Actor*;
+	auto CreateCustomActor(const char* nameSpace, const char* className) -> std::shared_ptr<Actor>;
 
 	static Game* GetInstance();
 
@@ -149,6 +150,8 @@ public:
 	ComPtr<ID3D11SamplerState> GetDefaultSamplerState() { return DefaultSamplerState; }
 
 	//void DestroyComponent(GameComponent* GC);
+
+	auto DestroyActor(std::shared_ptr<Actor> actor) -> void;
 
 	DirLight DirectiLight;
 	Camera LightCam;
@@ -219,7 +222,7 @@ protected:
 	ComPtr<ID3D11SamplerState> ShadowmapSamplerState = nullptr;
 
 
-	std::vector<Actor*> Actors;
+	std::vector<std::shared_ptr<Actor>> Actors;
 
 
 private:

@@ -14,3 +14,6 @@ protected:
 
 	static T* Instance;
 };
+
+template<class T>
+T* Singleton<T>::Instance = nullptr;

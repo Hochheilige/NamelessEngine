@@ -24,9 +24,10 @@ void CameraController::SetCameraToControl(Camera* InCamera)
 
 void CameraController::Update(float DeltaTime)
 {
-	if (Cam == nullptr ||
+	if (Cam == nullptr
 		// TODO: remove hack: disable editor camera movement when it's not in use
-		!Game::GetInstance()->GetUseEditorCamera())
+		|| !Game::GetInstance()->GetUseEditorCamera()
+		)
 	{
 		return;
 	}
@@ -106,8 +107,8 @@ void CameraController::Update(float DeltaTime)
 		Speed = MinSpeed;
 
 	EditorContext& ec = Game::GetInstance()->MyEditorContext;
-	if (keyboard->IsDown(KEY_F) && ec.GetSelectedActor() != nullptr)
+	if (keyboard->IsDown(KEY_F) && ec.GetSelectedActor().lock())
 	{
-		Cam->Transform.Position = ec.GetSelectedActor()->GetTransform().Position;
+		Cam->Transform.Position = ec.GetSelectedActor().lock()->GetTransform().Position;
 	}
 }
