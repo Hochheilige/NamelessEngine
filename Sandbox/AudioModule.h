@@ -31,6 +31,8 @@ public:
 
 	void StopAllChannels();
 
+	void SetEars();
+
 private:
 	AudioModule();
 

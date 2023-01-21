@@ -49,4 +49,6 @@ private:
 	
 	const float kDefaultVolume = 0.3f;
 	float volume = .0f;
+
+	Transform prev;
 };

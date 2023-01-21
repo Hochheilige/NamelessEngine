@@ -1,4 +1,5 @@
 #include "AudioComponent.h"
+#include "Game.h"
 
 void AudioComponent::LoadSound(const std::string& soundName, bool b3d, bool looping, bool stream)
 {
@@ -86,6 +87,9 @@ void AudioComponent::StopChannel()
 void AudioComponent::Update(float DeltaTime)
 {
 	Transform trans = GetTransform();
+	auto d = (trans.Position - prev.Position) * 1000 / DeltaTime;
+	FMOD_VECTOR vel(d.x, d.y, d.z);
+	prev = trans;
 	FMOD_VECTOR position(trans.Position.x, trans.Position.y, trans.Position.z);
 	channel->set3DAttributes(&position, nullptr);
 
@@ -95,6 +99,15 @@ void AudioComponent::Update(float DeltaTime)
 	//{
 	//	Play();
 	//}
+
+	auto camera = Game::GetInstance()->GetCurrentPOV();
+	auto p = camera->Transform.Position;
+	auto fwd = camera->Transform.Rotation.GetForwardVector();
+	auto u = camera->Transform.Rotation.GetUpVector();
+	FMOD_VECTOR pos(p.x, p.y, p.z);
+	FMOD_VECTOR forward(fwd.x, fwd.y, fwd.z);
+	FMOD_VECTOR up(u.x, u.y, u.z);
+	AudioModule::GetInstance()->GetSystem()->set3DListenerAttributes(0, &pos, nullptr, &forward, &up);
 
 	AudioModule::GetInstance()->Update();
 }
