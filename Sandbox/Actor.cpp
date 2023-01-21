@@ -60,6 +60,10 @@ Actor::~Actor()
 	for (auto comp : Components) {
 		delete(comp);
 	}
+	if (game->MyEditorContext.GetSelectedActor() == this)
+	{
+		game->MyEditorContext.SetSelectedActor(nullptr);
+	}
 }
 
 void Actor::OnComponentAdded(Component* component)
