@@ -68,9 +68,10 @@ void MonoSystem::InitializeMono()
 			image = mono_assembly_get_image(scriptAssembly);
 			PrintAssemblyTypes(scriptAssembly);
 			if (image) {
+				// todo: remove memory leaks here?
 				new MonoMasterModule;
 				new MonoComponentModule;
-				new MonoActorModule;
+				MonoActorModule::AddInternalCalls();
 				new MonoRigidBodyComponentModule;
 				new MonoMovementComponentModule;
 				new MonoCameraComponentModule();

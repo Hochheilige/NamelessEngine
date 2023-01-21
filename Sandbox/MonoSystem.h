@@ -6,6 +6,22 @@
 #include <mono/metadata/assembly.h>
 #include <mono/metadata/debug-helpers.h>
 
+#define EXPOSE_LAMBDA_FUNC(csharp_class_name, func_name, lambda)					\
+{																					\
+	auto func = lambda;																\
+	mono_add_internal_call(#csharp_class_name"::Internal" #func_name, (void*)func); \
+}																					\
+
+#define EXPOSE_FUNC_RETURN_VAL(class_name, csharp_class_name, func_name) \
+	EXPOSE_LAMBDA_FUNC(csharp_class_name, func_name, ([](class_name* obj){ return obj->##func_name();}))
+
+#define EXPOSE_FUNC_NO_RETURN(class_name, csharp_class_name, func_name) \
+	EXPOSE_LAMBDA_FUNC(csharp_class_name, func_name, ([](class_name* obj){ obj->##func_name();}))																							\
+
+#define EXPOSE_FUNC_ONE_PARAM_NO_RETURN(class_name, csharp_class_name, func_name, param1_type)	\
+	EXPOSE_LAMBDA_FUNC(csharp_class_name, func_name,											\
+			([](class_name* obj, param1_type p1) { obj->##func_name(p1);}))
+
 class MonoSystem
 {
 protected:
